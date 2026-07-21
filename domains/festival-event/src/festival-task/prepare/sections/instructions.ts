@@ -32,8 +32,7 @@ function isForcingGlobalUpdate(
 }
 
 export type ForceInstructions =
-  | ForceGlobalInstructions
-  | ForceInChargeInstructions;
+  ForceGlobalInstructions | ForceInChargeInstructions;
 
 export class Instructions {
   private constructor(

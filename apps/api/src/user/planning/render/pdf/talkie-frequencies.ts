@@ -58,9 +58,11 @@ export class TalkieFrequencies {
   ): Content[] {
     const style = ["otherFrequency"];
     const margin: [number, number, number, number] = [75, 20, 50, 5];
-    return otherFrequencies.map(
-      ({ text }): Content => ({ text, style, margin }),
-    );
+    return otherFrequencies.map(({ text }): Content => ({
+      text,
+      style,
+      margin,
+    }));
   }
 
   private static generateHeader(headerText: string): Content {

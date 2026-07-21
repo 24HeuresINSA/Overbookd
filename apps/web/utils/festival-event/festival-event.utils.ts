@@ -28,8 +28,7 @@ export const reviewStatusLabel = new Map<
 ]);
 
 export type FestivalEventStatus =
-  | FestivalActivity["status"]
-  | FestivalTask["status"];
+  FestivalActivity["status"] | FestivalTask["status"];
 
 export function isFestivalActivityStatus(
   status: FestivalEventStatus,

@@ -35,8 +35,7 @@ export type CandidateFulfillingDemand = AssignableVolunteer & {
 };
 
 export type IDefineCandidate =
-  | NotYetFulfillingDemandCandidate
-  | CandidateFulfillingDemand;
+  NotYetFulfillingDemandCandidate | CandidateFulfillingDemand;
 
 type Agenda = {
   planning: PlanningEvent[];

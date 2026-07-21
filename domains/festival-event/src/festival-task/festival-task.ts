@@ -157,10 +157,7 @@ export type PreviewValidated = GeneratePreview<Validated>;
 export type PreviewReadyToAssign = GeneratePreview<ReadyToAssign>;
 
 export type PreviewReviewable =
-  | PreviewInReview
-  | PreviewRefused
-  | PreviewValidated
-  | PreviewReadyToAssign;
+  PreviewInReview | PreviewRefused | PreviewValidated | PreviewReadyToAssign;
 
 export type Preview = PreviewDraft | PreviewReviewable;
 

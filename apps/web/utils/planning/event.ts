@@ -27,9 +27,7 @@ type AssignedToTask = CalendarEvent & {
 };
 
 export type CalendarEventForPlanning =
-  | RequestedDuringMobilization
-  | AssignedToTask
-  | BreakEvent;
+  RequestedDuringMobilization | AssignedToTask | BreakEvent;
 
 export function toCalendarAssignment(
   assignment: AssignmentEvent,

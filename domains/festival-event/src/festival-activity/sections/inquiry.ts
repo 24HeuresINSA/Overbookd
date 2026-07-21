@@ -4,9 +4,7 @@ import { TimeWindow } from "../../common/time-window.js";
 import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
 
 export type InquiryOwner =
-  | typeof LOG_MATOS
-  | typeof BARRIERES
-  | typeof LOG_ELEC;
+  typeof LOG_MATOS | typeof BARRIERES | typeof LOG_ELEC;
 
 export type WithTimeWindows = {
   timeWindows: WithAtLeastOneItem<TimeWindow>;
@@ -31,9 +29,7 @@ type WithElectricityInquiries = {
 };
 
 export type WithInquiries =
-  | WithGearInquiries
-  | WithBarrierInquiries
-  | WithElectricityInquiries;
+  WithGearInquiries | WithBarrierInquiries | WithElectricityInquiries;
 
 export type InquiryWithRequests = WithInquiries & WithTimeWindows;
 

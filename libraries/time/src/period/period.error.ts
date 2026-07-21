@@ -12,5 +12,4 @@ export class EndBeforeStart extends PeriodError {
 }
 
 export type ErrorMessage =
-  | typeof END_BEFORE_START_ERROR_MESSAGE
-  | typeof NO_DURATION_ERROR_MESSAGE;
+  typeof END_BEFORE_START_ERROR_MESSAGE | typeof NO_DURATION_ERROR_MESSAGE;
