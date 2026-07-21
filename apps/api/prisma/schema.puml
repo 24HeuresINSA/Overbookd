@@ -110,7 +110,7 @@ entity "User" as User {
   * lastName : String
   nickname : String
   * email : String
-  * birthDate : DateTime
+  birthDate : DateTime
   * phoneNumber : String
   comment : String
   profilePicture : String

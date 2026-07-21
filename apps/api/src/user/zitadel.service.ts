@@ -6,9 +6,9 @@ import {
 } from "@nestjs/common";
 import { OidcRole } from "@overbookd/oidc";
 import { ApiZitadelUser } from "./entities/zitadel-api-user.entity";
-import { ApiZitadelRoles } from "./entities/zitade-api-roles.entity";
+import { ApiZitadelRoles } from "./entities/zitadel-api-roles.entity";
 import { ApiZitadelUserCreated } from "./entities/zitadel-api-user-created.entity";
-import { DateString, toIsoDate } from "@overbookd/time";
+import { DateString, isDateString, OverDate } from "@overbookd/time";
 import { UserMetadata } from "./entities/user-metadata.entity";
 import { ApiZitadelMetadata } from "./entities/zitadel-api-metadata.entity";
 
@@ -212,19 +212,17 @@ export class ZitadelService {
 
   async updateMetadata(zitadelId: string, metadata: UserMetadata) {
     const zitadelMetadata = this.buildMetadata(metadata);
-    if (zitadelMetadata.length > 0) {
-      const data = JSON.stringify({ metadata: zitadelMetadata });
-      const response = await fetch(
-        `${this.ZITADEL_BASE_URL}/management/v1/users/${zitadelId}/metadata/_bulk`,
-        {
-          method: "POST",
-          body: data,
-          headers: this.headers,
-        },
-      );
+    const data = JSON.stringify({ metadata: zitadelMetadata });
+    const response = await fetch(
+      `${this.ZITADEL_BASE_URL}/management/v1/users/${zitadelId}/metadata/_bulk`,
+      {
+        method: "POST",
+        body: data,
+        headers: this.headers,
+      },
+    );
 
-      return await this.handleZitadelResponse(response);
-    }
+    return await this.handleZitadelResponse(response);
   }
 
   async addZitadelRoleIfNotExist(
@@ -251,9 +249,13 @@ export class ZitadelService {
     const metadata = [];
 
     if (dateOfBirth) {
+      const isAlreadyDateString = isDateString(dateOfBirth.toString());
+      const dateString = isAlreadyDateString
+        ? dateOfBirth.toString()
+        : OverDate.fromLocal(new Date(dateOfBirth)).dateString;
       metadata.push({
         key: "dateOfBirth",
-        value: btoa(toIsoDate(dateOfBirth, { hideTime: true })),
+        value: btoa(dateString),
       });
     }
 

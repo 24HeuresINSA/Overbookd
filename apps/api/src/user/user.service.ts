@@ -63,29 +63,37 @@ export class UserService {
       (await this.getUserByZitadelId(user.zitadelId))?.id ??
       (await this.getUserByEmail(user.email))?.id;
 
+    const birthDate = user.birthDate ? { birthDate: user.birthDate } : {};
     const data = {
       email: user.email,
       firstName: user.givenName,
       lastName: user.familyName,
       phoneNumber: user.phoneNumber,
-      birthDate: user.birthDate,
       zitadelId: user.zitadelId,
+      ...birthDate,
     };
 
     if (!userId) {
       const newUser = await this.prisma.user.create({
         data,
-        select: SELECT_USER_IDENTIFIER,
+        select: { id: true },
       });
       await this.updateAdminTeamFromZitadel(newUser.id, user.zitadelRoles);
       return;
     }
-    await this.prisma.user.update({
+
+    const updatedUser = await this.prisma.user.update({
       where: { id: userId },
-      data: data,
-      select: SELECT_USER_IDENTIFIER,
+      data,
+      select: { birthDate: true },
     });
     await this.updateAdminTeamFromZitadel(userId, user.zitadelRoles);
+
+    if (!user.birthDate && updatedUser.birthDate) {
+      await this.zitadelService.updateMetadata(user.zitadelId, {
+        dateOfBirth: updatedUser.birthDate,
+      });
+    }
   }
 
   private getUserByZitadelId(zitadelId: string): Promise<User> {
@@ -178,6 +186,9 @@ export class UserService {
         select: SELECT_MY_USER_INFORMATION,
       }),
       this.selectCharismaPeriods(),
+      this.zitadelService.updateMetadata(author.zitadelId, {
+        dateOfBirth: profile.birthDate,
+      }),
     ]);
     return UserService.formatToMyInformation(updatedUser, charismaPeriods);
   }

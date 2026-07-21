@@ -1,5 +1,5 @@
 import { Permission } from "@overbookd/permission";
-import { ConnectedZitadelUser, ZitadelMetadata } from "./zitadel-types";
+import { ConnectedZitadelUser } from "./zitadel-types";
 import {
   OIDC_METADATA_CLAIMS,
   OIDC_ROLES_CLAIMS,
@@ -45,15 +45,8 @@ export class RequestHydratedUser {
     const userZitadelRoles = user[`${OIDC_ROLES_CLAIMS}`] ?? {};
     const userMetadataEncoded = user[`${OIDC_METADATA_CLAIMS}`] ?? {};
 
-    const userMetadataDecoded: ZitadelMetadata = { dateOfBirth: "" };
-    Object.keys(userMetadataDecoded).forEach((key) => {
-      if (userMetadataEncoded[`${key}`]) {
-        userMetadataDecoded[`${key}`] = atob(userMetadataEncoded[`${key}`]);
-      }
-    });
-
     const userRoles = Object.keys(userZitadelRoles) as OidcRole[];
-    const birthDate = new Date(userMetadataDecoded.dateOfBirth);
+    const birthDate = new Date(userMetadataEncoded["dateOfBirth"]);
 
     return new RequestHydratedUser({
       email: user.email,
