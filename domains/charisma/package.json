@@ -50,7 +50,7 @@
   ],
   "engines": {
     "node": "24.18.0",
-    "pnpm": "10.34.5"
+    "pnpm": "11.15.1"
   },
   "dependencies": {
     "@overbookd/slugify": "workspace:*",
