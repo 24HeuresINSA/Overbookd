@@ -1,28 +1,13 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
-  ENROLL_HARD,
-  ENROLL_SOFT,
-  READ_FA,
-  READ_FT,
-} from "@overbookd/permission";
-import {
   FulfilledRegistration,
   Teams,
 } from "./register-form/fulfilled-registration.js";
 import { KARNA, TECKOS } from "@overbookd/team-constants";
 import { RegisterNewcomer } from "./register-newcomer.js";
 import { InMemoryNewcomerRepository } from "./newcomer-repository.inmemory.js";
-import { InMemoryNotificationRepository } from "./notification-repository.inmemory.js";
-import { StoredNotifyee } from "./notification-repository.inmemory.js";
 import { STAFF, NewcomerRegistered, VOLUNTEER } from "./newcomer.js";
 import { RegistrationError } from "./register-form/register-form.js";
-
-const notifyees: StoredNotifyee[] = [
-  { id: 100, permissions: [] },
-  { id: 101, permissions: [READ_FA] },
-  { id: 102, permissions: [READ_FA, READ_FT, ENROLL_HARD] },
-  { id: 103, permissions: [READ_FA, READ_FT, ENROLL_SOFT] },
-];
 
 const email = "test@example.com";
 const firstName = "Titouan";
@@ -72,13 +57,7 @@ describe("Register newcomer", () => {
   describe("Form validation and storage", () => {
     beforeEach(() => {
       newcomerRepository = new InMemoryNewcomerRepository();
-      const notificationRepository = new InMemoryNotificationRepository(
-        notifyees,
-      );
-      registerNewcomer = new RegisterNewcomer(
-        newcomerRepository,
-        notificationRepository,
-      );
+      registerNewcomer = new RegisterNewcomer(newcomerRepository);
     });
     describe.each`
       membership   | registerForm
@@ -142,13 +121,7 @@ describe("Register newcomer", () => {
             const newcomerRepository = new InMemoryNewcomerRepository([
               firstNewComer,
             ]);
-            const notificationRepository = new InMemoryNotificationRepository(
-              notifyees,
-            );
-            registerNewcomer = new RegisterNewcomer(
-              newcomerRepository,
-              notificationRepository,
-            );
+            registerNewcomer = new RegisterNewcomer(newcomerRepository);
           });
           it("should indicate that someone is already register with this email", async () => {
             await expect(async () =>
@@ -182,35 +155,5 @@ describe("Register newcomer", () => {
         });
       },
     );
-  });
-  describe("Notification", () => {
-    beforeEach(() => {
-      newcomerRepository = new InMemoryNewcomerRepository();
-      const notificationRepository = new InMemoryNotificationRepository(
-        notifyees,
-      );
-      registerNewcomer = new RegisterNewcomer(
-        newcomerRepository,
-        notificationRepository,
-      );
-    });
-    describe("when a new staff has been registered", () => {
-      it("should generate a notification for 'can enroll staff' users", async () => {
-        const notifees =
-          await registerNewcomer.notifyNewStaffAwaits(firstNewComer);
-        expect(notifees).toHaveLength(1);
-        expect(notifees).toEqual([{ id: 102 }]);
-      });
-    });
-    describe("when a new volunteer has been registered", () => {
-      it("should generate a notification for 'can enroll volunteer' users", async () => {
-        const notifees = await registerNewcomer.notifyNewVolunteerAwaits({
-          ...firstNewComer,
-          membership: VOLUNTEER,
-        });
-        expect(notifees).toHaveLength(1);
-        expect(notifees).toEqual([{ id: 103 }]);
-      });
-    });
   });
 });

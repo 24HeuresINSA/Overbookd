@@ -4,7 +4,6 @@ import {
   FestivalTaskError,
   FestivalTaskNotFound,
 } from "../festival-task.error.js";
-import { Notifications } from "../../common/notifications.js";
 import {
   DraftWithoutConflicts,
   FestivalTaskTranslator,
@@ -36,7 +35,6 @@ export type Reviewers = {
 
 type Repositories = {
   tasks: AskForReviewTasks;
-  notifications: Notifications<"FT">;
   reviewers: Reviewers;
 };
 
@@ -58,8 +56,6 @@ export class AskForReview {
     }
 
     const inReview = await this.convertInReview(task, instigator);
-
-    this.repositories.notifications.add(inReview.event);
 
     const saved = await this.repositories.tasks.save(inReview.task);
     return this.translator.translate<InReview>(saved);

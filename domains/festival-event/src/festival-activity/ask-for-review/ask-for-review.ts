@@ -9,7 +9,6 @@ import {
   Reviewable,
 } from "../festival-activity.js";
 import { Adherent } from "../../common/adherent.js";
-import { Notifications } from "../../common/notifications.js";
 import { isDraft, isRefused } from "../../festival-event.js";
 import {
   BARRIERES,
@@ -29,7 +28,6 @@ export type AskForReviewFestivalActivityRepository = {
 export class AskForReview {
   constructor(
     private readonly festivalActivities: AskForReviewFestivalActivityRepository,
-    private readonly notifications: Notifications,
   ) {}
 
   async from(
@@ -55,8 +53,6 @@ export class AskForReview {
     instigator: Adherent,
   ): Promise<Reviewable> {
     const inReview = InReviewFestivalActivity.init(activity, instigator);
-
-    this.notifications.add(inReview.readyForReview);
     return this.festivalActivities.save(inReview);
   }
 
@@ -65,8 +61,6 @@ export class AskForReview {
     instigator: Adherent,
   ): Promise<Reviewable> {
     const inReview = InReviewFestivalActivity.build(activity, instigator);
-
-    this.notifications.add(inReview.readyForReview);
     return this.festivalActivities.save(inReview);
   }
 }

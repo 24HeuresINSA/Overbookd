@@ -14,7 +14,6 @@ import { PrismaCatalogSignages } from "./repository/catalog-signages.prisma";
 import { PrismaCreateFestivalActivities } from "./repository/create-festival-activities.prisma";
 import { PrismaInquiries } from "./repository/inquiries.prisma";
 import { PrismaLocations } from "../../common/repository/locations.prisma";
-import { PrismaNotifications } from "../../common/repository/notifications.prisma";
 import { PrismaPrepareFestivalActivities } from "./repository/prepare-festival-activities.prisma";
 import { PrismaPreviews } from "./repository/previews.prisma";
 import { PrismaRemoveFestivalActivities } from "./repository/remove-festival-activities.prisma";
@@ -60,12 +59,6 @@ import { PrismaReviewingFestivalActivities } from "./repository/reviewing-festiv
       inject: [PrismaService],
     },
     {
-      provide: PrismaNotifications<"FA">,
-      useFactory: (prisma: PrismaService) =>
-        new PrismaNotifications<"FA">(prisma),
-      inject: [PrismaService],
-    },
-    {
       provide: PrismaReviewingFestivalActivities,
       useFactory: (prisma: PrismaService) =>
         new PrismaReviewingFestivalActivities(prisma),
@@ -97,11 +90,9 @@ import { PrismaReviewingFestivalActivities } from "./repository/reviewing-festiv
     },
     {
       provide: AskForReview,
-      useFactory: (
-        festivalActivities: PrismaAskForReview,
-        notifications: PrismaNotifications<"FA">,
-      ) => new AskForReview(festivalActivities, notifications),
-      inject: [PrismaAskForReview, PrismaNotifications<"FA">],
+      useFactory: (festivalActivities: PrismaAskForReview) =>
+        new AskForReview(festivalActivities),
+      inject: [PrismaAskForReview],
     },
     {
       provide: PrismaRemoveFestivalActivities,

@@ -25,7 +25,6 @@ import { MailModule } from "./mail/mail.module";
 import { ContributionModule } from "./contribution/contribution.module";
 import { CatalogSignageModule } from "./catalog-signage/catalog-signage.module";
 import { AlertModule } from "./alert/alert.module";
-import { NotificationModule } from "./notification/notification.module";
 import { FestivalActivityModule } from "./festival-event/activity/festival-activity.module";
 import { ONE_MINUTE_IN_MS } from "@overbookd/time";
 import { PersonalAccountModule } from "./personal-account/personal-account.module";
@@ -38,6 +37,7 @@ import { MembershipApplicationModule } from "./registration/membership-applicati
 import { ZitadelAuthModule } from "./authentication-zitadel/zitadel-auth.module";
 import { ZitadelAuthGuard } from "./authentication-zitadel/guards/zitadel.auth.guard";
 import { PermissionsGuard } from "./authentication-zitadel/guards/permissions-auth.guard";
+import { LiveNotificationModule } from "./live-notification/live-notification.module";
 
 @Module({
   imports: [
@@ -80,7 +80,7 @@ import { PermissionsGuard } from "./authentication-zitadel/guards/permissions-au
     ContributionModule,
     CatalogSignageModule,
     AlertModule,
-    NotificationModule,
+    LiveNotificationModule,
     PersonalAccountModule,
     SharedMealModule,
     LogisticModule,

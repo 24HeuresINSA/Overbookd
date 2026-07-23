@@ -43,11 +43,6 @@ export type {
   AssignDrive,
 } from "./common/inquiry-request.js";
 export type { Location } from "./common/location.js";
-export type {
-  WaitingForReview,
-  Notifications,
-  Notifyee,
-} from "./common/notifications.js";
 export {
   isRefusedReviews,
   isValidatedReviews,

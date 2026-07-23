@@ -9,7 +9,6 @@ import {
 import { Reviewer } from "../../common/review.js";
 import { CANT_MOVE_TO_IN_REVIEW_ERROR_MESSAGE } from "../../common/ready-for-review.error.js";
 import { AskForReview, isReviewer } from "./ask-for-review.js";
-import { Notifications } from "../../common/notifications.js";
 import {
   pcSecurite,
   finaleEsport,
@@ -26,7 +25,6 @@ import {
   bubbleFoot,
 } from "./ask-for-review.test-utils.js";
 import { InReviewFestivalActivity } from "./in-review-festival-activity.js";
-import { InMemoryNotifications } from "./notifications.inmemory.js";
 import { InMemoryAskForReviewFestivalActivityRepository } from "./festival-activities.inmemory.js";
 import { george, lea } from "../festival-activity.fake.js";
 import { CantAskForReview } from "../../common/review.error.js";
@@ -42,7 +40,6 @@ import {
 
 describe("Festival Activity - ask for review", () => {
   let askForReview: AskForReview;
-  let notifications: InMemoryNotifications<"FA">;
   beforeEach(() => {
     const festivalActivities =
       new InMemoryAskForReviewFestivalActivityRepository([
@@ -60,8 +57,7 @@ describe("Festival Activity - ask for review", () => {
         escapeGame,
         bubbleFoot,
       ]);
-    notifications = new InMemoryNotifications();
-    askForReview = new AskForReview(festivalActivities, notifications);
+    askForReview = new AskForReview(festivalActivities);
   });
   describe("when asking a review for a draft festival activity", () => {
     describe("when draft festival activity has all required fields fulfilled", () => {
@@ -94,32 +90,6 @@ describe("Festival Activity - ask for review", () => {
         expect(inReviewFa.supply).toEqual(pcSecurite.supply);
       });
       describe("reviews", () => {
-        it("should ask review from humain, signa, secu, matos, elec and barrieres,", async () => {
-          const inReviewFa = await askForReview.from(pcSecurite.id, lea);
-
-          const event = { id: inReviewFa.id, name: inReviewFa.general.name };
-          const barrieresNotification = { team: BARRIERES, event };
-
-          expect(notifications.entries).toHaveLength(6);
-          expect(notifications.entries).toContainEqual({
-            team: HUMAIN,
-            event,
-          });
-          expect(notifications.entries).toContainEqual({
-            team: SIGNA,
-            event,
-          });
-          expect(notifications.entries).toContainEqual({ team: SECU, event });
-          expect(notifications.entries).toContainEqual({
-            team: LOG_MATOS,
-            event,
-          });
-          expect(notifications.entries).toContainEqual({
-            team: LOG_ELEC,
-            event,
-          });
-          expect(notifications.entries).toContainEqual(barrieresNotification);
-        });
         it.each`
           team             | status
           ${COMMUNICATION} | ${NOT_ASKING_TO_REVIEW}
@@ -136,32 +106,6 @@ describe("Festival Activity - ask for review", () => {
           expect(inReviewFa.reviews[team]).toBe(status);
         });
         describe("when it will be published (i.e. is public)", () => {
-          it("should also ask review from communication", async () => {
-            const inReviewFa = await askForReview.from(finaleEsport.id, george);
-
-            const event = {
-              id: inReviewFa.id,
-              name: inReviewFa.general.name,
-            };
-            const communicationNotification = { team: COMMUNICATION, event };
-            const humainNotification = { team: HUMAIN, event };
-            const signaNotification = { team: SIGNA, event };
-            const secuNotification = { team: SECU, event };
-            const matosNotification = { team: LOG_MATOS, event };
-            const elecNotification = { team: LOG_ELEC, event };
-            const barrieresNotification = { team: BARRIERES, event };
-
-            expect(notifications.entries).toHaveLength(7);
-            expect(notifications.entries).toContainEqual(
-              communicationNotification,
-            );
-            expect(notifications.entries).toContainEqual(humainNotification);
-            expect(notifications.entries).toContainEqual(signaNotification);
-            expect(notifications.entries).toContainEqual(secuNotification);
-            expect(notifications.entries).toContainEqual(matosNotification);
-            expect(notifications.entries).toContainEqual(elecNotification);
-            expect(notifications.entries).toContainEqual(barrieresNotification);
-          });
           it.each`
             team             | status
             ${COMMUNICATION} | ${REVIEWING}
@@ -183,39 +127,6 @@ describe("Festival Activity - ask for review", () => {
               expect(inReviewFa.reviews[team]).toBe(status);
             },
           );
-        });
-      });
-
-      describe("when festival activity will be published (i.e. is public)", () => {
-        it("should also ask review from communication", async () => {
-          const inReviewFa = await askForReview.from(finaleEsport.id, george);
-          expect(notifications.entries).toHaveLength(7);
-          const event = { id: inReviewFa.id, name: inReviewFa.general.name };
-          expect(notifications.entries).toContainEqual({
-            team: COMMUNICATION,
-            event,
-          });
-          expect(notifications.entries).toContainEqual({
-            team: HUMAIN,
-            event,
-          });
-          expect(notifications.entries).toContainEqual({
-            team: SIGNA,
-            event,
-          });
-          expect(notifications.entries).toContainEqual({ team: SECU, event });
-          expect(notifications.entries).toContainEqual({
-            team: LOG_MATOS,
-            event,
-          });
-          expect(notifications.entries).toContainEqual({
-            team: LOG_ELEC,
-            event,
-          });
-          expect(notifications.entries).toContainEqual({
-            team: BARRIERES,
-            event,
-          });
         });
       });
     });
@@ -353,8 +264,7 @@ describe("Festival Activity - ask for review", () => {
               lea,
             ),
           ]);
-        const notifications = new InMemoryNotifications();
-        askForReview = new AskForReview(festivalActivities, notifications);
+        askForReview = new AskForReview(festivalActivities);
       });
       it("should indicate that festival activity is already under review", async () => {
         expect(
@@ -389,23 +299,6 @@ describe("Festival Activity - ask for review", () => {
               description: "Demande de relecture de la FA",
             },
           ]);
-        });
-        describe("reviews", () => {
-          it(`should ask review from ${rejectors.join(", ")}`, async () => {
-            const inReviewFa = await askForReview.from(activity.id, lea);
-
-            const event = {
-              id: inReviewFa.id,
-              name: inReviewFa.general.name,
-            };
-
-            expect(notifications.entries).toHaveLength(rejectors.length);
-            rejectors
-              .map((team: Reviewer<"FA">) => ({ event, team }))
-              .every((expected: Notifications) =>
-                expect(notifications.entries).toContainEqual(expected),
-              );
-          });
         });
       },
     );

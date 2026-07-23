@@ -1,8 +1,8 @@
 import { type DomainEvent } from "@overbookd/domain-events";
 import { ENROLL_HARD, type Permission } from "@overbookd/permission";
 import { filter, merge, Observable } from "rxjs";
-import { DomainEventService } from "../../domain-event/domain-event.service";
-import { RequestHydratedUser } from "../../authentication-zitadel/request-hydrated-user";
+import { DomainEventService } from "../domain-event/domain-event.service";
+import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
 
 type Identifiers = { teams: string[]; id: number };
 
