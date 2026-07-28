@@ -63,3 +63,4 @@ dist
 .npm/
 .cache/
 .config/
+.local/
