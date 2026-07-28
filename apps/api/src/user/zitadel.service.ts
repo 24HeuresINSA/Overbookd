@@ -6,17 +6,20 @@ import {
 } from "@nestjs/common";
 import { OidcRole } from "@overbookd/oidc";
 import { ApiZitadelUser } from "./entities/zitadel-api-user.entity";
-import { ApiZitadelRoles } from "./entities/zitade-api-roles.entity";
+import { ApiZitadelRoles } from "./entities/zitadel-api-roles.entity";
 import { ApiZitadelUserCreated } from "./entities/zitadel-api-user-created.entity";
-import { DateString, toIsoDate } from "@overbookd/time";
-import { UserMetadata } from "./entities/user-metadata.entity";
+import { OverDate } from "@overbookd/time";
 import { ApiZitadelMetadata } from "./entities/zitadel-api-metadata.entity";
 
 type AboutUser = {
   firstName: string;
   lastName: string;
   phoneNumber: string;
-  dateOfBirth: DateString;
+  dateOfBirth: Date;
+};
+
+type UserMetadataForm = {
+  dateOfBirth: Date;
 };
 
 @Injectable()
@@ -210,21 +213,19 @@ export class ZitadelService {
     return await this.handleZitadelResponse(response);
   }
 
-  async updateMetadata(zitadelId: string, metadata: UserMetadata) {
+  async updateMetadata(zitadelId: string, metadata: UserMetadataForm) {
     const zitadelMetadata = this.buildMetadata(metadata);
-    if (zitadelMetadata.length > 0) {
-      const data = JSON.stringify({ metadata: zitadelMetadata });
-      const response = await fetch(
-        `${this.ZITADEL_BASE_URL}/management/v1/users/${zitadelId}/metadata/_bulk`,
-        {
-          method: "POST",
-          body: data,
-          headers: this.headers,
-        },
-      );
+    const data = JSON.stringify({ metadata: zitadelMetadata });
+    const response = await fetch(
+      `${this.ZITADEL_BASE_URL}/management/v1/users/${zitadelId}/metadata/_bulk`,
+      {
+        method: "POST",
+        body: data,
+        headers: this.headers,
+      },
+    );
 
-      return await this.handleZitadelResponse(response);
-    }
+    return await this.handleZitadelResponse(response);
   }
 
   async addZitadelRoleIfNotExist(
@@ -247,16 +248,14 @@ export class ZitadelService {
     }
   }
 
-  private buildMetadata({ dateOfBirth }: UserMetadata): ApiZitadelMetadata[] {
+  private buildMetadata({
+    dateOfBirth,
+  }: UserMetadataForm): ApiZitadelMetadata[] {
     const metadata = [];
-
-    if (dateOfBirth) {
-      metadata.push({
-        key: "dateOfBirth",
-        value: btoa(toIsoDate(dateOfBirth, { hideTime: true })),
-      });
-    }
-
+    metadata.push({
+      key: "dateOfBirth",
+      value: btoa(OverDate.from(dateOfBirth).dateString),
+    });
     return metadata;
   }
 

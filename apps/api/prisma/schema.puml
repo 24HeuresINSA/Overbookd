@@ -110,7 +110,7 @@ entity "User" as User {
   * lastName : String
   nickname : String
   * email : String
-  * birthDate : DateTime
+  birthDate : DateTime
   * phoneNumber : String
   comment : String
   profilePicture : String
@@ -130,11 +130,6 @@ entity "Preference" as Preference {
   paperPlanning : Boolean
   * favoritePages : String
   * assignment : AssignmentPreference
-}
-
-entity "Notification" as Notification {
-+ userId [PK] : Int 
---
 }
 
 entity "Team" as Team {
@@ -537,7 +532,6 @@ entity "BreakPeriod" as BreakPeriod {
 
 ' Relations
 Preference }o--|| User
-Notification }o--|| User
 UserTeam }o--|| User
 UserTeam }o--|| Team
 MembershipApplication }o--|| User
