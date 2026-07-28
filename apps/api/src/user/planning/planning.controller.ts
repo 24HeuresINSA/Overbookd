@@ -83,6 +83,7 @@ export class PlanningController {
   ): Promise<TaskResponseDto[]> {
     const volunteerId = user.id;
     const format = request.headers.accept;
+    console.log(format);
     try {
       const planning = await this.planning.buildOne(format, volunteerId, after);
       response.setHeader("content-type", format);
@@ -289,8 +290,11 @@ export class PlanningController {
     @Query("after", new ParseDatePipe({ optional: true })) after?: Date,
   ): Promise<TaskResponseDto[]> {
     const format = request.headers.accept;
+    console.log(format);
     try {
+      console.log("before");
       const planning = await this.planning.buildOne(format, volunteerId, after);
+      console.log("after");
       response.setHeader("content-type", format);
       response.send(planning);
       return;

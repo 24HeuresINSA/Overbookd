@@ -18,14 +18,14 @@ export type UserWithTeams = User & {
 
 export type Profile = UserName & {
   email: string;
-  birthDate?: Date | null;
+  birthDate: Date;
   phoneNumber: string;
   comment: string | null;
 };
 
 export type UserPersonalData = User & {
   email: string;
-  birthDate?: Date | null;
+  birthDate: Date;
   phoneNumber: string;
   comment?: string | null;
   charisma: number;

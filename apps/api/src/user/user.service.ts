@@ -63,17 +63,21 @@ export class UserService {
       (await this.getUserByZitadelId(user.zitadelId))?.id ??
       (await this.getUserByEmail(user.email))?.id;
 
-    const birthDate = user.birthDate ? { birthDate: user.birthDate } : {};
     const data = {
       email: user.email,
       firstName: user.givenName,
       lastName: user.familyName,
       phoneNumber: user.phoneNumber,
       zitadelId: user.zitadelId,
-      ...birthDate,
+      birthDate: user.birthDate,
     };
 
     if (!userId) {
+      if (!user.birthDate || !user.phoneNumber) {
+        throw new UnauthorizedException(
+          "Les données de l'utilisateur sont incomplètes. Veuillez contacter un administrateur.",
+        );
+      }
       const newUser = await this.prisma.user.create({
         data,
         select: { id: true },
@@ -85,13 +89,18 @@ export class UserService {
     const updatedUser = await this.prisma.user.update({
       where: { id: userId },
       data,
-      select: { birthDate: true },
+      select: { birthDate: true, phoneNumber: true },
     });
     await this.updateAdminTeamFromZitadel(userId, user.zitadelRoles);
 
-    if (!user.birthDate && updatedUser.birthDate) {
+    if (!user.birthDate) {
       await this.zitadelService.updateMetadata(user.zitadelId, {
         dateOfBirth: updatedUser.birthDate,
+      });
+    }
+    if (!user.phoneNumber) {
+      await this.zitadelService.updateZitadelUser(user.zitadelId, {
+        phoneNumber: updatedUser.phoneNumber,
       });
     }
   }

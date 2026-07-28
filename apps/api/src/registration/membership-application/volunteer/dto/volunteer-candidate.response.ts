@@ -62,10 +62,10 @@ export class VolunteerCandidateResponseDto implements VolunteerCandidate {
   availabilities: IProvidePeriod[];
 
   @ApiProperty({
-    required: false,
+    required: true,
     type: String,
   })
-  birthDate?: Date;
+  birthDate: Date;
 
   @ApiProperty({
     required: false,

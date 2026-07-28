@@ -11,10 +11,15 @@ import { ApiZitadelUserCreated } from "./entities/zitadel-api-user-created.entit
 import { OverDate } from "@overbookd/time";
 import { ApiZitadelMetadata } from "./entities/zitadel-api-metadata.entity";
 
-type AboutUser = {
+type UpdateUserProfileForm = {
   firstName: string;
   lastName: string;
   phoneNumber: string;
+};
+
+type CreateUserForm = UpdateUserProfileForm & {
+  email: string;
+  password: string;
   dateOfBirth: Date;
 };
 
@@ -152,18 +157,18 @@ export class ZitadelService {
 
   async updateZitadelUser(
     zitadelId: string,
-    dto: AboutUser,
+    form: Partial<UpdateUserProfileForm>,
   ): Promise<ApiZitadelUserCreated> {
-    const reqBody = JSON.stringify({
-      profile: {
-        givenName: dto.firstName,
-        familyName: dto.lastName,
-      },
-      phone: {
-        phone: dto.phoneNumber,
-        isVerified: true,
-      },
-    });
+    const shouldUpdateProfile = form.firstName || form.lastName;
+    const givenName = form.firstName ? { givenName: form.firstName } : {};
+    const familyName = form.lastName ? { familyName: form.lastName } : {};
+    const profile = shouldUpdateProfile
+      ? { profile: { ...givenName, ...familyName } }
+      : {};
+    const phone = form.phoneNumber
+      ? { phone: { phone: form.phoneNumber, isVerified: true } }
+      : {};
+    const reqBody = JSON.stringify({ ...profile, ...phone });
 
     const response = await fetch(
       `${this.ZITADEL_BASE_URL}/v2/users/human/${zitadelId}`,
@@ -177,8 +182,8 @@ export class ZitadelService {
     return await this.handleZitadelResponse(response);
   }
 
-  async createZidatelUser(
-    user: AboutUser & { password: string; email: string },
+  async createZitadelUser(
+    user: CreateUserForm,
   ): Promise<ApiZitadelUserCreated> {
     const metadata = this.buildMetadata({
       dateOfBirth: user.dateOfBirth,

@@ -30,8 +30,8 @@ export class RequestHydratedUser {
   readonly email: string;
   readonly familyName: string;
   readonly givenName: string;
-  readonly phoneNumber: string;
-  readonly birthDate: Date | null;
+  readonly phoneNumber?: string;
+  readonly birthDate?: Date;
   readonly zitadelRoles: OidcRole[];
   readonly id?: number;
   readonly teams?: string[];
@@ -62,7 +62,7 @@ export class RequestHydratedUser {
       phoneNumber: user.phone_number,
       zitadelId: user.sub,
       zitadelRoles: userRoles,
-      birthDate: Number.isNaN(birthDate.getTime()) ? null : birthDate,
+      birthDate: Number.isNaN(birthDate.getTime()) ? undefined : birthDate,
       ...user.overbookdData,
     });
   }

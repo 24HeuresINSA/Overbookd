@@ -43,9 +43,8 @@ export class UserPersonalDataResponseDto implements UserPersonalData {
     name: "birthDate",
     description: "User date of birth",
     type: Date,
-    required: false,
   })
-  birthDate: Date | null;
+  birthDate: Date;
 
   @ApiProperty({
     name: "phoneNumber",

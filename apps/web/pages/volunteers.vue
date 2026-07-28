@@ -175,9 +175,7 @@ const exportCSV = async () => {
     const teams = volunteer.teams
       .filter((team) => team !== PERSONNE)
       .join(", ");
-    const birthDate = volunteer.birthDate
-      ? formatDate(volunteer.birthDate)
-      : "";
+    const birthDate = formatDate(volunteer.birthDate);
     const phoneNumber = formatPhoneNumber(volunteer.phoneNumber);
     return {
       firstName: volunteer.firstName,

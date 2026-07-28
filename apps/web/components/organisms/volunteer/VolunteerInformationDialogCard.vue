@@ -279,7 +279,7 @@ const assignmentPreferenceLabel = computed<string>(() => {
 
 const updateVolunteerInformations = async () => {
   nickname.value = props.volunteer.nickname ?? null;
-  birthDay.value = formatLocalDate(props.volunteer.birthDate ?? new Date());
+  birthDay.value = formatLocalDate(props.volunteer.birthDate);
   phoneNumber.value = props.volunteer.phoneNumber ?? "";
   email.value = props.volunteer.email ?? "";
   note.value = props.volunteer.note ?? null;

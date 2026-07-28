@@ -34,7 +34,7 @@ export type ConnectedZitadelUser = {
   /**
    * The user's phone number.
    */
-  phone_number: string;
+  phone_number: string | undefined;
 
   /**
    * Custom field with user roles
