@@ -8,7 +8,7 @@ import { OidcRole } from "@overbookd/oidc";
 import { ApiZitadelUser } from "./entities/zitadel-api-user.entity";
 import { ApiZitadelRoles } from "./entities/zitadel-api-roles.entity";
 import { ApiZitadelUserCreated } from "./entities/zitadel-api-user-created.entity";
-import { isDateString, OverDate } from "@overbookd/time";
+import { OverDate } from "@overbookd/time";
 import { ApiZitadelMetadata } from "./entities/zitadel-api-metadata.entity";
 
 type AboutUser = {
@@ -252,18 +252,10 @@ export class ZitadelService {
     dateOfBirth,
   }: UserMetadataForm): ApiZitadelMetadata[] {
     const metadata = [];
-
-    if (dateOfBirth) {
-      const isAlreadyDateString = isDateString(dateOfBirth.toString());
-      const dateString = isAlreadyDateString
-        ? dateOfBirth.toString()
-        : OverDate.fromLocal(new Date(dateOfBirth)).dateString;
-      metadata.push({
-        key: "dateOfBirth",
-        value: btoa(dateString),
-      });
-    }
-
+    metadata.push({
+      key: "dateOfBirth",
+      value: btoa(OverDate.from(dateOfBirth).dateString),
+    });
     return metadata;
   }
 
