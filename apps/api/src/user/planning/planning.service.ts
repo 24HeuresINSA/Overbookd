@@ -62,14 +62,11 @@ export class PlanningService {
     after?: Date,
     plainText: boolean = false,
   ) {
-    console.log(1);
     const tasks = await this.useCases.planning.generateForVolunteer(
       volunteerId,
       after,
     );
-    console.log(2);
     const renderStrategy = this.useCases.renderStrategy.get(format, plainText);
-    console.log(3);
     return renderStrategy.render(tasks, volunteerId);
   }
 
