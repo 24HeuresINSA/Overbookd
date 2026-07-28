@@ -110,7 +110,9 @@ const props = defineProps({
 });
 
 const search = defineModel<string>("search", { default: "" });
-const requiredTeams = defineModel<Team[]>("requiredTeams", { default: [] });
+const requiredTeams = defineModel<Team[]>("requiredTeams", {
+  default: () => [],
+});
 const inChargeTeam = defineModel<Team | null>("inChargeTeam");
 const category = defineModel<DisplayableCategory | TaskPriority | undefined>(
   "category",

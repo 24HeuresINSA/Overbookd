@@ -101,7 +101,7 @@ import {
 } from "~/utils/calendar/calendar.organizer";
 
 const dayModel = defineModel<Date>({
-  default: OverDate.now().date,
+  default: () => OverDate.now().date,
 });
 const day = computed<DayPresenter>({
   get: () => new DayPresenter(OverDate.fromLocal(dayModel.value)),

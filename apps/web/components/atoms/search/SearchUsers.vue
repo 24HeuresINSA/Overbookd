@@ -27,7 +27,7 @@ import { slugifiedFilter } from "~/utils/search/search.utils";
 const userStore = useUserStore();
 userStore.fetchVolunteers();
 
-const users = defineModel<User[]>({ default: [] });
+const users = defineModel<User[]>({ default: () => [] });
 
 const props = defineProps({
   label: {

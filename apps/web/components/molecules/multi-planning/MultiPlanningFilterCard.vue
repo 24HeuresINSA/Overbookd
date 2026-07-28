@@ -50,7 +50,7 @@ import type { User } from "@overbookd/user";
 
 const userStore = useUserStore();
 
-const volunteers = defineModel<User[]>("volunteers", { default: [] });
+const volunteers = defineModel<User[]>("volunteers", { default: () => [] });
 
 defineProps({
   loading: {

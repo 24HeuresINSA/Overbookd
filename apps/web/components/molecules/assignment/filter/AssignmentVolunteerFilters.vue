@@ -108,8 +108,12 @@ defineProps({
 });
 
 const search = defineModel<string>("search", { default: "" });
-const includedTeams = defineModel<Team[]>("includedTeams", { default: [] });
-const excludedTeams = defineModel<Team[]>("excludedTeams", { default: [] });
+const includedTeams = defineModel<Team[]>("includedTeams", {
+  default: () => [],
+});
+const excludedTeams = defineModel<Team[]>("excludedTeams", {
+  default: () => [],
+});
 const sort = defineModel<number>("sort", { default: Sort.NONE });
 const friendFilter = defineModel<FriendFilterKey | undefined>("friendFilter", {
   default: undefined,
