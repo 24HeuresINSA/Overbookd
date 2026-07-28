@@ -54,7 +54,7 @@ import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-
 @Injectable()
 export class UserService {
   constructor(
-    private prisma: PrismaService,
+    private readonly prisma: PrismaService,
     private readonly zitadelService: ZitadelService,
   ) {}
 
