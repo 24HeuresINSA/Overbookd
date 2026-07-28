@@ -132,11 +132,6 @@ entity "Preference" as Preference {
   * assignment : AssignmentPreference
 }
 
-entity "Notification" as Notification {
-+ userId [PK] : Int 
---
-}
-
 entity "Team" as Team {
 + code [PK] : String 
 --
@@ -537,7 +532,6 @@ entity "BreakPeriod" as BreakPeriod {
 
 ' Relations
 Preference }o--|| User
-Notification }o--|| User
 UserTeam }o--|| User
 UserTeam }o--|| Team
 MembershipApplication }o--|| User
