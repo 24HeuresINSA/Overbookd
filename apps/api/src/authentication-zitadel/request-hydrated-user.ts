@@ -53,7 +53,7 @@ export class RequestHydratedUser {
     });
 
     const userRoles = Object.keys(userZitadelRoles) as OidcRole[];
-    const birthDate = new Date(userMetadataDecoded["dateOfBirth"]);
+    const birthDate = new Date(userMetadataDecoded.dateOfBirth);
 
     return new RequestHydratedUser({
       email: user.email,
