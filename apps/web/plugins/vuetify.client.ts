@@ -74,7 +74,10 @@ export default defineNuxtPlugin((nuxtApp) => {
         },
       },
       VField: { style: commonFieldBorderRadiusStyle },
-      VBtn: { style: commonFieldBorderRadiusStyle },
+      VBtn: {
+        class: "text-uppercase",
+        style: commonFieldBorderRadiusStyle,
+      },
       VBtnToggle: { style: commonFieldBorderRadiusStyle },
       VTextField: commonFieldDefaultSettings,
       VSelect: commonFieldDefaultSettings,
