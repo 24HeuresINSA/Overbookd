@@ -26,5 +26,6 @@ export { SettleAlerting } from "./settle-alerting/settle-alerting.js";
 export type {
   Permissions,
   Contributions,
+  IDefineContribution,
 } from "./settle-alerting/settle-alerting.js";
 export { SettleAlert } from "./settle-alerting/settle-alert.js";

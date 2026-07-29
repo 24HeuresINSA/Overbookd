@@ -23,7 +23,7 @@ export class PrismaViewFestivalTasks implements FestivalTasksForView {
     return tasks.map((task) => FestivalTaskBuilder.fromDatabase(task).preview);
   }
 
-  async one(id: number): Promise<FestivalTaskWithoutConflicts> {
+  async one(id: number): Promise<FestivalTaskWithoutConflicts | null> {
     const task = await this.prisma.festivalTask.findUnique({
       where: buildFestivalTaskCondition(id),
       select: SELECT_FESTIVAL_TASK,
