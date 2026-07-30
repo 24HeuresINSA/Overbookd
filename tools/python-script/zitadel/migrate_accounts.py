@@ -99,9 +99,6 @@ def build_metadata(date_of_birth: str):
 
 
 def validate_bcrypt_hash(password_hash: str):
-    if not password_hash:
-        raise ValueError("Hash bcrypt vide")
-
     if not BCRYPT_REGEX.match(password_hash):
         raise ValueError(
             "Hash bcrypt invalide. Format attendu : $2a$..., $2b$... ou $2y$..."
