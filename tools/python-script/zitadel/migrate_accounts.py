@@ -78,11 +78,8 @@ def normalize_birth_date(value: str) -> str:
 def normalize_phone_number(phone: str) -> str:
     phone = re.sub(r"\s+", "", phone.strip())
 
-    if phone.startswith("+33"):
+    if phone.startswith("+"):
         return phone
-
-    if phone.startswith("0033"):
-        return "+" + phone[2:]
 
     if phone.startswith("0"):
         return "+33" + phone[1:]
