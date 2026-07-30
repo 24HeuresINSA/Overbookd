@@ -212,12 +212,14 @@ def create_user(row: dict):
     email = get_field(row, "email").lower()
     first_name = get_field(row, "first_name")
     last_name = get_field(row, "last_name")
-    nick_name = get_field(row, "nickname")
+    nickname = get_field(row, "nickname", required=False)
     phone_number = get_field(row, "phone_number")
     birth_date = get_field(row, "birth_date")
     password_hash = get_field(row, "password")
 
     validate_bcrypt_hash(password_hash)
+
+    nickname_body = {"nickName": nickname} if nickname else {}
 
     payload = {
         "organizationId": ZITADEL_ORGANIZATION_ID,
@@ -238,7 +240,7 @@ def create_user(row: dict):
             "profile": {
                 "givenName": first_name,
                 "familyName": last_name,
-                "nickName": nick_name,
+                **nickname_body,
                 "preferredLanguage": "fr",
             },
             "metadata": build_metadata(birth_date),
