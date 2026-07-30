@@ -297,6 +297,10 @@ def main():
 
         for row_number, row in enumerate(reader, start=2):
             email = row.get("email", "").strip().lower() or "<email inconnu>"
+            is_deleted = row.get("is_deleted") == "1"
+            if is_deleted:
+                print(f"[SKIP] ligne {row_number} - {email} supprimé")
+                continue
 
             try:
                 existing_user = get_user_by_email(email)
