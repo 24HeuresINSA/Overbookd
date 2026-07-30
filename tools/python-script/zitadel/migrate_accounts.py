@@ -10,14 +10,15 @@ from base64 import b64encode
 
 # Ce script permet de migrer les utilisateurs de la base de données Overbookd vers ZITADEL.
 # Il ajoute également le rôle "overbookd_user" à chaque utilisateur créé ou existant.
-# Si un utilisateur avec le même email existe déjà dans ZITADEL, 
-# le script ne le recrée pas mais vérifie que le rôle "overbookd_user" est bien présent.
+# Si un utilisateur avec le même email existe déjà dans ZITADEL,
+# le script ne le recrée pas mais vérifie que le rôle "overbookd_user" est bien présent
+# et ajoute la date de naissance et le numéro de téléphone si ces informations sont manquantes.
 
 # =====================================================
 # CONSIGNES
 # =====================================================
 
-# Avant d'exécuter ce script, tu dois compléter les variables 
+# Avant d'exécuter ce script, tu dois compléter les variables
 # ZITADEL_API_BEARER_TOKEN et ZITADEL_OVERBOOKD_PROJECT_ID.
 
 # Tu dois également exporter la table "user" de la base de données
@@ -28,16 +29,15 @@ from base64 import b64encode
 # =====================================================
 
 ZITADEL_BASE_URL = "https://zitadel.24heures.org"
-ZITADEL_API_BEARER_TOKEN = "xxxxxxxxxxxxxxxx"
+ZITADEL_API_BEARER_TOKEN = "xxxxxxxxxxxxxxxxx"
 ZITADEL_ORGANIZATION_ID = "277560954105954307"
 
-ZITADEL_OVERBOOKD_PROJECT_ID = "xxxxxxxxxxxxxxxx"
+ZITADEL_OVERBOOKD_PROJECT_ID = "xxxxxxxxxxxxxxxxx"
 OVERBOOKD_ROLE = "overbookd_user"
 
 CSV_FILE = "user.csv"
 
-SEARCH_USERS_ENDPOINT = "/v2/users"
-CREATE_USER_ENDPOINT = "/v2/users/new"
+DATE_OF_BIRTH_METADATA_KEY = "dateOfBirth"
 
 # =====================================================
 
@@ -92,7 +92,7 @@ def build_metadata(date_of_birth: str):
 
     return [
         {
-            "key": "dateOfBirth",
+            "key": DATE_OF_BIRTH_METADATA_KEY,
             "value": b64encode(normalized_date.encode("utf-8")).decode("utf-8"),
         }
     ]
@@ -139,7 +139,7 @@ def get_user_by_email(email: str):
     }
 
     response = requests.post(
-        f"{ZITADEL_BASE_URL}{SEARCH_USERS_ENDPOINT}",
+        f"{ZITADEL_BASE_URL}/v2/users",
         headers=HEADERS,
         json=payload,
         timeout=30,
@@ -160,14 +160,10 @@ def get_user_roles(user_id: str):
         },
         "queries": [
             {
-                "projectIdQuery": {
-                    "projectId": ZITADEL_OVERBOOKD_PROJECT_ID,
-                }
+                "projectIdQuery": {"projectId": ZITADEL_OVERBOOKD_PROJECT_ID}
             },
             {
-                "userIdQuery": {
-                    "userId": user_id,
-                }
+                "userIdQuery": {"userId": user_id}
             },
         ],
     }
@@ -185,12 +181,22 @@ def get_user_roles(user_id: str):
     return result[0] if result else None
 
 
-def ensure_overbookd_role(user_id: str):
+def get_user_metadata(user_id: str):
+    response = requests.get(
+        f"{ZITADEL_BASE_URL}/management/v1/users/{user_id}/metadata/{DATE_OF_BIRTH_METADATA_KEY}",
+        headers=HEADERS,
+        timeout=30,
+    )
+
+    return handle_zitadel_response(response)
+
+
+def ensure_overbookd_role(user_id: str) -> str:
     grant = get_user_roles(user_id)
 
     if not grant:
         add_role_to_user(user_id, OVERBOOKD_ROLE)
-        return
+        return "rôle ajouté"
 
     current_roles = grant.get("roleKeys", [])
 
@@ -200,6 +206,9 @@ def ensure_overbookd_role(user_id: str):
             grant["id"],
             current_roles + [OVERBOOKD_ROLE],
         )
+        return "rôle ajouté"
+
+    return "rôle OK"
 
 
 def create_user(row: dict):
@@ -223,6 +232,7 @@ def create_user(row: dict):
             },
             "email": {
                 "email": email,
+                "isVerified": True,
             },
             "phone": {
                 "phone": normalize_phone_number(phone_number),
@@ -239,7 +249,7 @@ def create_user(row: dict):
     }
 
     response = requests.post(
-        f"{ZITADEL_BASE_URL}{CREATE_USER_ENDPOINT}",
+        f"{ZITADEL_BASE_URL}/v2/users/new",
         headers=HEADERS,
         json=payload,
         timeout=30,
@@ -284,6 +294,77 @@ def update_roles(user_id: str, grant_id: str, roles: list[str]):
     return handle_zitadel_response(response)
 
 
+def update_missing_birthdate(user_id: str, birth_date: str) -> str:
+    try:
+        metadata = get_user_metadata(user_id)
+
+        if metadata.get("metadata", {}).get("key") == DATE_OF_BIRTH_METADATA_KEY:
+            return "date de naissance OK"
+
+    except RuntimeError as exc:
+        if "404" not in str(exc):
+            raise
+
+    payload = {
+        "metadata": build_metadata(birth_date)
+    }
+
+    response = requests.post(
+        f"{ZITADEL_BASE_URL}/management/v1/users/{user_id}/metadata/_bulk",
+        headers=HEADERS,
+        json=payload,
+        timeout=30,
+    )
+
+    handle_zitadel_response(response)
+
+    return "date de naissance ajoutée"
+
+
+def update_missing_phone_number(user: dict, phone_number: str):
+    has_phone = (
+        user.get("human", {})
+        .get("phone", {})
+        .get("phone")
+    )
+    if has_phone:
+        return "téléphone OK"
+
+    user_id = user["userId"]
+    payload = {
+        "phone": {
+            "phone": normalize_phone_number(phone_number),
+            "isVerified": True,
+        }
+    }
+
+    response = requests.put(
+        f"{ZITADEL_BASE_URL}/v2/users/human/{user_id}",
+        headers=HEADERS,
+        json=payload,
+        timeout=30,
+    )
+
+    handle_zitadel_response(response)
+    return "téléphone ajouté"
+
+
+def update_missing_user_data(user: dict, row: dict):
+    user_id = user["userId"]
+
+    phone_number = normalize_phone_number(
+        get_field(row, "phone_number")
+    )
+    birth_date = get_field(row, "birth_date")
+
+    actions = []
+
+    actions.append(update_missing_phone_number(user, phone_number))
+    actions.append(update_missing_birthdate(user_id, birth_date))
+
+    return actions
+
+
 def main():
     created = 0
     existing = 0
@@ -303,8 +384,15 @@ def main():
                 existing_user = get_user_by_email(email)
 
                 if existing_user:
-                    ensure_overbookd_role(existing_user["userId"])
-                    print(f"[SKIP] ligne {row_number} - {email} déjà présent (rôle vérifié)")
+                    actions = []
+                    actions.append(ensure_overbookd_role(
+                        existing_user["userId"]))
+                    actions.extend(
+                        update_missing_user_data(existing_user, row))
+                    print(
+                        f"[SKIP] ligne {row_number} - {email} déjà présent | "
+                        + " | ".join(actions)
+                    )
                     existing += 1
                     continue
 
