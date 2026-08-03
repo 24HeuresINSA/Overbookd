@@ -190,6 +190,7 @@ import {
 } from "@overbookd/permission";
 import {
   type User,
+  type UserPersonalData,
   type UserUpdateForm,
   type UserWithTeams,
   buildUserName,
@@ -205,7 +206,6 @@ import {
   minDate,
   required,
 } from "~/utils/rules/input.rules";
-import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import { formatLocalDate } from "@overbookd/time";
 import { HARD, PERSONNE } from "@overbookd/team-constants";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
@@ -221,7 +221,7 @@ const userStore = useUserStore();
 
 const props = defineProps({
   volunteer: {
-    type: Object as PropType<UserDataWithPotentialyProfilePicture>,
+    type: Object as PropType<UserPersonalData>,
     required: true,
   },
   hideDeleteButton: {
@@ -277,9 +277,6 @@ const updateVolunteerInformations = async () => {
   email.value = props.volunteer.email ?? "";
   note.value = props.volunteer.note ?? null;
   await userStore.fetchSelectedUserFriends();
-
-  if (props.volunteer.profilePictureBlob) return;
-  await userStore.setSelectedUserProfilePicture();
 };
 
 watch(props.volunteer, async () => await updateVolunteerInformations(), {
@@ -332,7 +329,6 @@ const updatedVolunteer = computed<UserUpdateForm>(() => {
   const trimmedNote = note.value?.trim() || null;
   const trimmedComment = props.volunteer.comment?.trim() || null;
   return {
-    ...props.volunteer,
     nickname: trimmedNickname,
     birthDate: new Date(birthDay.value),
     phoneNumber: phoneNumber.value,

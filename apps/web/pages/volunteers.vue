@@ -71,7 +71,6 @@ import {
   type VolunteerFilters,
 } from "~/utils/user/volunteer.filter";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
-import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import { downloadCsv } from "~/utils/file/download.utils";
 import { formatDate } from "@overbookd/time";
 import { PERSONNE } from "@overbookd/team-constants";
@@ -84,6 +83,7 @@ import {
 } from "~/utils/user/volunteer.display";
 import { CSVBuilder } from "@overbookd/csv";
 import { formatPhoneNumber } from "@overbookd/registration";
+import type { UserPersonalData } from "@overbookd/user";
 
 useHead({ title: "Liste des bénévoles" });
 
@@ -96,9 +96,7 @@ const canAssignVolunteer = computed<boolean>(() =>
   myStore.can(AFFECT_VOLUNTEER),
 );
 
-const volunteers = computed<UserDataWithPotentialyProfilePicture[]>(
-  () => userStore.volunteers,
-);
+const volunteers = computed<UserPersonalData[]>(() => userStore.volunteers);
 const allVolunteersLoading = ref<boolean>(volunteers.value.length === 0);
 userStore.fetchVolunteers().then(() => (allVolunteersLoading.value = false));
 
@@ -126,22 +124,20 @@ onMounted(() => {
   fetchAssignmentStatsIfNeeded();
 });
 
-const searchableVolunteers = computed<
-  Searchable<UserDataWithPotentialyProfilePicture>[]
->(() => volunteers.value.map(toSearchable));
-
-const filteredVolunteers = computed<UserDataWithPotentialyProfilePicture[]>(
-  () => {
-    const { search, teams, excludedTeams } = filters.value;
-    return searchableVolunteers.value.filter((volunteer) => {
-      return (
-        keepMembersOf(teams ?? [])(volunteer) &&
-        excludeMembersOf(excludedTeams ?? [])(volunteer) &&
-        keepMatchingSearchCriteria(search ?? "")(volunteer)
-      );
-    });
-  },
+const searchableVolunteers = computed<Searchable<UserPersonalData>[]>(() =>
+  volunteers.value.map(toSearchable),
 );
+
+const filteredVolunteers = computed<UserPersonalData[]>(() => {
+  const { search, teams, excludedTeams } = filters.value;
+  return searchableVolunteers.value.filter((volunteer) => {
+    return (
+      keepMembersOf(teams ?? [])(volunteer) &&
+      excludeMembersOf(excludedTeams ?? [])(volunteer) &&
+      keepMatchingSearchCriteria(search ?? "")(volunteer)
+    );
+  });
+});
 
 const addTeamInFilters = (team: Team) => {
   const currentTeams = filters.value.teams ?? [];
@@ -156,9 +152,7 @@ const addTeamInFilters = (team: Team) => {
 const selectedVolunteer = computed(() => userStore.selectedUser);
 const isVolunteerInfoDialogOpen = ref<boolean>(false);
 
-const openVolunteerInfoDialog = (
-  volunteer: UserDataWithPotentialyProfilePicture,
-) => {
+const openVolunteerInfoDialog = (volunteer: UserPersonalData) => {
   if (!myStore.can(VIEW_VOLUNTEER_DETAILS)) return;
   userStore.setSelectedUser(volunteer);
   if (canAssignVolunteer.value) {

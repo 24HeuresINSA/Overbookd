@@ -4,10 +4,6 @@ import {
   castUserPersonalDataWithDate,
 } from "~/utils/http/cast-date/user.utils";
 import type {
-  MyUserInformationWithPotentialyProfilePicture,
-  UserDataWithPotentialyProfilePicture,
-} from "~/utils/user/user-information";
-import type {
   User,
   UserPersonalData,
   UserUpdateForm,
@@ -18,10 +14,10 @@ import { UserRepository } from "~/repositories/user.repository";
 import { AssignmentsRepository } from "~/repositories/assignment/assignments.repository";
 
 type State = {
-  selectedUser?: UserDataWithPotentialyProfilePicture;
+  selectedUser?: UserPersonalData;
   selectedUserFriends: UserWithTeams[];
   personalAccountConsumers: Consumer[];
-  volunteers: UserDataWithPotentialyProfilePicture[];
+  volunteers: UserPersonalData[];
   volunteersWithAssignmentStats: VolunteerWithAssignmentStats[];
   adherents: User[];
   potentialFriends: User[];
@@ -198,37 +194,7 @@ export const useUserStore = defineStore("user", {
       this.selectedUser = castUserPersonalDataWithDate(res);
     },
 
-    _getProfilePicture(
-      user:
-        | MyUserInformationWithPotentialyProfilePicture
-        | UserDataWithPotentialyProfilePicture,
-    ) {
-      if (!user.profilePicture) return undefined;
-      if (user.profilePictureBlob) return user.profilePictureBlob;
-
-      return UserRepository.getProfilePicture(user.id);
-    },
-
-    async setSelectedUserProfilePicture() {
-      if (!this.selectedUser) return;
-      const profilePictureBlob = await this._getProfilePicture(
-        this.selectedUser,
-      );
-      if (profilePictureBlob instanceof Error) return;
-
-      this.selectedUser = { ...this.selectedUser, profilePictureBlob };
-      this._updateVolunteerFromList(this.selectedUser);
-    },
-
-    async setProfilePicture(user: UserPersonalData) {
-      const profilePictureBlob = await this._getProfilePicture(user);
-      if (profilePictureBlob instanceof Error) return;
-
-      const updated = { ...user, profilePictureBlob };
-      this._updateVolunteerFromList(updated);
-    },
-
-    _updateVolunteerFromList(volunteer: UserDataWithPotentialyProfilePicture) {
+    _updateVolunteerFromList(volunteer: UserPersonalData) {
       this.volunteers = this.volunteers.map((v) =>
         v.id === volunteer.id ? reactive(volunteer) : v,
       );

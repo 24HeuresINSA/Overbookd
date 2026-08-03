@@ -1,9 +1,9 @@
 <template>
   <img
-    v-if="hasProfilePictureBlob"
+    v-if="user.profilePicture"
     class="profile-picture__photo"
     :class="size"
-    :src="user.profilePictureBlob"
+    :src="user.profilePicture"
     alt="Photo de profil"
   />
   <v-icon
@@ -16,18 +16,16 @@
 </template>
 
 <script lang="ts" setup>
-import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
-
-const userStore = useUserStore();
+import type { UserPersonalData } from "@overbookd/user";
 
 const _SMALL = "small";
 const _MEDIUM = "medium";
 const _LARGE = "large";
 type Size = typeof _SMALL | typeof _MEDIUM | typeof _LARGE;
 
-const props = defineProps({
+defineProps({
   user: {
-    type: Object as PropType<UserDataWithPotentialyProfilePicture>,
+    type: Object as PropType<UserPersonalData>,
     required: true,
   },
   size: {
@@ -35,22 +33,6 @@ const props = defineProps({
     default: "medium",
   },
 });
-
-const hasProfilePicture = computed<boolean>(
-  () => props.user.profilePicture !== null,
-);
-const hasProfilePictureBlob = computed<boolean>(
-  () => props.user.profilePictureBlob !== undefined,
-);
-
-watch(
-  () => props.user.profilePictureBlob,
-  () => {
-    if (!hasProfilePicture.value || hasProfilePictureBlob.value) return;
-    userStore.setProfilePicture(props.user);
-  },
-  { immediate: true },
-);
 </script>
 
 <style lang="scss" scoped>

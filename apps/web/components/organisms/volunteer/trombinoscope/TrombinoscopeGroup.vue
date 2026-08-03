@@ -20,12 +20,12 @@
 
 <script lang="ts" setup>
 import type { Team } from "@overbookd/team";
-import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
+import type { UserPersonalData } from "@overbookd/user";
 
 defineProps({
   volunteers: {
     required: true,
-    type: Array as PropType<UserDataWithPotentialyProfilePicture[]>,
+    type: Array as PropType<UserPersonalData[]>,
   },
   heading: {
     required: true,
@@ -35,9 +35,8 @@ defineProps({
 
 const emit = defineEmits(["click:team", "click:volunteer"]);
 const propagateClickedTeam = (team: Team) => emit("click:team", team);
-const propagateClickedVolunteer = (
-  volunteer: UserDataWithPotentialyProfilePicture,
-) => emit("click:volunteer", volunteer);
+const propagateClickedVolunteer = (volunteer: UserPersonalData) =>
+  emit("click:volunteer", volunteer);
 </script>
 
 <style lang="scss" scoped>

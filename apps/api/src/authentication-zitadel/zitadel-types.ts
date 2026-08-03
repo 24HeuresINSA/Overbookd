@@ -37,6 +37,11 @@ export type ConnectedZitadelUser = {
   phone_number: string | undefined;
 
   /**
+   * The user's profile picture.
+   */
+  picture: string | undefined;
+
+  /**
    * Custom field with user roles
    */
   zitadelRoles: OverbookdOidcRole[];

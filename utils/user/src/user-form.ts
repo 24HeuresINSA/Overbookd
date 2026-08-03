@@ -6,6 +6,5 @@ export type UserUpdateForm = {
   birthDate?: Date;
   phoneNumber?: string;
   comment?: string | null;
-  profilePicture?: string;
   note?: string | null;
 };

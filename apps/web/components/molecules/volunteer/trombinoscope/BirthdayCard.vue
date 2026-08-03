@@ -1,5 +1,9 @@
 <template>
-  <v-card class="birthday-card" color="primary">
+  <v-card
+    class="birthday-card"
+    color="primary"
+    @click="propagateClickedVolunteer"
+  >
     <v-card-title class="birthday-card__heading">
       <ProfilePicture size="large" :user="volunteer" />
       <p>Joyeux anniv 🎂</p>
@@ -9,15 +13,22 @@
 </template>
 
 <script lang="ts" setup>
-import { buildUserNameWithNickname } from "@overbookd/user";
-import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
+import {
+  buildUserNameWithNickname,
+  type UserPersonalData,
+} from "@overbookd/user";
 
-defineProps({
+const { volunteer } = defineProps({
   volunteer: {
-    type: Object as PropType<UserDataWithPotentialyProfilePicture>,
+    type: Object as PropType<UserPersonalData>,
     required: true,
   },
 });
+
+const emit = defineEmits(["click"]);
+const propagateClickedVolunteer = () => {
+  emit("click", volunteer);
+};
 </script>
 
 <style lang="scss" scoped>

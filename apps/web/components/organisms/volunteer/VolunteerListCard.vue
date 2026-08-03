@@ -60,7 +60,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import {
   type UserPersonalData,
   buildUserNameWithNickname,
@@ -106,7 +105,7 @@ const isMobile = computed<boolean>(() => layoutStore.isMobile);
 const emit = defineEmits(["click:volunteer", "click:team"]);
 const propagateClickedVolunteer = (
   _: MouseEvent,
-  { item }: { item: UserDataWithPotentialyProfilePicture },
+  { item }: { item: UserPersonalData },
 ) => emit("click:volunteer", { ...item });
 const propagateClickedTeam = (team: Team) => emit("click:team", team);
 

@@ -28,6 +28,7 @@ export type UserPersonalData = User & {
   birthDate: Date;
   phoneNumber: string;
   comment?: string | null;
+  profilePicture?: string | null;
   charisma: number;
   teams: string[];
   note?: string | null;

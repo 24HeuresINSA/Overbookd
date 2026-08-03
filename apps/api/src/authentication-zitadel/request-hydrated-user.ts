@@ -10,13 +10,14 @@ import { RawRequestUserData } from "./guards/zitadel.auth.guard";
 
 type ZitadelUserData = Omit<
   ConnectedZitadelUser,
-  "given_name" | "family_name" | "phone_number" | "sub"
+  "given_name" | "family_name" | "phone_number" | "picture" | "sub"
 > & {
   givenName: string;
   familyName: string;
   phoneNumber: string;
   zitadelId: string;
-  birthDate: Date | null;
+  birthDate: Date | undefined;
+  profilePicture: string | undefined;
 };
 
 export type AdditionalOverbookdUserData = {
@@ -32,6 +33,7 @@ export class RequestHydratedUser {
   readonly givenName: string;
   readonly phoneNumber?: string;
   readonly birthDate?: Date;
+  readonly profilePicture?: string;
   readonly zitadelRoles: OverbookdOidcRole[];
   readonly id?: number;
   readonly teams?: string[];
@@ -60,6 +62,7 @@ export class RequestHydratedUser {
       familyName: user.family_name,
       givenName: user.given_name,
       phoneNumber: user.phone_number,
+      profilePicture: user.picture,
       zitadelId: user.sub,
       zitadelRoles: userRoles,
       birthDate: Number.isNaN(birthDate.getTime()) ? undefined : birthDate,

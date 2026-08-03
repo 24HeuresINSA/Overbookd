@@ -209,7 +209,6 @@ const save = async () => {
     const profilePictureForm = new FormData();
     profilePictureForm.append("file", image, image.name);
     await myStore.addProfilePicture(profilePictureForm);
-    myStore.setMyProfilePicture();
   }
 
   loading.value = false;
