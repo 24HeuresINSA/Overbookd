@@ -1,3 +1,4 @@
+import { OnModuleDestroy } from "@nestjs/common";
 import {
   PERMISSION_GRANTED,
   PERMISSION_REVOKED,
@@ -42,8 +43,8 @@ import {
   FESTIVAL_TASK_READY_TO_ASSIGN,
 } from "@overbookd/domain-events";
 import { CANDIDATE_ENROLLED, CandidateEnrolled } from "@overbookd/registration";
-import { SOFT } from "@overbookd/team-constants";
-import { Observable, Subject, filter } from "rxjs";
+import { HARD, SOFT } from "@overbookd/team-constants";
+import { Observable, Subject, filter, takeUntil } from "rxjs";
 
 type FestivalVolunteerEnrolled = CandidateEnrolled & {
   data: {
@@ -51,11 +52,21 @@ type FestivalVolunteerEnrolled = CandidateEnrolled & {
   };
 };
 
-export class DomainEventService {
-  private readonly $events = new Subject<DomainEvent>();
+type FestivalOrganizerEnrolled = CandidateEnrolled & {
+  data: {
+    team: typeof HARD;
+  };
+};
+
+export class DomainEventService implements OnModuleDestroy {
+  private readonly eventsSubject$ = new Subject<DomainEvent>();
+  private readonly destroy$ = new Subject<void>();
+  private readonly events$ = this.eventsSubject$
+    .asObservable()
+    .pipe(takeUntil(this.destroy$));
 
   private constructor(events: DomainEvent[]) {
-    events.forEach((event) => this.$events.next(event));
+    events.forEach((event) => this.eventsSubject$.next(event));
   }
 
   static withEvents(events: DomainEvent[]): DomainEventService {
@@ -67,11 +78,16 @@ export class DomainEventService {
   }
 
   listen<T extends DomainEvent["type"]>(domain: T): Observable<EventOf<T>> {
-    return filterEvents(domain, this.$events.asObservable());
+    return filterEvents(domain, this.events$);
   }
 
   publish(event: DomainEvent): void {
-    this.$events.next(event);
+    this.eventsSubject$.next(event);
+  }
+
+  onModuleDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   get staffsRegistered(): Observable<StaffRegisteredEvent> {
@@ -89,6 +105,12 @@ export class DomainEventService {
   get volunteersEnrolled(): Observable<FestivalVolunteerEnrolled> {
     return this.listen(CANDIDATE_ENROLLED).pipe(
       filter(isEnrollingFestivalVolunteer),
+    );
+  }
+
+  get organizerEnrolled(): Observable<FestivalOrganizerEnrolled> {
+    return this.listen(CANDIDATE_ENROLLED).pipe(
+      filter(isEnrollingFestivalOrganizer),
     );
   }
 
@@ -161,4 +183,10 @@ function isEnrollingFestivalVolunteer(
   candidate: CandidateEnrolled,
 ): candidate is FestivalVolunteerEnrolled {
   return candidate.data.team === SOFT;
+}
+
+function isEnrollingFestivalOrganizer(
+  candidate: CandidateEnrolled,
+): candidate is FestivalOrganizerEnrolled {
+  return candidate.data.team === HARD;
 }
