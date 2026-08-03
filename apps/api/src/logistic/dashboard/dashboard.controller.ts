@@ -32,9 +32,9 @@ import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 @ApiBearerAuth()
 @ApiSwaggerResponse()
 export class DashboardController {
-  constructor(private readonly dashboardService: DashboardService) {}
-
   private logger = new Logger(DashboardController.name);
+
+  constructor(private readonly dashboardService: DashboardService) {}
 
   @Get()
   @Permissions(VIEW_GEAR_DASHBOARD)

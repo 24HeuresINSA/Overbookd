@@ -81,14 +81,14 @@ export type Members = {
 
 @Injectable()
 export class MailService implements OnApplicationBootstrap {
+  private logger = new Logger(MailService.name);
+
   constructor(
     private readonly eventStore: DomainEventService,
     private readonly members: PrismaMembers,
   ) {}
 
-  private logger = new Logger("MailService");
-
-  onApplicationBootstrap() {
+  onApplicationBootstrap(): void {
     this.eventStore.staffsRegistered.subscribe(({ data: event }) => {
       this.logger.log("Send welcome-staff mail");
       this.logger.debug(JSON.stringify(event));

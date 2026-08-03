@@ -1,4 +1,9 @@
-import { ForbiddenException, Injectable, Logger } from "@nestjs/common";
+import {
+  ForbiddenException,
+  Injectable,
+  Logger,
+  OnApplicationBootstrap,
+} from "@nestjs/common";
 import { Prisma } from "../generated/prisma/client";
 import {
   Edition,
@@ -17,15 +22,15 @@ import { DomainEventService } from "../domain-event/domain-event.service";
 import { VOLUNTEER_BRIEFING_TIME_WINDOW_KEY } from "@overbookd/configuration";
 
 @Injectable()
-export class VolunteerAvailabilityService {
+export class VolunteerAvailabilityService implements OnApplicationBootstrap {
+  private logger = new Logger(VolunteerAvailabilityService.name);
+
   constructor(
     private readonly eventStore: DomainEventService,
     private readonly prisma: PrismaService,
   ) {}
 
-  private logger = new Logger("VolunteerAvailabilityService");
-
-  onApplicationBootstrap() {
+  onApplicationBootstrap(): void {
     this.eventStore.volunteersEnrolled.subscribe(
       async ({ data: enrolling }) => {
         const candidateName = enrolling.candidate.name;

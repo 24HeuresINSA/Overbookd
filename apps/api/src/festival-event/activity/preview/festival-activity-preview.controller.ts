@@ -61,11 +61,11 @@ import { RequestHydratedUser } from "../../../authentication-zitadel/request-hyd
   RefusedPreviewFestivalActivityResponseDto,
 )
 export class FestivalActivityPreviewController {
+  private logger = new Logger(FestivalActivityPreviewController.name);
+
   constructor(
     private readonly previewService: FestivalActivityPreviewService,
   ) {}
-
-  private logger = new Logger(FestivalActivityPreviewController.name);
 
   @Get()
   @Permissions(READ_FA)

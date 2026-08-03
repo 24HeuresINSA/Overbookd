@@ -54,7 +54,7 @@ export class TransactionService implements OnApplicationBootstrap {
     private readonly eventStore: DomainEventService,
   ) {}
 
-  onApplicationBootstrap() {
+  onApplicationBootstrap(): void {
     this.eventStore.closedSharedMeal.subscribe(({ data: event }) => {
       const mealTransactionsMessage = `Shared meal #${event.id} closed... Generating related transactions`;
       this.logger.log(mealTransactionsMessage);
