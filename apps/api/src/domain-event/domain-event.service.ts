@@ -47,15 +47,11 @@ import { HARD, SOFT } from "@overbookd/team-constants";
 import { Observable, Subject, filter, takeUntil } from "rxjs";
 
 type FestivalVolunteerEnrolled = CandidateEnrolled & {
-  data: {
-    team: typeof SOFT;
-  };
+  data: { team: typeof SOFT };
 };
 
 type FestivalOrganizerEnrolled = CandidateEnrolled & {
-  data: {
-    team: typeof HARD;
-  };
+  data: { team: typeof HARD };
 };
 
 export class DomainEventService implements OnModuleDestroy {
