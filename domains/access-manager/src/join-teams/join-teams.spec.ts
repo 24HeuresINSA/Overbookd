@@ -21,9 +21,6 @@ import { InMemoryMemberships } from "./memberships.inmemory";
 const shogosse = { id: 1, name: "Lea (Shogosse) Mauyno" };
 const noel = { id: 2, name: "Noel Ertsemud" };
 
-const adminManager = { canManageAdmins: true };
-const standardUser = { canManageAdmins: false };
-
 let joinTeams: JoinTeams;
 let events: InMemoryEvents;
 let memberships: InMemoryMemberships;
@@ -57,20 +54,19 @@ describe("Join teams", () => {
     ({ userId, userName, teams }) => {
       const member = { id: userId, name: userName };
       const joiningTeams = { member, teams };
-      const request = { ...joiningTeams, teamManager: standardUser };
       it("should apply without issue", async () => {
-        expect(joinTeams.apply(request)).resolves.ok;
+        expect(joinTeams.apply(joiningTeams)).resolves.ok;
       });
       it("should publish a teams joined event", async () => {
         const expectedEvent = { type: TEAMS_JOINED, data: joiningTeams };
 
-        await joinTeams.apply(request);
+        await joinTeams.apply(joiningTeams);
 
         expect(events.all).toHaveLength(1);
         expect(events.all).toContainEqual(expectedEvent);
       });
       it("should become member of the teams", async () => {
-        await joinTeams.apply(request);
+        await joinTeams.apply(joiningTeams);
         teams.every((team) =>
           expect(memberships.membersOf(team)).toContainEqual(member),
         );
@@ -78,64 +74,38 @@ describe("Join teams", () => {
     },
   );
   describe("when user is already member of all the teams", () => {
-    const request = {
-      member: shogosse,
-      teams: [SOFT],
-      teamManager: standardUser,
-    };
+    const joiningTeams = { member: shogosse, teams: [SOFT] };
     it("should apply without issue", async () => {
-      expect(joinTeams.apply(request)).resolves.ok;
+      expect(joinTeams.apply(joiningTeams)).resolves.ok;
     });
     it("should not publish a teams joined event", async () => {
-      await joinTeams.apply(request);
+      await joinTeams.apply(joiningTeams);
 
       expect(events.all).toHaveLength(0);
     });
     it("should stay member of the teams", async () => {
-      await joinTeams.apply(request);
+      await joinTeams.apply(joiningTeams);
 
       expect(memberships.membersOf(SOFT)).toContainEqual(shogosse);
     });
   });
   describe("when some of the teams do not exist", () => {
     it("should indicate that some of the teams do not exist", async () => {
-      const request = {
+      const joiningTeams = {
         member: shogosse,
         teams: ["unknown", "not existing", CONFIANCE],
-        teamManager: standardUser,
       };
-      await expect(joinTeams.apply(request)).rejects.toThrowError(
-        new SomeTeamsNotFound(request.teams),
+      await expect(joinTeams.apply(joiningTeams)).rejects.toThrow(
+        new SomeTeamsNotFound(joiningTeams.teams),
       );
     });
   });
   describe("when user is joining admin team", () => {
     const joiningTeams = { member: shogosse, teams: [ADMIN] };
-    describe("when team manager can not manage admins", () => {
-      const request = { ...joiningTeams, teamManager: standardUser };
-      it("should inidicate that team manager cannot manage admins", async () => {
-        await expect(joinTeams.apply(request)).rejects.toThrowError(
-          AdminAssignmentError,
-        );
-      });
-    });
-    describe("when team manager can manage admins", () => {
-      const request = { ...joiningTeams, teamManager: adminManager };
-      it("should apply without issue", async () => {
-        expect(joinTeams.apply(request)).resolves.ok;
-      });
-      it("should publish a teams joined event", async () => {
-        const expectedEvent = { type: TEAMS_JOINED, data: joiningTeams };
-
-        await joinTeams.apply(request);
-
-        expect(events.all).toHaveLength(1);
-        expect(events.all).toContainEqual(expectedEvent);
-      });
-      it("should become member of the teams", async () => {
-        await joinTeams.apply(request);
-        expect(memberships.membersOf(ADMIN)).toContainEqual(shogosse);
-      });
+    it("should inidicate that admin team cannot be managed", async () => {
+      await expect(joinTeams.apply(joiningTeams)).rejects.toThrow(
+        AdminAssignmentError,
+      );
     });
   });
 });

@@ -41,7 +41,7 @@ describe("Reject one membership application", () => {
     it("should indicate that the candidate has already been rejected for staff membership for this edition", () => {
       const candidates = new InMemoryCandidates([rejectedOlopStaffCandidate]);
       const reject = new RejectMembershipApplication(candidates);
-      expect(async () => reject.applyOne(olop, STAFF)).rejects.toThrowError(
+      expect(async () => reject.applyOne(olop, STAFF)).rejects.toThrow(
         new AlreadyRejected(STAFF),
       );
     });
@@ -51,9 +51,9 @@ describe("Reject one membership application", () => {
     it("should indicate that the candidate has already been rejected for volunteer membership for this edition", () => {
       const candidates = new InMemoryCandidates([rejectedDnamraCandidate]);
       const reject = new RejectMembershipApplication(candidates);
-      expect(async () =>
-        reject.applyOne(dnamra, VOLUNTEER),
-      ).rejects.toThrowError(new AlreadyRejected(VOLUNTEER));
+      expect(async () => reject.applyOne(dnamra, VOLUNTEER)).rejects.toThrow(
+        new AlreadyRejected(VOLUNTEER),
+      );
     });
   });
 
@@ -109,7 +109,7 @@ describe("Cancel one membership application rejection", () => {
     it("should indicate that the candidate is not rejected for staff membership for this edition", () => {
       const candidates = new InMemoryCandidates([leaStaffCandidate]);
       const reject = new RejectMembershipApplication(candidates);
-      expect(async () => reject.unapplyOne(lea, STAFF)).rejects.toThrowError(
+      expect(async () => reject.unapplyOne(lea, STAFF)).rejects.toThrow(
         new NotRejected(STAFF),
       );
     });
@@ -119,9 +119,9 @@ describe("Cancel one membership application rejection", () => {
     it("should indicate that the candidate is not rejected for volunteer membership for this edition", () => {
       const candidates = new InMemoryCandidates([oelCandidate]);
       const reject = new RejectMembershipApplication(candidates);
-      expect(async () =>
-        reject.unapplyOne(oel, VOLUNTEER),
-      ).rejects.toThrowError(new NotRejected(VOLUNTEER));
+      expect(async () => reject.unapplyOne(oel, VOLUNTEER)).rejects.toThrow(
+        new NotRejected(VOLUNTEER),
+      );
     });
   });
 

@@ -44,7 +44,7 @@ describe("Plan borrow", () => {
       const borrows = new InMemoryBorrows([karnaBorrow]);
       const plan = new PlanBorrow(borrows);
 
-      await expect(plan.update(100, { lender: "KLS" })).rejects.toThrowError(
+      await expect(plan.update(100, { lender: "KLS" })).rejects.toThrow(
         BorrowNotFound,
       );
     });
@@ -57,7 +57,7 @@ describe("Plan borrow", () => {
 
       await expect(
         plan.update(karnaBorrow.id, { unavailableOn: karnaBorrow.availableOn }),
-      ).rejects.toThrowError(NoDuration);
+      ).rejects.toThrow(NoDuration);
     });
   });
 
@@ -71,9 +71,9 @@ describe("Plan borrow", () => {
     describe("when the quantity of the gear request is lower than 1", () => {
       it("should indicate that the quantity must be at least 1", async () => {
         const request = { ...chaise, quantity: 0 };
-        await expect(
-          plan.addGear(karnaBorrow.id, request),
-        ).rejects.toThrowError(NotEnoughQuantity);
+        await expect(plan.addGear(karnaBorrow.id, request)).rejects.toThrow(
+          NotEnoughQuantity,
+        );
       });
     });
     describe("when adding an already added gear", () => {
@@ -87,7 +87,7 @@ describe("Plan borrow", () => {
     describe("when the borrow does not exist", () => {
       it("should indicate that borrow does not exist", async () => {
         const request = { ...chaise, quantity: 4 };
-        await expect(plan.addGear(100, request)).rejects.toThrowError(
+        await expect(plan.addGear(100, request)).rejects.toThrow(
           BorrowNotFound,
         );
       });
@@ -102,7 +102,7 @@ describe("Plan borrow", () => {
     });
     describe("when the borrow does not exist", () => {
       it("should indicate that borrow does not exist", async () => {
-        await expect(plan.removeGear(100, chaise.slug)).rejects.toThrowError(
+        await expect(plan.removeGear(100, chaise.slug)).rejects.toThrow(
           BorrowNotFound,
         );
       });

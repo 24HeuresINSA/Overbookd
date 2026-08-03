@@ -8,7 +8,7 @@ export type ApiZitadelRoles = {
     changeDate: string;
     resourceOwner: string;
   };
-  roleKeys: OidcRole[];
+  roleKeys?: OidcRole[];
   state: string;
   userId: string;
   userName: string;

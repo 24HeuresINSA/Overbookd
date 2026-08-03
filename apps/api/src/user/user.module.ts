@@ -17,6 +17,9 @@ import { PlanningController } from "./planning/planning.controller";
 import { TeamService } from "../team/team.service";
 import { AccessManagerModule } from "../access-manager/access-manager.module";
 import { ZitadelService } from "./zitadel.service";
+import { ZitadelRoleService } from "./zitadel-roles.service";
+import { DomainEventService } from "../domain-event/domain-event.service";
+import { DomainEventModule } from "../domain-event/domain-event.module";
 
 @Module({
   imports: [
@@ -24,6 +27,7 @@ import { ZitadelService } from "./zitadel.service";
     RegistrationModule,
     PrismaModule,
     AccessManagerModule,
+    DomainEventModule,
   ],
   controllers: [UserController, PreferenceController, PlanningController],
   providers: [
@@ -64,6 +68,15 @@ import { ZitadelService } from "./zitadel.service";
     FileService,
     ProfilePictureService,
     TeamService,
+    {
+      provide: ZitadelRoleService,
+      useFactory: (
+        eventStore: DomainEventService,
+        prisma: PrismaService,
+        zitadelService: ZitadelService,
+      ) => new ZitadelRoleService(eventStore, prisma, zitadelService),
+      inject: [DomainEventService, PrismaService, ZitadelService],
+    },
   ],
   exports: [UserService],
 })

@@ -5,19 +5,16 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { JoinTeams, LeaveTeam } from "@overbookd/access-manager";
-import { MANAGE_ADMINS, VALIDATE_FA, VALIDATE_FT } from "@overbookd/permission";
+import { VALIDATE_FA, VALIDATE_FT } from "@overbookd/permission";
 import { ADMIN } from "@overbookd/team-constants";
 import { SlugifyService } from "@overbookd/slugify";
 import { Team } from "@overbookd/team";
 import { toStandAloneUser } from "@overbookd/user";
 import { PrismaService } from "../../src/prisma.service";
-import { UserService } from "../../src/user/user.service";
 import {
   SELECT_TEAM_CODES,
   SELECT_USER_IDENTIFIER,
 } from "../common/query/user.query";
-import { canManageAdmins } from "./team.utils";
-import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
 
 export type UpdateTeamForm = {
   name?: string;
@@ -31,7 +28,6 @@ export class TeamService {
 
   constructor(
     private prisma: PrismaService,
-    private userService: UserService,
     private readonly joinTeams: JoinTeams,
     private readonly leaveTeam: LeaveTeam,
   ) {}
@@ -73,21 +69,17 @@ export class TeamService {
     await this.prisma.team.delete({ where: { code } });
   }
 
-  as(me: RequestHydratedUser) {
+  user(userId: number) {
     return {
-      user: (userId: number) => ({
-        joins: async (teams: string[]) => {
-          const member = await this.generateMember(userId);
-          const teamManager = { canManageAdmins: me.can(MANAGE_ADMINS) };
-          await this.joinTeams.apply({ member, teams, teamManager });
-          return this.listTeamsFor(userId);
-        },
-        leave: async (team: string) => {
-          const member = await this.generateMember(userId);
-          const teamManager = { canManageAdmins: me.can(MANAGE_ADMINS) };
-          return this.leaveTeam.apply({ member, team, teamManager });
-        },
-      }),
+      joins: async (teams: string[]) => {
+        const member = await this.generateMember(userId);
+        await this.joinTeams.apply({ member, teams });
+        return this.listTeamsFor(userId);
+      },
+      leave: async (team: string) => {
+        const member = await this.generateMember(userId);
+        return this.leaveTeam.apply({ member, team });
+      },
     };
   }
 
@@ -109,39 +101,7 @@ export class TeamService {
     return user.teams.map((t) => t.teamCode);
   }
 
-  async removeTeamFromUser(
-    userId: number,
-    team: string,
-    author: RequestHydratedUser,
-  ): Promise<void> {
-    await this.checkUserExistence(userId);
-    if (!canManageAdmins([team], author)) {
-      throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
-    }
-
-    try {
-      await this.prisma.userTeam.delete({
-        where: { userId_teamCode: { userId, teamCode: team } },
-      });
-    } catch (_error) {
-      this.logger.warn(`Try to remove ${team} unexisting team`);
-    }
-  }
-
   static buildIsMemberOfCondition(teamCodes: string[]) {
     return { some: { team: { code: { in: teamCodes } } } };
-  }
-
-  private async fetchExistingTeams(teams: string[]): Promise<string[]> {
-    const teamsFound = await this.prisma.team.findMany({
-      where: { code: { in: teams } },
-      select: { code: true },
-    });
-    return teamsFound.map((team) => team.code);
-  }
-
-  private async checkUserExistence(id: number): Promise<void> {
-    const user = await this.userService.getById(id);
-    if (!user) throw new NotFoundException("Utilisateur inconnu");
   }
 }

@@ -30,7 +30,7 @@
               :team="team"
               with-name
               :show-hidden="canManageUsers"
-              :closable="canManageUsers"
+              :closable="canManageUsers && isTeamManageable(team)"
               @close="removeTeam"
             />
           </div>
@@ -42,7 +42,7 @@
                 prepend-icon="mdi-account-group"
                 hide-details
                 closable-chips
-                :list="assignableTeams"
+                :exclude="[...NON_MANAGEABLE_TEAMS, ...volunteer.teams]"
               />
               <v-btn
                 icon="mdi-plus"
@@ -185,7 +185,6 @@
 import type { Team } from "@overbookd/team";
 import {
   AFFECT_VOLUNTEER,
-  MANAGE_ADMINS,
   MANAGE_USERS,
   VIEW_PLANNING,
 } from "@overbookd/permission";
@@ -208,15 +207,17 @@ import {
 } from "~/utils/rules/input.rules";
 import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import { formatLocalDate } from "@overbookd/time";
-import { ADMIN, HARD, PERSONNE } from "@overbookd/team-constants";
+import { HARD, PERSONNE } from "@overbookd/team-constants";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
-import type { AssignmentPreferenceType } from "@overbookd/preference";
 import { PLANNING_URL } from "@overbookd/web-page";
 import { formatEmailLink, formatPhoneLink } from "@overbookd/registration";
+import {
+  NON_MANAGEABLE_TEAMS,
+  isTeamManageable,
+} from "@overbookd/access-manager";
 
 const myStore = useMyStore();
 const userStore = useUserStore();
-const teamStore = useTeamStore();
 
 const props = defineProps({
   volunteer: {
@@ -261,20 +262,12 @@ const isMe = computed<boolean>(
   () => myStore.loggedUser?.id === volunteerId.value,
 );
 
-const assignableTeams = computed<Team[]>(() => {
-  const teamsToAdd = teamStore.teams.filter(
-    (team: Team) => !props.volunteer.teams?.includes(team.code),
-  );
-  if (myStore.can(MANAGE_ADMINS)) return teamsToAdd;
-  return teamsToAdd.filter((team: Team) => team.code !== ADMIN);
-});
-
 const isHard = computed<boolean>(() => props.volunteer.teams.includes(HARD));
 const assignmentPreferenceLabel = computed<string>(() => {
   const assignment = props.volunteer.preference?.assignment;
   if (isHard.value) return assignmentPreferenceLabels.NO_REST;
   if (!assignment) return assignmentPreferenceLabels.NO_PREF;
-  return assignmentPreferenceLabels[assignment as AssignmentPreferenceType];
+  return assignmentPreferenceLabels[assignment];
 });
 
 const updateVolunteerInformations = async () => {

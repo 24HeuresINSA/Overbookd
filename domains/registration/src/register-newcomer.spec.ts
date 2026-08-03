@@ -126,7 +126,7 @@ describe("Register newcomer", () => {
           it("should indicate that someone is already register with this email", async () => {
             await expect(async () =>
               registerNewcomer.fromRegisterForm(registerForm, membership),
-            ).rejects.toThrowError(
+            ).rejects.toThrow(
               "Erreur lors de l'inscription:\nL'email est déja utilisé par un autre utilisateur",
             );
           });

@@ -79,7 +79,10 @@ export class ZitadelService {
     return (await this.handleZitadelResponse(response)).user;
   }
 
-  async getZitadelRoles(userId: string): Promise<ApiZitadelRoles> {
+  async getZitadelRoles(
+    zitadelUserId: string,
+    projectId?: string,
+  ): Promise<ApiZitadelRoles> {
     const data = JSON.stringify({
       query: {
         offset: "0",
@@ -88,9 +91,11 @@ export class ZitadelService {
       },
       queries: [
         {
-          projectIdQuery: { projectId: this.ZITADEL_OVERBOOKD_PROJECT_ID },
+          projectIdQuery: {
+            projectId: projectId ?? this.ZITADEL_OVERBOOKD_PROJECT_ID,
+          },
         },
-        { userIdQuery: { userId } },
+        { userIdQuery: { userId: zitadelUserId } },
       ],
     });
 
@@ -106,21 +111,15 @@ export class ZitadelService {
     return (await this.handleZitadelResponse(response)).result?.at(0);
   }
 
-  async updateZitadelRole({
-    userId,
-    grantId,
-    roleKeys,
-  }: {
-    userId: string;
-    grantId: string;
-    roleKeys: Array<OidcRole>;
-  }) {
-    const data = JSON.stringify({
-      roleKeys,
-    });
+  async updateZitadelRole(
+    zitadelUserId: string,
+    grantId: string,
+    roleKeys: Array<OidcRole>,
+  ) {
+    const data = JSON.stringify({ roleKeys });
 
     const response = await fetch(
-      `${this.ZITADEL_BASE_URL}/management/v1/users/${userId}/grants/${grantId}`,
+      `${this.ZITADEL_BASE_URL}/management/v1/users/${zitadelUserId}/grants/${grantId}`,
       {
         method: "PUT",
         body: data,
@@ -131,20 +130,18 @@ export class ZitadelService {
     return await this.handleZitadelResponse(response);
   }
 
-  async addZitadelRole({
-    userId,
-    roleKeys,
-  }: {
-    userId: string;
-    roleKeys: Array<OidcRole>;
-  }) {
+  async addZitadelRole(
+    zitadelUserId: string,
+    roleKeys: Array<OidcRole>,
+    projectId?: string,
+  ) {
     const data = JSON.stringify({
-      projectId: this.ZITADEL_OVERBOOKD_PROJECT_ID,
+      projectId: projectId ?? this.ZITADEL_OVERBOOKD_PROJECT_ID,
       roleKeys,
     });
 
     const response = await fetch(
-      `${this.ZITADEL_BASE_URL}/management/v1/users/${userId}/grants`,
+      `${this.ZITADEL_BASE_URL}/management/v1/users/${zitadelUserId}/grants`,
       {
         method: "POST",
         body: data,
@@ -155,8 +152,20 @@ export class ZitadelService {
     return await this.handleZitadelResponse(response);
   }
 
+  async removeZitadelGrant(zitadelUserId: string, grantId: string) {
+    const response = await fetch(
+      `${this.ZITADEL_BASE_URL}/management/v1/users/${zitadelUserId}/grants/${grantId}`,
+      {
+        method: "DELETE",
+        headers: this.headers,
+      },
+    );
+
+    return await this.handleZitadelResponse(response);
+  }
+
   async updateZitadelUser(
-    zitadelId: string,
+    zitadelUserId: string,
     form: Partial<UpdateUserProfileForm>,
   ): Promise<ApiZitadelUserCreated> {
     const shouldUpdateProfile = form.firstName || form.lastName;
@@ -171,7 +180,7 @@ export class ZitadelService {
     const reqBody = JSON.stringify({ ...profile, ...phone });
 
     const response = await fetch(
-      `${this.ZITADEL_BASE_URL}/v2/users/human/${zitadelId}`,
+      `${this.ZITADEL_BASE_URL}/v2/users/human/${zitadelUserId}`,
       {
         method: "PUT",
         body: reqBody,
@@ -218,11 +227,11 @@ export class ZitadelService {
     return await this.handleZitadelResponse(response);
   }
 
-  async updateMetadata(zitadelId: string, metadata: UserMetadataForm) {
+  async updateMetadata(zitadelUserId: string, metadata: UserMetadataForm) {
     const zitadelMetadata = this.buildMetadata(metadata);
     const data = JSON.stringify({ metadata: zitadelMetadata });
     const response = await fetch(
-      `${this.ZITADEL_BASE_URL}/management/v1/users/${zitadelId}/metadata/_bulk`,
+      `${this.ZITADEL_BASE_URL}/management/v1/users/${zitadelUserId}/metadata/_bulk`,
       {
         method: "POST",
         body: data,
@@ -233,23 +242,37 @@ export class ZitadelService {
     return await this.handleZitadelResponse(response);
   }
 
-  async addZitadelRoleIfNotExist(
+  async addZitadelRoleIfNotGranted(
     zitadelUserId: string,
     role: OidcRole,
+    projectId?: string,
   ): Promise<void> {
-    const userRoles = await this.getZitadelRoles(zitadelUserId);
+    const userRoles = await this.getZitadelRoles(zitadelUserId, projectId);
 
     if (!userRoles) {
-      await this.addZitadelRole({
-        userId: zitadelUserId,
-        roleKeys: [role],
-      });
-    } else if (!userRoles.roleKeys.includes(role)) {
-      await this.updateZitadelRole({
-        userId: zitadelUserId,
-        grantId: userRoles.id,
-        roleKeys: [...userRoles.roleKeys, role],
-      });
+      await this.addZitadelRole(zitadelUserId, [role], projectId);
+    } else if (!userRoles.roleKeys?.includes(role)) {
+      await this.updateZitadelRole(zitadelUserId, userRoles.id, [
+        ...(userRoles.roleKeys ?? []),
+        role,
+      ]);
+    }
+  }
+
+  async removeZitadelRoleIfGranted(
+    zitadelUserId: string,
+    role: OidcRole,
+    projectId?: string,
+  ): Promise<void> {
+    const userRoles = await this.getZitadelRoles(zitadelUserId, projectId);
+
+    if (!userRoles || !userRoles.roleKeys?.includes(role)) return;
+
+    if (userRoles.roleKeys.length > 1) {
+      const newRoles = userRoles.roleKeys.filter((roleKey) => roleKey !== role);
+      await this.updateZitadelRole(zitadelUserId, userRoles.id, newRoles);
+    } else {
+      await this.removeZitadelGrant(zitadelUserId, userRoles.id);
     }
   }
 

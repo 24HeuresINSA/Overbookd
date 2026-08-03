@@ -1,4 +1,4 @@
-import { type OidcRole, OIDC_ROLES_CLAIMS } from "@overbookd/oidc";
+import { type OverbookdOidcRole, OIDC_ROLES_CLAIMS } from "@overbookd/oidc";
 import { LOGIN_URL } from "@overbookd/web-page";
 import { useMyStore } from "~/stores/authenticated-user";
 
@@ -8,12 +8,12 @@ import { useMyStore } from "~/stores/authenticated-user";
 export function useOidcUtils() {
   const oidc = useOidcAuth();
 
-  const getUserRoles = (): OidcRole[] => {
+  const getUserRoles = (): OverbookdOidcRole[] => {
     const rolesObj = oidc.user.value?.userInfo?.[`${OIDC_ROLES_CLAIMS}`] ?? {};
-    return Object.keys(rolesObj) as OidcRole[];
+    return Object.keys(rolesObj) as OverbookdOidcRole[];
   };
 
-  const userHasRole = (role: OidcRole) => {
+  const userHasRole = (role: OverbookdOidcRole) => {
     const roles = getUserRoles();
     return roles.includes(role);
   };

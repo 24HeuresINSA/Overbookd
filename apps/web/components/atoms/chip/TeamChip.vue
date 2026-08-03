@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-import { PERSONNE } from "@overbookd/team-constants";
+import { BDE, PERSONNE } from "@overbookd/team-constants";
 import type { Team } from "@overbookd/team";
 
 const { team, size, withName, showHidden, closable, clickable, prefix } =
@@ -77,7 +77,7 @@ const teamText = computed<string>(() => {
   return `${chipPrefix}${teamMetadata.value?.name}`;
 });
 const color = computed<string>(() => teamMetadata.value?.color ?? "grey");
-const isBde = computed<boolean>(() => team === "bde");
+const isBde = computed<boolean>(() => team === BDE);
 
 const emit = defineEmits(["click", "close"]);
 const sendEvent = () => {

@@ -42,7 +42,7 @@ describe("Apply for staff membership", () => {
       it("should indicate that the candidate has already applied fot this edition", () => {
         const candidates = new InMemoryCandidates([leaStaffCandidate]);
         const applyFor = new ApplyFor(candidates);
-        expect(async () => applyFor.staff(lea)).rejects.toThrowError(
+        expect(async () => applyFor.staff(lea)).rejects.toThrow(
           new AlreadyCandidate(STAFF),
         );
       });
@@ -66,7 +66,7 @@ describe("Apply for staff membership", () => {
       it("should indicate that the candidate has already a rejected application", () => {
         const candidates = new InMemoryCandidates([rejectedOlopStaffCandidate]);
         const applyFor = new ApplyFor(candidates);
-        expect(async () => applyFor.staff(olop)).rejects.toThrowError(
+        expect(async () => applyFor.staff(olop)).rejects.toThrow(
           new Rejected(STAFF),
         );
       });
@@ -128,9 +128,9 @@ describe("Apply for volunteer membership", () => {
       it("should indicate that the candidate has already applied fot this edition", () => {
         const candidates = new InMemoryCandidates([oelCandidate]);
         const applyFor = new ApplyFor(candidates);
-        expect(async () =>
-          applyFor.volunteer(oelCandidate),
-        ).rejects.toThrowError(new AlreadyCandidate(VOLUNTEER));
+        expect(async () => applyFor.volunteer(oelCandidate)).rejects.toThrow(
+          new AlreadyCandidate(VOLUNTEER),
+        );
       });
     });
 
@@ -154,7 +154,7 @@ describe("Apply for volunteer membership", () => {
         const applyFor = new ApplyFor(candidates);
         expect(async () =>
           applyFor.volunteer(rejectedDnamraCandidate),
-        ).rejects.toThrowError(new Rejected(VOLUNTEER));
+        ).rejects.toThrow(new Rejected(VOLUNTEER));
       });
     });
 

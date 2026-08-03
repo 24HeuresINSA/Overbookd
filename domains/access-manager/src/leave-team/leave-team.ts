@@ -4,15 +4,13 @@ import { ADMIN } from "@overbookd/team-constants";
 
 export class AdminUnassignmentError extends AccessManagerError {
   constructor() {
-    super("Tu ne peux pas gérer l'équipe admin");
+    super("Tu ne peux pas retirer l'équipe admin depuis Overbookd");
   }
 }
 
 export type Member = { id: number; name: string };
 export type Team = string;
 type LeavingTeam = { member: Member; team: Team };
-type TeamManager = { canManageAdmins: boolean };
-type LeavingTeamRequest = LeavingTeam & { teamManager: TeamManager };
 
 export const TEAM_LEFT = "team-left" as const;
 export type TeamLeft = Event<typeof TEAM_LEFT, LeavingTeam>;
@@ -33,9 +31,8 @@ export class LeaveTeam {
     private readonly events: Events,
   ) {}
 
-  async apply(request: LeavingTeamRequest): Promise<void> {
-    const { team, member, teamManager } = request;
-    this.checkAdminLeave(team, teamManager);
+  async apply({ team, member }: LeavingTeam): Promise<void> {
+    this.checkAdminLeave(team);
 
     const isMember = await this.memberships.is(member.id).memberOf(team);
     if (!isMember) return;
@@ -44,9 +41,8 @@ export class LeaveTeam {
     this.events.publish({ type: TEAM_LEFT, data: { member, team } });
   }
 
-  private checkAdminLeave(team: string, teamManager: TeamManager) {
+  private checkAdminLeave(team: string) {
     if (team !== ADMIN) return;
-    if (teamManager.canManageAdmins) return;
     throw new AdminUnassignmentError();
   }
 }

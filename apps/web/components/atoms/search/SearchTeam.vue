@@ -27,7 +27,7 @@ import type { Density } from "~/utils/vuetify/component-props";
 
 const team = defineModel<Team>("team", { required: false });
 
-const props = defineProps({
+const { list, exclude } = defineProps({
   label: {
     type: String,
     default: "Chercher des équipes",
@@ -52,8 +52,14 @@ const props = defineProps({
     type: Array as PropType<Team[] | null>,
     default: () => null,
   },
+  exclude: {
+    type: Array as PropType<string[]>,
+    default: () => [],
+  },
 });
 
 const teamStore = useTeamStore();
-const teamList = computed<Team[]>(() => props.list ?? teamStore.teams);
+const teamList = computed<Team[]>(() =>
+  (list ?? teamStore.teams).filter((team) => !exclude.includes(team.code)),
+);
 </script>

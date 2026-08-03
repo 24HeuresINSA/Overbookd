@@ -31,6 +31,7 @@
           @click="openUpdateTeamDialog(item)"
         />
         <v-btn
+          v-if="isTeamManageable(item.code)"
           icon="mdi-trash-can"
           aria-label="Supprimer l'équipe"
           title="Supprimer l'équipe"
@@ -78,6 +79,7 @@
 </template>
 
 <script lang="ts" setup>
+import { isTeamManageable } from "@overbookd/access-manager";
 import type { Team } from "@overbookd/team";
 
 const teamStore = useTeamStore();

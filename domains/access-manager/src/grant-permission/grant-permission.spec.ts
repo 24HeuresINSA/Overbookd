@@ -63,7 +63,7 @@ describe("Grant permission", () => {
   describe("when the team does not exist", () => {
     it("should throw an error", async () => {
       const grant: Grant = { permission: WRITE_FA, to: "unknown" };
-      await expect(() => grantPermission.apply(grant)).rejects.toThrowError(
+      await expect(() => grantPermission.apply(grant)).rejects.toThrow(
         new TeamNotFound("unknown"),
       );
     });

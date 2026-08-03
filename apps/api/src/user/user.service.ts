@@ -47,7 +47,7 @@ import { canManageAdmins } from "../team/team.utils";
 import { Charisma } from "@overbookd/charisma";
 import { ADMIN } from "@overbookd/team-constants";
 import { friendAssigneesCount } from "../assignment/common/repository/assignment.query";
-import { OidcRole, oidcRoles } from "@overbookd/oidc";
+import { OverbookdOidcRole, oidcRoles } from "@overbookd/oidc";
 import { ZitadelService } from "./zitadel.service";
 import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
 
@@ -121,7 +121,7 @@ export class UserService {
 
   private async updateAdminTeamFromZitadel(
     userId: number,
-    zitadelRoles: OidcRole[],
+    zitadelRoles: OverbookdOidcRole[],
   ): Promise<void> {
     const hasZitadelAdminRole = zitadelRoles.includes(oidcRoles.ADMIN);
     const hasAdminTeam = await this.prisma.userTeam.findFirst({

@@ -1,4 +1,4 @@
-import { OidcRole } from "@overbookd/oidc";
+import { OverbookdOidcRole } from "@overbookd/oidc";
 import { ZitadelIntrospectionOptions } from "passport-zitadel";
 
 export type ZitadelAuthModuleConfig = ZitadelIntrospectionOptions;
@@ -39,7 +39,7 @@ export type ConnectedZitadelUser = {
   /**
    * Custom field with user roles
    */
-  zitadelRoles: OidcRole[];
+  zitadelRoles: OverbookdOidcRole[];
 
   /**Available properties from Zitadel API, that we do not use in our project.
    * Can be uncommented if needed

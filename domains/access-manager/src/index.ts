@@ -33,3 +33,5 @@ export type {
   Member as MemberLeaving,
   TeamLeft,
 } from "./leave-team/leave-team";
+
+export { NON_MANAGEABLE_TEAMS, isTeamManageable } from "./manage-teams";

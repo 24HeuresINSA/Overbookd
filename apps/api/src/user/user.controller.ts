@@ -282,9 +282,8 @@ export class UserController {
   joinTeams(
     @Param("userId", ParseIntPipe) userId: number,
     @Body() teams: string[],
-    @AuthenticatedUser() me: RequestHydratedUser,
   ): Promise<string[]> {
-    return this.teamService.as(me).user(userId).joins(teams);
+    return this.teamService.user(userId).joins(teams);
   }
 
   @Delete(":userId/teams/:teamCode")
@@ -297,8 +296,7 @@ export class UserController {
   leaveTeam(
     @Param("userId", ParseIntPipe) userId: number,
     @Param("teamCode") team: string,
-    @AuthenticatedUser() me: RequestHydratedUser,
   ): Promise<void> {
-    return this.teamService.as(me).user(userId).leave(team);
+    return this.teamService.user(userId).leave(team);
   }
 }

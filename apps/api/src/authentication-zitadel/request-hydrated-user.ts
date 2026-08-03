@@ -3,7 +3,7 @@ import { ConnectedZitadelUser, ZitadelMetadata } from "./zitadel-types";
 import {
   OIDC_METADATA_CLAIMS,
   OIDC_ROLES_CLAIMS,
-  OidcRole,
+  OverbookdOidcRole,
   oidcRoles,
 } from "@overbookd/oidc";
 import { RawRequestUserData } from "./guards/zitadel.auth.guard";
@@ -32,7 +32,7 @@ export class RequestHydratedUser {
   readonly givenName: string;
   readonly phoneNumber?: string;
   readonly birthDate?: Date;
-  readonly zitadelRoles: OidcRole[];
+  readonly zitadelRoles: OverbookdOidcRole[];
   readonly id?: number;
   readonly teams?: string[];
   readonly permissions?: Permission[];
@@ -52,7 +52,7 @@ export class RequestHydratedUser {
       }
     });
 
-    const userRoles = Object.keys(userZitadelRoles) as OidcRole[];
+    const userRoles = Object.keys(userZitadelRoles) as OverbookdOidcRole[];
     const birthDate = new Date(userMetadataDecoded.dateOfBirth);
 
     return new RequestHydratedUser({
