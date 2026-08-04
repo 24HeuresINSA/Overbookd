@@ -49,7 +49,6 @@ import { friendAssigneesCount } from "../assignment/common/repository/assignment
 import { OverbookdOidcRole, oidcRoles } from "@overbookd/oidc";
 import { ZitadelService } from "./zitadel.service";
 import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
-import { privateDecrypt } from "node:crypto";
 
 @Injectable()
 export class UserService {
