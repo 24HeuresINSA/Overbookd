@@ -26,21 +26,23 @@ export const registrationSteps = {
 export type RegistrationStepKey =
   (typeof registrationSteps)[keyof typeof registrationSteps];
 
-export type RegistrationFormStepUser = Pick<
-  FulfilledRegistration,
-  | "firstName"
-  | "lastName"
-  | "nickname"
-  | "birthDate"
-  | "mobilePhone"
-  | "teams"
-  | "email"
-  | "comment"
+export type RegistrationFormStepUser = Partial<
+  Pick<
+    FulfilledRegistration,
+    | "firstName"
+    | "lastName"
+    | "nickname"
+    | "birthDate"
+    | "mobilePhone"
+    | "teams"
+    | "email"
+    | "comment"
+  >
 >;
 
 export type RegistrationFormStep = {
   next: typeof registrationSteps.FORM;
-  user?: Partial<RegistrationFormStepUser>;
+  user?: RegistrationFormStepUser;
 };
 
 export type RegistrationLoginStep = {

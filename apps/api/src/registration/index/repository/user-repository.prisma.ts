@@ -7,6 +7,7 @@ import { RegistrationFormStepUser } from "@overbookd/http";
 import {
   REGISTRATION_TEAM_CODES,
   RegistrationTeamCode,
+  RegistrationTeams,
 } from "@overbookd/registration";
 
 export class PrismaUserForRegistrationRepository implements UserForRegistrationRepository {
@@ -36,7 +37,7 @@ export class PrismaUserForRegistrationRepository implements UserForRegistrationR
       mobilePhone: user.phoneNumber,
       teams: teamCodes.filter((code) =>
         REGISTRATION_TEAM_CODES.includes(code as RegistrationTeamCode),
-      ),
+      ) as RegistrationTeams,
     };
   }
 }
