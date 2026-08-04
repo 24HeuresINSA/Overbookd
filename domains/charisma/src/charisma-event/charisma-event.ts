@@ -1,5 +1,4 @@
 import { SlugifyService } from "@overbookd/slugify";
-import { User } from "@overbookd/user";
 import {
   InvalidName,
   InsufficientCharismaPerHour,
@@ -12,10 +11,17 @@ import {
 } from "./charisma-event.error";
 import { DateString, OverDate } from "@overbookd/time";
 
+export type Participant = {
+  id: number;
+  firstName: string;
+  lastName: string;
+  nickname?: string;
+};
+
 export type Participation = {
   slug: string;
   name: string;
-  participant: User;
+  participant: Participant;
   charisma: number;
   eventDate: DateString;
 };
@@ -44,7 +50,7 @@ export type CharismaEventParticipations = {
     eventSlug: string,
     eventDate: DateString,
     participants: ParticipantTakingPart[],
-  ): Promise<User[]>;
+  ): Promise<Participant[]>;
   add(...participations: CreateParticipation[]): Promise<Participation[]>;
   exists(
     eventSlug: string,
