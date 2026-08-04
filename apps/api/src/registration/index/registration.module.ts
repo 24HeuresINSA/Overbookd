@@ -10,8 +10,8 @@ import { DomainEventModule } from "../../domain-event/domain-event.module";
 import { DomainEventService } from "../../domain-event/domain-event.service";
 import { PrismaMemberRepository } from "./repository/member-repository.prisma";
 import { ForgetMember } from "@overbookd/registration";
-import { UserService } from "../../user/user.service";
 import { ZitadelService } from "../../user/zitadel.service";
+import { PrismaUserForRegistrationRepository } from "./repository/user-repository.prisma";
 
 @Module({
   controllers: [RegistrationController],
@@ -40,7 +40,12 @@ import { ZitadelService } from "../../user/zitadel.service";
         new ForgetMember(members),
       inject: [PrismaMemberRepository],
     },
-    UserService,
+    {
+      provide: PrismaUserForRegistrationRepository,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaUserForRegistrationRepository(prisma),
+      inject: [PrismaService],
+    },
     ZitadelService,
     {
       provide: RegistrationService,
@@ -48,16 +53,20 @@ import { ZitadelService } from "../../user/zitadel.service";
         register: RegisterNewcomer,
         forget: ForgetMember,
         event: DomainEventService,
-        user: UserService,
         zitadel: ZitadelService,
+        user: PrismaUserForRegistrationRepository,
       ) =>
-        new RegistrationService({ register, forget }, { event, user, zitadel }),
+        new RegistrationService(
+          { register, forget },
+          { event, zitadel },
+          { user },
+        ),
       inject: [
         RegisterNewcomer,
         ForgetMember,
         DomainEventService,
-        UserService,
         ZitadelService,
+        PrismaUserForRegistrationRepository,
       ],
     },
   ],

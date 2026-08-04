@@ -20,12 +20,11 @@ import {
 } from "@overbookd/domain-events";
 import { checkStaffInvitationTokenValidity } from "../membership-application/staff/jwt.utils";
 import { jwtConstants } from "../../jwt-constants";
-import { UserService } from "../../user/user.service";
 import { ZitadelService } from "../../user/zitadel.service";
 import {
   registrationSteps,
   RegistrationStep,
-  RegistrationFormStep,
+  RegistrationFormStepUser,
 } from "@overbookd/http";
 
 type Member = {
@@ -35,32 +34,40 @@ type Member = {
 
 type Service = {
   event: Readonly<DomainEventService>;
-  user: Readonly<UserService>;
   zitadel: Readonly<ZitadelService>;
+};
+
+export type UserForRegistrationRepository = {
+  getByEmail: (email: string) => Promise<RegistrationFormStepUser>;
+};
+
+type Repository = {
+  user: Readonly<UserForRegistrationRepository>;
 };
 
 export class RegistrationService {
   constructor(
     private readonly member: Member,
     private readonly service: Service,
+    private readonly repository: Repository,
   ) {}
 
   async check(email: string): Promise<RegistrationStep> {
     email = email.toLowerCase().trim();
     const zitadelUser = await this.service.zitadel.getZitadelUserByEmail(email);
 
-    const existingUser = await this.service.user.getUserByEmail(email);
+    const existingUser = await this.repository.user.getByEmail(email);
     if (!zitadelUser) {
       return { next: registrationSteps.FORM, user: existingUser };
     }
 
     if (!existingUser) {
-      const stepUser: RegistrationFormStep["user"] = {
+      const stepUser: RegistrationFormStepUser = {
+        email: zitadelUser.human.email.email,
         firstName: zitadelUser.human.profile.givenName,
         lastName: zitadelUser.human.profile.familyName,
         nickname: zitadelUser.human.profile.nickName,
-        email: zitadelUser.human.email.email,
-        teams: [],
+        phoneNumber: zitadelUser.human.phone.phone,
       };
       return { next: registrationSteps.FORM, user: stepUser };
     }

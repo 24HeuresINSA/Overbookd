@@ -1,5 +1,6 @@
 import { IProvidePeriod } from "@overbookd/time";
 import { UserWithTeams } from "@overbookd/user";
+import { FulfilledRegistration } from "@overbookd/registration";
 
 export type StaffCandidate = UserWithTeams & {
   email: string;
@@ -25,11 +26,21 @@ export const registrationSteps = {
 export type RegistrationStepKey =
   (typeof registrationSteps)[keyof typeof registrationSteps];
 
-export type RegistrationFormStepUser = Omit<UserWithTeams, "id">;
+export type RegistrationFormStepUser = Pick<
+  FulfilledRegistration,
+  | "firstName"
+  | "lastName"
+  | "nickname"
+  | "birthDate"
+  | "mobilePhone"
+  | "teams"
+  | "email"
+  | "comment"
+>;
 
 export type RegistrationFormStep = {
   next: typeof registrationSteps.FORM;
-  user?: RegistrationFormStepUser;
+  user?: Partial<RegistrationFormStepUser>;
 };
 
 export type RegistrationLoginStep = {

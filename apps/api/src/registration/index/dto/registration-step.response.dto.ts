@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { RegistrationFormStepUser, registrationSteps } from "@overbookd/http";
+import { RegistrationTeams } from "@overbookd/registration";
 import { UserNameResponseDto } from "../../../common/dto/user-name.response.dto";
 
 class RegistrationFormStepUserResponseDto
@@ -7,12 +8,40 @@ class RegistrationFormStepUserResponseDto
   implements RegistrationFormStepUser
 {
   @ApiProperty({
-    required: true,
+    required: false,
+    description: "user email",
+    type: String,
+  })
+  email?: string;
+
+  @ApiProperty({
+    required: false,
+    description: "user phone number",
+    type: String,
+  })
+  phoneNumber?: string;
+
+  @ApiProperty({
+    required: false,
+    description: "user birth date",
+    type: Date,
+  })
+  birthDate?: Date;
+
+  @ApiProperty({
+    required: false,
+    description: "user comment",
+    type: String,
+  })
+  comment?: string;
+
+  @ApiProperty({
+    required: false,
     description: "user teams",
     type: String,
     isArray: true,
   })
-  teams: string[];
+  teams?: RegistrationTeams[];
 }
 
 export class RegistrationFormStepResponseDto {
