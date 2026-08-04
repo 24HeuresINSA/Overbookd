@@ -1,7 +1,4 @@
-import {
-  SELECT_USER_IDENTIFIER,
-  SELECT_USER_NAME,
-} from "../../../common/query/user.query";
+import { SELECT_USER_NAME } from "../../../common/query/user.query";
 import { PrismaService } from "../../../prisma.service";
 import { SELECT_USER_TEAMS } from "../../../user/user.query";
 import { UserForRegistrationRepository } from "../registration.service";
