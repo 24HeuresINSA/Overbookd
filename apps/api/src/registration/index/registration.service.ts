@@ -11,6 +11,7 @@ import {
   NewcomerRegistered,
   isStaffRegistered,
   isVolunteerRegistered,
+  PASSWORD_REQUIRED,
 } from "@overbookd/registration";
 import { DomainEventService } from "../../domain-event/domain-event.service";
 import { isString } from "class-validator";
@@ -92,6 +93,7 @@ export class RegistrationService {
     const registree = await this.member.register.fromRegisterForm(
       fulfilledRegistration,
       membership,
+      PASSWORD_REQUIRED,
     );
 
     this.publishNewcomerRegisteredEvent(registree);
