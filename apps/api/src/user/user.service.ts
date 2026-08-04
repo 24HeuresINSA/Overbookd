@@ -17,7 +17,6 @@ import {
   DatabaseConsumer,
   DatabaseMyUserInformation,
   DatabaseUserPersonalData,
-  UserPasswordOnly,
 } from "./user.model";
 import {
   SELECT_MY_USER_INFORMATION,
