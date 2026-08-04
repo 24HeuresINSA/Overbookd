@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { CharismaEvent } from "./charisma-event";
+import { CharismaEvent, Participant } from "./charisma-event";
 import { InMemoryCharismaEventParticipations } from "./charisma-event-participations.inmemory";
 import {
   InexistentParticipation,
@@ -7,7 +7,7 @@ import {
   IntegerCharismaPerHour,
 } from "./charisma-event.error";
 
-const lea = { id: 1, firstName: "Lea", lastName: "Mouyno" };
+const lea: Participant = { id: 1, firstName: "Lea", lastName: "Mouyno" };
 
 const participationFromLea = {
   slug: "participation-from-lea",

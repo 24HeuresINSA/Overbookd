@@ -7,16 +7,15 @@ import {
   NoParticipant,
   SameParticipantMultipleTimes,
 } from "./charisma-event.error";
-import { CharismaEvent } from "./charisma-event";
-import { User } from "@overbookd/user";
+import { CharismaEvent, Participant } from "./charisma-event";
 import { InMemoryCharismaEventParticipations } from "./charisma-event-participations.inmemory";
 
-const lea: User = {
+const lea: Participant = {
   id: 1,
   firstName: "Lea",
   lastName: "Mouyno",
 };
-const cul: User = {
+const cul: Participant = {
   id: 2,
   firstName: "Cul",
   lastName: "Nehgahrednav",

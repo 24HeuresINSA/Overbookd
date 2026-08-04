@@ -1,4 +1,4 @@
-import { User } from "@overbookd/user";
+import { Participant } from "./charisma-event";
 
 export class CharismaEventError extends Error {}
 
@@ -51,7 +51,7 @@ export class SameParticipantMultipleTimes extends CharismaEventError {
   }
 }
 export class AlreadyExists extends CharismaEventError {
-  constructor(participants: User[]) {
+  constructor(participants: Participant[]) {
     const formattedParticipants = participants
       .map(({ firstName, lastName }) => `${firstName} ${lastName}`)
       .join(", ");

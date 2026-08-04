@@ -1,16 +1,16 @@
-import { User } from "@overbookd/user";
 import {
   Participation,
   CharismaEventParticipations,
   CreateParticipation,
   ParticipantTakingPart,
   EditParticipation,
+  Participant,
 } from "./charisma-event";
 import { DateString } from "@overbookd/time";
 
 export class InMemoryCharismaEventParticipations implements CharismaEventParticipations {
   constructor(
-    private participants: User[],
+    private participants: Participant[],
     private participations: Participation[],
   ) {}
 
@@ -18,7 +18,7 @@ export class InMemoryCharismaEventParticipations implements CharismaEventPartici
     eventSlug: string,
     eventDate: DateString,
     participants: ParticipantTakingPart[],
-  ): Promise<User[]> {
+  ): Promise<Participant[]> {
     return this.participations
       .filter((participation) => {
         const sameSlug = participation.slug === eventSlug;
