@@ -173,13 +173,6 @@ export class UserService {
     return UserService.formatToMyInformation(user, charismaPeriods);
   }
 
-  async getUserPassword(email: string): Promise<UserPasswordOnly | null> {
-    return this.prisma.user.findUnique({
-      where: { email },
-      select: { password: true },
-    });
-  }
-
   async isDeleted(email: string): Promise<boolean | null> {
     const user = await this.prisma.user.findUnique({
       where: { email },
