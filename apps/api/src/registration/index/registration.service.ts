@@ -63,12 +63,13 @@ export class RegistrationService {
     }
 
     if (!existingUser) {
+      const { email, profile, phone } = zitadelUser.human;
       const stepUser: RegistrationFormStepUser = {
-        email: zitadelUser.human.email.email,
-        firstName: zitadelUser.human.profile.givenName,
-        lastName: zitadelUser.human.profile.familyName,
-        nickname: zitadelUser.human.profile.nickName,
-        mobilePhone: zitadelUser.human.phone.phone,
+        email: email.email,
+        firstName: profile.givenName,
+        lastName: profile.familyName,
+        nickname: profile.nickName,
+        mobilePhone: phone.phone,
       };
       return { next: registrationSteps.FORM, user: stepUser };
     }

@@ -32,6 +32,10 @@ export type TeamCode =
 
 export type Teams = [] | [TeamCode] | [TeamCode, TeamCode];
 
+export function isTeamCode(code: string): code is TeamCode {
+  return TEAM_CODES.includes(code as TeamCode);
+}
+
 export type FulfilledRegistration = {
   email: string;
   firstName: string;

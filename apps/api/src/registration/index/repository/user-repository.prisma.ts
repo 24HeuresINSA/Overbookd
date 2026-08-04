@@ -5,9 +5,8 @@ import { SELECT_USER_TEAMS } from "../../../user/user.query";
 import { UserForRegistrationRepository } from "../registration.service";
 import { RegistrationFormStepUser } from "@overbookd/http";
 import {
-  REGISTRATION_TEAM_CODES,
-  RegistrationTeamCode,
   RegistrationTeams,
+  isRegistrationTeamCode,
 } from "@overbookd/registration";
 
 export class PrismaUserForRegistrationRepository implements UserForRegistrationRepository {
@@ -35,9 +34,7 @@ export class PrismaUserForRegistrationRepository implements UserForRegistrationR
       birthDate: user.birthDate,
       comment: user.comment,
       mobilePhone: user.phoneNumber,
-      teams: teamCodes.filter((code) =>
-        REGISTRATION_TEAM_CODES.includes(code as RegistrationTeamCode),
-      ) as RegistrationTeams,
+      teams: teamCodes.filter(isRegistrationTeamCode) as RegistrationTeams,
     };
   }
 }

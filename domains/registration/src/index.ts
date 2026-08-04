@@ -59,7 +59,10 @@ export type {
   TeamCode as RegistrationTeamCode,
   Teams as RegistrationTeams,
 } from "./register-form/fulfilled-registration.js";
-export { TEAM_CODES as REGISTRATION_TEAM_CODES } from "./register-form/fulfilled-registration.js";
+export {
+  TEAM_CODES as REGISTRATION_TEAM_CODES,
+  isTeamCode as isRegistrationTeamCode,
+} from "./register-form/fulfilled-registration.js";
 export {
   RegisterForm,
   RegistrationError,
