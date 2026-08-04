@@ -67,7 +67,7 @@ export class RegistrationService {
         firstName: zitadelUser.human.profile.givenName,
         lastName: zitadelUser.human.profile.familyName,
         nickname: zitadelUser.human.profile.nickName,
-        phoneNumber: zitadelUser.human.phone.phone,
+        mobilePhone: zitadelUser.human.phone.phone,
       };
       return { next: registrationSteps.FORM, user: stepUser };
     }

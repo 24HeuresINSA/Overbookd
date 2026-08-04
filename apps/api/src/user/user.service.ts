@@ -47,7 +47,7 @@ import {
   MinimalCharismaPeriod,
   SELECT_CHARISMA_PERIOD,
 } from "../common/query/charisma.query";
-import { canManageAdmins } from "../team/team.utils";
+import { canManageAdmins, extractTeamCodes } from "../team/team.utils";
 import { Charisma } from "@overbookd/charisma";
 import { ADMIN } from "@overbookd/team-constants";
 import { friendAssigneesCount } from "../assignment/common/repository/assignment.query";
@@ -371,9 +371,7 @@ export class UserService {
       charisma,
       teams: extractTeamCodes(teams),
       preference: preference
-        ? {
-            assignment: preference.assignment,
-          }
+        ? { assignment: preference.assignment }
         : undefined,
     };
   }
@@ -420,8 +418,4 @@ export class UserService {
   ): boolean {
     return author.can(MANAGE_USERS) || author.id === targetUserId;
   }
-}
-
-function extractTeamCodes(teams: DatabaseTeamCode[]) {
-  return teams.map((t) => t.team.code);
 }

@@ -16,10 +16,10 @@ class RegistrationFormStepUserResponseDto
 
   @ApiProperty({
     required: false,
-    description: "user phone number",
+    description: "user mobile phone number",
     type: String,
   })
-  phoneNumber?: string;
+  mobilePhone?: string;
 
   @ApiProperty({
     required: false,
@@ -41,7 +41,7 @@ class RegistrationFormStepUserResponseDto
     type: String,
     isArray: true,
   })
-  teams?: RegistrationTeams[];
+  teams?: RegistrationTeams;
 }
 
 export class RegistrationFormStepResponseDto {
