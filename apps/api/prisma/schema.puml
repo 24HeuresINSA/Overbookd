@@ -114,7 +114,6 @@ entity "User" as User {
   * phoneNumber : String
   comment : String
   profilePicture : String
-  * password : String
   * createdAt : DateTime
   * updatedAt : DateTime
   * isDeleted : Boolean
