@@ -11,6 +11,7 @@ import {
   User,
   UserPersonalData,
   UserUpdateForm,
+  UserWithTeams,
 } from "@overbookd/user";
 import {
   Consumer,
@@ -37,7 +38,10 @@ import { SELECT_PLANNING_EVENT } from "../assignment/common/repository/planning.
 import { toPlanningEventFromAssignment } from "../assignment/common/repository/planning.prisma";
 import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../common/query/transaction.query";
 import { Balance } from "@overbookd/personal-account";
-import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
+import {
+  SELECT_USER_IDENTIFIER,
+  SELECT_USER_WITH_TEAM_CODES,
+} from "../common/query/user.query";
 import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
 import {
   MinimalCharismaPeriod,
@@ -59,6 +63,11 @@ export class UserService {
   ) {}
 
   async userSync(user: RequestHydratedUser): Promise<void> {
+    this.zitadelService.addZitadelRoleIfNotGranted(
+      user.zitadelId,
+      oidcRoles.USER,
+    );
+
     const userId =
       (await this.getUserByZitadelId(user.zitadelId))?.id ??
       (await this.getUserByEmail(user.email))?.id;
@@ -112,11 +121,14 @@ export class UserService {
     });
   }
 
-  private getUserByEmail(email: string): Promise<User> {
-    return this.prisma.user.findUnique({
+  async getUserByEmail(email: string): Promise<UserWithTeams> {
+    const user = await this.prisma.user.findUnique({
       where: { email },
-      select: SELECT_USER_IDENTIFIER,
+      select: SELECT_USER_WITH_TEAM_CODES,
     });
+    if (!user) return null;
+    const teams = user.teams.map(({ teamCode }) => teamCode);
+    return { ...user, teams };
   }
 
   private async updateAdminTeamFromZitadel(

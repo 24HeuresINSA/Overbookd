@@ -20,6 +20,13 @@ import {
 } from "@overbookd/domain-events";
 import { checkStaffInvitationTokenValidity } from "../membership-application/staff/jwt.utils";
 import { jwtConstants } from "../../jwt-constants";
+import { UserService } from "../../user/user.service";
+import { ZitadelService } from "../../user/zitadel.service";
+import {
+  registrationSteps,
+  RegistrationStep,
+  RegistrationFormStep,
+} from "@overbookd/http";
 
 type Member = {
   forget: Readonly<ForgetMember>;
@@ -28,6 +35,8 @@ type Member = {
 
 type Service = {
   event: Readonly<DomainEventService>;
+  user: Readonly<UserService>;
+  zitadel: Readonly<ZitadelService>;
 };
 
 export class RegistrationService {
@@ -35,6 +44,29 @@ export class RegistrationService {
     private readonly member: Member,
     private readonly service: Service,
   ) {}
+
+  async check(email: string): Promise<RegistrationStep> {
+    email = email.toLowerCase().trim();
+    const zitadelUser = await this.service.zitadel.getZitadelUserByEmail(email);
+
+    const existingUser = await this.service.user.getUserByEmail(email);
+    if (!zitadelUser) {
+      return { next: registrationSteps.FORM, user: existingUser };
+    }
+
+    if (!existingUser) {
+      const stepUser: RegistrationFormStep["user"] = {
+        firstName: zitadelUser.human.profile.givenName,
+        lastName: zitadelUser.human.profile.familyName,
+        nickname: zitadelUser.human.profile.nickName,
+        email: zitadelUser.human.email.email,
+        teams: [],
+      };
+      return { next: registrationSteps.FORM, user: stepUser };
+    }
+
+    return { next: registrationSteps.LOGIN };
+  }
 
   async register(
     fulfilledRegistration: FulfilledRegistration,

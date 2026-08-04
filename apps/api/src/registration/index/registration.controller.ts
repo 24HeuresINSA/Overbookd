@@ -2,12 +2,20 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   Param,
   Post,
+  Query,
   UseFilters,
 } from "@nestjs/common";
-import { ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBody,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from "@nestjs/swagger";
 import { RegistrationRequestDto } from "./dto/registration.request.dto";
 import { RegistrationService } from "./registration.service";
 import {
@@ -16,12 +24,39 @@ import {
 } from "./registration-error.filter";
 import { ForgetRequestDto } from "./dto/forget.request.dto";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
+import {
+  RegistrationFormStepResponseDto,
+  RegistrationLoginStepResponseDto,
+} from "./dto/registration-step.response.dto";
+import { RegistrationStep } from "@overbookd/http";
+import { Public } from "../../authentication-zitadel/decorators/public.decorator";
 
 @Controller("registrations")
 @ApiTags("registration")
+@Public()
 @ApiSwaggerResponse()
 export class RegistrationController {
   constructor(private readonly registrationService: RegistrationService) {}
+
+  @Get("check")
+  @ApiQuery({
+    type: String,
+    name: "email",
+    description: "Email to check",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Next Registration step",
+    schema: {
+      anyOf: [
+        { $ref: getSchemaPath(RegistrationFormStepResponseDto) },
+        { $ref: getSchemaPath(RegistrationLoginStepResponseDto) },
+      ],
+    },
+  })
+  checkUser(@Query("email") email: string): Promise<RegistrationStep> {
+    return this.registrationService.check(email);
+  }
 
   @Post()
   @UseFilters(RegistrationErrorFilter)
