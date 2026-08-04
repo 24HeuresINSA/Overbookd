@@ -9,7 +9,7 @@ repos:
       - id: end-of-file-fixer
         exclude: apps/api/prisma/schema.puml
       - id: check-yaml
-        exclude: pnpm-lock.yaml
+        exclude: '(^pnpm-lock\.yaml$|^\.gitlab/.*\.ya?ml$)'
       - id: check-added-large-files
       - id: check-merge-conflict
   - repo: https://github.com/compilerla/conventional-pre-commit
