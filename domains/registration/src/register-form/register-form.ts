@@ -12,6 +12,10 @@ import { FulfilledRegistration, Teams } from "./fulfilled-registration.js";
 import { EULAField } from "./fields/EULA-field.js";
 import { VolunteerCharterField } from "./fields/volunteer-charter-field.js";
 import { Membership, VOLUNTEER } from "../newcomer.js";
+import {
+  PASSWORD_REQUIRED,
+  PasswordRequirement,
+} from "./password-requirement.js";
 
 export class RegisterForm {
   private email: EmailField;
@@ -28,6 +32,7 @@ export class RegisterForm {
 
   private constructor(
     private readonly membership: Membership,
+    private readonly passwordRequirement: PasswordRequirement,
     {
       email,
       firstName,
@@ -45,7 +50,7 @@ export class RegisterForm {
     this.email = EmailField.build(email ?? "");
     this.firstName = FirstNameField.build(firstName ?? "");
     this.lastName = LastNameField.build(lastName ?? "");
-    this.password = PasswordField.build(password ?? "");
+    this.password = PasswordField.build(password, passwordRequirement);
     this.mobilePhone = MobilePhoneField.build(mobilePhone ?? "");
     this.nickname = NicknameField.build(nickname);
     this.birthDate = BirthDateField.build(birthDate ?? new Date("1949-12-25"));
@@ -58,159 +63,162 @@ export class RegisterForm {
     );
   }
 
-  static initFor(membership: Membership): RegisterForm {
-    return new RegisterForm(membership, {});
+  static initFor(
+    membership: Membership,
+    passwordRequirement: PasswordRequirement,
+  ): RegisterForm {
+    return new RegisterForm(membership, passwordRequirement, {});
   }
 
   fillEmail(email: string): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       email,
     });
   }
 
   clearEmail(): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       email: undefined,
     });
   }
 
   fillFirstName(firstName: string): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       firstName,
     });
   }
 
   clearFirstName(): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       firstName: undefined,
     });
   }
 
   fillLastName(lastName: string): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       lastName,
     });
   }
 
   clearLastName(): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       lastName: undefined,
     });
   }
 
   fillPassword(password: string): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       password,
     });
   }
 
   clearPassword(): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       password: undefined,
     });
   }
 
   fillMobilePhone(mobilePhone: string): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       mobilePhone,
     });
   }
 
   clearMobilePhone(): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       mobilePhone: undefined,
     });
   }
 
   fillNickname(nickname: string): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       nickname,
     });
   }
 
   clearNickname(): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       nickname: undefined,
     });
   }
 
   fillBirthDate(birthDate: Date): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       birthDate,
     });
   }
 
   clearBirthDate(): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       birthDate: undefined,
     });
   }
 
   fillComment(comment: string): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       comment,
     });
   }
 
   clearComment(): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       comment: undefined,
     });
   }
 
   fillTeams(teams: Teams): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       teams,
     });
   }
 
   clearTeams(): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       teams: [],
     });
   }
 
   approveEndUserLicenceAgreement(): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       hasApprovedEULA: true,
     });
   }
 
   denyEndUserLicenceAgreement(): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       hasApprovedEULA: false,
     });
   }
 
   signVolunteerCharter(): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       hasSignedVolunteerCharter: true,
     });
   }
 
   denyVolunteerCharter(): RegisterForm {
-    return new RegisterForm(this.membership, {
+    return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       hasSignedVolunteerCharter: false,
     });
@@ -220,18 +228,22 @@ export class RegisterForm {
     const volunteerCharter = shouldSignVolunteerCharter(this.membership)
       ? { hasSignedVolunteerCharter: this.volunteerCharter.value }
       : {};
+    const password =
+      this.passwordRequirement === PASSWORD_REQUIRED
+        ? { password: this.password.value }
+        : {};
 
     return {
       email: this.email.value,
       firstName: this.firstName.value,
       lastName: this.lastName.value,
-      password: this.password.value,
       mobilePhone: this.mobilePhone.value,
       nickname: this.nickname.value,
       birthDate: this.birthDate.value,
       comment: this.comment.value,
       teams: this.teams.value,
       hasApprovedEULA: this.EULA.value,
+      ...password,
       ...volunteerCharter,
     };
   }

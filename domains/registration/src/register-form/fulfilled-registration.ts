@@ -36,7 +36,7 @@ export type FulfilledRegistration = {
   email: string;
   firstName: string;
   lastName: string;
-  password: string;
+  password?: string;
   mobilePhone: string;
   nickname?: string;
   birthDate: Date;

@@ -9,6 +9,10 @@ import {
 } from "@overbookd/team-constants";
 import { RegisterForm } from "./register-form.js";
 import { STAFF, VOLUNTEER } from "../newcomer.js";
+import {
+  PASSWORD_NOT_REQUIRED,
+  PASSWORD_REQUIRED,
+} from "./password-requirement.js";
 
 const AT_LEAST_12_CHAR_IN_PASSWORD =
   "Il faut au moins 12 caractères dans le mot de passe";
@@ -31,8 +35,8 @@ const comment = "Vous etes les meilleurs ! <3";
 const teams: Teams = [KARNA, TECKOS];
 const nickname = "Shagou";
 
-function validForm() {
-  return RegisterForm.initFor(VOLUNTEER)
+function validFormWithPassword() {
+  return RegisterForm.initFor(VOLUNTEER, PASSWORD_REQUIRED)
     .fillEmail(email)
     .fillFirstName(firstName)
     .fillLastName(lastName)
@@ -46,15 +50,54 @@ function validForm() {
     .signVolunteerCharter();
 }
 
+function validFormWithoutPassword() {
+  return RegisterForm.initFor(VOLUNTEER, PASSWORD_NOT_REQUIRED)
+    .fillEmail(email)
+    .fillFirstName(firstName)
+    .fillLastName(lastName)
+    .fillMobilePhone(mobilePhone)
+    .fillNickname(nickname)
+    .fillBirthDate(birthDate)
+    .fillComment(comment)
+    .fillTeams(teams)
+    .approveEndUserLicenceAgreement()
+    .signVolunteerCharter();
+}
+
 describe("Register form", () => {
   describe("when form is completely filled", () => {
-    it("should indicate the form is valid", () => {
-      const form = validForm();
-      expect(form.isValid).toBe(true);
+    describe("when password is required", () => {
+      it("should indicate the form is valid", () => {
+        const form = validFormWithPassword();
+        expect(form.isValid).toBe(true);
+      });
+      describe("when we want to register a newcomer", () => {
+        it("should generate a fulfilled form with password", () => {
+          const newcomer = validFormWithPassword().complete();
+          expect(newcomer).toEqual({
+            firstName,
+            lastName,
+            teams,
+            comment,
+            nickname,
+            birthDate,
+            password,
+            email,
+            mobilePhone,
+            hasApprovedEULA: true,
+            hasSignedVolunteerCharter: true,
+          });
+        });
+      });
     });
-    describe("when we want to register a newcomer", () => {
-      it("should generate a fulfilled form", () => {
-        const newcomer = validForm().complete();
+    describe("when password is not required", () => {
+      it("should indicate the form is valid without password", () => {
+        const form = validFormWithoutPassword();
+        expect(form.isValid).toBe(true);
+        expect(form.reasons).toHaveLength(0);
+      });
+      it("should generate a fulfilled form without password", () => {
+        const newcomer = validFormWithoutPassword().complete();
         expect(newcomer).toEqual({
           firstName,
           lastName,
@@ -62,17 +105,27 @@ describe("Register form", () => {
           comment,
           nickname,
           birthDate,
-          password,
           email,
           mobilePhone,
           hasApprovedEULA: true,
           hasSignedVolunteerCharter: true,
         });
       });
+      it("should ignore password rules", () => {
+        const form = validFormWithoutPassword().fillPassword("invalid");
+        expect(form.isValid).toBe(true);
+        expect(form.reasons).toHaveLength(0);
+      });
+      it("should not expose password even when password has been filled", () => {
+        const form =
+          validFormWithoutPassword().fillPassword("Adjpefj5dtaxckw+");
+        expect(form.isValid).toBe(true);
+        expect(form.complete()).not.toHaveProperty("password");
+      });
     });
   });
   describe("email rules", () => {
-    const baseForm = validForm().clearEmail();
+    const baseForm = validFormWithPassword().clearEmail();
     describe("when form is filled with empty email", () => {
       it("should indicate the form is invalid", () => {
         const form = baseForm.fillEmail("");
@@ -109,7 +162,7 @@ describe("Register form", () => {
   });
   describe("firstName rules", () => {
     describe("when firstName is filled with empty string", () => {
-      const baseForm = validForm().clearFirstName();
+      const baseForm = validFormWithPassword().clearFirstName();
       it("should indicate the form is invalid", () => {
         const form = baseForm.fillFirstName("");
         expect(form.isValid).toBe(false);
@@ -123,7 +176,7 @@ describe("Register form", () => {
   });
   describe("lastName rules", () => {
     describe("when lastName is filled with empty string", () => {
-      const baseForm = validForm().clearLastName();
+      const baseForm = validFormWithPassword().clearLastName();
       it("should indicate the form is invalid", () => {
         const form = baseForm.fillLastName("");
         expect(form.isValid).toBe(false);
@@ -135,8 +188,8 @@ describe("Register form", () => {
       });
     });
   });
-  describe("password rules", () => {
-    const baseForm = validForm().clearPassword();
+  describe("password rules when password is required", () => {
+    const baseForm = validFormWithPassword().clearPassword();
     describe("when password is filled with missing rules", () => {
       describe.each`
         password               | reasons
@@ -183,7 +236,7 @@ describe("Register form", () => {
     });
   });
   describe("mobilePhone rules", () => {
-    const baseForm = validForm().clearMobilePhone();
+    const baseForm = validFormWithPassword().clearMobilePhone();
     describe("when mobile phone is valid", () => {
       it("should indicate form is valid", () => {
         const form = baseForm.fillMobilePhone(mobilePhone);
@@ -203,7 +256,7 @@ describe("Register form", () => {
     });
   });
   describe("nickname rules", () => {
-    const baseForm = validForm().clearNickname();
+    const baseForm = validFormWithPassword().clearNickname();
     describe("when nickname is cleared", () => {
       it("should indicate form is valid", () => {
         expect(baseForm.isValid).toBe(true);
@@ -219,7 +272,7 @@ describe("Register form", () => {
     });
   });
   describe("birthDate rules", () => {
-    const baseForm = validForm().clearBirthDate();
+    const baseForm = validFormWithPassword().clearBirthDate();
     describe.each`
       birthDate       | valid    | reason
       ${"1949-12-25"} | ${false} | ${"Tu n'es pas si vieux !"}
@@ -240,7 +293,7 @@ describe("Register form", () => {
     );
   });
   describe("comment rules", () => {
-    const baseForm = validForm().clearComment();
+    const baseForm = validFormWithPassword().clearComment();
     describe("when comment is cleared", () => {
       it("should indicate form is valid", () => {
         expect(baseForm.isValid).toBe(true);
@@ -256,7 +309,7 @@ describe("Register form", () => {
     });
   });
   describe("teams rules", () => {
-    const baseForm = validForm().clearTeams();
+    const baseForm = validFormWithPassword().clearTeams();
     describe.each`
       teams                          | valid
       ${[]}                          | ${true}
@@ -276,7 +329,7 @@ describe("Register form", () => {
     });
   });
   describe("EULA rules", () => {
-    const form = validForm().denyEndUserLicenceAgreement();
+    const form = validFormWithPassword().denyEndUserLicenceAgreement();
     describe("when EULA is cleared", () => {
       it("should indicate form is invalid", () => {
         expect(form.isValid).toBe(false);
@@ -292,12 +345,12 @@ describe("Register form", () => {
   describe("Volunteer Charter rules", () => {
     describe("when volunteer is signing the volunteer charter", () => {
       it("should indicate form is valid", () => {
-        const signedForm = validForm().signVolunteerCharter();
-        expect(validForm().isValid).toBe(true);
+        const signedForm = validFormWithPassword().signVolunteerCharter();
+        expect(signedForm.isValid).toBe(true);
       });
     });
     describe("when volunteer is not signing the volunteer charter", () => {
-      const unsignedForm = validForm().denyVolunteerCharter();
+      const unsignedForm = validFormWithPassword().denyVolunteerCharter();
       it("should indicate form is invalid", () => {
         expect(unsignedForm.isValid).toBe(false);
       });
@@ -309,7 +362,7 @@ describe("Register form", () => {
       });
     });
     describe("when staff is not signing the volunteer charter", () => {
-      const unsignedForm = RegisterForm.initFor(STAFF)
+      const unsignedForm = RegisterForm.initFor(STAFF, PASSWORD_REQUIRED)
         .fillEmail(email)
         .fillFirstName(firstName)
         .fillLastName(lastName)

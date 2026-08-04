@@ -1,5 +1,5 @@
 import { IMAGE_MAX_SIZE, IMAGE_EXTENSIONS } from "@overbookd/http";
-import { SPECIAL_CHARS_REGEX_PATERN } from "@overbookd/registration";
+import { SPECIAL_CHARS_REGEX_PATTERN } from "@overbookd/registration";
 import {
   isMobilePhoneNumberValid,
   isPhoneNumberValid,
@@ -87,7 +87,7 @@ export function isPhoneNumber(value: string | null) {
 // nosemgrep
 // eslint-disable-next-line security/detect-non-literal-regexp
 export const passwordPattern = new RegExp(
-  `^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*${SPECIAL_CHARS_REGEX_PATERN}).{12,}`,
+  `^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*${SPECIAL_CHARS_REGEX_PATTERN}).{12,}`,
 );
 
 export function password(value: string | null) {
