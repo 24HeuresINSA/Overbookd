@@ -34,7 +34,6 @@ npm-debug.log
 
 .env
 !/.env
-!/docker/.env
 
 # IDE
 .vscode/*
@@ -44,7 +43,6 @@ npm-debug.log
 .idea
 
 ## Old files
-
 *.old
 
 dist
