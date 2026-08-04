@@ -250,6 +250,7 @@ import {
   shouldSignVolunteerCharter,
   STAFF,
   VOLUNTEER,
+  PASSWORD_REQUIRED,
 } from "@overbookd/registration";
 import { LOGIN_URL } from "@overbookd/web-page";
 import {
@@ -326,7 +327,7 @@ const cleanNickname = computed<string | undefined>(
 
 const registerForm = computed<RegisterForm>(() => {
   const form = commentAction(
-    nicknameAction(RegisterForm.initFor(membership.value)),
+    nicknameAction(RegisterForm.initFor(membership.value, PASSWORD_REQUIRED)),
   )
     .fillBirthDate(new Date(birthDay.value))
     .fillEmail(email.value)
