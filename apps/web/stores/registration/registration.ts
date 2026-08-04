@@ -5,6 +5,11 @@ import { RegistrationRepository } from "~/repositories/registration/registration
 
 export const useRegistrationStore = defineStore("registration", {
   actions: {
+    async checkUser(email: string) {
+      const res = await RegistrationRepository.checkUser(email);
+      if (isHttpError(res)) return;
+    },
+
     async register(form: RegisterForm, token?: string): Promise<boolean> {
       const res = await RegistrationRepository.registerNewcomer(form, token);
       if (isHttpError(res)) return false;

@@ -1,8 +1,16 @@
+import type { RegistrationStep } from "@overbookd/http";
 import { type Credentials, RegisterForm } from "@overbookd/registration";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class RegistrationRepository {
   private static readonly basePath = "registrations";
+
+  static checkUser(email: string) {
+    const cleanedEmail = email.toLowerCase().trim();
+    return HttpClient.get<RegistrationStep>(
+      `${this.basePath}/check?email=${cleanedEmail}`,
+    );
+  }
 
   static registerNewcomer(form: RegisterForm, token?: string) {
     const newcomer = form.complete();

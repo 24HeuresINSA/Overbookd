@@ -17,7 +17,6 @@ import {
   Consumer,
   DatabaseConsumer,
   DatabaseMyUserInformation,
-  DatabaseTeamCode,
   DatabaseUserPersonalData,
   UserPasswordOnly,
 } from "./user.model";
