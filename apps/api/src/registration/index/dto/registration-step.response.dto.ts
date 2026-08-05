@@ -1,6 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { RegistrationFormStepUser, registrationSteps } from "@overbookd/http";
-import { RegistrationTeams } from "@overbookd/registration";
+import {
+  RegistrationTeams,
+  PasswordRequirement,
+} from "@overbookd/registration";
 
 class RegistrationFormStepUserResponseDto implements RegistrationFormStepUser {
   @ApiProperty({
@@ -75,6 +78,13 @@ export class RegistrationFormStepResponseDto {
     type: RegistrationFormStepUserResponseDto,
   })
   user?: RegistrationFormStepUserResponseDto;
+
+  @ApiProperty({
+    required: true,
+    description: "password requirement for registration",
+    type: String,
+  })
+  passwordRequirement: PasswordRequirement;
 }
 
 export class RegistrationLoginStepResponseDto {
@@ -84,4 +94,13 @@ export class RegistrationLoginStepResponseDto {
     type: String,
   })
   next: typeof registrationSteps.LOGIN;
+}
+
+export class RegistrationCompletedStepResponseDto {
+  @ApiProperty({
+    required: true,
+    description: "next registration step",
+    type: String,
+  })
+  next: typeof registrationSteps.COMPLETED;
 }

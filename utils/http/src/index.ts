@@ -103,6 +103,7 @@ export type {
   RegistrationFormStep,
   RegistrationFormStepUser,
   RegistrationLoginStep,
+  RegistrationCompletedStep,
 } from "./registration";
 export { registrationSteps } from "./registration";
 export type { EditAmountForm } from "./contribution";

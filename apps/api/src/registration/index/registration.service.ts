@@ -12,7 +12,9 @@ import {
   isStaffRegistered,
   isVolunteerRegistered,
   PASSWORD_REQUIRED,
+  PASSWORD_NOT_REQUIRED,
 } from "@overbookd/registration";
+import { BE_AFFECTED } from "@overbookd/permission";
 import { DomainEventService } from "../../domain-event/domain-event.service";
 import { isString } from "class-validator";
 import {
@@ -27,6 +29,7 @@ import {
   RegistrationStep,
   RegistrationFormStepUser,
 } from "@overbookd/http";
+import { RequestHydratedUser } from "../../authentication-zitadel/request-hydrated-user";
 
 type Member = {
   forget: Readonly<ForgetMember>;
@@ -40,10 +43,16 @@ type Service = {
 
 export type UserForRegistrationRepository = {
   getByEmail: (email: string) => Promise<RegistrationFormStepUser>;
+  getById: (id: number) => Promise<RegistrationFormStepUser>;
+};
+
+export type MembershipApplicationForRegistrationRepository = {
+  hasValidApplication: (id: number) => Promise<boolean>;
 };
 
 type Repository = {
   user: Readonly<UserForRegistrationRepository>;
+  application: Readonly<MembershipApplicationForRegistrationRepository>;
 };
 
 export class RegistrationService {
@@ -53,16 +62,29 @@ export class RegistrationService {
     private readonly repository: Repository,
   ) {}
 
-  async check(email: string): Promise<RegistrationStep> {
+  async checkUnauthenticatedUser(email: string): Promise<RegistrationStep> {
     email = email.toLowerCase().trim();
     const zitadelUser = await this.service.zitadel.getZitadelUserByEmail(email);
 
-    const existingUser = await this.repository.user.getByEmail(email);
     if (!zitadelUser) {
-      return { next: registrationSteps.FORM, user: existingUser };
+      const existingUser = await this.repository.user.getByEmail(email);
+      return {
+        next: registrationSteps.FORM,
+        user: existingUser,
+        passwordRequirement: PASSWORD_REQUIRED,
+      };
     }
 
-    if (!existingUser) {
+    return { next: registrationSteps.LOGIN };
+  }
+
+  async checkAuthenticatedUser(
+    user: RequestHydratedUser,
+  ): Promise<RegistrationStep> {
+    if (!user.id) {
+      const zitadelUser = await this.service.zitadel.getZitadelUserById(
+        user.zitadelId,
+      );
       const { email, profile, phone } = zitadelUser.human;
       const stepUser: RegistrationFormStepUser = {
         email: email.email,
@@ -71,10 +93,29 @@ export class RegistrationService {
         nickname: profile.nickName,
         mobilePhone: phone.phone,
       };
-      return { next: registrationSteps.FORM, user: stepUser };
+      return {
+        next: registrationSteps.FORM,
+        user: stepUser,
+        passwordRequirement: PASSWORD_NOT_REQUIRED,
+      };
     }
 
-    return { next: registrationSteps.LOGIN };
+    if (user.can(BE_AFFECTED)) {
+      return { next: registrationSteps.COMPLETED };
+    }
+
+    const hasValidApplication =
+      await this.repository.application.hasValidApplication(user.id);
+    if (hasValidApplication) {
+      return { next: registrationSteps.COMPLETED };
+    }
+
+    const existingUser = await this.repository.user.getById(user.id);
+    return {
+      next: registrationSteps.FORM,
+      user: existingUser,
+      passwordRequirement: PASSWORD_NOT_REQUIRED,
+    };
   }
 
   async register(

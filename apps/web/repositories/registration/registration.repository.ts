@@ -5,10 +5,16 @@ import { HttpClient } from "~/utils/http/http-client";
 export class RegistrationRepository {
   private static readonly basePath = "registrations";
 
-  static checkUser(email: string) {
+  static checkUnauthenticatedUser(email: string) {
     const cleanedEmail = email.toLowerCase().trim();
     return HttpClient.get<RegistrationStep>(
-      `${this.basePath}/check?email=${cleanedEmail}`,
+      `${this.basePath}/unauthenticated/check/${cleanedEmail}`,
+    );
+  }
+
+  static checkAuthenticatedUser() {
+    return HttpClient.get<RegistrationStep>(
+      `${this.basePath}/authenticated/check`,
     );
   }
 

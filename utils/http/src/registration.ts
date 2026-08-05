@@ -1,6 +1,9 @@
 import { IProvidePeriod } from "@overbookd/time";
 import { UserWithTeams } from "@overbookd/user";
-import { FulfilledRegistration } from "@overbookd/registration";
+import {
+  FulfilledRegistration,
+  PasswordRequirement,
+} from "@overbookd/registration";
 
 export type StaffCandidate = UserWithTeams & {
   email: string;
@@ -21,6 +24,7 @@ export type HasApplication = { hasApplication: boolean };
 export const registrationSteps = {
   LOGIN: "LOGIN",
   FORM: "FORM",
+  COMPLETED: "COMPLETED",
 } as const;
 
 export type RegistrationStepKey =
@@ -43,10 +47,16 @@ export type RegistrationFormStepUser = Partial<
 export type RegistrationFormStep = {
   next: typeof registrationSteps.FORM;
   user?: RegistrationFormStepUser;
+  passwordRequirement: PasswordRequirement;
 };
 
 export type RegistrationLoginStep = {
   next: typeof registrationSteps.LOGIN;
 };
 
-export type RegistrationStep = RegistrationFormStep | RegistrationLoginStep;
+export type RegistrationCompletedStep = {
+  next: typeof registrationSteps.COMPLETED;
+};
+
+export type RegistrationStep =
+  RegistrationFormStep | RegistrationLoginStep | RegistrationCompletedStep;
