@@ -36,7 +36,6 @@ export type {
 export type {
   Member,
   MemberRepository,
-  Credentials,
 } from "./forget-member/forget-member.js";
 export { ForgetMember } from "./forget-member/forget-member.js";
 export {

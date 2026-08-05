@@ -8,8 +8,6 @@ import { PrismaModule } from "../../prisma.module";
 import { HashingUtilsService } from "../../hashing-utils/hashing-utils.service";
 import { DomainEventModule } from "../../domain-event/domain-event.module";
 import { DomainEventService } from "../../domain-event/domain-event.service";
-import { PrismaMemberRepository } from "./repository/member-repository.prisma";
-import { ForgetMember } from "@overbookd/registration";
 import { ZitadelService } from "../../user/zitadel.service";
 import { PrismaUserForRegistrationRepository } from "./repository/user-repository.prisma";
 import { PrismaMembershipApplicationForRegistrationRepository } from "./repository/membership-application-repository.prisma";
@@ -30,18 +28,6 @@ import { PrismaMembershipApplicationForRegistrationRepository } from "./reposito
       inject: [PrismaNewcomerRepository],
     },
     {
-      provide: PrismaMemberRepository,
-      useFactory: (prisma: PrismaService) =>
-        new PrismaMemberRepository(prisma, new HashingUtilsService()),
-      inject: [PrismaService],
-    },
-    {
-      provide: ForgetMember,
-      useFactory: (members: PrismaMemberRepository) =>
-        new ForgetMember(members),
-      inject: [PrismaMemberRepository],
-    },
-    {
       provide: PrismaUserForRegistrationRepository,
       useFactory: (prisma: PrismaService) =>
         new PrismaUserForRegistrationRepository(prisma),
@@ -58,20 +44,18 @@ import { PrismaMembershipApplicationForRegistrationRepository } from "./reposito
       provide: RegistrationService,
       useFactory: (
         register: RegisterNewcomer,
-        forget: ForgetMember,
         event: DomainEventService,
         zitadel: ZitadelService,
         user: PrismaUserForRegistrationRepository,
         application: PrismaMembershipApplicationForRegistrationRepository,
       ) =>
         new RegistrationService(
-          { register, forget },
+          { register },
           { event, zitadel },
           { user, application },
         ),
       inject: [
         RegisterNewcomer,
-        ForgetMember,
         DomainEventService,
         ZitadelService,
         PrismaUserForRegistrationRepository,
@@ -80,6 +64,5 @@ import { PrismaMembershipApplicationForRegistrationRepository } from "./reposito
     },
   ],
   imports: [PrismaModule, DomainEventModule],
-  exports: [RegisterNewcomer, ForgetMember],
 })
 export class RegistrationModule {}

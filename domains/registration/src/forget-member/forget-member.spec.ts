@@ -5,15 +5,11 @@ import {
   StoredMember,
   InMemoryMemberRepository,
 } from "./member-repository.inmemory.js";
-import { ANONYMOUS, ANONYMOUS_MOBILE_PHONE } from "./anonymous-member.js";
 import {
-  ALREADY_HAVE_TRANSACTIONS,
   ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE,
   IN_DEBT_ERROR_MESSAGE,
-  I_M_ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE,
-  I_M_IN_DEBT_ERROR_MESSAGE,
-  WRONG_CREDENTIALS_ERROR_MESSAGE,
 } from "./forget-member.error.js";
+import { ANONYMOUS, ANONYMOUS_MOBILE_PHONE } from "./anonymous-member.js";
 
 const withTaskMember: StoredMember = {
   id: 1,
@@ -22,6 +18,7 @@ const withTaskMember: StoredMember = {
   tasks: [{ end: new Date(Date.now() + ONE_DAY_IN_MS * 30) }],
   balance: 10,
   transactions: [{ from: 0, to: 1 }],
+  comment: "Commentaire",
 };
 
 const inDebtMember: StoredMember = {
@@ -52,6 +49,8 @@ const withTransactionsMember: StoredMember = {
     { from: 0, to: 4 },
     { from: 4, to: 0 },
   ],
+  comment: "Ceci est un commentaire",
+  note: "SUper bénévole",
 };
 
 describe("Forget member", () => {
@@ -66,57 +65,24 @@ describe("Forget member", () => {
     ]);
     forget = new ForgetMember(memberRepository);
   });
-  describe("when asking to forget me", () => {
-    describe("when I submit a wrong password", () => {
-      it("should indicate that we can't forget about member without the right password", async () => {
-        expect(
-          async () =>
-            await forget.me({
-              email: withoutTransactionsMember.email,
-              password: "qwertyui",
-            }),
-        ).rejects.toThrow(WRONG_CREDENTIALS_ERROR_MESSAGE);
-      });
-    });
-    describe("when I have task assigned in futur", () => {
+  describe("when asking to forget a member", () => {
+    describe("when he has task assigned in futur", () => {
       it("should indicate that we can't forget about assigned member", async () => {
         expect(
-          async () =>
-            await forget.me({
-              email: withTaskMember.email,
-              password: withTaskMember.password,
-            }),
-        ).rejects.toThrow(I_M_ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE);
+          async () => await forget.apply(withTaskMember.id),
+        ).rejects.toThrow(ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE);
       });
     });
-    describe("when I'm in debt", () => {
+    describe("when he is in debt", () => {
       it("should indicate that we can't forget about in debt member", async () => {
-        expect(
-          async () =>
-            await forget.me({
-              email: inDebtMember.email,
-              password: inDebtMember.password,
-            }),
-        ).rejects.toThrow(I_M_IN_DEBT_ERROR_MESSAGE);
-      });
-    });
-    describe("when I don't have transactions", () => {
-      it("should remove member data from storage", async () => {
-        await forget.me({
-          email: withoutTransactionsMember.email,
-          password: withoutTransactionsMember.password,
-        });
-        expect(memberRepository.storedMembers).not.toContainEqual(
-          withoutTransactionsMember,
+        expect(async () => await forget.apply(inDebtMember.id)).rejects.toThrow(
+          IN_DEBT_ERROR_MESSAGE,
         );
       });
     });
-    describe("when I have transactions", () => {
+    describe("when he has transactions", () => {
       it("should anonymize member personal data", async () => {
-        const anonymizedMember = await forget.me({
-          email: withTransactionsMember.email,
-          password: withTransactionsMember.password,
-        });
+        const anonymizedMember = await forget.apply(withTransactionsMember.id);
         expect(anonymizedMember).toEqual({
           email: "anonymous+4@24heures.org",
           firstName: ANONYMOUS,
@@ -124,35 +90,13 @@ describe("Forget member", () => {
           mobilePhone: ANONYMOUS_MOBILE_PHONE,
           nickname: null,
           comment: null,
+          note: null,
         });
-      });
-    });
-  });
-  describe("when asking to forget other member", () => {
-    describe("when he has task assigned in futur", () => {
-      it("should indicate that we can't forget about assigned member", async () => {
-        expect(
-          async () => await forget.him(withTaskMember.email),
-        ).rejects.toThrow(ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE);
-      });
-    });
-    describe("when he is in debt", () => {
-      it("should indicate that we can't forget about in debt member", async () => {
-        expect(
-          async () => await forget.him(inDebtMember.email),
-        ).rejects.toThrow(IN_DEBT_ERROR_MESSAGE);
-      });
-    });
-    describe("when he has transactions", () => {
-      it("should indicate that we can't forget about member with transactions", async () => {
-        expect(
-          async () => await forget.him(withTransactionsMember.email),
-        ).rejects.toThrow(ALREADY_HAVE_TRANSACTIONS);
       });
     });
     describe("when he doesn't have transactions", () => {
       it("should remove member data from storage", async () => {
-        await forget.him(withoutTransactionsMember.email);
+        await forget.apply(withoutTransactionsMember.id);
         expect(memberRepository.storedMembers).not.toContainEqual(
           withoutTransactionsMember,
         );

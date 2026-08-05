@@ -1,10 +1,8 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   HttpCode,
-  Param,
   Post,
   Query,
   UseFilters,
@@ -19,11 +17,7 @@ import {
 } from "@nestjs/swagger";
 import { RegistrationRequestDto } from "./dto/registration.request.dto";
 import { RegistrationService } from "./registration.service";
-import {
-  ForgetMemberErrorFilter,
-  RegistrationErrorFilter,
-} from "./registration-error.filter";
-import { ForgetRequestDto } from "./dto/forget.request.dto";
+import { RegistrationErrorFilter } from "./registration-error.filter";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 import {
   RegistrationCompletedStepResponseDto,
@@ -102,33 +96,5 @@ export class RegistrationController {
     @Body() { newcomer, token }: RegistrationRequestDto,
   ): Promise<void> {
     return this.registrationService.register(newcomer, token);
-  }
-
-  @Post("forget")
-  @Public()
-  @UseFilters(ForgetMemberErrorFilter)
-  @ApiBody({
-    description: "Forget a member",
-    type: ForgetRequestDto,
-  })
-  @HttpCode(201)
-  @ApiResponse({
-    status: 201,
-    description: "Forget request done",
-  })
-  forgetMe(@Body() { token, credentials }: ForgetRequestDto) {
-    return this.registrationService.forgetMe(credentials, token);
-  }
-
-  @Delete("forget/:email")
-  @Public()
-  @UseFilters(ForgetMemberErrorFilter)
-  @HttpCode(204)
-  @ApiResponse({
-    status: 204,
-    description: "Forget request done",
-  })
-  forgetHim(@Param("email") email: string): Promise<void> {
-    return this.registrationService.forgetHim(email);
   }
 }

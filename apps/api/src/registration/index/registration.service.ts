@@ -1,12 +1,9 @@
-import jwt from "jsonwebtoken";
 import { BadRequestException } from "@nestjs/common";
 import {
   FulfilledRegistration,
   RegisterNewcomer,
   VOLUNTEER,
   STAFF,
-  Credentials,
-  ForgetMember,
   Membership,
   NewcomerRegistered,
   isStaffRegistered,
@@ -16,13 +13,11 @@ import {
 } from "@overbookd/registration";
 import { BE_AFFECTED } from "@overbookd/permission";
 import { DomainEventService } from "../../domain-event/domain-event.service";
-import { isString } from "class-validator";
 import {
   STAFF_REGISTERED,
   VOLUNTEER_REGISTERED,
 } from "@overbookd/domain-events";
 import { checkStaffInvitationTokenValidity } from "../membership-application/staff/jwt.utils";
-import { jwtConstants } from "../../jwt-constants";
 import { ZitadelService } from "../../user/zitadel.service";
 import {
   registrationSteps,
@@ -34,7 +29,6 @@ import {
 import { RequestHydratedUser } from "../../authentication-zitadel/request-hydrated-user";
 
 type Member = {
-  forget: Readonly<ForgetMember>;
   register: Readonly<RegisterNewcomer>;
 };
 
@@ -164,38 +158,6 @@ export class RegistrationService {
         type: VOLUNTEER_REGISTERED,
         data: registree,
       });
-    }
-  }
-
-  async forgetMe(credentials: Credentials, token: string) {
-    const isValidForgetRequest = this.checkForgetRequestValidity(
-      token,
-      credentials.email,
-    );
-
-    if (!isValidForgetRequest) {
-      throw new BadRequestException(
-        "Le lien d'oubli ne semble pas être le bon. Tu peux en redemander un.",
-      );
-    }
-
-    await this.member.forget.me(credentials);
-  }
-
-  async forgetHim(email: string) {
-    return this.member.forget.him(email);
-  }
-
-  private checkForgetRequestValidity(token: string, email: string) {
-    try {
-      const verifyOptions = { ignoreExpiration: false };
-      const payload = jwt.verify(token, jwtConstants.secret, verifyOptions);
-
-      if (isString(payload)) return false;
-
-      return payload.email === email;
-    } catch {
-      return false;
     }
   }
 }

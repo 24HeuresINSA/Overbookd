@@ -48,12 +48,14 @@ import { friendAssigneesCount } from "../assignment/common/repository/assignment
 import { OverbookdOidcRole, oidcRoles } from "@overbookd/oidc";
 import { ZitadelService } from "./zitadel.service";
 import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
+import { ForgetMember } from "@overbookd/registration";
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly zitadelService: ZitadelService,
+    private readonly forget: ForgetMember,
   ) {}
 
   async userSync(user: RequestHydratedUser): Promise<void> {
@@ -304,6 +306,8 @@ export class UserService {
         "Tu ne peux pas supprimer un membre de l'équipe admin.",
       );
     }
+
+    await this.forget.apply(id);
     await this.prisma.user.delete({ where: { id } });
   }
 

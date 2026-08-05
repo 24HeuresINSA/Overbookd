@@ -8,4 +8,5 @@ export type AnonymousMember = {
   email: string;
   mobilePhone: typeof ANONYMOUS_MOBILE_PHONE;
   comment: null;
+  note: null;
 };
