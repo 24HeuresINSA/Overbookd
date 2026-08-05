@@ -69,7 +69,11 @@ export {
   shouldSignVolunteerCharter,
 } from "./register-form/register-form.js";
 export { SPECIAL_CHARS_REGEX_PATTERN } from "./register-form/fields/password-field.js";
-export { PASSWORD_REQUIRED } from "./register-form/password-requirement.js";
+export {
+  PASSWORD_REQUIRED,
+  PASSWORD_NOT_REQUIRED,
+} from "./register-form/password-requirement.js";
+export type { PasswordRequirement } from "./register-form/password-requirement.js";
 
 // Phone Number
 export {

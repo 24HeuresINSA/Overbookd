@@ -32,8 +32,8 @@ import {
 } from "./dto/registration-step.response.dto";
 import { RegistrationStep } from "@overbookd/http";
 import { Public } from "../../authentication-zitadel/decorators/public.decorator";
-import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
-import { AuthenticatedUser } from "../authentication-zitadel/decorators/authenticated-user.decorator";
+import { RequestHydratedUser } from "../../authentication-zitadel/request-hydrated-user";
+import { AuthenticatedUser } from "../../authentication-zitadel/decorators/authenticated-user.decorator";
 
 @Controller("registrations")
 @ApiTags("registration")
