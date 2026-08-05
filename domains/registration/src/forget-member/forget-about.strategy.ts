@@ -2,6 +2,7 @@ import {
   AnonymousMember,
   ANONYMOUS,
   ANONYMOUS_MOBILE_PHONE,
+  ANONYMOUS_BIRTH_DATE,
 } from "./anonymous-member.js";
 import { MemberRepository } from "./forget-member.js";
 
@@ -45,9 +46,12 @@ export class WithTransactions implements ForgetAboutMember {
       lastName: ANONYMOUS,
       mobilePhone: ANONYMOUS_MOBILE_PHONE,
       email: `anonymous+${this.id}@24heures.org`,
+      birthDate: ANONYMOUS_BIRTH_DATE,
       comment: null,
       nickname: null,
       note: null,
+      profilePicture: null,
+      oidcId: null,
     };
     return this.members.anonymize(this.id, anonymizedMember);
   }

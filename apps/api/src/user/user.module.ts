@@ -19,7 +19,7 @@ import { ZitadelService } from "./zitadel.service";
 import { ZitadelRoleService } from "./zitadel-roles.service";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { DomainEventModule } from "../domain-event/domain-event.module";
-import { PrismaMemberRepository } from "./repository/member-repository.prisma";
+import { PrismaForgetMemberRepository } from "./repository/forget-member-repository.prisma";
 import { ForgetMember } from "@overbookd/registration";
 
 @Module({
@@ -60,15 +60,16 @@ import { ForgetMember } from "@overbookd/registration";
       inject: [PrismaBreaks],
     },
     {
-      provide: PrismaMemberRepository,
-      useFactory: (prisma: PrismaService) => new PrismaMemberRepository(prisma),
+      provide: PrismaForgetMemberRepository,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaForgetMemberRepository(prisma),
       inject: [PrismaService],
     },
     {
       provide: ForgetMember,
-      useFactory: (members: PrismaMemberRepository) =>
+      useFactory: (members: PrismaForgetMemberRepository) =>
         new ForgetMember(members),
-      inject: [PrismaMemberRepository],
+      inject: [PrismaForgetMemberRepository],
     },
     ZitadelService,
     {

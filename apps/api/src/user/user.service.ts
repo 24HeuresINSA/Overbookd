@@ -335,7 +335,6 @@ export class UserService {
     }
 
     await this.forget.apply(id);
-    await this.prisma.user.delete({ where: { id } });
   }
 
   private async selectCharismaPeriods(): Promise<MinimalCharismaPeriod[]> {
