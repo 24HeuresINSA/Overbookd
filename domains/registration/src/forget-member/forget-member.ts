@@ -5,10 +5,6 @@ import {
   WithTransactions,
 } from "./forget-about.strategy.js";
 
-export type Member = {
-  id: number;
-};
-
 export type MemberRepository = {
   hasTasks(id: number): Promise<boolean>;
   hasDebts(id: number): Promise<boolean>;
