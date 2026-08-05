@@ -2,7 +2,7 @@ import { updateItemToList } from "@overbookd/list";
 import { AnonymousMember } from "./anonymous-member.js";
 import { MemberRepository } from "./forget-member.js";
 
-type Task = {
+type Assignment = {
   end: Date;
 };
 
@@ -15,21 +15,37 @@ export type StoredMember = {
   id: number;
   email: string;
   password: string;
-  tasks: Task[];
+  birthDate: Date;
+  assignments: Assignment[];
+  tasks: boolean;
+  activities: boolean;
   balance: number;
   transactions: Transaction[];
   comment?: string;
   note?: string;
+  profilePicture?: string;
 };
 
 export class InMemoryMemberRepository implements MemberRepository {
   constructor(private members: StoredMember[]) {}
 
-  hasTasks(id: number): Promise<boolean> {
+  hasFutureAssignments(id: number): Promise<boolean> {
     return Promise.resolve(
       this.members
         .find((member) => member.id === id)
-        ?.tasks?.some(({ end }) => end.getTime() > Date.now()) ?? false,
+        ?.assignments?.some(({ end }) => end.getTime() > Date.now()) ?? false,
+    );
+  }
+
+  hasActivities(id: number): Promise<boolean> {
+    return Promise.resolve(
+      this.members.find((member) => member.id === id)?.activities ?? false,
+    );
+  }
+
+  hasTasks(id: number): Promise<boolean> {
+    return Promise.resolve(
+      this.members.find((member) => member.id === id)?.tasks ?? false,
     );
   }
 

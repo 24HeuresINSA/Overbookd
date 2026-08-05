@@ -4,14 +4,36 @@ import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../../common/query/transaction.
 import { Balance } from "@overbookd/personal-account";
 import { IS_NOT_DELETED } from "../../common/query/not-deleted.query";
 
-export class PrismaMemberRepository implements MemberRepository {
+export class PrismaForgetMemberRepository implements MemberRepository {
   constructor(private readonly prisma: PrismaService) {}
+
+  async hasFutureAssignments(id: number): Promise<boolean> {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        id,
+        assigned: { some: { assignment: { end: { gt: new Date() } } } },
+      },
+    });
+    return user !== null;
+  }
+
+  async hasActivities(id: number): Promise<boolean> {
+    const user = await this.prisma.user.findFirst({
+      where: { id, OR: [{ festivalActivities: { some: {} } }] },
+    });
+    return user !== null;
+  }
 
   async hasTasks(id: number): Promise<boolean> {
     const user = await this.prisma.user.findFirst({
       where: {
         id,
-        assigned: { some: { assignment: { end: { gt: new Date() } } } },
+        OR: [
+          { festivalTaskAdministrated: { some: {} } },
+          { festivalTaskContacts: { some: {} } },
+          { festivalTaskInCharge: { some: {} } },
+          { festivalTaskMobilizations: { some: {} } },
+        ],
       },
     });
     return user !== null;
@@ -56,13 +78,39 @@ export class PrismaMemberRepository implements MemberRepository {
     await this.prisma.user.update({
       where: { id },
       data: {
+        zitadelId: anonymous.oidcId,
         firstName: anonymous.firstName,
         lastName: anonymous.lastName,
         phoneNumber: anonymous.mobilePhone,
+        birthDate: anonymous.birthDate,
         nickname: anonymous.nickname,
         comment: anonymous.comment,
         note: anonymous.note,
         email: anonymous.email,
+
+        hasApprovedEULA: false,
+        hasSignedVolunteerCharter: false,
+        profilePicture: null,
+        registrationMembership: null,
+
+        teams: { deleteMany: {} },
+        preference: { delete: {} },
+        contributions: { deleteMany: {} },
+        friends: { deleteMany: {} },
+        friendRequestors: { deleteMany: {} },
+        membershipApplications: { deleteMany: {} },
+
+        availabilities: { deleteMany: {} },
+        breaks: { deleteMany: {} },
+
+        shotguns: { deleteMany: {} },
+        chefMeals: { deleteMany: {} },
+        charismaEventParticipations: { deleteMany: {} },
+
+        faFeedbacks: { deleteMany: {} },
+        ftFeedbacks: { deleteMany: {} },
+        festivalActivityInstigations: { deleteMany: {} },
+        festivalTaskInstigations: { deleteMany: {} },
       },
     });
     return anonymous;
