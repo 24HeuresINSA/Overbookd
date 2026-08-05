@@ -178,7 +178,7 @@ export class OrgaNeedsService {
     return {
       volunteers: {
         select: { volunteerId: true },
-        where: this.teamMemberCondition(teams),
+        where: { volunteer: this.teamMemberCondition(teams) },
       },
     };
   }
