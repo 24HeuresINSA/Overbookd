@@ -57,6 +57,3 @@ export type RegistrationLoginStep = {
 export type RegistrationCompletedStep = {
   next: typeof registrationSteps.COMPLETED;
 };
-
-export type RegistrationStep =
-  RegistrationFormStep | RegistrationLoginStep | RegistrationCompletedStep;

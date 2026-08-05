@@ -1,4 +1,8 @@
-import type { RegistrationStep } from "@overbookd/http";
+import type {
+  RegistrationFormStep,
+  RegistrationLoginStep,
+  RegistrationCompletedStep,
+} from "@overbookd/http";
 import { type Credentials, RegisterForm } from "@overbookd/registration";
 import { HttpClient } from "~/utils/http/http-client";
 
@@ -7,13 +11,13 @@ export class RegistrationRepository {
 
   static checkUnauthenticatedUser(email: string) {
     const cleanedEmail = email.toLowerCase().trim();
-    return HttpClient.get<RegistrationStep>(
+    return HttpClient.get<RegistrationLoginStep | RegistrationFormStep>(
       `${this.basePath}/unauthenticated/check/${cleanedEmail}`,
     );
   }
 
   static checkAuthenticatedUser() {
-    return HttpClient.get<RegistrationStep>(
+    return HttpClient.get<RegistrationFormStep | RegistrationCompletedStep>(
       `${this.basePath}/authenticated/check`,
     );
   }

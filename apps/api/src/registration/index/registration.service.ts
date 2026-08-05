@@ -26,7 +26,9 @@ import { jwtConstants } from "../../jwt-constants";
 import { ZitadelService } from "../../user/zitadel.service";
 import {
   registrationSteps,
-  RegistrationStep,
+  RegistrationFormStep,
+  RegistrationLoginStep,
+  RegistrationCompletedStep,
   RegistrationFormStepUser,
 } from "@overbookd/http";
 import { RequestHydratedUser } from "../../authentication-zitadel/request-hydrated-user";
@@ -62,7 +64,9 @@ export class RegistrationService {
     private readonly repository: Repository,
   ) {}
 
-  async checkUnauthenticatedUser(email: string): Promise<RegistrationStep> {
+  async checkUnauthenticatedUser(
+    email: string,
+  ): Promise<RegistrationLoginStep | RegistrationFormStep> {
     email = email.toLowerCase().trim();
     const zitadelUser = await this.service.zitadel.getZitadelUserByEmail(email);
 
@@ -80,7 +84,7 @@ export class RegistrationService {
 
   async checkAuthenticatedUser(
     user: RequestHydratedUser,
-  ): Promise<RegistrationStep> {
+  ): Promise<RegistrationFormStep | RegistrationCompletedStep> {
     if (!user.id) {
       const zitadelUser = await this.service.zitadel.getZitadelUserById(
         user.zitadelId,

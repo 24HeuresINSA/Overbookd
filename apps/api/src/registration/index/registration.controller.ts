@@ -30,7 +30,11 @@ import {
   RegistrationFormStepResponseDto,
   RegistrationLoginStepResponseDto,
 } from "./dto/registration-step.response.dto";
-import { RegistrationStep } from "@overbookd/http";
+import {
+  RegistrationFormStep,
+  RegistrationLoginStep,
+  RegistrationCompletedStep,
+} from "@overbookd/http";
 import { Public } from "../../authentication-zitadel/decorators/public.decorator";
 import { RequestHydratedUser } from "../../authentication-zitadel/request-hydrated-user";
 import { AuthenticatedUser } from "../../authentication-zitadel/decorators/authenticated-user.decorator";
@@ -53,14 +57,14 @@ export class RegistrationController {
     description: "Next Registration step",
     schema: {
       anyOf: [
-        { $ref: getSchemaPath(RegistrationFormStepResponseDto) },
         { $ref: getSchemaPath(RegistrationLoginStepResponseDto) },
+        { $ref: getSchemaPath(RegistrationFormStepResponseDto) },
       ],
     },
   })
   checkUnauthenticatedUser(
     @Query("email") email: string,
-  ): Promise<RegistrationStep> {
+  ): Promise<RegistrationLoginStep | RegistrationFormStep> {
     return this.registrationService.checkUnauthenticatedUser(email);
   }
 
@@ -72,14 +76,13 @@ export class RegistrationController {
     schema: {
       anyOf: [
         { $ref: getSchemaPath(RegistrationFormStepResponseDto) },
-        { $ref: getSchemaPath(RegistrationLoginStepResponseDto) },
         { $ref: getSchemaPath(RegistrationCompletedStepResponseDto) },
       ],
     },
   })
   checkAuthenticatedUser(
     @AuthenticatedUser() user: RequestHydratedUser,
-  ): Promise<RegistrationStep> {
+  ): Promise<RegistrationFormStep | RegistrationCompletedStep> {
     return this.registrationService.checkAuthenticatedUser(user);
   }
 

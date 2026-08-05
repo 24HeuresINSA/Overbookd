@@ -98,7 +98,6 @@ export type {
   StaffCandidate,
   VolunteerCandidate,
   HasApplication,
-  RegistrationStep,
   RegistrationStepKey,
   RegistrationFormStep,
   RegistrationFormStepUser,
