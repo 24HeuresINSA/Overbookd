@@ -93,7 +93,7 @@ import {
 import { slugifiedFilter } from "~/utils/search/search.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { isNumber, min } from "~/utils/rules/input.rules";
-import { BARRIERES, LOG_ELEC } from "@overbookd/team-constants";
+import { BARRIERES, LOG_ELEC } from "@overbookd/team-code";
 
 const myStore = useMyStore();
 const catalogGearStore = useCatalogGearStore();

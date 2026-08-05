@@ -16,7 +16,7 @@ import {
   InquiryAlreadyExists,
   InquiryNotFound,
 } from "../../../common/inquiry-request.error.js";
-import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
+import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-code";
 
 export class AlreadyInitialized extends FestivalActivityError {
   constructor() {

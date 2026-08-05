@@ -47,7 +47,7 @@ import {
 } from "../festival-task.error.js";
 import { PrepareFestivalTask } from "../prepare/prepare.js";
 import { isDraft } from "../../festival-event.js";
-import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-code";
 
 const factory = getFactory();
 

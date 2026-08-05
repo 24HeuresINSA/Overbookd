@@ -15,7 +15,7 @@ import {
   CONFIANCE,
   HARD,
   SOFT,
-} from "@overbookd/team-constants";
+} from "@overbookd/team-code";
 
 const shogosse = { id: 1, name: "Lea (Shogosse) Mauyno" };
 const noel = { id: 2, name: "Noel Ertsemud" };

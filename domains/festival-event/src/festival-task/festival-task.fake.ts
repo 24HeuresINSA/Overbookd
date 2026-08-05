@@ -59,7 +59,7 @@ import {
   REVIEWING,
   WILL_NOT_REVIEW,
 } from "@overbookd/festival-event-constants";
-import { CONFIANCE, HARD, PERSONNE, VIEUX } from "@overbookd/team-constants";
+import { CONFIANCE, HARD, PERSONNE, VIEUX } from "@overbookd/team-code";
 
 const factory = getFactory();
 

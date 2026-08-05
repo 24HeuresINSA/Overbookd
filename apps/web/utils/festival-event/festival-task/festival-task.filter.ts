@@ -19,7 +19,7 @@ import {
   STATUS_QUERY_PARAM,
   TEAM_QUERY_PARAM,
 } from "../festival-event.constant";
-import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-code";
 
 export type TaskReviewsFilter = {
   humain?: ReviewStatus<"FT">;

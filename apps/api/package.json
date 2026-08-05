@@ -68,7 +68,7 @@
     "@overbookd/signa": "workspace:*",
     "@overbookd/slugify": "workspace:*",
     "@overbookd/team": "workspace:*",
-    "@overbookd/team-constants": "workspace:*",
+    "@overbookd/team-code": "workspace:*",
     "@overbookd/time": "workspace:*",
     "@overbookd/user": "workspace:*",
     "@overbookd/volunteer-availability": "workspace:*",

@@ -93,7 +93,7 @@
 
 <script lang="ts" setup>
 import { formatPhoneNumber } from "@overbookd/registration";
-import { HARD } from "@overbookd/team-constants";
+import { HARD } from "@overbookd/team-code";
 import { nicknameOrFirstName, buildUserName } from "@overbookd/user";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
 

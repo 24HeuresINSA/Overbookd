@@ -103,7 +103,7 @@
 </template>
 
 <script lang="ts" setup>
-import { HARD, VIEUX } from "@overbookd/team-constants";
+import { HARD, VIEUX } from "@overbookd/team-code";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import { matchingSearchItems } from "~/utils/search/search.utils";
 import type { ConsumerWithAmount } from "~/utils/transaction/consumer";

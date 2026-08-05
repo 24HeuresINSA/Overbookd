@@ -5,7 +5,7 @@ import {
   HARD,
   PERSONNE,
   VIEUX,
-} from "@overbookd/team-constants";
+} from "@overbookd/team-code";
 import { WaitingForVolunteer } from "./startup-funnel.js";
 import { InMemoryPlanning } from "./planning.inmemory.js";
 import { InMemoryAssignments } from "../repositories/assignments.inmemory.js";

@@ -10,9 +10,7 @@
       "@overbookd/permission": ["${configDir}/constants/permission/src"],
       "@overbookd/preference": ["${configDir}/constants/preference/src"],
       "@overbookd/slugify": ["${configDir}/libraries/slugify/src"],
-      "@overbookd/team-constants": [
-        "${configDir}/constants/team-constants/src"
-      ],
+      "@overbookd/team-code": ["${configDir}/constants/team-code/src"],
       "@overbookd/time": ["${configDir}/libraries/time/src"],
       "@overbookd/web-page": ["${configDir}/constants/web-page/src"]
     }

@@ -43,7 +43,7 @@ import {
 } from "../common/query/charisma.query";
 import { canManageAdmins, extractTeamCodes } from "../team/team.utils";
 import { Charisma } from "@overbookd/charisma";
-import { ADMIN } from "@overbookd/team-constants";
+import { ADMIN } from "@overbookd/team-code";
 import { friendAssigneesCount } from "../assignment/common/repository/assignment.query";
 import { OverbookdOidcRole, oidcRoles } from "@overbookd/oidc";
 import { ZitadelService } from "./zitadel.service";

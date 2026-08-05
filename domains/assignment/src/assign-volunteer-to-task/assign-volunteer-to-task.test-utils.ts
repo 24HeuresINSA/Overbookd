@@ -4,7 +4,7 @@ import {
   VolunteerWithAssignments,
   VolunteerWithFriendFilter,
 } from "./assign-volunteer-to-task.js";
-import { HARD, VIEUX } from "@overbookd/team-constants";
+import { HARD, VIEUX } from "@overbookd/team-code";
 import { defaultFriendCount } from "../friends.js";
 
 const friday08hTo10h = Period.init({

@@ -51,7 +51,7 @@ import {
   uneMultiprise3Prises,
 } from "../festival-activity.fake.js";
 import { PrepareError } from "./prepare-in-review-festival-activity.js";
-import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
+import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-code";
 
 const branleCanisse = {
   slug: "branle-canisse",

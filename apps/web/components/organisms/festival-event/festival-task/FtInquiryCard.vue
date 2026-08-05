@@ -43,7 +43,7 @@ import {
   type TimeWindow,
 } from "@overbookd/festival-event";
 import type { CatalogGear } from "@overbookd/http";
-import { LOG_MATOS } from "@overbookd/team-constants";
+import { LOG_MATOS } from "@overbookd/team-code";
 
 const ftStore = useFestivalTaskStore();
 

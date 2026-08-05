@@ -63,7 +63,7 @@ import {
   FEN,
   CAMION,
   VOITURE,
-} from "@overbookd/team-constants";
+} from "@overbookd/team-code";
 import { OverDate } from "@overbookd/time";
 import type { Team } from "@overbookd/team";
 import type { UserPersonalData } from "@overbookd/user";

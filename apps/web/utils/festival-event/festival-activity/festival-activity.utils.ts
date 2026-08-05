@@ -30,7 +30,7 @@ import {
   LOG_MATOS,
   SECU,
   SIGNA,
-} from "@overbookd/team-constants";
+} from "@overbookd/team-code";
 
 export function castActivityWithDate(
   activity: HttpStringified<FestivalActivity>,

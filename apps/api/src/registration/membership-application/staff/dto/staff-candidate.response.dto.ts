@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { StaffCandidate } from "@overbookd/http";
 import { RegistrationTeams } from "@overbookd/registration";
-import { TECKOS } from "@overbookd/team-constants";
+import { TECKOS } from "@overbookd/team-code";
 
 export class StaffCandidateResponseDto implements StaffCandidate {
   @ApiProperty({

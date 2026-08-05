@@ -57,7 +57,7 @@
     "@overbookd/preference": "workspace:*",
     "@overbookd/festival-event-constants": "workspace:*",
     "@overbookd/list": "workspace:*",
-    "@overbookd/team-constants": "workspace:*",
+    "@overbookd/team-code": "workspace:*",
     "@overbookd/time": "workspace:*"
   }
 }

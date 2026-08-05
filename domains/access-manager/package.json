@@ -57,6 +57,6 @@
     "@overbookd/event": "workspace:*",
     "@overbookd/list": "workspace:*",
     "@overbookd/permission": "workspace:*",
-    "@overbookd/team-constants": "workspace:*"
+    "@overbookd/team-code": "workspace:*"
   }
 }

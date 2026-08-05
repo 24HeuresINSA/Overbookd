@@ -9,7 +9,7 @@ import {
   LOG_MATOS,
   SECU,
   SIGNA,
-} from "@overbookd/team-constants";
+} from "@overbookd/team-code";
 import { IsEnum, IsString } from "class-validator";
 
 const reviewers: Reviewer<"FA">[] = [

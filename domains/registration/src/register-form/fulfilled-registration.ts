@@ -7,7 +7,7 @@ import {
   STRASBOURG,
   TECKOS,
   HAUTS_DE_FRANCE,
-} from "@overbookd/team-constants";
+} from "@overbookd/team-code";
 
 export const TEAM_CODES: TeamCode[] = [
   BDE,

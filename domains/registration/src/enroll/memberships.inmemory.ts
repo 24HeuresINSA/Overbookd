@@ -1,4 +1,4 @@
-import { PERSONNE } from "@overbookd/team-constants";
+import { PERSONNE } from "@overbookd/team-code";
 import { Memberships, JoinedTeam, Candidate } from "./enroll-candidates";
 import { JoinableTeam } from "./joinable-team";
 

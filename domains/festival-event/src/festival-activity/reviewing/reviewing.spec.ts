@@ -45,7 +45,7 @@ import {
   LOG_MATOS,
   SECU,
   SIGNA,
-} from "@overbookd/team-constants";
+} from "@overbookd/team-code";
 import { getNameFromReviewer } from "../../common/review.js";
 
 const factory = getFactory();

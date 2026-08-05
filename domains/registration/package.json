@@ -56,7 +56,7 @@
     "@overbookd/event": "workspace:*",
     "@overbookd/list": "workspace:*",
     "@overbookd/permission": "workspace:*",
-    "@overbookd/team-constants": "workspace:*",
+    "@overbookd/team-code": "workspace:*",
     "@overbookd/time": "workspace:*",
     "@overbookd/web-page": "workspace:*",
     "awesome-phonenumber": "7.8.0",

@@ -15,7 +15,7 @@ import {
   Team,
 } from "./revoke-permission";
 import { InMemoryTeams } from "./teams.inmemory";
-import { HARD, LOG_MATOS, SOFT } from "@overbookd/team-constants";
+import { HARD, LOG_MATOS, SOFT } from "@overbookd/team-code";
 
 let teams: InMemoryTeams;
 let events: InMemoryEvents;

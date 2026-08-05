@@ -14,7 +14,7 @@ import { Location } from "../common/location.js";
 import { TimeWindow } from "../common/time-window.js";
 import { ValidatedWithConflicts } from "./festival-task.factory.js";
 import { Assignments } from "./enable-assignment/enable-assignment.js";
-import { PERSONNE, HARD } from "@overbookd/team-constants";
+import { PERSONNE, HARD } from "@overbookd/team-code";
 
 type BuildTimeWindow = {
   date: Date;

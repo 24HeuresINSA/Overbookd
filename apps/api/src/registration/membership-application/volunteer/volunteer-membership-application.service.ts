@@ -9,7 +9,7 @@ import {
 import { Users } from "../common/repository/users";
 import { HasApplication, VolunteerCandidate } from "@overbookd/http";
 import { EnrollCandidatesRepository } from "../common/repository/enroll-candidates";
-import { SOFT } from "@overbookd/team-constants";
+import { SOFT } from "@overbookd/team-code";
 import { ConfigurationService } from "../../../configuration/configuration.service";
 
 type UseCases = {

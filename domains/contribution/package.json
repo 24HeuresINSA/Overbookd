@@ -56,7 +56,7 @@
   "dependencies": {
     "@overbookd/list": "workspace:*",
     "@overbookd/permission": "workspace:*",
-    "@overbookd/team-constants": "workspace:*",
+    "@overbookd/team-code": "workspace:*",
     "@overbookd/time": "workspace:*"
   }
 }

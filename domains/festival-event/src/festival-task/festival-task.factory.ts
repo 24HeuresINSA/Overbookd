@@ -15,7 +15,7 @@ import {
   HUMAIN,
   LOG_MATOS,
   PERSONNE,
-} from "@overbookd/team-constants";
+} from "@overbookd/team-code";
 import { isKeyOf } from "../is-key-of.js";
 import {
   Draft,

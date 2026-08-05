@@ -134,7 +134,7 @@ import {
   isDraft,
 } from "@overbookd/festival-event";
 import type { CatalogGear } from "@overbookd/http";
-import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
+import { BARRIERES, LOG_ELEC, LOG_MATOS } from "@overbookd/team-code";
 import type { IProvidePeriod } from "@overbookd/time";
 
 const faStore = useFestivalActivityStore();

@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts" setup>
-import { BDE, PERSONNE } from "@overbookd/team-constants";
+import { BDE, PERSONNE } from "@overbookd/team-code";
 import type { Team } from "@overbookd/team";
 
 const { team, size, withName, showHidden, closable, clickable, prefix } =

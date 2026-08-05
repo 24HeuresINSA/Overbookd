@@ -10,7 +10,7 @@ import {
 import { Users } from "../common/repository/users";
 import { EnrollCandidatesRepository } from "../common/repository/enroll-candidates";
 import { HasApplication, StaffCandidate } from "@overbookd/http";
-import { HARD } from "@overbookd/team-constants";
+import { HARD } from "@overbookd/team-code";
 import { createStaffInvitationToken } from "./jwt.utils";
 import { ConfigurationService } from "../../../configuration/configuration.service";
 import { INVITE_STAFF_LINK_KEY } from "@overbookd/configuration";

@@ -118,7 +118,7 @@ import {
   isAssignmentPreference,
   type AssignmentPreferenceType,
 } from "@overbookd/preference";
-import { HARD } from "@overbookd/team-constants";
+import { HARD } from "@overbookd/team-code";
 import { formatLocalDate } from "@overbookd/time";
 import { assignmentPreferenceDetailedLabels } from "~/utils/assignment/preference";
 import {

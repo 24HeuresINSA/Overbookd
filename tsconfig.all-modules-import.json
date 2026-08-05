@@ -30,8 +30,8 @@
       "@overbookd/signa": ["${configDir}/domains/signa/src"],
       "@overbookd/slugify": ["${configDir}/libraries/slugify/src"],
       "@overbookd/team": ["${configDir}/utils/team/src"],
-      "@overbookd/team-constants": [
-        "${configDir}/constants/team-constants/src"
+      "@overbookd/team-code": [
+        "${configDir}/constants/team-code/src"
       ],
       "@overbookd/time": ["${configDir}/libraries/time/src"],
       "@overbookd/user": ["${configDir}/utils/user/src"],

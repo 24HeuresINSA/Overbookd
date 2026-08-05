@@ -9,7 +9,7 @@ import {
   TeamNotFound,
 } from "./grant-permission";
 import { InMemoryTeams } from "./teams.inmemory";
-import { HARD } from "@overbookd/team-constants";
+import { HARD } from "@overbookd/team-code";
 
 const hard: Team = { code: HARD, permissions: [READ_FA] };
 let teams: InMemoryTeams;

@@ -6,7 +6,7 @@ import {
   CONFIANCE,
   HARD,
   SOFT,
-} from "@overbookd/team-constants";
+} from "@overbookd/team-code";
 import { InMemoryEvents } from "./events.inmemory";
 import {
   AdminAssignmentError,

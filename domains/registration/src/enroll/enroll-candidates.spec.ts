@@ -1,4 +1,4 @@
-import { PERSONNE, HARD, SOFT } from "@overbookd/team-constants";
+import { PERSONNE, HARD, SOFT } from "@overbookd/team-code";
 import { beforeEach, describe, expect, it } from "vitest";
 import {
   AlreadyEnrolledError,

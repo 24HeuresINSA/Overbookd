@@ -32,7 +32,7 @@ import { FestivalActivityBuilder } from "./festival-activity.builder";
 import { DatabaseEvent } from "./event.query";
 import { DatabaseAssignment, DatabaseMobilization } from "./mobilization.query";
 import { DatabaseInquiryRequest } from "./inquiry.query";
-import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-code";
 
 type VisualizeFestivalTask<
   Task extends FestivalTaskWithoutConflicts = FestivalTaskWithoutConflicts,

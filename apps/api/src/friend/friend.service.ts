@@ -2,7 +2,7 @@ import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "../../src/prisma.service";
 import { User, UserWithTeams } from "@overbookd/user";
 import { SELECT_USER_WITH_TEAM_CODES } from "../common/query/user.query";
-import { CAMION, FEN, VOITURE } from "@overbookd/team-constants";
+import { CAMION, FEN, VOITURE } from "@overbookd/team-code";
 import { IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER } from "../user/user.query";
 
 type DatabaseFriend = User & { teams: { teamCode: string }[] };

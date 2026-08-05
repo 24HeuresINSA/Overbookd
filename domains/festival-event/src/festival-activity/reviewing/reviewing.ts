@@ -38,7 +38,7 @@ import {
   LOG_MATOS,
   SECU,
   SIGNA,
-} from "@overbookd/team-constants";
+} from "@overbookd/team-code";
 
 export type ReviewingFestivalActivities = {
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;

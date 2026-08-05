@@ -5,7 +5,7 @@ import {
   ReviewIgnoreTask,
   ReviewRejection,
 } from "@overbookd/http";
-import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-code";
 import { IsEnum, IsString } from "class-validator";
 
 const reviewers: Reviewer<"FT">[] = [HUMAIN, LOG_MATOS, LOG_ELEC];

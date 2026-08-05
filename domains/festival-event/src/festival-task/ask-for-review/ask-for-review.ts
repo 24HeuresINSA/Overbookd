@@ -15,7 +15,7 @@ import { InReviewFestivalTask } from "./in-review-festival-task.js";
 import { isDraft, isRefused } from "../../festival-event.js";
 import { CantAskForReview } from "../../common/review.error.js";
 import { Reviewer } from "../../common/review.js";
-import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-code";
 
 export type AskForReviewTasks = {
   findById(

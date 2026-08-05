@@ -1,4 +1,4 @@
-import { ADMIN } from "@overbookd/team-constants";
+import { ADMIN } from "@overbookd/team-code";
 
 export const NON_MANAGEABLE_TEAMS = [ADMIN];
 

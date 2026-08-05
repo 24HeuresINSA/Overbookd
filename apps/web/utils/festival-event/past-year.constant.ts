@@ -29,7 +29,7 @@ import {
   SPONSO,
   SPORTS,
   VIEUX,
-} from "@overbookd/team-constants";
+} from "@overbookd/team-code";
 
 // Activities and tasks from 50th edition of the festival
 

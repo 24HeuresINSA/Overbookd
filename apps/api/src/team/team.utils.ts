@@ -1,5 +1,5 @@
 import { ForbiddenException } from "@nestjs/common";
-import { ADMIN } from "@overbookd/team-constants";
+import { ADMIN } from "@overbookd/team-code";
 import { MANAGE_ADMINS } from "@overbookd/permission";
 import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
 import { DatabaseTeamCode } from "../user/user.model";

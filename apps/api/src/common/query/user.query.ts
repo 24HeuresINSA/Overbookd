@@ -1,4 +1,4 @@
-import { PERSONNE } from "@overbookd/team-constants";
+import { PERSONNE } from "@overbookd/team-code";
 
 export const SELECT_USER_NAME = {
   firstName: true,

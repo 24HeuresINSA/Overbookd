@@ -3,7 +3,7 @@ import {
   FulfilledRegistration,
   Teams,
 } from "./register-form/fulfilled-registration.js";
-import { KARNA, TECKOS } from "@overbookd/team-constants";
+import { KARNA, TECKOS } from "@overbookd/team-code";
 import { RegisterNewcomer } from "./register-newcomer.js";
 import { InMemoryNewcomerRepository } from "./newcomer-repository.inmemory.js";
 import { STAFF, VOLUNTEER } from "./newcomer.js";

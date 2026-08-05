@@ -4,7 +4,7 @@ import {
   JoinedTeam,
   Memberships,
 } from "@overbookd/registration";
-import { PERSONNE } from "@overbookd/team-constants";
+import { PERSONNE } from "@overbookd/team-code";
 import { toStandAloneUser } from "@overbookd/user";
 import { SELECT_USER_IDENTIFIER } from "../../../../common/query/user.query";
 import { PrismaService } from "../../../../prisma.service";

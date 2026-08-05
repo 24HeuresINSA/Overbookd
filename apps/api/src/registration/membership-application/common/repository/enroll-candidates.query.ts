@@ -1,5 +1,5 @@
 import { Membership, STAFF, VOLUNTEER } from "@overbookd/registration";
-import { PERSONNE, HARD } from "@overbookd/team-constants";
+import { PERSONNE, HARD } from "@overbookd/team-code";
 import { Edition, IProvidePeriod } from "@overbookd/time";
 import { SELECT_PERIOD } from "../../../../common/query/period.query";
 import { SELECT_USER_TEAMS } from "../../../../user/user.query";

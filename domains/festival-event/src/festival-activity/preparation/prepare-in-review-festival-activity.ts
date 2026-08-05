@@ -62,7 +62,7 @@ import {
   LOG_MATOS,
   SECU,
   SIGNA,
-} from "@overbookd/team-constants";
+} from "@overbookd/team-code";
 
 class IsNotPublicActivity extends FestivalActivityError {
   constructor(missingParts: string[]) {
