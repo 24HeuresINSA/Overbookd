@@ -59,13 +59,21 @@ export type {
   TeamCode as RegistrationTeamCode,
   Teams as RegistrationTeams,
 } from "./register-form/fulfilled-registration.js";
-export { TEAM_CODES as REGISTRATION_TEAM_CODES } from "./register-form/fulfilled-registration.js";
+export {
+  TEAM_CODES as REGISTRATION_TEAM_CODES,
+  isTeamCode as isRegistrationTeamCode,
+} from "./register-form/fulfilled-registration.js";
 export {
   RegisterForm,
   RegistrationError,
   shouldSignVolunteerCharter,
 } from "./register-form/register-form.js";
-export { SPECIAL_CHARS_REGEX_PATERN } from "./register-form/fields/password-field.js";
+export { SPECIAL_CHARS_REGEX_PATTERN } from "./register-form/fields/password-field.js";
+export {
+  PASSWORD_REQUIRED,
+  PASSWORD_NOT_REQUIRED,
+} from "./register-form/password-requirement.js";
+export type { PasswordRequirement } from "./register-form/password-requirement.js";
 
 // Phone Number
 export {

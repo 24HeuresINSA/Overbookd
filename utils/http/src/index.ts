@@ -98,7 +98,13 @@ export type {
   StaffCandidate,
   VolunteerCandidate,
   HasApplication,
+  RegistrationStepKey,
+  RegistrationFormStep,
+  RegistrationFormStepUser,
+  RegistrationLoginStep,
+  RegistrationCompletedStep,
 } from "./registration";
+export { registrationSteps } from "./registration";
 export type { EditAmountForm } from "./contribution";
 export { DEFAULT_PREFERENCE } from "./preference";
 export type {

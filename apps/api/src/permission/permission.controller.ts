@@ -105,7 +105,6 @@ export class PermissionController {
 
   @Post(":permission/teams")
   @Permissions(MANAGE_PERMISSIONS)
-  @ApiBearerAuth()
   @ApiBody({
     description: "team to grant the permission to",
     type: GrantPermissionRequestDto,
@@ -124,7 +123,6 @@ export class PermissionController {
 
   @Delete(":permission/teams/:code")
   @Permissions(MANAGE_PERMISSIONS)
-  @ApiBearerAuth()
   @HttpCode(204)
   @ApiResponse({
     status: 204,

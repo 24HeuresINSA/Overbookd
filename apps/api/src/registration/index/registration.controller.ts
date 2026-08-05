@@ -2,12 +2,21 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   Param,
   Post,
+  Query,
   UseFilters,
 } from "@nestjs/common";
-import { ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+  getSchemaPath,
+} from "@nestjs/swagger";
 import { RegistrationRequestDto } from "./dto/registration.request.dto";
 import { RegistrationService } from "./registration.service";
 import {
@@ -16,6 +25,19 @@ import {
 } from "./registration-error.filter";
 import { ForgetRequestDto } from "./dto/forget.request.dto";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
+import {
+  RegistrationCompletedStepResponseDto,
+  RegistrationFormStepResponseDto,
+  RegistrationLoginStepResponseDto,
+} from "./dto/registration-step.response.dto";
+import {
+  RegistrationFormStep,
+  RegistrationLoginStep,
+  RegistrationCompletedStep,
+} from "@overbookd/http";
+import { Public } from "../../authentication-zitadel/decorators/public.decorator";
+import { RequestHydratedUser } from "../../authentication-zitadel/request-hydrated-user";
+import { AuthenticatedUser } from "../../authentication-zitadel/decorators/authenticated-user.decorator";
 
 @Controller("registrations")
 @ApiTags("registration")
@@ -23,7 +45,49 @@ import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 export class RegistrationController {
   constructor(private readonly registrationService: RegistrationService) {}
 
+  @Get("unauthenticated/check")
+  @Public()
+  @ApiQuery({
+    type: String,
+    name: "email",
+    description: "Email to check",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Next Registration step",
+    schema: {
+      anyOf: [
+        { $ref: getSchemaPath(RegistrationLoginStepResponseDto) },
+        { $ref: getSchemaPath(RegistrationFormStepResponseDto) },
+      ],
+    },
+  })
+  checkUnauthenticatedUser(
+    @Query("email") email: string,
+  ): Promise<RegistrationLoginStep | RegistrationFormStep> {
+    return this.registrationService.checkUnauthenticatedUser(email);
+  }
+
+  @Get("authenticated/check")
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 200,
+    description: "Next Registration step",
+    schema: {
+      anyOf: [
+        { $ref: getSchemaPath(RegistrationFormStepResponseDto) },
+        { $ref: getSchemaPath(RegistrationCompletedStepResponseDto) },
+      ],
+    },
+  })
+  checkAuthenticatedUser(
+    @AuthenticatedUser() user: RequestHydratedUser,
+  ): Promise<RegistrationFormStep | RegistrationCompletedStep> {
+    return this.registrationService.checkAuthenticatedUser(user);
+  }
+
   @Post()
+  @Public()
   @UseFilters(RegistrationErrorFilter)
   @HttpCode(204)
   @ApiResponse({
@@ -41,6 +105,7 @@ export class RegistrationController {
   }
 
   @Post("forget")
+  @Public()
   @UseFilters(ForgetMemberErrorFilter)
   @ApiBody({
     description: "Forget a member",
@@ -56,6 +121,7 @@ export class RegistrationController {
   }
 
   @Delete("forget/:email")
+  @Public()
   @UseFilters(ForgetMemberErrorFilter)
   @HttpCode(204)
   @ApiResponse({

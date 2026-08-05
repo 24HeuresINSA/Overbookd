@@ -10,6 +10,9 @@ import { DomainEventModule } from "../../domain-event/domain-event.module";
 import { DomainEventService } from "../../domain-event/domain-event.service";
 import { PrismaMemberRepository } from "./repository/member-repository.prisma";
 import { ForgetMember } from "@overbookd/registration";
+import { ZitadelService } from "../../user/zitadel.service";
+import { PrismaUserForRegistrationRepository } from "./repository/user-repository.prisma";
+import { PrismaMembershipApplicationForRegistrationRepository } from "./repository/membership-application-repository.prisma";
 
 @Module({
   controllers: [RegistrationController],
@@ -39,13 +42,41 @@ import { ForgetMember } from "@overbookd/registration";
       inject: [PrismaMemberRepository],
     },
     {
+      provide: PrismaUserForRegistrationRepository,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaUserForRegistrationRepository(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaMembershipApplicationForRegistrationRepository,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaMembershipApplicationForRegistrationRepository(prisma),
+      inject: [PrismaService],
+    },
+    ZitadelService,
+    {
       provide: RegistrationService,
       useFactory: (
         register: RegisterNewcomer,
-        event: DomainEventService,
         forget: ForgetMember,
-      ) => new RegistrationService({ register, forget }, { event }),
-      inject: [RegisterNewcomer, DomainEventService, ForgetMember],
+        event: DomainEventService,
+        zitadel: ZitadelService,
+        user: PrismaUserForRegistrationRepository,
+        application: PrismaMembershipApplicationForRegistrationRepository,
+      ) =>
+        new RegistrationService(
+          { register, forget },
+          { event, zitadel },
+          { user, application },
+        ),
+      inject: [
+        RegisterNewcomer,
+        ForgetMember,
+        DomainEventService,
+        ZitadelService,
+        PrismaUserForRegistrationRepository,
+        PrismaMembershipApplicationForRegistrationRepository,
+      ],
     },
   ],
   imports: [PrismaModule, DomainEventModule],

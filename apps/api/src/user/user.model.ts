@@ -4,10 +4,6 @@ import { WithTransactionsForBalance } from "../common/query/transaction.query";
 import { UserDataForCharisma } from "../common/query/charisma.query";
 import { Membership } from "@overbookd/registration";
 
-export type UserPasswordOnly = {
-  password: string;
-};
-
 export type DatabaseMyUserInformation = Omit<
   MyUserInformation,
   | "teams"

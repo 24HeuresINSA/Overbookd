@@ -19,13 +19,6 @@ export class InMemoryNewcomerRepository implements NewcomerRepository {
     this.idGenerator = numberGenerator(staffs.length + 1);
   }
 
-  isEmailUsed(email: string): Promise<boolean> {
-    return Promise.resolve(
-      this.staffs.some((registree) => registree.email === email) ||
-        this.volunteers.some((registree) => registree.email === email),
-    );
-  }
-
   save<T extends Membership>(
     fulfilledForm: FulfilledRegistration,
     membership: T,

@@ -1,15 +1,18 @@
+import {
+  PASSWORD_NOT_REQUIRED,
+  PasswordRequirement,
+} from "../password-requirement.js";
 import { Field } from "./field.js";
 import { Rule } from "./rule.js";
 
-// prettier-ignore
 // eslint-disable-next-line no-useless-escape
-export const SPECIAL_CHARS_REGEX_PATERN = "[!@#$%^&*+=_.,;:?{}()\/\|\\\-]";
+export const SPECIAL_CHARS_REGEX_PATTERN = "[!@#$%^&*+=_.,;:?{}()\/\|\\\-]";
 
-export class PasswordField implements Field<string> {
+export class PasswordField implements Field<string | undefined> {
   private readonly minusculePattern = new RegExp("[a-z]");
   private readonly majusculePattern = new RegExp("[A-Z]");
   private readonly numberPattern = new RegExp("[0-9]");
-  private readonly specialCharPattern = new RegExp(SPECIAL_CHARS_REGEX_PATERN);
+  private readonly specialCharPattern = new RegExp(SPECIAL_CHARS_REGEX_PATTERN);
   private readonly minPasswordLength = 12;
 
   private readonly containsMinuscule: Rule<string> = {
@@ -38,14 +41,22 @@ export class PasswordField implements Field<string> {
     reason: `Il faut au moins ${this.minPasswordLength} caractères dans le mot de passe`,
   };
 
-  private constructor(private readonly password: string) {}
+  private constructor(
+    private readonly password: string | undefined,
+    private readonly requirement: PasswordRequirement,
+  ) {}
 
-  static build(password: string): PasswordField {
-    return new PasswordField(password);
+  static build(
+    password: string | undefined,
+    requirement: PasswordRequirement,
+  ): PasswordField {
+    return new PasswordField(password, requirement);
   }
 
-  get value(): string {
-    return this.password;
+  get value(): string | undefined {
+    return this.requirement === PASSWORD_NOT_REQUIRED
+      ? undefined
+      : this.password;
   }
 
   private get rules(): Rule<unknown>[] {
@@ -59,12 +70,14 @@ export class PasswordField implements Field<string> {
   }
 
   get isValid(): boolean {
+    if (this.requirement === PASSWORD_NOT_REQUIRED) return true;
     return this.rules.every((rule) => rule.test(this.password));
   }
 
   get reasons(): string[] {
+    if (this.requirement === PASSWORD_NOT_REQUIRED) return [];
     return this.rules
-      .filter((rule) => !rule.test(this.password))
+      .filter((rule) => !rule.test(this.password ?? ""))
       .map(({ reason }) => reason);
   }
 }

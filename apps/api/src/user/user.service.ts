@@ -16,9 +16,7 @@ import {
   Consumer,
   DatabaseConsumer,
   DatabaseMyUserInformation,
-  DatabaseTeamCode,
   DatabaseUserPersonalData,
-  UserPasswordOnly,
 } from "./user.model";
 import {
   SELECT_MY_USER_INFORMATION,
@@ -43,7 +41,7 @@ import {
   MinimalCharismaPeriod,
   SELECT_CHARISMA_PERIOD,
 } from "../common/query/charisma.query";
-import { canManageAdmins } from "../team/team.utils";
+import { canManageAdmins, extractTeamCodes } from "../team/team.utils";
 import { Charisma } from "@overbookd/charisma";
 import { ADMIN } from "@overbookd/team-constants";
 import { friendAssigneesCount } from "../assignment/common/repository/assignment.query";
@@ -59,6 +57,11 @@ export class UserService {
   ) {}
 
   async userSync(user: RequestHydratedUser): Promise<void> {
+    this.zitadelService.addZitadelRoleIfNotGranted(
+      user.zitadelId,
+      oidcRoles.USER,
+    );
+
     const userId =
       (await this.getUserByZitadelId(user.zitadelId))?.id ??
       (await this.getUserByEmail(user.email))?.id;
@@ -167,13 +170,6 @@ export class UserService {
       this.selectCharismaPeriods(),
     ]);
     return UserService.formatToMyInformation(user, charismaPeriods);
-  }
-
-  async getUserPassword(email: string): Promise<UserPasswordOnly | null> {
-    return this.prisma.user.findUnique({
-      where: { email },
-      select: { password: true },
-    });
   }
 
   async isDeleted(email: string): Promise<boolean | null> {
@@ -359,9 +355,7 @@ export class UserService {
       charisma,
       teams: extractTeamCodes(teams),
       preference: preference
-        ? {
-            assignment: preference.assignment,
-          }
+        ? { assignment: preference.assignment }
         : undefined,
     };
   }
@@ -408,8 +402,4 @@ export class UserService {
   ): boolean {
     return author.can(MANAGE_USERS) || author.id === targetUserId;
   }
-}
-
-function extractTeamCodes(teams: DatabaseTeamCode[]) {
-  return teams.map((t) => t.team.code);
 }
