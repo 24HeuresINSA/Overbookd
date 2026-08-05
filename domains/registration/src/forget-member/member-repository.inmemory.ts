@@ -1,6 +1,6 @@
 import { updateItemToList } from "@overbookd/list";
 import { AnonymousMember } from "./anonymous-member.js";
-import { Credentials, Member, MemberRepository } from "./forget-member.js";
+import { MemberRepository } from "./forget-member.js";
 
 type Task = {
   end: Date;
@@ -18,29 +18,31 @@ export type StoredMember = {
   tasks: Task[];
   balance: number;
   transactions: Transaction[];
+  comment?: string;
+  note?: string;
 };
 
 export class InMemoryMemberRepository implements MemberRepository {
   constructor(private members: StoredMember[]) {}
 
-  hasTasks(email: string): Promise<boolean> {
+  hasTasks(id: number): Promise<boolean> {
     return Promise.resolve(
       this.members
-        .find((member) => member.email === email)
+        .find((member) => member.id === id)
         ?.tasks?.some(({ end }) => end.getTime() > Date.now()) ?? false,
     );
   }
 
-  hasDebts(email: string): Promise<boolean> {
+  hasDebts(id: number): Promise<boolean> {
     return Promise.resolve(
-      (this.members.find((member) => member.email === email)?.balance ?? 0) < 0,
+      (this.members.find((member) => member.id === id)?.balance ?? 0) < 0,
     );
   }
 
-  hasTransactions(email: string): Promise<boolean> {
+  hasTransactions(id: number): Promise<boolean> {
     return Promise.resolve(
-      (this.members.find((member) => member.email === email)?.transactions
-        ?.length ?? 0) > 0,
+      (this.members.find((member) => member.id === id)?.transactions?.length ??
+        0) > 0,
     );
   }
 
@@ -65,21 +67,5 @@ export class InMemoryMemberRepository implements MemberRepository {
 
   get storedMembers(): StoredMember[] {
     return this.members;
-  }
-
-  authenticate(credentials: Credentials): Promise<Member | null> {
-    const member = this.members.find(
-      ({ email, password }) =>
-        email === credentials.email && password === credentials.password,
-    );
-
-    return Promise.resolve(member ? { id: member.id } : null);
-  }
-
-  getId(email: string): Promise<number | null> {
-    const member = this.members.find((member) => member.email === email);
-    if (!member) return Promise.resolve(null);
-
-    return Promise.resolve(member.id);
   }
 }

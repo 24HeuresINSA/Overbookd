@@ -5,11 +5,8 @@ import { ApplyFor, RegisterNewcomer } from "@overbookd/registration";
 import { PrismaService } from "../../prisma.service";
 import { PrismaNewcomerRepository } from "./repository/newcomer-repository.prisma";
 import { PrismaModule } from "../../prisma.module";
-import { HashingUtilsService } from "../../hashing-utils/hashing-utils.service";
 import { DomainEventModule } from "../../domain-event/domain-event.module";
 import { DomainEventService } from "../../domain-event/domain-event.service";
-import { PrismaMemberRepository } from "./repository/member-repository.prisma";
-import { ForgetMember } from "@overbookd/registration";
 import { ZitadelService } from "../../user/zitadel.service";
 import { PrismaUserForRegistrationRepository } from "./repository/user-repository.prisma";
 import { PrismaMembershipApplicationForRegistrationRepository } from "./repository/membership-application-repository.prisma";
@@ -29,18 +26,6 @@ import { PrismaCandidates } from "../membership-application/common/repository/ca
       useFactory: (newcomers: PrismaNewcomerRepository) =>
         new RegisterNewcomer(newcomers),
       inject: [PrismaNewcomerRepository],
-    },
-    {
-      provide: PrismaMemberRepository,
-      useFactory: (prisma: PrismaService) =>
-        new PrismaMemberRepository(prisma, new HashingUtilsService()),
-      inject: [PrismaService],
-    },
-    {
-      provide: ForgetMember,
-      useFactory: (members: PrismaMemberRepository) =>
-        new ForgetMember(members),
-      inject: [PrismaMemberRepository],
     },
     {
       provide: PrismaUserForRegistrationRepository,
@@ -69,7 +54,6 @@ import { PrismaCandidates } from "../membership-application/common/repository/ca
       provide: RegistrationService,
       useFactory: (
         register: RegisterNewcomer,
-        forget: ForgetMember,
         applyFor: ApplyFor,
         event: DomainEventService,
         zitadel: ZitadelService,
@@ -77,13 +61,12 @@ import { PrismaCandidates } from "../membership-application/common/repository/ca
         application: PrismaMembershipApplicationForRegistrationRepository,
       ) =>
         new RegistrationService(
-          { register, forget, applyFor },
+          { register, applyFor },
           { event, zitadel },
           { user, application },
         ),
       inject: [
         RegisterNewcomer,
-        ForgetMember,
         ApplyFor,
         DomainEventService,
         ZitadelService,
@@ -93,6 +76,5 @@ import { PrismaCandidates } from "../membership-application/common/repository/ca
     },
   ],
   imports: [PrismaModule, DomainEventModule],
-  exports: [RegisterNewcomer, ForgetMember],
 })
 export class RegistrationModule {}
