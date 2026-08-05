@@ -33,10 +33,7 @@ export type {
 } from "./enroll/enroll-candidates";
 
 // Forget Member
-export type {
-  Member,
-  MemberRepository,
-} from "./forget-member/forget-member.js";
+export type { MemberRepository } from "./forget-member/forget-member.js";
 export { ForgetMember } from "./forget-member/forget-member.js";
 export {
   ANONYMOUS,
