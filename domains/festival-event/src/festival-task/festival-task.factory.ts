@@ -10,12 +10,7 @@ import {
   REVIEWING,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
-import {
-  CONDUCTEUR,
-  HUMAIN,
-  LOG_MATOS,
-  PERSONNE,
-} from "@overbookd/team-code";
+import { CONDUCTEUR, HUMAIN, LOG_MATOS, PERSONNE } from "@overbookd/team-code";
 import { isKeyOf } from "../is-key-of.js";
 import {
   Draft,
