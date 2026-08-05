@@ -21,9 +21,30 @@ pnpm prerelease : update version as realese-candidate (rc) of api and web
 
 ## Les fichiers nécessaires
 
-### Le fichier `.env`
+### Le fichier .env
 
-Contient toutes les variables d'environnement nécessaires pour le dev. Il est fourni dans se repo.
+Avant de lancer le projet, il faut avoir un fichier `.env` avec les bonnes valeurs. Pour ce faire 2 options sont possibles, récupérer le fichier `.env`depuis le vault OU le remplir à la main.
+
+#### Avec le cli bitwarden
+
+```bash
+# Installation du cli bitwarden (compatibilité avec vaultwarden)
+npm install -g @bitwarden/cli
+# Configuration de l'insance à utiliser
+bw config server https://vault.libreon.fr
+# Connexion au vault, l'email et le mot de passe vont être demandés
+export BW_SESSION="$(bw login --raw)"
+# Recupérer le contenue de l'entrée du vault
+bw get notes 50204af9-2eef-4417-8f72-e6043b6740dd > docker/.env
+```
+
+#### Avec le fichier d'exemple
+
+Copier et modifier les valeurs du fichier `.env`
+
+```bash
+cp docker/.env.example docker/.env
+```
 
 ### Le fichier `assets/traefik/tls.yml`
 
