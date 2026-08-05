@@ -77,7 +77,6 @@ model User {
   charismaEventParticipations CharismaEventParticipation[]
   membershipApplications      MembershipApplication[]
 
-  @@index([isDeleted])
   @@map("user")
 }
 

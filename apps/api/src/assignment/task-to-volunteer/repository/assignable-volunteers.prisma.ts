@@ -23,7 +23,6 @@ import {
   SELECT_USER_FRIENDS_FOR_COUNT,
 } from "../../common/repository/friend.query";
 import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "../../common/repository/task.query";
-import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 import { Charisma } from "@overbookd/charisma";
 import {
   MinimalCharismaPeriod,
@@ -221,7 +220,6 @@ function toStoredAssignableVolunteer(
 
 function isAssignableOn(oneOfTheTeams: string[], period: Period) {
   return {
-    ...IS_NOT_DELETED,
     ...buildHasAvailabilityCondition(oneOfTheTeams, period),
     assigned: { none: { assignment: overlapPeriodCondition(period) } },
     breaks: { none: overlapPeriodCondition(period) },
