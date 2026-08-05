@@ -39,6 +39,12 @@ export class InMemoryMemberRepository implements MemberRepository {
     );
   }
 
+  hasMoney(id: number): Promise<boolean> {
+    return Promise.resolve(
+      (this.members.find((member) => member.id === id)?.balance ?? 0) > 0,
+    );
+  }
+
   hasTransactions(id: number): Promise<boolean> {
     return Promise.resolve(
       (this.members.find((member) => member.id === id)?.transactions?.length ??

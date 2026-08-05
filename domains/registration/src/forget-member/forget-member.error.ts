@@ -4,6 +4,9 @@ export const ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE =
 export const IN_DEBT_ERROR_MESSAGE =
   "Nous ne pouvons pas l'effacer d'Overbookd.\nIel a des dettes auprès de l'association.";
 
+export const HAS_MONEY_ERROR_MESSAGE =
+  "Nous ne pouvons pas l'effacer d'Overbookd.\nIel a de l'argent auprès de l'association.";
+
 export class ForgetMemberError extends Error {}
 
 export class AssignedInFuturTask extends ForgetMemberError {
@@ -15,5 +18,11 @@ export class AssignedInFuturTask extends ForgetMemberError {
 export class InDebt extends ForgetMemberError {
   constructor() {
     super(IN_DEBT_ERROR_MESSAGE);
+  }
+}
+
+export class HasMoney extends ForgetMemberError {
+  constructor() {
+    super(HAS_MONEY_ERROR_MESSAGE);
   }
 }

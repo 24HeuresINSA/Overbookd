@@ -8,22 +8,31 @@ export class PrismaMemberRepository implements MemberRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async hasTasks(id: number): Promise<boolean> {
-    const exists = await this.prisma.user.findFirst({
+    const user = await this.prisma.user.findFirst({
       where: {
         id,
         assigned: { some: { assignment: { end: { gt: new Date() } } } },
       },
     });
-    return exists ? true : false;
+    return user !== null;
   }
 
   async hasDebts(id: number): Promise<boolean> {
+    const balance = await this.getBalance(id);
+    return balance < 0;
+  }
+
+  async hasMoney(id: number): Promise<boolean> {
+    const balance = await this.getBalance(id);
+    return balance > 0;
+  }
+
+  private async getBalance(id: number): Promise<number> {
     const user = await this.prisma.user.findFirst({
       where: { id },
       select: SELECT_TRANSACTIONS_FOR_BALANCE,
     });
-    const balance = Balance.calculate(user);
-    return balance < 0;
+    return Balance.calculate(user);
   }
 
   async hasTransactions(id: number): Promise<boolean> {
