@@ -21,8 +21,7 @@ export class FileService {
     if (!existsSync(filePath)) return;
     // nosemgrep
     return unlink(filePath, (err) => {
-      if (err)
-        this.logger.error(`Impossible to delete Profile Picture ${fileName}`);
+      if (err) this.logger.error(`Cannot delete file ${fileName}`);
     });
   }
 
@@ -30,7 +29,7 @@ export class FileService {
     const filePath = join(process.cwd(), "/public/", fileName);
     // nosemgrep
     if (!existsSync(filePath)) {
-      throw new NotFoundException("Profile picture not found");
+      throw new NotFoundException("File not found");
     }
     // nosemgrep
     const file = createReadStream(filePath);

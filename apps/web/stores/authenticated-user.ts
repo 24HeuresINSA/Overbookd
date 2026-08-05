@@ -6,6 +6,7 @@ import { UserRepository } from "~/repositories/user.repository";
 import type { Membership } from "@overbookd/registration";
 import { ADMIN } from "@overbookd/team-constants";
 import { ONE_SECOND_IN_MS } from "@overbookd/time";
+import { ZitadelRepository } from "~/repositories/zitadel.repository";
 
 type State = {
   loggedUser?: MyUserInformation;
@@ -90,11 +91,13 @@ export const useMyStore = defineStore("authenticated-user", {
       this.loggedUser = updated;
     },
 
-    async addProfilePicture(profilePicture: FormData) {
-      const res = await UserRepository.addProfilePicture(profilePicture);
+    async updateMyProfilePicture(profilePicture: FormData) {
+      const res = await ZitadelRepository.updateProfilePicture(profilePicture);
       if (isHttpError(res)) return;
       sendSuccessNotification("Photo de profil mise à jour ! 🎉");
-      this.loggedUser = castMyUserInformationWithDate(res);
+
+      await this.sync();
+      await this.fetchMyInformations();
     },
 
     setLoggedUserMembershipApplication(application: Membership) {

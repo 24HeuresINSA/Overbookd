@@ -65,6 +65,7 @@ export class PrismaCatalogSignageRepository implements CatalogSignageRepository 
     });
     return image;
   }
+
   async uploadImage(id: number, image: string): Promise<Signage> {
     const signage = await this.prisma.catalogSignage.findUnique({
       where: { id },

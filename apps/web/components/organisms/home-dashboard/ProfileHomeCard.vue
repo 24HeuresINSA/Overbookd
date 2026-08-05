@@ -11,11 +11,7 @@
     />
 
     <v-card-title class="profile__title">
-      <ProfilePicture
-        v-if="loggedUser"
-        :user="loggedUser"
-        class="profile-picture"
-      />
+      <ProfilePicture v-if="loggedUser" :user="loggedUser" />
       <h2>{{ name }}</h2>
       <p class="title__full-name">{{ fullName }}</p>
     </v-card-title>

@@ -5,21 +5,15 @@ import {
   Get,
   HttpCode,
   Param,
-  ParseFilePipe,
   ParseIntPipe,
   Patch,
   Post,
   Put,
-  StreamableFile,
-  UploadedFile,
   UseFilters,
-  UseInterceptors,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Permissions } from "../authentication-zitadel/decorators/permissions-auth.decorator";
-import { FileUploadRequestDto } from "./dto/file-upload.request.dto";
 import { UpdateUserRequestDto } from "./dto/update-user.request.dto";
-import { ProfilePictureService } from "./profile-picture.service";
 import { MyUserInformation, User, UserPersonalData } from "@overbookd/user";
 import { UserService } from "./user.service";
 import { UserPersonalDataResponseDto } from "./dto/user-personal-data.response.dto";
@@ -41,7 +35,6 @@ import { PlanningTaskResponseDto } from "./planning/dto/planning-task.response.d
 import { PlanningService } from "./planning/planning.service";
 import { AssignmentEventResponseDto } from "../assignment/common/dto/assignment-event.response.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
-import { ImageInterceptor } from "../utils/image.interceptor";
 import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
 import { AuthenticatedUser } from "../authentication-zitadel/decorators/authenticated-user.decorator";
 
@@ -53,7 +46,6 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly planningService: PlanningService,
-    private readonly profilePictureService: ProfilePictureService,
     private readonly teamService: TeamService,
   ) {}
 
@@ -231,39 +223,6 @@ export class UserController {
     @AuthenticatedUser() me: RequestHydratedUser,
   ): Promise<void> {
     return this.userService.deleteUser(userToDeleteId, me);
-  }
-
-  @Post("me/profile-picture")
-  @UseInterceptors(ImageInterceptor("file"))
-  @ApiResponse({
-    status: 201,
-    description: "Add a profile picture to a user",
-    type: MyUserInformationResponseDto,
-  })
-  @ApiBody({
-    description: "Profile picture file",
-    type: FileUploadRequestDto,
-  })
-  defineProfilePicture(
-    @AuthenticatedUser() user: RequestHydratedUser,
-    @UploadedFile(new ParseFilePipe({ fileIsRequired: true }))
-    file: Express.Multer.File,
-  ): Promise<MyUserInformation> {
-    return this.profilePictureService.updateProfilePicture(
-      user.id,
-      file.filename,
-    );
-  }
-
-  @Get(":userId/profile-picture")
-  @ApiResponse({
-    status: 200,
-    description: "Get a user profile picture",
-  })
-  getProfilePicture(
-    @Param("userId", ParseIntPipe) userId: number,
-  ): Promise<StreamableFile> {
-    return this.profilePictureService.streamProfilePicture(userId);
   }
 
   @Patch(":userId/teams")

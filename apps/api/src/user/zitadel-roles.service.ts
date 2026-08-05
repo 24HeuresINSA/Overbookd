@@ -73,7 +73,7 @@ export class ZitadelRoleService implements OnApplicationBootstrap {
     const zitadelId = await this.getZitadelId(id);
     if (!zitadelId) {
       this.logger.error(
-        `Can not grant organizer roles to user #${id}. They do not have a Zitadel account.`,
+        `Cannot grant organizer roles to user #${id}. They do not have a Zitadel account.`,
       );
       return;
     }
@@ -81,7 +81,7 @@ export class ZitadelRoleService implements OnApplicationBootstrap {
     this.organizersRoles.forEach(({ role, projectId }) => {
       if (!projectId) {
         this.logger.warn(
-          `Can not grant role ${role} to user #${id} (${zitadelId}). Project id not set.`,
+          `Cannot grant role ${role} to user #${id} (${zitadelId}). Project id not set.`,
         );
         return;
       }
@@ -105,7 +105,7 @@ export class ZitadelRoleService implements OnApplicationBootstrap {
     const zitadelId = await this.getZitadelId(id);
     if (!zitadelId) {
       this.logger.error(
-        `Can not remove organizer roles to user #${id}. They do not have a Zitadel account.`,
+        `Cannot remove organizer roles to user #${id}. They do not have a Zitadel account.`,
       );
       return;
     }
@@ -113,7 +113,7 @@ export class ZitadelRoleService implements OnApplicationBootstrap {
     this.organizersRoles.forEach(({ role, projectId }) => {
       if (!projectId) {
         this.logger.warn(
-          `Can not remove role ${role} from user #${id} (${zitadelId}). Project id not set.`,
+          `Cannot remove role ${role} from user #${id} (${zitadelId}). Project id not set.`,
         );
         return;
       }

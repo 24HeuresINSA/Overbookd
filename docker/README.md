@@ -54,14 +54,12 @@ Les certificats sont automatiquement téléchargés avec le container `certs-dow
 
 ### Le dossier `data`
 
-Contient les données de la base de données et les photos de profils. La structure est la suivantes :
+Contient les données de la base de données. La structure est la suivantes :
 
 ```txt
 data\
     postgresql\
         (all postgresql data)
-    images\
-        (all profile pictures)
 ```
 
 ## Les docker-compose de prod, preprod et cetaitmieuxavant

@@ -9,7 +9,6 @@ import type {
   UserWithTeams,
 } from "@overbookd/user";
 import { HttpClient } from "~/utils/http/http-client";
-import { ImageRepository } from "~/utils/http/image.repository";
 
 export class UserRepository {
   private static readonly basePath = "users";
@@ -50,18 +49,6 @@ export class UserRepository {
     return HttpClient.get<Consumer[]>(
       `${this.basePath}/personal-account-consumers`,
     );
-  }
-
-  static async addProfilePicture(profilePicture: FormData) {
-    return HttpClient.post<MyUserInformation>(
-      `${this.basePath}/me/profile-picture`,
-      profilePicture,
-    );
-  }
-
-  static async getProfilePicture(userId: number): Promise<string | Error> {
-    const path = `${this.basePath}/${userId}/profile-picture`;
-    return ImageRepository.getImage(path);
   }
 
   static updateUser(userId: number, userData: UserUpdateForm) {

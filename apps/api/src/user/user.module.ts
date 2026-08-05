@@ -2,7 +2,6 @@ import { Module } from "@nestjs/common";
 import { BreakPeriods } from "@overbookd/assignment";
 import { PrismaService } from "../prisma.service";
 import { FileService } from "../utils/file.service";
-import { ProfilePictureService } from "./profile-picture.service";
 import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
 import { RegistrationModule } from "../registration/index/registration.module";
@@ -66,7 +65,6 @@ import { DomainEventModule } from "../domain-event/domain-event.module";
       inject: [PrismaService, ZitadelService],
     },
     FileService,
-    ProfilePictureService,
     TeamService,
     {
       provide: ZitadelRoleService,
