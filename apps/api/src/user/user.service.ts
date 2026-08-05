@@ -173,14 +173,6 @@ export class UserService {
     return UserService.formatToMyInformation(user, charismaPeriods);
   }
 
-  async isDeleted(email: string): Promise<boolean | null> {
-    const user = await this.prisma.user.findUnique({
-      where: { email },
-      select: { isDeleted: true },
-    });
-    return user?.isDeleted ?? null;
-  }
-
   async updateMyInformation(
     author: RequestHydratedUser,
     profile: Partial<Profile>,
@@ -223,7 +215,7 @@ export class UserService {
       : SELECT_USER_PERSONAL_DATA;
     const [volunteers, charismaPeriods] = await Promise.all([
       this.prisma.user.findMany({
-        where: { ...IS_NOT_DELETED, ...hasPermission(BE_AFFECTED) },
+        where: hasPermission(BE_AFFECTED),
         select: select,
         orderBy: { id: "asc" },
       }),
@@ -237,7 +229,7 @@ export class UserService {
   getAdherents(): Promise<User[]> {
     return this.prisma.user.findMany({
       orderBy: { id: "asc" },
-      where: { ...IS_NOT_DELETED, ...hasPermission(PAY_CONTRIBUTION) },
+      where: hasPermission(PAY_CONTRIBUTION),
       select: SELECT_USER_IDENTIFIER,
     });
   }
@@ -245,7 +237,7 @@ export class UserService {
   async getAllPersonalAccountConsumers(): Promise<Consumer[]> {
     const [consumers, charismaPeriods] = await Promise.all([
       this.prisma.user.findMany({
-        where: { ...IS_NOT_DELETED, ...hasPermission(HAVE_PERSONAL_ACCOUNT) },
+        where: hasPermission(HAVE_PERSONAL_ACCOUNT),
         select: {
           ...SELECT_USER_PERSONAL_DATA,
           ...SELECT_TRANSACTIONS_FOR_BALANCE,
@@ -306,33 +298,19 @@ export class UserService {
   }
 
   async deleteUser(id: number, author: RequestHydratedUser): Promise<void> {
-    const user = await this.prisma.user.findUnique({
-      where: { id },
-      select: { email: true },
-    });
-    if (!user) return;
-
-    return this.softDeleteUser(id, author);
+    const teams = await this.getUserTeams(id);
+    if (!canManageAdmins(teams, author)) {
+      throw new UnauthorizedException(
+        "Tu ne peux pas supprimer un membre de l'équipe admin.",
+      );
+    }
+    await this.prisma.user.delete({ where: { id } });
   }
 
   private async selectCharismaPeriods(): Promise<MinimalCharismaPeriod[]> {
     return this.prisma.charismaPeriod.findMany({
       select: SELECT_CHARISMA_PERIOD,
     });
-  }
-
-  private async softDeleteUser(
-    id: number,
-    author: RequestHydratedUser,
-  ): Promise<void> {
-    const teams = await this.getUserTeams(id);
-    if (!canManageAdmins(teams, author)) {
-      throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
-    }
-    Promise.all([
-      this.prisma.user.updateMany({ where: { id }, data: { isDeleted: true } }),
-      this.prisma.userTeam.deleteMany({ where: { userId: id } }),
-    ]);
   }
 
   static formatToPersonalData(

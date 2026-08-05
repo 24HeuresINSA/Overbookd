@@ -116,7 +116,6 @@ entity "User" as User {
   profilePicture : String
   * createdAt : DateTime
   * updatedAt : DateTime
-  * isDeleted : Boolean
   registrationMembership : Membership
   note : String
   * hasApprovedEULA : Boolean

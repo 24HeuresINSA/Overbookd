@@ -8,7 +8,6 @@ import { VolunteerWithAssignments, Volunteers } from "@overbookd/assignment";
 import { getFriendCount } from "../../common/repository/friend.query";
 import { HAS_AVAILABILITIES } from "../../common/repository/availabilities.query";
 import { IS_MEMBER_OF_VOLUNTEER_TEAM } from "../../../common/query/user.query";
-import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 import {
   MinimalCharismaPeriod,
   SELECT_CHARISMA_PERIOD,
@@ -23,7 +22,6 @@ export class PrismaVolunteers implements Volunteers {
     const [volunteers, charismaPeriods] = await Promise.all([
       this.prisma.user.findMany({
         where: {
-          ...IS_NOT_DELETED,
           ...HAS_AVAILABILITIES,
           ...IS_MEMBER_OF_VOLUNTEER_TEAM,
         },

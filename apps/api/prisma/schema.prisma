@@ -48,7 +48,6 @@ model User {
   profilePicture            String?     @map("profile_picture")
   createdAt                 DateTime    @default(now()) @map("created_at")
   updatedAt                 DateTime    @updatedAt @map("updated_at")
-  isDeleted                 Boolean     @default(false) @map("is_deleted")
   registrationMembership    Membership? @map("registration_membership")
   note                      String?     @db.Text
   hasApprovedEULA           Boolean     @default(false) @map("has_approved_eula")
@@ -83,7 +82,6 @@ model User {
   charismaEventParticipations CharismaEventParticipation[]
   membershipApplications      MembershipApplication[]
 
-  @@index([isDeleted])
   @@map("user")
 }
 

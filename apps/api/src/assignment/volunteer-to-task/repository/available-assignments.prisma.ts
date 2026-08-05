@@ -8,7 +8,6 @@ import {
   countAssigneesInTeam,
   retrieveImplicitTeams,
 } from "@overbookd/assignment";
-import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 import { SELECT_TEAM_CODES } from "../../../common/query/user.query";
 import { friendAssigneesCount } from "../../common/repository/assignment.query";
 
@@ -35,7 +34,7 @@ export class PrismaAvailableAssignments implements AvailableAssignments {
     volunteerId: number,
   ): Promise<AssignmentSummaryWithTask[]> {
     const volunteer = await this.prisma.user.findUnique({
-      where: { id: volunteerId, ...IS_NOT_DELETED },
+      where: { id: volunteerId },
       select: {
         ...SELECT_TEAM_CODES,
         availabilities: { select: SELECT_PERIOD },

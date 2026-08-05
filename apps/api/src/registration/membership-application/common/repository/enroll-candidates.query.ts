@@ -3,7 +3,6 @@ import { PERSONNE, HARD } from "@overbookd/team-code";
 import { Edition, IProvidePeriod } from "@overbookd/time";
 import { SELECT_PERIOD } from "../../../../common/query/period.query";
 import { SELECT_USER_TEAMS } from "../../../../user/user.query";
-import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 
 export const SELECT_STAFF = {
   id: true,
@@ -48,13 +47,11 @@ function buildHasRejectedMembershipApplicationCondition(
 }
 
 export const IS_ENROLLABLE_STAFF = {
-  ...IS_NOT_DELETED,
   ...IS_NOT_HARD,
   ...buildHasMembershipApplicationCondition(STAFF),
 };
 
 export const IS_REJECTED_STAFF = {
-  ...IS_NOT_DELETED,
   ...IS_NOT_HARD,
   ...buildHasRejectedMembershipApplicationCondition(STAFF),
 };
@@ -64,13 +61,11 @@ const IS_NOT_VOLUNTEER = {
 };
 
 export const IS_ENROLLABLE_VOLUNTEER = {
-  ...IS_NOT_DELETED,
   ...IS_NOT_VOLUNTEER,
   ...buildHasMembershipApplicationCondition(VOLUNTEER),
 };
 
 export const IS_REJECTED_VOLUNTEER = {
-  ...IS_NOT_DELETED,
   ...IS_NOT_VOLUNTEER,
   ...buildHasRejectedMembershipApplicationCondition(VOLUNTEER),
 };
