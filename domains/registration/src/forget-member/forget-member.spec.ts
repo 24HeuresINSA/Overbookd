@@ -7,6 +7,7 @@ import {
 } from "./member-repository.inmemory.js";
 import {
   ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE,
+  HAS_MONEY_ERROR_MESSAGE,
   IN_DEBT_ERROR_MESSAGE,
 } from "./forget-member.error.js";
 import { ANONYMOUS, ANONYMOUS_MOBILE_PHONE } from "./anonymous-member.js";
@@ -30,8 +31,17 @@ const inDebtMember: StoredMember = {
   transactions: [{ from: 2, to: 0 }],
 };
 
-const withoutTransactionsMember: StoredMember = {
+const positiveBalanceMember: StoredMember = {
   id: 3,
+  email: "positive-account@24heures.org",
+  password: "P4ssW0rd1234^",
+  tasks: [],
+  balance: 20,
+  transactions: [{ from: 0, to: 2 }],
+};
+
+const withoutTransactionsMember: StoredMember = {
+  id: 4,
   email: "withoutTransaction@24heures.org",
   password: "P4ssW0rd1234^",
   tasks: [{ end: new Date("2022-05-12") }],
@@ -40,14 +50,14 @@ const withoutTransactionsMember: StoredMember = {
 };
 
 const withTransactionsMember: StoredMember = {
-  id: 4,
+  id: 5,
   email: "withTransaction@24heures.org",
   password: "P4ssW0rd1234^",
   tasks: [{ end: new Date("2022-05-12") }],
   balance: 0,
   transactions: [
-    { from: 0, to: 4 },
-    { from: 4, to: 0 },
+    { from: 0, to: 5 },
+    { from: 5, to: 0 },
   ],
   comment: "Ceci est un commentaire",
   note: "SUper bénévole",
@@ -59,6 +69,7 @@ describe("Forget member", () => {
   beforeEach(() => {
     memberRepository = new InMemoryMemberRepository([
       withTaskMember,
+      positiveBalanceMember,
       inDebtMember,
       withoutTransactionsMember,
       withTransactionsMember,
@@ -73,6 +84,13 @@ describe("Forget member", () => {
         ).rejects.toThrow(ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE);
       });
     });
+    describe("when he has money in his account", () => {
+      it("should indicate that we can't forget about member with money in his account", async () => {
+        expect(
+          async () => await forget.apply(positiveBalanceMember.id),
+        ).rejects.toThrow(HAS_MONEY_ERROR_MESSAGE);
+      });
+    });
     describe("when he is in debt", () => {
       it("should indicate that we can't forget about in debt member", async () => {
         expect(async () => await forget.apply(inDebtMember.id)).rejects.toThrow(
@@ -84,7 +102,7 @@ describe("Forget member", () => {
       it("should anonymize member personal data", async () => {
         const anonymizedMember = await forget.apply(withTransactionsMember.id);
         expect(anonymizedMember).toEqual({
-          email: "anonymous+4@24heures.org",
+          email: "anonymous+5@24heures.org",
           firstName: ANONYMOUS,
           lastName: ANONYMOUS,
           mobilePhone: ANONYMOUS_MOBILE_PHONE,
