@@ -107,11 +107,11 @@ export function required(value: unknown) {
 }
 
 export function isImageSizeWithinLimit(value?: File | null): true | string {
-  const message = "Moins de 2 Mo s'il te plaît 🙏";
+  const message = `Moins de ${Math.round(IMAGE_MAX_SIZE / (1024 * 1024))} Mo s'il te plaît 🙏`;
   return !value || value.size < IMAGE_MAX_SIZE || message;
 }
 
 export function isSupportedImageFile(value?: File | null): true | string {
-  const message = "Seulement des images (png, jpeg ou gif)";
+  const message = "Seulement des images (png, jpeg, webp ou gif)";
   return !value || IMAGE_EXTENSIONS.includes(value.type) || message;
 }

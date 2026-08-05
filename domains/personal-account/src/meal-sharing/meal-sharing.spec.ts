@@ -417,7 +417,7 @@ describe("Meal Sharing", () => {
         });
       });
       describe("when the amount is too low", () => {
-        it("should indicate we can not record expense", () => {
+        it("should indicate we cannot record expense", () => {
           expect(
             async () =>
               await mealSharing.recordExpense(rizCantonnais.id, julie.id, {
@@ -427,7 +427,7 @@ describe("Meal Sharing", () => {
         });
       });
       describe("when the amount is too high", () => {
-        it("should indicate we can not record expense", () => {
+        it("should indicate we cannot record expense", () => {
           expect(
             async () =>
               await mealSharing.recordExpense(rizCantonnais.id, julie.id, {
@@ -437,7 +437,7 @@ describe("Meal Sharing", () => {
         });
       });
       describe("when no one shotguns for the meal", () => {
-        it("should indicate we can not record expense", () => {
+        it("should indicate we cannot record expense", () => {
           expect(
             async () =>
               await mealSharing.recordExpense(

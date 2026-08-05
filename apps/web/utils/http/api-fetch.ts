@@ -1,5 +1,6 @@
 import type { HttpStringified } from "@overbookd/http";
 import { CSV, ICAL, JSON as JSON_TYPE, PDF } from "@overbookd/http";
+import { useOidcUtils } from "~/composable/useOidcUtils";
 
 type MethodWithBody = "POST" | "PUT" | "PATCH";
 type MethodWithoutBody = "GET" | "DELETE";
@@ -12,7 +13,7 @@ export type RequestGeneral = {
 
 type AcceptedType = typeof JSON_TYPE | typeof CSV | typeof ICAL | typeof PDF;
 export type RequestOptions = {
-  acceptedType: AcceptedType;
+  acceptedType?: AcceptedType;
   serverErrorMessage: string;
 };
 
@@ -43,7 +44,7 @@ export async function apiFetch<T extends ApiResponse>(
 
 function createRequestOptions(
   method: string,
-  acceptedType: AcceptedType,
+  acceptedType?: AcceptedType,
   body?: object,
 ): RequestInit {
   const isFormData = body instanceof FormData;
@@ -54,18 +55,15 @@ function createRequestOptions(
 }
 
 function createHeaders(
-  acceptedType: AcceptedType,
+  acceptedType: AcceptedType = JSON_TYPE,
   contentType?: typeof JSON_TYPE,
 ): HeadersInit {
   const contentTypeObject: EmptyOr<{ "Content-Type": string }> = contentType
     ? { "Content-Type": contentType }
     : {};
 
-  const oidc = useOidcAuth();
-  const accessToken = oidc.user.value?.accessToken;
-  const authorization: EmptyOr<{ Authorization: string }> = accessToken
-    ? { Authorization: `Bearer ${accessToken}` }
-    : {};
+  const { getUserAuthorizationHeader } = useOidcUtils();
+  const authorization = getUserAuthorizationHeader();
   const accept = { Accept: acceptedType };
 
   return { ...contentTypeObject, ...authorization, ...accept };
@@ -92,7 +90,7 @@ async function handleFetchError(
 
 async function handleFetchResponse<T extends ApiResponse>(
   res: Response,
-  acceptedType: AcceptedType,
+  acceptedType?: AcceptedType,
 ): Promise<HttpResponse<T>> {
   if (res.status === 204) return undefined as Success<T>;
   if (acceptedType === JSON_TYPE) {

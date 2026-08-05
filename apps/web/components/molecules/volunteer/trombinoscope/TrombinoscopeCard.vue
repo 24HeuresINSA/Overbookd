@@ -24,14 +24,16 @@
 </template>
 
 <script lang="ts" setup>
-import { buildUserNameWithNickname } from "@overbookd/user";
+import {
+  buildUserNameWithNickname,
+  type UserPersonalData,
+} from "@overbookd/user";
 import type { Team } from "@overbookd/team";
 import { VIEW_VOLUNTEER_DETAILS } from "@overbookd/permission";
-import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 
-const props = defineProps({
+const { volunteer } = defineProps({
   volunteer: {
-    type: Object as PropType<UserDataWithPotentialyProfilePicture>,
+    type: Object as PropType<UserPersonalData>,
     required: true,
   },
 });
@@ -44,7 +46,7 @@ const canViewVolunteerDetails = computed(() =>
 const emit = defineEmits(["click:team", "click:volunteer"]);
 const propagateClickedTeam = (team: Team) => emit("click:team", team);
 const propagateClickedVolunteer = () => {
-  emit("click:volunteer", props.volunteer);
+  emit("click:volunteer", volunteer);
 };
 </script>
 

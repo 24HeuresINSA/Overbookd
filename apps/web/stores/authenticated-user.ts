@@ -1,18 +1,15 @@
 import type { Permission } from "@overbookd/permission";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import { castMyUserInformationWithDate } from "~/utils/http/cast-date/user.utils";
-import type {
-  MyUserInformationWithPotentialyProfilePicture,
-  UserDataWithPotentialyProfilePicture,
-} from "~/utils/user/user-information";
-import type { Profile } from "@overbookd/user";
+import type { MyUserInformation, Profile } from "@overbookd/user";
 import { UserRepository } from "~/repositories/user.repository";
 import type { Membership } from "@overbookd/registration";
 import { ADMIN } from "@overbookd/team-constants";
 import { ONE_SECOND_IN_MS } from "@overbookd/time";
+import { ZitadelRepository } from "~/repositories/zitadel.repository";
 
 type State = {
-  loggedUser?: MyUserInformationWithPotentialyProfilePicture;
+  loggedUser?: MyUserInformation;
   synced: boolean;
 };
 
@@ -94,30 +91,13 @@ export const useMyStore = defineStore("authenticated-user", {
       this.loggedUser = updated;
     },
 
-    async addProfilePicture(profilePicture: FormData) {
-      const res = await UserRepository.addProfilePicture(profilePicture);
+    async updateMyProfilePicture(profilePicture: FormData) {
+      const res = await ZitadelRepository.updateProfilePicture(profilePicture);
       if (isHttpError(res)) return;
       sendSuccessNotification("Photo de profil mise à jour ! 🎉");
-      this.loggedUser = castMyUserInformationWithDate(res);
-    },
 
-    _getProfilePicture(
-      user:
-        | MyUserInformationWithPotentialyProfilePicture
-        | UserDataWithPotentialyProfilePicture,
-    ) {
-      if (!user.profilePicture) return undefined;
-      if (user.profilePictureBlob) return user.profilePictureBlob;
-
-      return UserRepository.getProfilePicture(user.id);
-    },
-
-    async setMyProfilePicture() {
-      if (!this.loggedUser) return;
-      const profilePictureBlob = await this._getProfilePicture(this.loggedUser);
-      if (profilePictureBlob instanceof Error) return;
-
-      this.loggedUser = { ...this.loggedUser, profilePictureBlob };
+      await this.sync();
+      await this.fetchMyInformations();
     },
 
     setLoggedUserMembershipApplication(application: Membership) {

@@ -102,7 +102,7 @@ export class CatalogSignageController {
     type: SignageResponseDto,
   })
   @ApiBody({
-    description: "Profile picture file",
+    description: "Signage image file",
     type: FileUploadRequestDto,
   })
   defineSignageImage(

@@ -73,6 +73,7 @@ export class UserService {
       phoneNumber: user.phoneNumber,
       zitadelId: user.zitadelId,
       birthDate: user.birthDate,
+      profilePicture: user.profilePicture,
     };
 
     if (!userId) {

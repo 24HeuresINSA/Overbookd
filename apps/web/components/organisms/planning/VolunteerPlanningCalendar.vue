@@ -93,7 +93,7 @@ import {
 } from "~/utils/planning/event";
 import type { VolunteerForPlanningCalendar } from "~/utils/planning/volunteer";
 import type { SelectableCategory } from "~/utils/assignment/task-category";
-import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
+import type { UserPersonalData } from "@overbookd/user";
 
 const myStore = useMyStore();
 const userStore = useUserStore();
@@ -111,9 +111,9 @@ const { volunteerId } = defineProps({
 
 const selectedCategory = ref<SelectableCategory | undefined>(undefined);
 
-const selectedVolunteer = computed<
-  UserDataWithPotentialyProfilePicture | undefined
->(() => userStore.selectedUser);
+const selectedVolunteer = computed<UserPersonalData | undefined>(
+  () => userStore.selectedUser,
+);
 const selectedTask = computed<TaskForCalendar | undefined>(
   () => planningStore.selectedCalendarTask,
 );

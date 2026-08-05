@@ -75,15 +75,6 @@ export class UpdateUserRequestDto implements UserUpdateForm {
 
   @ApiProperty({
     required: false,
-    description: "The user profile picture path",
-  })
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  profilePicture?: string;
-
-  @ApiProperty({
-    required: false,
     description: "Notes from 'humain' members about user",
   })
   @IsOptional()

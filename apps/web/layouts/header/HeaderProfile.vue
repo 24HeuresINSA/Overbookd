@@ -2,12 +2,7 @@
   <div class="profile">
     <div class="profile__header" @click="handleProfileClick">
       <div class="profile__data">
-        <ProfilePicture
-          v-if="loggedUser"
-          :user="loggedUser"
-          class="profile__picture"
-          size="small"
-        />
+        <ProfilePicture v-if="loggedUser" :user="loggedUser" size="small" />
         <div class="profile__information">
           <span class="profile__name">{{ myName }}</span>
           <span class="profile__balance" :class="balanceClassColor">

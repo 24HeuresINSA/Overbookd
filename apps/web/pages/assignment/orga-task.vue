@@ -62,10 +62,9 @@ import type {
   BreakPeriod,
   VolunteerWithAssignmentDuration,
 } from "@overbookd/assignment";
-import { buildUserName } from "@overbookd/user";
+import { buildUserName, type UserPersonalData } from "@overbookd/user";
 import type { Period } from "@overbookd/time";
 import type { UnassignForm } from "~/utils/assignment/assignment";
-import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import type { BreakEvent } from "~/domain/common/break-events";
 import {
   OrgaTaskFilterBuilder,
@@ -83,7 +82,7 @@ const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 const availabilitiesStore = useVolunteerAvailabilityStore();
 const planningStore = usePlanningStore();
 
-const selectedUser = computed<UserDataWithPotentialyProfilePicture | undefined>(
+const selectedUser = computed<UserPersonalData | undefined>(
   () => userStore.selectedUser,
 );
 

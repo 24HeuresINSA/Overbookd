@@ -9,6 +9,7 @@ export default defineNuxtConfig({
       baseURL: process.env.BASE_URL,
       apiURL: `${process.env.BASE_URL}/ob-api`,
       version: process.env.OVERBOOKD_VERSION || "no version",
+      zitadelBaseURL: process.env.ZITADEL_BASE_URL,
     },
   },
   typescript: {
@@ -107,6 +108,7 @@ export default defineNuxtConfig({
           "phone",
           "offline_access",
           "urn:zitadel:iam:user:metadata",
+          "urn:zitadel:iam:org:project:id:zitadel:aud",
         ],
         nonce: false,
         responseType: "code",

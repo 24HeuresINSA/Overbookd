@@ -3,6 +3,7 @@ import {
   type HandleEvent,
   addEventListener,
 } from "@overbookd/domain-events";
+import { useOidcUtils } from "./useOidcUtils";
 
 let sharedSource: EventSource | null = null;
 
@@ -11,9 +12,8 @@ export function useLiveNotification() {
     const config = useRuntimeConfig();
     const url = new URL(`${config.public.apiURL}/live-notifications/stream`);
 
-    const oidc = useOidcAuth();
-    const accessToken = oidc.user.value?.accessToken ?? "";
-    url.searchParams.append("token", accessToken);
+    const { userAccessToken } = useOidcUtils();
+    url.searchParams.append("token", userAccessToken.value ?? "");
     sharedSource = new EventSource(url.href);
   }
 

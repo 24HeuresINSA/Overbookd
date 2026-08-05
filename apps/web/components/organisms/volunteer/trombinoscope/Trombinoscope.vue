@@ -12,6 +12,7 @@
         v-for="volunteer in volunteersBornToday"
         :key="volunteer.id"
         :volunteer="volunteer"
+        @click="propagateClickedVolunteer"
       />
     </div>
     <TrombinoscopeGroup
@@ -53,7 +54,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import {
   BUREAU,
   HARD,
@@ -66,10 +66,11 @@ import {
 } from "@overbookd/team-constants";
 import { OverDate } from "@overbookd/time";
 import type { Team } from "@overbookd/team";
+import type { UserPersonalData } from "@overbookd/user";
 
 const props = defineProps({
   volunteers: {
-    type: Array as PropType<UserDataWithPotentialyProfilePicture[]>,
+    type: Array as PropType<UserPersonalData[]>,
     required: true,
   },
   loading: {
@@ -85,14 +86,14 @@ const allVolunteersDisplayed = computed<boolean>(() => {
   return hasVolunteers && noFilters;
 });
 
-const caMembers = computed<UserDataWithPotentialyProfilePicture[]>(() =>
+const caMembers = computed<UserPersonalData[]>(() =>
   props.volunteers.filter((volunteer) => {
     const isOrga = volunteer.teams.includes(CA);
     const isBureau = volunteer.teams.includes(BUREAU);
     return isOrga || isBureau;
   }),
 );
-const adherents = computed<UserDataWithPotentialyProfilePicture[]>(() =>
+const adherents = computed<UserPersonalData[]>(() =>
   props.volunteers.filter((volunteer) => {
     const isNotOrga = !volunteer.teams.includes(CA);
     const isNotBureau = !volunteer.teams.includes(BUREAU);
@@ -100,17 +101,17 @@ const adherents = computed<UserDataWithPotentialyProfilePicture[]>(() =>
     return isNotOrga && isNotBureau && isHard;
   }),
 );
-const eventVolunteers = computed<UserDataWithPotentialyProfilePicture[]>(() =>
+const eventVolunteers = computed<UserPersonalData[]>(() =>
   props.volunteers.filter((volunteer) => volunteer.teams.includes(SOFT)),
 );
-const seniors = computed<UserDataWithPotentialyProfilePicture[]>(() =>
+const seniors = computed<UserPersonalData[]>(() =>
   props.volunteers.filter((volunteer) => {
     const notHard = !volunteer.teams.includes(HARD);
     const isSenior = volunteer.teams.includes(VIEUX);
     return notHard && isSenior;
   }),
 );
-const vehicles = computed<UserDataWithPotentialyProfilePicture[]>(() =>
+const vehicles = computed<UserPersonalData[]>(() =>
   props.volunteers.filter((volunteer) => {
     const isVoiture = volunteer.teams.includes(VOITURE);
     const isCamion = volunteer.teams.includes(CAMION);
@@ -119,24 +120,21 @@ const vehicles = computed<UserDataWithPotentialyProfilePicture[]>(() =>
   }),
 );
 
-const volunteersBornToday = computed<UserDataWithPotentialyProfilePicture[]>(
-  () => {
-    const today = OverDate.now();
-    return props.volunteers.filter((volunteer) => {
-      const birthDate = OverDate.from(volunteer.birthDate);
-      return (
-        birthDate.monthlyDate.month === today.monthlyDate.month &&
-        birthDate.monthlyDate.day === today.monthlyDate.day
-      );
-    });
-  },
-);
+const volunteersBornToday = computed<UserPersonalData[]>(() => {
+  const today = OverDate.now();
+  return props.volunteers.filter((volunteer) => {
+    const birthDate = OverDate.from(volunteer.birthDate);
+    return (
+      birthDate.monthlyDate.month === today.monthlyDate.month &&
+      birthDate.monthlyDate.day === today.monthlyDate.day
+    );
+  });
+});
 
 const emit = defineEmits(["click:team", "click:volunteer"]);
 const propagateClickedTeam = (team: Team) => emit("click:team", team);
-const propagateClickedVolunteer = (
-  volunteer: UserDataWithPotentialyProfilePicture,
-) => emit("click:volunteer", volunteer);
+const propagateClickedVolunteer = (volunteer: UserPersonalData) =>
+  emit("click:volunteer", volunteer);
 </script>
 
 <style lang="scss" scoped>

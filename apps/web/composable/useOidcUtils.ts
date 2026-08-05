@@ -8,15 +8,23 @@ import { useMyStore } from "~/stores/authenticated-user";
 export function useOidcUtils() {
   const oidc = useOidcAuth();
 
-  const getUserRoles = (): OverbookdOidcRole[] => {
+  const userAccessToken = computed<string | undefined>(
+    () => oidc.user.value?.accessToken,
+  );
+
+  const getUserAuthorizationHeader = ():
+    { Authorization: string } | Record<never, unknown> =>
+    userAccessToken.value
+      ? { Authorization: `Bearer ${userAccessToken.value}` }
+      : {};
+
+  const userRoles = computed<OverbookdOidcRole[]>(() => {
     const rolesObj = oidc.user.value?.userInfo?.[`${OIDC_ROLES_CLAIMS}`] ?? {};
     return Object.keys(rolesObj) as OverbookdOidcRole[];
-  };
+  });
 
-  const userHasRole = (role: OverbookdOidcRole) => {
-    const roles = getUserRoles();
-    return roles.includes(role);
-  };
+  const doesUserHaveRole = (role: OverbookdOidcRole) =>
+    userRoles.value.includes(role);
 
   const handleLogout = async () => {
     await oidc.logout();
@@ -24,5 +32,11 @@ export function useOidcUtils() {
     useMyStore().clear();
   };
 
-  return { getUserRoles, userHasRole, handleLogout };
+  return {
+    userAccessToken,
+    getUserAuthorizationHeader,
+    userRoles,
+    doesUserHaveRole,
+    handleLogout,
+  };
 }

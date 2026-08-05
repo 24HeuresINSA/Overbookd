@@ -64,7 +64,7 @@ export class UserPersonalDataResponseDto implements UserPersonalData {
 
   @ApiProperty({
     name: "profilePicture",
-    description: "User profile picture link",
+    description: "User profile picture url",
     type: String,
     required: false,
   })

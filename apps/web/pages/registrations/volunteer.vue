@@ -214,9 +214,11 @@ import {
   type Searchable,
 } from "~/utils/search/search.utils";
 import { toSearchable } from "~/utils/search/searchable-user.utils";
-import type { UserDataWithPotentialyProfilePicture } from "~/utils/user/user-information";
 import type { VolunteerFilters } from "~/utils/user/volunteer.filter";
-import { buildUserNameWithNickname } from "@overbookd/user";
+import {
+  buildUserNameWithNickname,
+  type UserPersonalData,
+} from "@overbookd/user";
 import { buildVolunteerCandidateWithRejectionStatus } from "~/utils/registration/volunteer-candidates.utils";
 import { CSVBuilder } from "@overbookd/csv";
 import { downloadCsv } from "~/utils/file/download.utils";
@@ -369,7 +371,7 @@ const exportCSV = async () => {
 
 const isCandidateInfoDialogOpen = ref<boolean>(false);
 
-const selectedUser = computed<UserDataWithPotentialyProfilePicture | undefined>(
+const selectedUser = computed<UserPersonalData | undefined>(
   () => userStore.selectedUser,
 );
 const openCandidateInfoDialog = async (
