@@ -6,10 +6,9 @@ import {
   InMemoryMemberRepository,
 } from "./member-repository.inmemory.js";
 import {
-  HAS_ACTIVITY_ERROR_MESSAGE,
+  DEFAULT_ERROR_MESSAGE,
   HAS_FUTURE_ASSIGNMENT_ERROR_MESSAGE,
   HAS_MONEY_ERROR_MESSAGE,
-  HAS_TASK_ERROR_MESSAGE,
   IN_DEBT_ERROR_MESSAGE,
 } from "./forget-member.error.js";
 import {
@@ -24,11 +23,12 @@ const defaultData: Omit<StoredMember, "id" | "email"> = {
   assignments: [],
   balance: 0,
   transactions: [],
-  activities: false,
-  tasks: false,
+  activities: [],
+  tasks: [],
   comment: "Ceci est un commentaire",
   note: "Ceci est une note",
   profilePicture: "https://example.com/profile-picture.jpg",
+  sharedMeals: [{ date: "09/10/2024 MIDI", closed: true }],
 };
 
 const withTaskMember: StoredMember = {
@@ -79,14 +79,24 @@ const withActivitiesMember: StoredMember = {
   ...defaultData,
   id: 6,
   email: "with-activities@24heures.org",
-  activities: true,
+  activities: [{ id: 1 }],
 };
 
 const withTasksMember: StoredMember = {
   ...defaultData,
   id: 7,
   email: "with-tasks@24heures.org",
-  tasks: true,
+  tasks: [{ id: 3 }],
+};
+
+const withOpenSharedMealsMember: StoredMember = {
+  ...defaultData,
+  id: 8,
+  email: "with-open-shared-meals@24heures.org",
+  sharedMeals: [
+    { date: "09/10/2024 MIDI", closed: true },
+    { date: "01/01/2025 SOIR", closed: false },
+  ],
 };
 
 describe("Forget member", () => {
@@ -101,6 +111,7 @@ describe("Forget member", () => {
       withTransactionsMember,
       withActivitiesMember,
       withTasksMember,
+      withOpenSharedMealsMember,
     ]);
     forget = new ForgetMember(memberRepository);
   });
@@ -130,14 +141,27 @@ describe("Forget member", () => {
       it("should indicate that we can't forget about member with activities", async () => {
         expect(
           async () => await forget.apply(withActivitiesMember.id),
-        ).rejects.toThrow(HAS_ACTIVITY_ERROR_MESSAGE);
+        ).rejects.toThrow(
+          `${DEFAULT_ERROR_MESSAGE}Iel est affecté(e) aux FA : #1.`,
+        );
       });
     });
     describe("when he has tasks", () => {
       it("should indicate that we can't forget about member with tasks", async () => {
         expect(
           async () => await forget.apply(withTasksMember.id),
-        ).rejects.toThrow(HAS_TASK_ERROR_MESSAGE);
+        ).rejects.toThrow(
+          `${DEFAULT_ERROR_MESSAGE}Iel est affecté(e) aux FT : #3.`,
+        );
+      });
+    });
+    describe("when he has open shared meals", () => {
+      it("should indicate that we can't forget about member with future shared meals", async () => {
+        expect(
+          async () => await forget.apply(withOpenSharedMealsMember.id),
+        ).rejects.toThrow(
+          `${DEFAULT_ERROR_MESSAGE}Iel est inscrit(e) à des repas partagés non cloturés: 01/01/2025 SOIR.`,
+        );
       });
     });
     describe("when he has transactions", () => {

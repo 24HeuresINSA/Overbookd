@@ -2,8 +2,13 @@ import { updateItemToList } from "@overbookd/list";
 import { AnonymousMember } from "./anonymous-member.js";
 import { MemberRepository } from "./forget-member.js";
 
-type Assignment = {
-  end: Date;
+type Assignment = { end: Date };
+type Activity = { id: number };
+type Task = { id: number };
+
+type SharedMeal = {
+  date: string;
+  closed: boolean;
 };
 
 type Transaction = {
@@ -17,13 +22,14 @@ export type StoredMember = {
   password: string;
   birthDate: Date;
   assignments: Assignment[];
-  tasks: boolean;
-  activities: boolean;
+  tasks: Task[];
+  activities: Activity[];
   balance: number;
   transactions: Transaction[];
   comment?: string;
   note?: string;
   profilePicture?: string;
+  sharedMeals: SharedMeal[];
 };
 
 export class InMemoryMemberRepository implements MemberRepository {
@@ -37,15 +43,28 @@ export class InMemoryMemberRepository implements MemberRepository {
     );
   }
 
-  hasActivities(id: number): Promise<boolean> {
+  activityIds(id: number): Promise<number[]> {
     return Promise.resolve(
-      this.members.find((member) => member.id === id)?.activities ?? false,
+      this.members
+        .find((member) => member.id === id)
+        ?.activities?.map((a) => a.id) ?? [],
     );
   }
 
-  hasTasks(id: number): Promise<boolean> {
+  taskIds(id: number): Promise<number[]> {
     return Promise.resolve(
-      this.members.find((member) => member.id === id)?.tasks ?? false,
+      this.members
+        .find((member) => member.id === id)
+        ?.tasks?.map((t) => t.id) ?? [],
+    );
+  }
+
+  openSharedMealDates(id: number): Promise<string[]> {
+    return Promise.resolve(
+      this.members
+        .find((member) => member.id === id)
+        ?.sharedMeals?.filter((sm) => !sm.closed)
+        .map((sm) => sm.date) ?? [],
     );
   }
 

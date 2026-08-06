@@ -4,6 +4,7 @@ import {
   HasMoney,
   HasTask,
   InDebt,
+  HasOpenSharedMeal,
 } from "./forget-member.error.js";
 import { AnonymousMember } from "./anonymous-member.js";
 import {
@@ -13,10 +14,11 @@ import {
 
 export type MemberRepository = {
   hasFutureAssignments(id: number): Promise<boolean>;
-  hasActivities(id: number): Promise<boolean>;
-  hasTasks(id: number): Promise<boolean>;
+  activityIds(id: number): Promise<number[]>;
+  taskIds(id: number): Promise<number[]>;
   hasDebts(id: number): Promise<boolean>;
   hasMoney(id: number): Promise<boolean>;
+  openSharedMealDates(id: number): Promise<string[]>;
   hasTransactions(id: number): Promise<boolean>;
   delete(id: number): Promise<void>;
   anonymize(id: number, anonymous: AnonymousMember): Promise<AnonymousMember>;
@@ -28,23 +30,27 @@ export class ForgetMember {
   async apply(id: number) {
     const [
       hasFutureAssignments,
-      hasActivities,
-      hasTasks,
+      activityIds,
+      taskIds,
       hasDebts,
       hasMoney,
+      openSharedMealDates,
       hasTransactions,
     ] = await Promise.all([
       this.members.hasFutureAssignments(id),
-      this.members.hasActivities(id),
-      this.members.hasTasks(id),
+      this.members.activityIds(id),
+      this.members.taskIds(id),
       this.members.hasDebts(id),
       this.members.hasMoney(id),
+      this.members.openSharedMealDates(id),
       this.members.hasTransactions(id),
     ]);
 
     if (hasFutureAssignments) throw new HasFutureAssignment();
-    if (hasActivities) throw new HasActivity();
-    if (hasTasks) throw new HasTask();
+    if (activityIds.length > 0) throw new HasActivity(activityIds);
+    if (taskIds.length > 0) throw new HasTask(taskIds);
+    if (openSharedMealDates.length > 0)
+      throw new HasOpenSharedMeal(openSharedMealDates);
     if (hasDebts) throw new InDebt();
     if (hasMoney) throw new HasMoney();
 
