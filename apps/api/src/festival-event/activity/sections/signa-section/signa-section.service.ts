@@ -11,7 +11,7 @@ import { checkMembership } from "../../../../team/team.utils";
 import { CatalogSignages } from "../../common/festival-activity-common.model";
 import { Locations } from "../../../common/repository/locations.prisma";
 import { UpdateSignageRequest } from "./dto/update-signage.request.dto";
-import { SIGNA } from "@overbookd/team-constants";
+import { SIGNA } from "@overbookd/team-code";
 import { RequestHydratedUser } from "../../../../authentication-zitadel/request-hydrated-user";
 
 type LinkSignageToCatalogItem = {

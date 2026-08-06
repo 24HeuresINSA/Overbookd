@@ -1,5 +1,5 @@
 import { moveAtFirstIndex } from "@overbookd/list";
-import { ADMIN, HARD, CA, SOFT, CONFIANCE } from "@overbookd/team-constants";
+import { ADMIN, HARD, CA, SOFT, CONFIANCE } from "@overbookd/team-code";
 
 export function sortTeamsForAssignment(teams: string[]): string[] {
   let sortedTeams = teams.filter((team) => team !== ADMIN && team !== CA);

@@ -73,7 +73,7 @@ import {
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import { downloadCsv } from "~/utils/file/download.utils";
 import { formatDate } from "@overbookd/time";
-import { PERSONNE } from "@overbookd/team-constants";
+import { PERSONNE } from "@overbookd/team-code";
 import {
   DisplayModeBuilder,
   TROMBINOSCOPE,

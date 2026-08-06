@@ -60,7 +60,7 @@ import {
   readablePeriodFromId,
 } from "../../common/time-window.js";
 import { AssignDriveInDraft } from "../../common/inquiry-request.error.js";
-import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-code";
 
 export type UpdateGeneral = {
   name?: FestivalTask["general"]["name"];

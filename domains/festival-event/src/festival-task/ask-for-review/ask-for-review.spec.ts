@@ -30,7 +30,7 @@ import { InMemoryReviewers } from "./reviewers.inmemory.js";
 import { InMemoryAskForReviewTasks } from "./ask-for-review-tasks.inmemory.js";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
-import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-code";
 
 describe("Festival Task - ask for review", () => {
   let askForReview: AskForReview;

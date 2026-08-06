@@ -1,6 +1,6 @@
 {
-  "name": "@overbookd/team-constants",
-  "version": "1.2.8",
+  "name": "@overbookd/team-code",
+  "version": "1.3.0",
   "description": "Gestion des constantes des équipes pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -13,7 +13,7 @@
   "repository": {
     "type": "git",
     "url": "https://gitlab.com/24-heures-insa/overbookd-mono",
-    "directory": "constants/team-constants"
+    "directory": "constants/team-code"
   },
   "type": "module",
   "exports": {
@@ -47,6 +47,7 @@
   },
   "keywords": [
     "team",
+    "code",
     "constants"
   ],
   "engines": {

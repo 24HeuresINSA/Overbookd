@@ -50,7 +50,7 @@ import {
 } from "@overbookd/permission";
 import { OverDate } from "@overbookd/time";
 import { VOLUNTEER } from "@overbookd/registration";
-import { SOFT } from "@overbookd/team-constants";
+import { SOFT } from "@overbookd/team-code";
 
 const myStore = useMyStore();
 const me = computed(() => myStore.loggedUser);

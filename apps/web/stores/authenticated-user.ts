@@ -4,7 +4,7 @@ import { castMyUserInformationWithDate } from "~/utils/http/cast-date/user.utils
 import type { MyUserInformation, Profile } from "@overbookd/user";
 import { UserRepository } from "~/repositories/user.repository";
 import type { Membership } from "@overbookd/registration";
-import { ADMIN } from "@overbookd/team-constants";
+import { ADMIN } from "@overbookd/team-code";
 import { ONE_SECOND_IN_MS } from "@overbookd/time";
 import { ZitadelRepository } from "~/repositories/zitadel.repository";
 

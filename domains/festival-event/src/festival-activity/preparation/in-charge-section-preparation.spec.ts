@@ -12,7 +12,7 @@ import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities
 import { ContractorNotFound } from "../festival-activity.error.js";
 import { HUMAIN } from "../../common/review.js";
 import { PrepareError } from "./prepare-in-review-festival-activity.js";
-import { VIEUX } from "@overbookd/team-constants";
+import { VIEUX } from "@overbookd/team-code";
 
 describe("In Charge section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;

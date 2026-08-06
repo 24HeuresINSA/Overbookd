@@ -22,7 +22,7 @@ import {
 } from "@overbookd/festival-event-constants";
 import { CastDraft } from "./draft";
 import { CastReviewable } from "./reviewable";
-import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-code";
 
 export function castTaskWithDate(
   task: HttpStringified<FestivalTask>,

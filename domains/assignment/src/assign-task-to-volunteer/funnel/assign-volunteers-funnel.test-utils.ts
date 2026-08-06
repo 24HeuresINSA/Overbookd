@@ -4,7 +4,7 @@ import {
   HARD,
   PERSONNE,
   VIEUX,
-} from "@overbookd/team-constants";
+} from "@overbookd/team-code";
 import { IProvidePeriod, Period } from "@overbookd/time";
 import { friday19hto21h } from "../test-resources/assign-task-to-volunteer.test.utils.js";
 import { Assignment } from "../assignment.js";

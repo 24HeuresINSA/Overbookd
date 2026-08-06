@@ -207,7 +207,7 @@ import {
   required,
 } from "~/utils/rules/input.rules";
 import { formatLocalDate } from "@overbookd/time";
-import { HARD, PERSONNE } from "@overbookd/team-constants";
+import { HARD, PERSONNE } from "@overbookd/team-code";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
 import { PLANNING_URL } from "@overbookd/web-page";
 import { formatEmailLink, formatPhoneLink } from "@overbookd/registration";

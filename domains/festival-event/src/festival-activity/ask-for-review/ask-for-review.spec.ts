@@ -36,7 +36,7 @@ import {
   LOG_MATOS,
   SECU,
   SIGNA,
-} from "@overbookd/team-constants";
+} from "@overbookd/team-code";
 
 describe("Festival Activity - ask for review", () => {
   let askForReview: AskForReview;

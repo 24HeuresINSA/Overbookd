@@ -13,7 +13,7 @@ import {
   HARD,
   TEAM_BOUFFE,
   TEAM_ELEC,
-} from "@overbookd/team-constants";
+} from "@overbookd/team-code";
 import { Volunteer } from "./instructions.js";
 import { TimeWindow } from "../../common/time-window.js";
 import { FestivalTask } from "../festival-task.js";

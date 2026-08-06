@@ -62,7 +62,7 @@
 
 <script lang="ts" setup>
 import type { AssignDrive, FestivalTask } from "@overbookd/festival-event";
-import { LOG_MATOS } from "@overbookd/team-constants";
+import { LOG_MATOS } from "@overbookd/team-code";
 import { FA_URL } from "@overbookd/web-page";
 
 const ftStore = useFestivalTaskStore();

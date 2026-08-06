@@ -6,7 +6,7 @@ import {
   TECKOS,
   TEAM_MONTAGE,
   KARNA,
-} from "@overbookd/team-constants";
+} from "@overbookd/team-code";
 import { RegisterForm } from "./register-form.js";
 import { STAFF, VOLUNTEER } from "../newcomer.js";
 import {

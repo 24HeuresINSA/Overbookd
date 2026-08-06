@@ -2,7 +2,7 @@ import { PrismaService } from "../../prisma.service";
 import { User } from "@overbookd/user";
 import { NotYetVolunteerAlerting } from "../alert.service";
 import { VOLUNTEER } from "@overbookd/registration";
-import { PERSONNE } from "@overbookd/team-constants";
+import { PERSONNE } from "@overbookd/team-code";
 
 export class PrismaNotYetVolunteerAlerting implements NotYetVolunteerAlerting {
   constructor(private readonly prisma: PrismaService) {}

@@ -71,7 +71,7 @@ import {
 } from "~/utils/search/search.utils";
 import type { Team } from "@overbookd/team";
 import { keepMembersOf } from "~/utils/search/search-team.utils";
-import { HARD, CA, VIEUX } from "@overbookd/team-constants";
+import { HARD, CA, VIEUX } from "@overbookd/team-code";
 import { downloadCsv } from "~/utils/file/download.utils";
 import { CSVBuilder } from "@overbookd/csv";
 import { Money } from "@overbookd/money";

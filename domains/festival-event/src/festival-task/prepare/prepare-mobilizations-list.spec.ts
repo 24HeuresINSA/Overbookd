@@ -64,7 +64,7 @@ import {
   RESET_REVIEW,
   REVIEWING,
 } from "@overbookd/festival-event-constants";
-import { PERSONNE, HARD, VIEUX, CONFIANCE } from "@overbookd/team-constants";
+import { PERSONNE, HARD, VIEUX, CONFIANCE } from "@overbookd/team-code";
 
 describe("Prepare festival task mobilizations list", () => {
   let prepare: PrepareFestivalTask;

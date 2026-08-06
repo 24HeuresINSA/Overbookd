@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { HARD, VIEUX } from "@overbookd/team-constants";
+import { HARD, VIEUX } from "@overbookd/team-code";
 import { Member, PayContribution } from "./pay-contribution.js";
 import { EXPIRATION_DATE } from "./contribute.js";
 import { InMemoryPayContributions } from "./pay-contributions.inmemory.js";

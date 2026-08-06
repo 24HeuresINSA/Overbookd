@@ -43,7 +43,7 @@ import {
   FESTIVAL_TASK_READY_TO_ASSIGN,
 } from "@overbookd/domain-events";
 import { CANDIDATE_ENROLLED, CandidateEnrolled } from "@overbookd/registration";
-import { HARD, SOFT } from "@overbookd/team-constants";
+import { HARD, SOFT } from "@overbookd/team-code";
 import { Observable, Subject, filter, takeUntil } from "rxjs";
 
 type FestivalVolunteerEnrolled = CandidateEnrolled & {

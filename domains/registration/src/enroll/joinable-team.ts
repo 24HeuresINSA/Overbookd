@@ -1,4 +1,4 @@
-import { HARD, SOFT } from "@overbookd/team-constants";
+import { HARD, SOFT } from "@overbookd/team-code";
 
 export type JoinableTeam = typeof SOFT | typeof HARD;
 

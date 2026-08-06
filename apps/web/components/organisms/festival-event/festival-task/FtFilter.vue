@@ -54,7 +54,7 @@ import {
 import { reviewStatusLabel } from "~/utils/festival-event/festival-event.utils";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import { REVIEWER_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
-import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-constants";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-code";
 
 const route = useRoute();
 const myStore = useMyStore();

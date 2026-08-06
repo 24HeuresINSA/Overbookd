@@ -3,7 +3,7 @@ import { APPROVED, DRAFT } from "@overbookd/festival-event-constants";
 import { SELECT_PERIOD_WITH_ID } from "../../../../common/query/period.query";
 import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 import { SELECT_BASE_SIGNAGE } from "./festival-activity.query";
-import { SECU } from "@overbookd/team-constants";
+import { SECU } from "@overbookd/team-code";
 
 const SELECT_BASE_PREVIEW = {
   id: true,

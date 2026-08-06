@@ -110,7 +110,7 @@ import {
   LOG_MATOS,
   SECU,
   SIGNA,
-} from "@overbookd/team-constants";
+} from "@overbookd/team-code";
 import { NEED_SUPPLY_QUERY_PARAM } from "~/utils/festival-event/festival-event.constant";
 import { downloadCsv } from "~/utils/file/download.utils";
 import { openPage } from "~/utils/navigation/router.utils";

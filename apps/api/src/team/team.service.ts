@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { JoinTeams, LeaveTeam } from "@overbookd/access-manager";
 import { VALIDATE_FA, VALIDATE_FT } from "@overbookd/permission";
-import { ADMIN } from "@overbookd/team-constants";
+import { ADMIN } from "@overbookd/team-code";
 import { SlugifyService } from "@overbookd/slugify";
 import { Team } from "@overbookd/team";
 import { toStandAloneUser } from "@overbookd/user";

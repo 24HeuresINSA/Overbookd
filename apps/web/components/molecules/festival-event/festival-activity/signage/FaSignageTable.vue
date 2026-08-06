@@ -69,7 +69,7 @@ import {
 } from "@overbookd/festival-event";
 import { APPROVED } from "@overbookd/festival-event-constants";
 import type { Signage as CatalogSignage } from "@overbookd/signa";
-import { SIGNA } from "@overbookd/team-constants";
+import { SIGNA } from "@overbookd/team-code";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const myStore = useMyStore();

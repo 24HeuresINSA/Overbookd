@@ -2,7 +2,7 @@ import { Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { filter } from "rxjs";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { TeamLeft, TeamsJoined } from "@overbookd/access-manager";
-import { HARD } from "@overbookd/team-constants";
+import { HARD } from "@overbookd/team-code";
 import { ZitadelService } from "./zitadel.service";
 import { PrismaService } from "../prisma.service";
 import {

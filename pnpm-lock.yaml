@@ -170,9 +170,9 @@ importers:
       '@overbookd/team':
         specifier: workspace:*
         version: link:../../utils/team
-      '@overbookd/team-constants':
+      '@overbookd/team-code':
         specifier: workspace:*
-        version: link:../../constants/team-constants
+        version: link:../../constants/team-code
       '@overbookd/time':
         specifier: workspace:*
         version: link:../../libraries/time
@@ -396,9 +396,9 @@ importers:
       '@overbookd/team':
         specifier: workspace:*
         version: link:../../utils/team
-      '@overbookd/team-constants':
+      '@overbookd/team-code':
         specifier: workspace:*
-        version: link:../../constants/team-constants
+        version: link:../../constants/team-code
       '@overbookd/time':
         specifier: workspace:*
         version: link:../../libraries/time
@@ -476,7 +476,7 @@ importers:
 
   constants/preference: {}
 
-  constants/team-constants: {}
+  constants/team-code: {}
 
   constants/web-page: {}
 
@@ -491,9 +491,9 @@ importers:
       '@overbookd/permission':
         specifier: workspace:*
         version: link:../../constants/permission
-      '@overbookd/team-constants':
+      '@overbookd/team-code':
         specifier: workspace:*
-        version: link:../../constants/team-constants
+        version: link:../../constants/team-code
 
   domains/assignment:
     dependencies:
@@ -506,9 +506,9 @@ importers:
       '@overbookd/preference':
         specifier: workspace:*
         version: link:../../constants/preference
-      '@overbookd/team-constants':
+      '@overbookd/team-code':
         specifier: workspace:*
-        version: link:../../constants/team-constants
+        version: link:../../constants/team-code
       '@overbookd/time':
         specifier: workspace:*
         version: link:../../libraries/time
@@ -530,9 +530,9 @@ importers:
       '@overbookd/permission':
         specifier: workspace:*
         version: link:../../constants/permission
-      '@overbookd/team-constants':
+      '@overbookd/team-code':
         specifier: workspace:*
-        version: link:../../constants/team-constants
+        version: link:../../constants/team-code
       '@overbookd/time':
         specifier: workspace:*
         version: link:../../libraries/time
@@ -548,9 +548,9 @@ importers:
       '@overbookd/slugify':
         specifier: workspace:*
         version: link:../../libraries/slugify
-      '@overbookd/team-constants':
+      '@overbookd/team-code':
         specifier: workspace:*
-        version: link:../../constants/team-constants
+        version: link:../../constants/team-code
       '@overbookd/time':
         specifier: workspace:*
         version: link:../../libraries/time
@@ -590,9 +590,9 @@ importers:
       '@overbookd/permission':
         specifier: workspace:*
         version: link:../../constants/permission
-      '@overbookd/team-constants':
+      '@overbookd/team-code':
         specifier: workspace:*
-        version: link:../../constants/team-constants
+        version: link:../../constants/team-code
       '@overbookd/time':
         specifier: workspace:*
         version: link:../../libraries/time

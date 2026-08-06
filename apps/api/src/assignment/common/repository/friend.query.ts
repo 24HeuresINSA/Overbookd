@@ -1,7 +1,7 @@
 import { FriendCount } from "@overbookd/assignment";
 import { SELECT_TEAM_CODES } from "../../../common/query/user.query";
 import { IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER } from "../../../user/user.query";
-import { PERSONNE } from "@overbookd/team-constants";
+import { PERSONNE } from "@overbookd/team-code";
 
 export const SELECT_USER_FRIENDS_FOR_COUNT = {
   friends: {

@@ -3,7 +3,7 @@ import { VolunteerCandidate } from "@overbookd/http";
 import { RegistrationTeams } from "@overbookd/registration";
 import type { IProvidePeriod } from "@overbookd/time";
 import { PeriodResponseDto } from "../../../../common/dto/period.response.dto";
-import { TECKOS } from "@overbookd/team-constants";
+import { TECKOS } from "@overbookd/team-code";
 
 export class VolunteerCandidateResponseDto implements VolunteerCandidate {
   @ApiProperty({

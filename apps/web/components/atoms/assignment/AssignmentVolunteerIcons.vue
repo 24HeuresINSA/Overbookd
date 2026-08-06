@@ -57,7 +57,7 @@
 
 <script setup lang="ts">
 import { FRAGMENTED, NO_REST, STACKED } from "@overbookd/preference";
-import { SOFT } from "@overbookd/team-constants";
+import { SOFT } from "@overbookd/team-code";
 import {
   isAssignableVolunteer,
   type AssignmentVolunteer,
