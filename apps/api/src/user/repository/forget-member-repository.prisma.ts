@@ -17,26 +17,35 @@ export class PrismaForgetMemberRepository implements MemberRepository {
     return user !== null;
   }
 
-  async hasActivities(id: number): Promise<boolean> {
-    const user = await this.prisma.user.findFirst({
-      where: { id, OR: [{ festivalActivities: { some: {} } }] },
+  async activityIds(id: number): Promise<number[]> {
+    const activities = await this.prisma.festivalActivity.findMany({
+      where: { adherentId: id },
+      select: { id: true },
     });
-    return user !== null;
+    return activities.map((a) => a.id);
   }
 
-  async hasTasks(id: number): Promise<boolean> {
-    const user = await this.prisma.user.findFirst({
+  async taskIds(id: number): Promise<number[]> {
+    const tasks = await this.prisma.festivalTask.findMany({
       where: {
-        id,
         OR: [
-          { festivalTaskAdministrated: { some: {} } },
-          { festivalTaskContacts: { some: {} } },
-          { festivalTaskInCharge: { some: {} } },
-          { festivalTaskMobilizations: { some: {} } },
+          { administratorId: id },
+          { contactId: id },
+          { inChargeId: id },
+          { mobilizationId: id },
         ],
       },
+      select: { id: true },
     });
-    return user !== null;
+    return tasks.map((t) => t.id);
+  }
+
+  async openSharedMealDates(id: number): Promise<string[]> {
+    const sharedMeals = await this.prisma.sharedMeal.findMany({
+      where: { adherentId: id, closedAt: null },
+      select: { date: true },
+    });
+    return sharedMeals.map((sm) => sm.date);
   }
 
   async hasDebts(id: number): Promise<boolean> {
@@ -111,6 +120,7 @@ export class PrismaForgetMemberRepository implements MemberRepository {
         ftFeedbacks: { deleteMany: {} },
         festivalActivityInstigations: { deleteMany: {} },
         festivalTaskInstigations: { deleteMany: {} },
+        festivalTasksToReview: { deleteMany: {} },
       },
     });
     return anonymous;

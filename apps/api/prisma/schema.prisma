@@ -541,7 +541,7 @@ enum FestivalActivityEvent {
 
 model FestivalActivityFeedback {
   content     String   @db.Text
-  author      User     @relation(fields: [authorId], references: [id])
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId    Int      @map("author_id")
   publishedAt DateTime @default(now()) @map("published_at")
 
@@ -795,7 +795,7 @@ model SharedMeal {
   menu      String    @db.Text
   date      String    @db.Text
   chefId    Int       @map("chef_id")
-  chef      User      @relation("chef", fields: [chefId], references: [id])
+  chef      User      @relation("chef", fields: [chefId], references: [id], onDelete: Cascade)
   amount    Int?
   closedAt  DateTime? @map("closed_at")
 
@@ -808,7 +808,7 @@ model SharedMeal {
 
 model Shotgun {
   guestId  Int        @map("guest_id")
-  guest    User       @relation("guest", fields: [guestId], references: [id])
+  guest    User       @relation("guest", fields: [guestId], references: [id], onDelete: Cascade)
   mealId   Int        @map("meal_id")
   meal     SharedMeal @relation(fields: [mealId], references: [id], onDelete: Cascade)
   date     DateTime
