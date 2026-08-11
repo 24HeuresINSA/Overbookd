@@ -1,5 +1,5 @@
-import { isUnauthenticatedPages } from "~/utils/navigation/pages/unauthenticated";
-import { HOME_URL, LOGIN_URL } from "@overbookd/web-page";
+import { isRegistrationFormStep } from "@overbookd/http";
+import { HOME_URL, LOGIN_URL, REGISTER_URL } from "@overbookd/web-page";
 
 export default defineNuxtRouteMiddleware(async (to) => {
   // Plus d'explication sur l'utilisation de useOidcAuth ici :
@@ -8,13 +8,23 @@ export default defineNuxtRouteMiddleware(async (to) => {
   await oidc.fetch();
 
   const isLoggedIn = oidc.loggedIn.value;
-  const unauthenticatedPage = isUnauthenticatedPages(to);
+  const unauthenticatedPages = [LOGIN_URL, REGISTER_URL];
+  const isUnauthenticatedPage = unauthenticatedPages.includes(to.path);
 
-  if (isLoggedIn && unauthenticatedPage) {
-    return navigateTo(HOME_URL);
+  if (!isLoggedIn && !isUnauthenticatedPage) {
+    return navigateTo(LOGIN_URL);
   }
 
-  if (!isLoggedIn && !unauthenticatedPage) {
-    return navigateTo(LOGIN_URL);
+  if (isLoggedIn) {
+    const myStore = useMyStore();
+    if (!myStore.registered) {
+      const registrationStep = await myStore.check();
+      if (registrationStep && isRegistrationFormStep(registrationStep)) {
+        return navigateTo(REGISTER_URL);
+      }
+    }
+    if (isUnauthenticatedPage) {
+      return navigateTo(HOME_URL);
+    }
   }
 });

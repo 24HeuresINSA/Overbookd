@@ -4,6 +4,7 @@ import {
   FulfilledRegistration,
   PasswordRequirement,
 } from "@overbookd/registration";
+import { HttpStringified } from "./http-stringified";
 
 export type StaffCandidate = UserWithTeams & {
   email: string;
@@ -56,4 +57,26 @@ export type RegistrationLoginStep = {
 
 export type RegistrationCompletedStep = {
   next: typeof registrationSteps.COMPLETED;
+};
+
+export type RegistrationStep =
+  RegistrationFormStep | RegistrationLoginStep | RegistrationCompletedStep;
+
+export const isRegistrationFormStep = (
+  step: RegistrationStep | HttpStringified<RegistrationStep>,
+): step is RegistrationFormStep | HttpStringified<RegistrationFormStep> => {
+  return step.next === registrationSteps.FORM;
+};
+
+export const isRegistrationLoginStep = (
+  step: RegistrationStep | HttpStringified<RegistrationStep>,
+): step is RegistrationLoginStep | HttpStringified<RegistrationLoginStep> => {
+  return step.next === registrationSteps.LOGIN;
+};
+
+export const isRegistrationCompletedStep = (
+  step: RegistrationStep | HttpStringified<RegistrationStep>,
+): step is
+  RegistrationCompletedStep | HttpStringified<RegistrationCompletedStep> => {
+  return step.next === registrationSteps.COMPLETED;
 };

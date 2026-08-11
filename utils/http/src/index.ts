@@ -103,8 +103,14 @@ export type {
   RegistrationFormStepUser,
   RegistrationLoginStep,
   RegistrationCompletedStep,
+  RegistrationStep,
 } from "./registration";
-export { registrationSteps } from "./registration";
+export {
+  registrationSteps,
+  isRegistrationFormStep,
+  isRegistrationLoginStep,
+  isRegistrationCompletedStep,
+} from "./registration";
 export type { EditAmountForm } from "./contribution";
 export { DEFAULT_PREFERENCE } from "./preference";
 export type {

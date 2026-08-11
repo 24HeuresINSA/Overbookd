@@ -7,16 +7,25 @@ import type { Membership } from "@overbookd/registration";
 import { ADMIN } from "@overbookd/team-code";
 import { ONE_SECOND_IN_MS } from "@overbookd/time";
 import { ZitadelRepository } from "~/repositories/zitadel.repository";
+import { RegistrationRepository } from "~/repositories/registration/registration.repository";
+import {
+  isRegistrationCompletedStep,
+  isRegistrationFormStep,
+  type HttpStringified,
+  type RegistrationStep,
+} from "@overbookd/http";
 
 type State = {
   loggedUser?: MyUserInformation;
   synced: boolean;
+  registered: boolean;
 };
 
 export const useMyStore = defineStore("authenticated-user", {
   state: (): State => ({
     loggedUser: undefined,
     synced: false,
+    registered: false,
   }),
   getters: {
     can:
@@ -56,10 +65,20 @@ export const useMyStore = defineStore("authenticated-user", {
       this.synced = !isHttpError(res);
     },
 
+    async check() {
+      const res = await RegistrationRepository.checkAuthenticatedUser();
+      if (isHttpError(res)) return;
+
+      const step = castRegistrationStepWithDate(res);
+      if (isRegistrationCompletedStep(step)) this.registered = true;
+      return step;
+    },
+
     clear() {
       setTimeout(() => {
         this.loggedUser = undefined;
         this.synced = false;
+        this.registered = false;
       }, ONE_SECOND_IN_MS);
     },
 
@@ -109,3 +128,22 @@ export const useMyStore = defineStore("authenticated-user", {
     },
   },
 });
+
+function castRegistrationStepWithDate(
+  step: HttpStringified<RegistrationStep>,
+): RegistrationStep {
+  if (isRegistrationFormStep(step)) {
+    return {
+      ...step,
+      user: step.user
+        ? {
+            ...step.user,
+            birthDate: step.user.birthDate
+              ? new Date(step.user.birthDate)
+              : undefined,
+          }
+        : undefined,
+    };
+  }
+  return step;
+}
