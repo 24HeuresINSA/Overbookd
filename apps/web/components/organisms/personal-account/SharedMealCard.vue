@@ -160,7 +160,7 @@
         @confirm="cancelMeal"
       >
         <template #title> Annuler le repas partagé </template>
-        <template #statement>
+        <template #content>
           Tu es sur le point d'annuler le repas du
           <strong> {{ meal.meal.date }} </strong>.
         </template>
@@ -177,7 +177,7 @@
         @confirm="disallowMultipleShotguns"
       >
         <template #title> Désactiver les shotguns multiples </template>
-        <template #statement>
+        <template #content>
           Tu es sur le point de désactiver les shotguns multiples pour le repas
           du <strong> {{ meal.meal.date }} </strong>.
           <br />

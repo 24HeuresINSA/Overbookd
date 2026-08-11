@@ -158,6 +158,12 @@ export const useUserStore = defineStore("user", {
       this.volunteers = this.volunteers.filter((v) => v.id !== userId);
     },
 
+    async shouldAnonymizeUser(userId: number) {
+      const res = await UserRepository.shouldAnonymizeUser(userId);
+      if (isHttpError(res)) return false;
+      return res;
+    },
+
     async addTeamsToUser(userId: number, teams: string[]) {
       const res = await UserRepository.addTeamsToUser(userId, teams);
       if (isHttpError(res)) return;

@@ -62,6 +62,12 @@ export class UserRepository {
     return HttpClient.delete(`${this.basePath}/${userId}`);
   }
 
+  static shouldAnonymizeUser(userId: number) {
+    return HttpClient.get<boolean>(
+      `${this.basePath}/${userId}/should-anonymize`,
+    );
+  }
+
   static getFriendsFor(userId: number) {
     return HttpClient.get<UserWithTeams[]>(`friends/for/${userId}`);
   }

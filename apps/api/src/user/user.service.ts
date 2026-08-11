@@ -310,6 +310,10 @@ export class UserService {
     await this.forget.apply(id);
   }
 
+  async shouldAnonymizeUser(id: number): Promise<boolean> {
+    return this.forget.shouldAnonymize(id);
+  }
+
   private async selectCharismaPeriods(): Promise<MinimalCharismaPeriod[]> {
     return this.prisma.charismaPeriod.findMany({
       select: SELECT_CHARISMA_PERIOD,

@@ -1,7 +1,7 @@
 <template>
   <ConfirmationDialogCard @close="close" @confirm="addTeam">
     <template #title>Ajouter des bénévoles d'une équipe</template>
-    <template #statement>
+    <template #content>
       <v-text-field
         v-model="count"
         type="number"

@@ -93,7 +93,7 @@
           {{ taskToRemove?.id }}
         </strong>
       </template>
-      <template #statement>
+      <template #content>
         Tu es sur le point de supprimer la FT
         <strong>{{ taskToRemove?.name }}.</strong>
         Es-tu sûr de faire ça ?

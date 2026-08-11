@@ -69,7 +69,7 @@
         <template #title>
           Supprimer l'équipe {{ selectedTeam?.name }}
         </template>
-        <template #statement>
+        <template #content>
           Cette équipe sera supprimée DEFINITIVEMENT !!! <br />
           Vérifie bien que tu ne te trompes pas d'équipe.
         </template>

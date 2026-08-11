@@ -1,7 +1,7 @@
 <template>
   <ConfirmationDialogCard @confirm="addVolunteer" @close="close">
     <template #title>Ajouter un bénévole</template>
-    <template #statement>
+    <template #content>
       <SearchUser v-model="volunteer" :list="addableVolunteers" hide-details />
     </template>
     <template #confirm-btn-content>

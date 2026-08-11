@@ -5,8 +5,8 @@
     @confirm="confirm"
   >
     <template #title>Supprimer le créneau de pause</template>
-    <template #statement>
-      <div class="delete-statement">
+    <template #content>
+      <div class="delete-content">
         <p>
           Tu vas supprimer la pause
           <strong>"{{ selectedBreak.name }}"</strong> de
@@ -56,7 +56,7 @@ const confirm = () => emit("confirm");
     }
   }
 }
-.delete-statement {
+.delete-content {
   display: flex;
   flex-direction: column;
   align-items: center;

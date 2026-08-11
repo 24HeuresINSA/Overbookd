@@ -107,7 +107,7 @@
         @confirm="deleteGear"
       >
         <template #title>Suppression du matos</template>
-        <template #statement>
+        <template #content>
           Tu es sur le point de supprimer
           <strong>{{ selectedGear?.name }}.</strong>
           Tu devrais vérifier que ce matos n'est pas utilisé quelque part avant

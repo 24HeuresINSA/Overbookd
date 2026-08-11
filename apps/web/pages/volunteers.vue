@@ -42,6 +42,22 @@
         :volunteer="selectedVolunteer"
         @updated="closeVolunteerInfoDialog"
         @close="closeVolunteerInfoDialog"
+        @delete="isDeleteUserDialogOpen = true"
+        @anonymize="isAnonymizeUserDialogOpen = true"
+      />
+    </v-dialog>
+
+    <v-dialog v-model="isAnonymizeUserDialogOpen" width="600">
+      <AnonymizeUserDialogCard
+        @close="isAnonymizeUserDialogOpen = false"
+        @confirm="deleteVolunteer"
+      />
+    </v-dialog>
+
+    <v-dialog v-model="isDeleteUserDialogOpen" width="600">
+      <DeleteUserDialogCard
+        @close="isDeleteUserDialogOpen = false"
+        @confirm="deleteVolunteer"
       />
     </v-dialog>
 
@@ -162,6 +178,16 @@ const openVolunteerInfoDialog = (volunteer: UserPersonalData) => {
 };
 const closeVolunteerInfoDialog = () => {
   isVolunteerInfoDialogOpen.value = false;
+};
+
+const isAnonymizeUserDialogOpen = ref<boolean>(false);
+const isDeleteUserDialogOpen = ref<boolean>(false);
+const deleteVolunteer = async () => {
+  if (!selectedVolunteer.value) return;
+  await userStore.deleteUser(selectedVolunteer.value.id);
+  isDeleteUserDialogOpen.value = false;
+  isAnonymizeUserDialogOpen.value = false;
+  closeVolunteerInfoDialog();
 };
 
 const exportCSV = async () => {

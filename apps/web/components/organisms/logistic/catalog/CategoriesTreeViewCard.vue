@@ -58,7 +58,7 @@
         @close="closeCategoryRemovalConfirmationDialog"
       >
         <template #title> Supprimer une catégorie </template>
-        <template #statement>
+        <template #content>
           Tu es sur le point de supprimer la catégorie
           <strong>{{ selectedCategory?.name }}</strong>
         </template>

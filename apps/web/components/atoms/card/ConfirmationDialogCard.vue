@@ -15,8 +15,8 @@
       </h2>
     </v-card-title>
     <v-card-text>
-      <p class="confirmation__statement">
-        <slot name="statement">Vous êtes sur le point de confirmer</slot>
+      <p class="confirmation__content">
+        <slot name="content">Vous êtes sur le point de confirmer</slot>
       </p>
     </v-card-text>
     <v-card-actions class="btn-group">
@@ -73,7 +73,7 @@ onUnmounted(() => window.removeEventListener("keydown", handleKeydown));
     }
   }
 
-  &__statement {
+  &__content {
     font-size: 1rem;
   }
 

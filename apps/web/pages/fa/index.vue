@@ -86,7 +86,7 @@
           {{ activityToRemove?.id }}
         </strong>
       </template>
-      <template #statement>
+      <template #content>
         Tu es sur le point de supprimer la FA
         <strong>{{ activityToRemove?.name }}.</strong>
         Es-tu sûr de faire ça ?

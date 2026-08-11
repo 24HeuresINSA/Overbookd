@@ -225,6 +225,20 @@ export class UserController {
     return this.userService.deleteUser(userToDeleteId, me);
   }
 
+  @Get(":id/should-anonymize")
+  @Permissions(MANAGE_USERS)
+  @UseFilters(ForgetMemberErrorFilter)
+  @ApiResponse({
+    status: 200,
+    description: "Check if a user should be anonymized",
+    type: Boolean,
+  })
+  shouldAnonymizeUser(
+    @Param("id", ParseIntPipe) userId: number,
+  ): Promise<boolean> {
+    return this.userService.shouldAnonymizeUser(userId);
+  }
+
   @Patch(":userId/teams")
   @Permissions(AFFECT_TEAM)
   @ApiResponse({
