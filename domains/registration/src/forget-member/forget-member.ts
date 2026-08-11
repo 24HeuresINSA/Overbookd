@@ -35,7 +35,6 @@ export class ForgetMember {
       hasDebts,
       hasMoney,
       openSharedMealDates,
-      hasTransactions,
     ] = await Promise.all([
       this.members.hasFutureAssignments(id),
       this.members.activityIds(id),
@@ -43,7 +42,6 @@ export class ForgetMember {
       this.members.hasDebts(id),
       this.members.hasMoney(id),
       this.members.openSharedMealDates(id),
-      this.members.hasTransactions(id),
     ]);
 
     if (hasFutureAssignments) throw new HasFutureAssignment();
@@ -54,9 +52,15 @@ export class ForgetMember {
     if (hasDebts) throw new InDebt();
     if (hasMoney) throw new HasMoney();
 
+    const hasTransactions = await this.members.hasTransactions(id);
     const strategy = hasTransactions ? WithTransactions : WithoutTransactions;
     const strategyInitializer = { id, repository: this.members };
 
     return strategy.init(strategyInitializer).forget();
+  }
+
+  async shouldAnonymize(id: number) {
+    const hasTransactions = await this.members.hasTransactions(id);
+    return hasTransactions;
   }
 }

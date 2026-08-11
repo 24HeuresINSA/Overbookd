@@ -18,7 +18,7 @@ export const DEFAULT_OPTIONS: RequestOptions = {
 export class HttpClient {
   private constructor() {}
 
-  static get<T extends object | string | number>(
+  static get<T extends object | string | number | boolean>(
     url: Endpoint | string,
     options?: Partial<RequestOptions>,
   ): Promise<HttpResponse<T>> {
