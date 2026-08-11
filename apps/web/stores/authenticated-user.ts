@@ -70,7 +70,12 @@ export const useMyStore = defineStore("authenticated-user", {
       if (isHttpError(res)) return;
 
       const step = castRegistrationStepWithDate(res);
-      if (isRegistrationCompletedStep(step)) this.registered = true;
+      if (isRegistrationCompletedStep(step)) {
+        this.registered = true;
+      }
+      if (isRegistrationFormStep(step)) {
+        useRegistrationStore().setPrefilledUserData(step.user);
+      }
       return step;
     },
 

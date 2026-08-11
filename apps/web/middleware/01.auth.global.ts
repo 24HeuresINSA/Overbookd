@@ -19,7 +19,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
     const myStore = useMyStore();
     if (!myStore.registered) {
       const registrationStep = await myStore.check();
-      if (registrationStep && isRegistrationFormStep(registrationStep)) {
+      if (
+        registrationStep &&
+        isRegistrationFormStep(registrationStep) &&
+        to.path !== REGISTER_URL
+      ) {
         return navigateTo(REGISTER_URL);
       }
     }
