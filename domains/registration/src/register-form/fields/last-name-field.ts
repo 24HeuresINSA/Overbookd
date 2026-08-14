@@ -16,6 +16,6 @@ export class LastNameField implements Field<string> {
   }
 
   static build(lastName: string): LastNameField {
-    return new LastNameField(lastName);
+    return new LastNameField(lastName.trim());
   }
 }

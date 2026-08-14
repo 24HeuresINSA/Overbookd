@@ -16,6 +16,10 @@ export class CommentField implements Field<string | undefined> {
   }
 
   static build(comment?: string): CommentField {
-    return new CommentField(comment);
+    const cleanedComment = comment?.trim();
+    if (!cleanedComment) {
+      return new CommentField(undefined);
+    }
+    return new CommentField(cleanedComment);
   }
 }

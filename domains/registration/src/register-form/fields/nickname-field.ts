@@ -16,6 +16,10 @@ export class NicknameField implements Field<string | undefined> {
   }
 
   static build(nickname?: string): NicknameField {
-    return new NicknameField(nickname);
+    const cleanedNickname = nickname?.trim();
+    if (!cleanedNickname) {
+      return new NicknameField(undefined);
+    }
+    return new NicknameField(cleanedNickname);
   }
 }
