@@ -153,7 +153,7 @@ describe("Register form", () => {
         const form = baseForm.fillEmail("example@insa-lyon.fr");
         expect(form.isValid).toBe(false);
       });
-      it("should indicate that insa email is forbiden", () => {
+      it("should indicate that insa email is forbidden", () => {
         const form = baseForm.fillEmail("example@insa-lyon.fr");
         expect(form.reasons).toHaveLength(1);
         expect(form.reasons).include("Pas d'adresse insa 🙏");

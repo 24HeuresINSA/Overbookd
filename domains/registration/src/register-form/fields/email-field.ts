@@ -20,7 +20,7 @@ export class EmailField implements Field<string> {
   private constructor(private readonly email: string) {}
 
   static build(email: string): EmailField {
-    return new EmailField(email);
+    return new EmailField(email.trim());
   }
 
   get value(): string {

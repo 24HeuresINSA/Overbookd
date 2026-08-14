@@ -140,7 +140,7 @@ export class RegisterForm {
     });
   }
 
-  fillNickname(nickname: string): RegisterForm {
+  fillNickname(nickname?: string): RegisterForm {
     return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       nickname,
@@ -168,7 +168,7 @@ export class RegisterForm {
     });
   }
 
-  fillComment(comment: string): RegisterForm {
+  fillComment(comment?: string): RegisterForm {
     return new RegisterForm(this.membership, this.passwordRequirement, {
       ...this.currentRegistration,
       comment,
@@ -270,6 +270,10 @@ export class RegisterForm {
 
   get reasons(): string[] {
     return this.fields.flatMap((field) => field.reasons);
+  }
+
+  get needsPassword(): boolean {
+    return this.passwordRequirement === PASSWORD_REQUIRED;
   }
 
   complete(): FulfilledRegistration {
