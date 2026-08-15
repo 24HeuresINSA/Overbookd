@@ -173,6 +173,14 @@ describe("Register form", () => {
         expect(form.reasons).include("Il faut renseigner un prenom");
       });
     });
+    describe("when firstName is filled with surrounding spaces", () => {
+      const baseForm = validFormWithPassword().clearFirstName();
+      it("should trim the firstName", () => {
+        const form = baseForm.fillFirstName("  Mon prenom  ");
+        expect(form.isValid).toBe(true);
+        expect(form.complete().firstName).toBe("Mon prenom");
+      });
+    });
   });
   describe("lastName rules", () => {
     describe("when lastName is filled with empty string", () => {
@@ -185,6 +193,14 @@ describe("Register form", () => {
         const form = baseForm.fillLastName("");
         expect(form.reasons).toHaveLength(1);
         expect(form.reasons).include("Il faut renseigner un nom");
+      });
+    });
+    describe("when lastName is filled with surrounding spaces", () => {
+      const baseForm = validFormWithPassword().clearLastName();
+      it("should trim the lastName", () => {
+        const form = baseForm.fillLastName("  Mon nom  ");
+        expect(form.isValid).toBe(true);
+        expect(form.complete().lastName).toBe("Mon nom");
       });
     });
   });
@@ -262,12 +278,11 @@ describe("Register form", () => {
         expect(baseForm.isValid).toBe(true);
       });
     });
-    describe("when nickname is filled with empty string", () => {
-      it("should indicate that nickname can't be empty", () => {
-        const form = baseForm.fillNickname("");
-        expect(form.isValid).toBe(false);
-        expect(form.reasons).toHaveLength(1);
-        expect(form.reasons).contain("Il faut renseigner un surnom");
+    describe("when nickname is filled with surrounding spaces", () => {
+      it("should trim the nickname", () => {
+        const form = baseForm.fillNickname("  Mon surnom  ");
+        expect(form.isValid).toBe(true);
+        expect(form.complete().nickname).toBe("Mon surnom");
       });
     });
   });
@@ -299,12 +314,11 @@ describe("Register form", () => {
         expect(baseForm.isValid).toBe(true);
       });
     });
-    describe("when comment is filled with empty string", () => {
-      it("should indicate that comment can't be empty", () => {
-        const form = baseForm.fillComment("");
-        expect(form.isValid).toBe(false);
-        expect(form.reasons).toHaveLength(1);
-        expect(form.reasons).contain("Il faut préciser ton commentaire");
+    describe("when comment is filled with surrounding spaces", () => {
+      it("should trim the comment", () => {
+        const form = baseForm.fillComment("  Mon commentaire  ");
+        expect(form.isValid).toBe(true);
+        expect(form.complete().comment).toBe("Mon commentaire");
       });
     });
   });
