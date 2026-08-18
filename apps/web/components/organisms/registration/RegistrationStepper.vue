@@ -61,6 +61,7 @@
               persistent-hint
             />
             <v-text-field
+              v-show="registerForm.needsPassword"
               v-model="password"
               type="password"
               label="Mot de passe*"
@@ -70,6 +71,7 @@
               :rules="[rules.password]"
             />
             <v-text-field
+              v-show="registerForm.needsPassword"
               v-model="repeatPassword"
               type="password"
               label="Confirme ton mot de passe*"
@@ -145,43 +147,40 @@
               :rules="[twoTeamsMaximumRule]"
             />
             <CommentField v-model="comment" />
-
-            <v-checkbox
-              v-model="hasApprovedEULA"
-              color="primary"
-              density="comfortable"
-              hide-details
-            >
-              <template #label>
-                <div>
-                  Je reconnais avoir lu et compris les
-                  <span
-                    v-tooltip:top="
-                      'Lire les Conditions Générales d\'Utilisation'
-                    "
-                    class="eula-link"
-                    @click.stop="openEULADialog"
-                  >
-                    CGU
-                  </span>
-                  et je les accepte.
-                </div>
-              </template>
-            </v-checkbox>
-            <v-btn
-              v-if="mustSignVolunteerCharter"
-              class="charter-btn"
-              :variant="hasSignedVolunteerCharter ? 'flat' : 'outlined'"
-              :color="hasSignedVolunteerCharter ? 'success' : 'primary'"
-              @click="openVolunteerCharterDialog"
-            >
-              {{
-                hasSignedVolunteerCharter
-                  ? "Charte signée ✔"
-                  : "Lire et signer la charte bénévole"
-              }}
-            </v-btn>
           </v-form>
+          <v-checkbox
+            v-model="hasApprovedEULA"
+            color="primary"
+            density="comfortable"
+            hide-details
+          >
+            <template #label>
+              <div>
+                Je reconnais avoir lu et compris les
+                <span
+                  v-tooltip:top="'Lire les Conditions Générales d\'Utilisation'"
+                  class="eula-link"
+                  @click.stop="openEULADialog"
+                >
+                  CGU
+                </span>
+                et je les accepte.
+              </div>
+            </template>
+          </v-checkbox>
+          <v-btn
+            v-if="mustSignVolunteerCharter"
+            class="charter-btn"
+            :variant="hasSignedVolunteerCharter ? 'flat' : 'outlined'"
+            :color="hasSignedVolunteerCharter ? 'success' : 'primary'"
+            @click="openVolunteerCharterDialog"
+          >
+            {{
+              hasSignedVolunteerCharter
+                ? "Charte signée ✔"
+                : "Lire et signer la charte bénévole"
+            }}
+          </v-btn>
 
           <div class="stepper-actions">
             <v-btn
@@ -229,7 +228,7 @@ import {
   shouldSignVolunteerCharter,
   STAFF,
   VOLUNTEER,
-  PASSWORD_REQUIRED,
+  PASSWORD_NOT_REQUIRED,
 } from "@overbookd/registration";
 import { LOGIN_URL } from "@overbookd/web-page";
 import {
@@ -297,7 +296,7 @@ const mustSignVolunteerCharter = computed(() =>
 );
 
 const registerForm = computed<RegisterForm>(() => {
-  const form = RegisterForm.initFor(membership.value, PASSWORD_REQUIRED)
+  const form = RegisterForm.initFor(membership.value, PASSWORD_NOT_REQUIRED)
     .fillBirthDate(new Date(birthDay.value))
     .fillEmail(email.value)
     .fillFirstName(firstName.value)
