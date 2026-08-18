@@ -16,9 +16,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }
 
   if (isLoggedIn) {
-    const myStore = useMyStore();
-    if (!myStore.registered) {
-      const registrationStep = await myStore.check();
+    const registrationStore = useRegistrationStore();
+    if (!registrationStore.fullyRegistered) {
+      const registrationStep = await registrationStore.checkAuthenticatedUser();
       if (
         registrationStep &&
         isRegistrationFormStep(registrationStep) &&
