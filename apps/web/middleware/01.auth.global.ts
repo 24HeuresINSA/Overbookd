@@ -1,4 +1,4 @@
-import { isRegistrationFormStep } from "@overbookd/http";
+import { registrationSteps } from "@overbookd/http";
 import { HOME_URL, LOGIN_URL, REGISTER_URL } from "@overbookd/web-page";
 
 export default defineNuxtRouteMiddleware(async (to) => {
@@ -16,12 +16,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }
 
   if (isLoggedIn) {
-    const registrationStore = useRegistrationStore();
-    if (!registrationStore.fullyRegistered) {
-      const registrationStep = await registrationStore.checkAuthenticatedUser();
+    const myStore = useMyStore();
+    if (!myStore.fullyRegistered) {
+      const registrationStep = await myStore.checkRegistration();
       if (
-        registrationStep &&
-        isRegistrationFormStep(registrationStep) &&
+        registrationStep == registrationSteps.FORM &&
         to.path !== REGISTER_URL
       ) {
         return navigateTo(REGISTER_URL);

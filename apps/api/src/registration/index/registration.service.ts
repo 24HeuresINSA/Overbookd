@@ -27,6 +27,7 @@ import { ZitadelService } from "../../user/zitadel.service";
 import {
   registrationSteps,
   RegistrationFormStep,
+  RegistrationFormStepWithData,
   RegistrationLoginStep,
   RegistrationCompletedStep,
   RegistrationFormStepUser,
@@ -66,7 +67,7 @@ export class RegistrationService {
 
   async checkUnauthenticatedUser(
     email: string,
-  ): Promise<RegistrationLoginStep | RegistrationFormStep> {
+  ): Promise<RegistrationLoginStep | RegistrationFormStepWithData> {
     email = email.toLowerCase().trim();
     const zitadelUser = await this.service.zitadel.getZitadelUserByEmail(email);
 
@@ -84,6 +85,7 @@ export class RegistrationService {
 
   async checkAuthenticatedUser(
     user: RequestHydratedUser,
+    withFormData: boolean,
   ): Promise<RegistrationFormStep | RegistrationCompletedStep> {
     if (!user.id) {
       const zitadelUser = await this.service.zitadel.getZitadelUserById(
@@ -99,7 +101,7 @@ export class RegistrationService {
       };
       return {
         next: registrationSteps.FORM,
-        user: stepUser,
+        user: withFormData ? stepUser : undefined,
         passwordRequirement: PASSWORD_NOT_REQUIRED,
       };
     }
@@ -114,7 +116,9 @@ export class RegistrationService {
       return { next: registrationSteps.COMPLETED };
     }
 
-    const existingUser = await this.repository.user.getById(user.id);
+    const existingUser = withFormData
+      ? await this.repository.user.getById(user.id)
+      : undefined;
     return {
       next: registrationSteps.FORM,
       user: existingUser,
