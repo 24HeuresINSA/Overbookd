@@ -7,16 +7,20 @@ import type { Membership } from "@overbookd/registration";
 import { ADMIN } from "@overbookd/team-code";
 import { ONE_SECOND_IN_MS } from "@overbookd/time";
 import { ZitadelRepository } from "~/repositories/zitadel.repository";
+import { registrationSteps, type RegistrationStepKey } from "@overbookd/http";
+import { RegistrationRepository } from "~/repositories/registration/registration.repository";
 
 type State = {
   loggedUser?: MyUserInformation;
   synced: boolean;
+  fullyRegistered: boolean;
 };
 
 export const useMyStore = defineStore("authenticated-user", {
   state: (): State => ({
     loggedUser: undefined,
     synced: false,
+    fullyRegistered: false,
   }),
   getters: {
     can:
@@ -56,10 +60,22 @@ export const useMyStore = defineStore("authenticated-user", {
       this.synced = !isHttpError(res);
     },
 
+    async checkRegistration(): Promise<RegistrationStepKey | undefined> {
+      const res =
+        await RegistrationRepository.checkAuthenticatedUserWithoutFormData();
+      if (isHttpError(res)) return;
+
+      if (res.next === registrationSteps.COMPLETED) {
+        this.fullyRegistered = true;
+      }
+      return res.next;
+    },
+
     clear() {
       setTimeout(() => {
         this.loggedUser = undefined;
         this.synced = false;
+        this.fullyRegistered = false;
       }, ONE_SECOND_IN_MS);
     },
 

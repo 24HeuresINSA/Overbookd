@@ -2,6 +2,7 @@ import type {
   RegistrationFormStep,
   RegistrationLoginStep,
   RegistrationCompletedStep,
+  RegistrationFormStepWithData,
 } from "@overbookd/http";
 import { type Credentials, RegisterForm } from "@overbookd/registration";
 import { HttpClient } from "~/utils/http/http-client";
@@ -11,14 +12,20 @@ export class RegistrationRepository {
 
   static checkUnauthenticatedUser(email: string) {
     const cleanedEmail = email.toLowerCase().trim();
-    return HttpClient.get<RegistrationLoginStep | RegistrationFormStep>(
+    return HttpClient.get<RegistrationLoginStep | RegistrationFormStepWithData>(
       `${this.basePath}/unauthenticated/check/${cleanedEmail}`,
     );
   }
 
-  static checkAuthenticatedUser() {
+  static checkAuthenticatedUserWithFormData() {
     return HttpClient.get<RegistrationFormStep | RegistrationCompletedStep>(
-      `${this.basePath}/authenticated/check`,
+      `${this.basePath}/authenticated/check?withFormData=true`,
+    );
+  }
+
+  static checkAuthenticatedUserWithoutFormData() {
+    return HttpClient.get<RegistrationFormStep | RegistrationCompletedStep>(
+      `${this.basePath}/authenticated/check?withFormData=false`,
     );
   }
 

@@ -45,11 +45,17 @@ export type RegistrationFormStepUser = Partial<
   >
 >;
 
-export type RegistrationFormStep = {
+export type RegistrationFormStepWithoutData = {
   next: typeof registrationSteps.FORM;
+};
+
+export type RegistrationFormStepWithData = RegistrationFormStepWithoutData & {
   user?: RegistrationFormStepUser;
   passwordRequirement: PasswordRequirement;
 };
+
+export type RegistrationFormStep =
+  RegistrationFormStepWithoutData | RegistrationFormStepWithData;
 
 export type RegistrationLoginStep = {
   next: typeof registrationSteps.LOGIN;
@@ -62,21 +68,10 @@ export type RegistrationCompletedStep = {
 export type RegistrationStep =
   RegistrationFormStep | RegistrationLoginStep | RegistrationCompletedStep;
 
-export const isRegistrationFormStep = (
-  step: RegistrationStep | HttpStringified<RegistrationStep>,
-): step is RegistrationFormStep | HttpStringified<RegistrationFormStep> => {
-  return step.next === registrationSteps.FORM;
-};
-
-export const isRegistrationLoginStep = (
-  step: RegistrationStep | HttpStringified<RegistrationStep>,
-): step is RegistrationLoginStep | HttpStringified<RegistrationLoginStep> => {
-  return step.next === registrationSteps.LOGIN;
-};
-
-export const isRegistrationCompletedStep = (
+export const hasRegistrationFormData = (
   step: RegistrationStep | HttpStringified<RegistrationStep>,
 ): step is
-  RegistrationCompletedStep | HttpStringified<RegistrationCompletedStep> => {
-  return step.next === registrationSteps.COMPLETED;
+  | RegistrationFormStepWithData
+  | HttpStringified<RegistrationFormStepWithData> => {
+  return step.next === registrationSteps.FORM && "passwordRequirement" in step;
 };

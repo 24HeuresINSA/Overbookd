@@ -99,18 +99,15 @@ export type {
   VolunteerCandidate,
   HasApplication,
   RegistrationStepKey,
+  RegistrationFormStepWithData,
+  RegistrationFormStepWithoutData,
   RegistrationFormStep,
   RegistrationFormStepUser,
   RegistrationLoginStep,
   RegistrationCompletedStep,
   RegistrationStep,
 } from "./registration";
-export {
-  registrationSteps,
-  isRegistrationFormStep,
-  isRegistrationLoginStep,
-  isRegistrationCompletedStep,
-} from "./registration";
+export { registrationSteps, hasRegistrationFormData } from "./registration";
 export type { EditAmountForm } from "./contribution";
 export { DEFAULT_PREFERENCE } from "./preference";
 export type {
