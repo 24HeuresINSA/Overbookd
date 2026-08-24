@@ -266,7 +266,6 @@ import { navigateTo } from "#app";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 import { REGISTER_FORM_KEY } from "@overbookd/configuration";
 import { planJauneAudioPlay } from "~/utils/easter-egg/jaune-audio";
-import { planMembershipApplication } from "~/utils/registration/membership-application.utils";
 import { hasRegistrationFormData, registrationSteps } from "@overbookd/http";
 import { ONE_SECOND_IN_MS } from "@overbookd/time";
 
