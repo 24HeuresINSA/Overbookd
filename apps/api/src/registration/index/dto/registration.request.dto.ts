@@ -1,6 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  BaseFulfilledRegistration,
   FulfilledRegistration,
+  RegistrationAccountStatus,
+  registrationAccountStatuses,
   RegistrationTeams,
 } from "@overbookd/registration";
 import { Type } from "class-transformer";
@@ -15,7 +18,15 @@ import {
   ValidateNested,
 } from "class-validator";
 
-class FulfilledRegistrationRepresentation implements FulfilledRegistration {
+class FulfilledRegistrationRepresentation implements BaseFulfilledRegistration {
+  @ApiProperty({ enum: registrationAccountStatuses })
+  @IsDefined()
+  status: RegistrationAccountStatus;
+
+  @IsOptional()
+  @IsString()
+  password?: string;
+
   @ApiProperty({ example: "test@example.com" })
   @IsEmail()
   email: string;
@@ -27,10 +38,6 @@ class FulfilledRegistrationRepresentation implements FulfilledRegistration {
   @IsDefined()
   @IsString()
   lastName: string;
-
-  @IsDefined()
-  @IsString()
-  password: string;
 
   @ApiProperty({ example: "0701020304" })
   @IsDefined()
@@ -49,6 +56,7 @@ class FulfilledRegistrationRepresentation implements FulfilledRegistration {
   @Type(() => Date)
   birthDate: Date;
 
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   comment?: string;
@@ -75,7 +83,9 @@ export class RegistrationRequestDto {
   @IsString()
   token: string;
 
-  @ApiProperty({ type: FulfilledRegistrationRepresentation })
+  @ApiProperty({
+    type: FulfilledRegistrationRepresentation,
+  })
   @Type(() => FulfilledRegistrationRepresentation)
   @ValidateNested()
   newcomer: FulfilledRegistration;

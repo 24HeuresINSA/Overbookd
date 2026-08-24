@@ -49,6 +49,16 @@ export class PrismaUserForRegistrationRepository implements UserForRegistrationR
     return this.formatUser(user);
   }
 
+  async updateZitadelIdByEmail(
+    email: string,
+    zitadelId: string,
+  ): Promise<void> {
+    await this.prisma.user.update({
+      where: { email },
+      data: { zitadelId },
+    });
+  }
+
   private formatUser(user: DatabaseUser): RegistrationFormStepUser {
     const teamCodes = extractTeamCodes(user.teams);
     return {

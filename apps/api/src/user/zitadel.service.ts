@@ -14,6 +14,7 @@ import { ApiZitadelMetadata } from "./entities/zitadel-api-metadata.entity";
 type UpdateUserProfileForm = {
   firstName: string;
   lastName: string;
+  nickname?: string;
   phoneNumber: string;
 };
 
@@ -171,8 +172,9 @@ export class ZitadelService {
     const shouldUpdateProfile = form.firstName || form.lastName;
     const givenName = form.firstName ? { givenName: form.firstName } : {};
     const familyName = form.lastName ? { familyName: form.lastName } : {};
+    const nickName = form.nickname ? { nickName: form.nickname } : {};
     const profile = shouldUpdateProfile
-      ? { profile: { ...givenName, ...familyName } }
+      ? { profile: { ...givenName, ...familyName, ...nickName } }
       : {};
     const phone = form.phoneNumber
       ? { phone: { phone: form.phoneNumber, isVerified: true } }
@@ -202,6 +204,7 @@ export class ZitadelService {
       profile: {
         givenName: user.firstName,
         familyName: user.lastName,
+        nickName: user.nickname,
         preferredLanguage: "fr",
       },
       email: {

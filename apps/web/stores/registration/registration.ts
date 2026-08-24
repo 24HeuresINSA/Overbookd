@@ -3,7 +3,7 @@ import type { Credentials } from "@overbookd/registration";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import { RegistrationRepository } from "~/repositories/registration/registration.repository";
 import {
-  hasRegistrationFormData,
+  hasHttpStringifiedRegistrationFormData,
   type RegistrationCompletedStep,
   type RegistrationFormStep,
   type RegistrationFormStepWithData,
@@ -25,7 +25,7 @@ export const useRegistrationStore = defineStore("registration", {
       const res =
         await RegistrationRepository.checkAuthenticatedUserWithFormData();
       if (isHttpError(res)) return;
-      if (hasRegistrationFormData(res)) {
+      if (hasHttpStringifiedRegistrationFormData(res)) {
         return {
           ...res,
           user: res.user
@@ -48,7 +48,7 @@ export const useRegistrationStore = defineStore("registration", {
     > {
       const res = await RegistrationRepository.checkUnauthenticatedUser(email);
       if (isHttpError(res)) return;
-      if (hasRegistrationFormData(res)) {
+      if (hasHttpStringifiedRegistrationFormData(res)) {
         return {
           ...res,
           user: res.user

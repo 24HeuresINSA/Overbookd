@@ -8,8 +8,8 @@ import {
   RegistrationCompletedStep,
 } from "@overbookd/http";
 import {
+  RegistrationAccountStatus,
   RegistrationTeams,
-  PasswordRequirement,
 } from "@overbookd/registration";
 
 class RegistrationFormStepUserResponseDto implements RegistrationFormStepUser {
@@ -96,7 +96,7 @@ export class RegistrationFormStepWithDataResponseDto
     description: "password requirement for registration",
     type: String,
   })
-  passwordRequirement: PasswordRequirement;
+  accountStatus: RegistrationAccountStatus;
 }
 
 export class RegistrationLoginStepResponseDto implements RegistrationLoginStep {

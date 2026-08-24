@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { Teams } from "./fulfilled-registration.js";
+import { accountStatuses, Teams } from "./fulfilled-registration.js";
 import {
   BDE,
   HAUTS_DE_FRANCE,
@@ -9,21 +9,17 @@ import {
 } from "@overbookd/team-code";
 import { RegisterForm } from "./register-form.js";
 import { STAFF, VOLUNTEER } from "../newcomer.js";
-import {
-  PASSWORD_NOT_REQUIRED,
-  PASSWORD_REQUIRED,
-} from "./password-requirement.js";
 
 const AT_LEAST_12_CHAR_IN_PASSWORD =
-  "Il faut au moins 12 caractères dans le mot de passe";
+  "Il faut au moins 12 caractères dans le mot de passe.";
 const AT_LEAST_1_NUMBER_IN_PASSWORD =
-  "Il faut au moins un chiffre dans le mot de passe";
+  "Il faut au moins un chiffre dans le mot de passe.";
 const AT_LEAST_1_MAJ_IN_PASSWORD =
-  "Il faut au moins une MAJUSCULE dans le mot de passe";
+  "Il faut au moins une MAJUSCULE dans le mot de passe.";
 const AT_LEAST_1_MIN_IN_PASSWORD =
-  "Il faut au moins une minuscule dans le mot de passe";
+  "Il faut au moins une minuscule dans le mot de passe.";
 const AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD =
-  "Il faut au moins un caractère spécial (!@#$%^&*=+_{}[]()|.) dans le mot de passe";
+  "Il faut au moins un caractère spécial (!@#$%^&*=+_{}[]()|.) dans le mot de passe.";
 
 const email = "test@example.com";
 const firstName = "Titouan";
@@ -36,7 +32,7 @@ const teams: Teams = [KARNA, TECKOS];
 const nickname = "Shagou";
 
 function validFormWithPassword() {
-  return RegisterForm.initFor(VOLUNTEER, PASSWORD_REQUIRED)
+  return RegisterForm.initFor(VOLUNTEER, accountStatuses.NEW)
     .fillEmail(email)
     .fillFirstName(firstName)
     .fillLastName(lastName)
@@ -51,7 +47,7 @@ function validFormWithPassword() {
 }
 
 function validFormWithoutPassword() {
-  return RegisterForm.initFor(VOLUNTEER, PASSWORD_NOT_REQUIRED)
+  return RegisterForm.initFor(VOLUNTEER, accountStatuses.EXISTING)
     .fillEmail(email)
     .fillFirstName(firstName)
     .fillLastName(lastName)
@@ -75,6 +71,7 @@ describe("Register form", () => {
         it("should generate a fulfilled form with password", () => {
           const newcomer = validFormWithPassword().complete();
           expect(newcomer).toEqual({
+            status: accountStatuses.NEW,
             firstName,
             lastName,
             teams,
@@ -99,6 +96,7 @@ describe("Register form", () => {
       it("should generate a fulfilled form without password", () => {
         const newcomer = validFormWithoutPassword().complete();
         expect(newcomer).toEqual({
+          status: accountStatuses.EXISTING,
           firstName,
           lastName,
           teams,
@@ -376,7 +374,7 @@ describe("Register form", () => {
       });
     });
     describe("when staff is not signing the volunteer charter", () => {
-      const unsignedForm = RegisterForm.initFor(STAFF, PASSWORD_REQUIRED)
+      const unsignedForm = RegisterForm.initFor(STAFF, accountStatuses.EXISTING)
         .fillEmail(email)
         .fillFirstName(firstName)
         .fillLastName(lastName)

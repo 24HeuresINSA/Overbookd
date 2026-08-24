@@ -1,14 +1,15 @@
 import { Membership, NewcomerRegistered } from "./newcomer.js";
-import { FulfilledRegistration } from "./register-form/fulfilled-registration.js";
 import {
-  PASSWORD_REQUIRED,
-  PasswordRequirement,
-} from "./register-form/password-requirement.js";
+  AccountStatus,
+  BaseFulfilledRegistration,
+  FulfilledRegistration,
+  isNewAccountRegistration,
+} from "./register-form/fulfilled-registration.js";
 import { RegisterForm } from "./register-form/register-form.js";
 
 export type NewcomerRepository = {
   save: <T extends Membership>(
-    fulfilledForm: FulfilledRegistration,
+    fulfilledForm: BaseFulfilledRegistration,
     membership: T,
   ) => Promise<NewcomerRegistered<T>>;
 };
@@ -19,9 +20,9 @@ export class RegisterNewcomer {
   async fromRegisterForm(
     form: Partial<FulfilledRegistration>,
     membership: Membership,
-    passwordRequirement: PasswordRequirement,
+    accountStatus: AccountStatus,
   ) {
-    const dataForm = RegisterForm.initFor(membership, passwordRequirement)
+    const dataForm = RegisterForm.initFor(membership, accountStatus)
       .fillEmail(form.email ?? "")
       .fillFirstName(form.firstName ?? "")
       .fillLastName(form.lastName ?? "")
@@ -36,10 +37,9 @@ export class RegisterNewcomer {
       form.comment !== undefined
         ? withNickname.fillComment(form.comment)
         : withNickname.clearComment();
-    const withPassword =
-      passwordRequirement === PASSWORD_REQUIRED
-        ? withComment.fillPassword(form.password ?? "")
-        : withComment.clearPassword();
+    const withPassword = isNewAccountRegistration(form)
+      ? withComment.fillPassword(form.password ?? "")
+      : withComment.clearPassword();
     const withEULA = form.hasApprovedEULA
       ? withPassword.approveEndUserLicenceAgreement()
       : withPassword.denyEndUserLicenceAgreement();
@@ -47,7 +47,23 @@ export class RegisterNewcomer {
       ? withEULA.signVolunteerCharter()
       : withEULA.denyVolunteerCharter();
     const fulfilledForm = withVolunteerCharter.complete();
+    const personalData = stripRegistrationData(fulfilledForm);
 
-    return this.newcomerRepository.save(fulfilledForm, membership);
+    return this.newcomerRepository.save(personalData, membership);
   }
+}
+
+function stripRegistrationData(
+  registration: FulfilledRegistration,
+): BaseFulfilledRegistration {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { status, ...rest } = registration;
+
+  if (isNewAccountRegistration(registration)) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { status, password, ...withoutPassword } = registration;
+    return withoutPassword;
+  }
+
+  return rest;
 }
