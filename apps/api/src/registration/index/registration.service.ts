@@ -9,10 +9,10 @@ import {
   ForgetMember,
   Membership,
   NewcomerRegistered,
+  isNewAccountRegistration,
   isStaffRegistered,
   isVolunteerRegistered,
-  PASSWORD_REQUIRED,
-  PASSWORD_NOT_REQUIRED,
+  registrationAccountStatuses,
 } from "@overbookd/registration";
 import { BE_AFFECTED } from "@overbookd/permission";
 import { DomainEventService } from "../../domain-event/domain-event.service";
@@ -47,6 +47,7 @@ type Service = {
 export type UserForRegistrationRepository = {
   getByEmail: (email: string) => Promise<RegistrationFormStepUser>;
   getById: (id: number) => Promise<RegistrationFormStepUser>;
+  updateZitadelIdByEmail: (email: string, zitadelId: string) => Promise<void>;
 };
 
 export type MembershipApplicationForRegistrationRepository = {
@@ -76,7 +77,7 @@ export class RegistrationService {
       return {
         next: registrationSteps.FORM,
         user: existingUser,
-        passwordRequirement: PASSWORD_REQUIRED,
+        accountStatus: registrationAccountStatuses.NEW,
       };
     }
 
@@ -102,7 +103,7 @@ export class RegistrationService {
       return {
         next: registrationSteps.FORM,
         user: withFormData ? stepUser : undefined,
-        passwordRequirement: PASSWORD_NOT_REQUIRED,
+        accountStatus: registrationAccountStatuses.EXISTING,
       };
     }
 
@@ -122,7 +123,7 @@ export class RegistrationService {
     return {
       next: registrationSteps.FORM,
       user: existingUser,
-      passwordRequirement: PASSWORD_NOT_REQUIRED,
+      accountStatus: registrationAccountStatuses.EXISTING,
     };
   }
 
@@ -140,11 +141,29 @@ export class RegistrationService {
 
     const membership = this.getMembership(token);
 
+    const { status, ...personalData } = fulfilledRegistration;
     const registree = await this.member.register.fromRegisterForm(
-      fulfilledRegistration,
+      personalData,
       membership,
-      PASSWORD_REQUIRED,
+      status,
     );
+
+    if (isNewAccountRegistration(fulfilledRegistration)) {
+      console.log(fulfilledRegistration);
+      const { userId } = await this.service.zitadel.createZitadelUser({
+        email: fulfilledRegistration.email,
+        firstName: fulfilledRegistration.firstName,
+        lastName: fulfilledRegistration.lastName,
+        nickname: fulfilledRegistration.nickname,
+        phoneNumber: fulfilledRegistration.mobilePhone,
+        dateOfBirth: fulfilledRegistration.birthDate,
+        password: fulfilledRegistration.password,
+      });
+      await this.repository.user.updateZitadelIdByEmail(
+        fulfilledRegistration.email,
+        userId,
+      );
+    }
 
     this.publishNewcomerRegisteredEvent(registree);
   }

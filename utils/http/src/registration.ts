@@ -2,7 +2,7 @@ import { IProvidePeriod } from "@overbookd/time";
 import { UserWithTeams } from "@overbookd/user";
 import {
   FulfilledRegistration,
-  PasswordRequirement,
+  RegistrationAccountStatus,
 } from "@overbookd/registration";
 import { HttpStringified } from "./http-stringified";
 
@@ -51,7 +51,7 @@ export type RegistrationFormStepWithoutData = {
 
 export type RegistrationFormStepWithData = RegistrationFormStepWithoutData & {
   user?: RegistrationFormStepUser;
-  passwordRequirement: PasswordRequirement;
+  accountStatus: RegistrationAccountStatus;
 };
 
 export type RegistrationFormStep =
@@ -68,10 +68,14 @@ export type RegistrationCompletedStep = {
 export type RegistrationStep =
   RegistrationFormStep | RegistrationLoginStep | RegistrationCompletedStep;
 
+export const hasHttpStringifiedRegistrationFormData = (
+  step: HttpStringified<RegistrationStep>,
+): step is HttpStringified<RegistrationFormStepWithData> => {
+  return step.next === registrationSteps.FORM && "accountStatus" in step;
+};
+
 export const hasRegistrationFormData = (
-  step: RegistrationStep | HttpStringified<RegistrationStep>,
-): step is
-  | RegistrationFormStepWithData
-  | HttpStringified<RegistrationFormStepWithData> => {
-  return step.next === registrationSteps.FORM && "passwordRequirement" in step;
+  step: RegistrationStep,
+): step is RegistrationFormStepWithData => {
+  return step.next === registrationSteps.FORM && "accountStatus" in step;
 };

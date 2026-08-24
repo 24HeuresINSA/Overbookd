@@ -109,7 +109,8 @@ export class RegistrationController {
     type: RegistrationRequestDto,
   })
   registerNewcomer(
-    @Body() { newcomer, token }: RegistrationRequestDto,
+    @Body()
+    { newcomer, token }: RegistrationRequestDto,
   ): Promise<void> {
     return this.registrationService.register(newcomer, token);
   }

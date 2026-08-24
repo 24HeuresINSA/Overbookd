@@ -1,18 +1,14 @@
 import {
-  FulfilledRegistration,
+  BaseFulfilledRegistration,
   Membership,
   NewcomerRegistered,
   NewcomerRepository,
   RegistrationTeamCode,
 } from "@overbookd/registration";
 import { PrismaService } from "../../../prisma.service";
-import { HashingUtilsService } from "../../../hashing-utils/hashing-utils.service";
 
 export class PrismaNewcomerRepository implements NewcomerRepository {
-  constructor(
-    private readonly prisma: PrismaService,
-    private readonly crypto: HashingUtilsService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async isEmailUsed(email: string): Promise<boolean> {
     const existing = await this.prisma.user.findFirst({
@@ -23,26 +19,27 @@ export class PrismaNewcomerRepository implements NewcomerRepository {
   }
 
   async save<T extends Membership>(
-    fulfilledForm: FulfilledRegistration,
+    fulfilledForm: BaseFulfilledRegistration,
     registrationMembership: T,
   ): Promise<NewcomerRegistered<T>> {
-    const { mobilePhone, password, ...similarProperties } = fulfilledForm;
-    const teams = {
-      createMany: {
-        data: fulfilledForm.teams.map((team: RegistrationTeamCode) => ({
-          teamCode: team,
-        })),
-      },
-    };
+    const { mobilePhone, ...similarProperties } = fulfilledForm;
     const data = {
       ...similarProperties,
-      teams,
       phoneNumber: mobilePhone,
-      password: await this.crypto.hash(password),
       registrationMembership,
+      teams: {
+        createMany: {
+          data: fulfilledForm.teams.map((team: RegistrationTeamCode) => ({
+            teamCode: team,
+          })),
+          skipDuplicates: true,
+        },
+      },
     };
-    const { id } = await this.prisma.user.create({
-      data,
+    const { id } = await this.prisma.user.upsert({
+      where: { email: fulfilledForm.email },
+      update: data,
+      create: data,
       select: { id: true },
     });
 

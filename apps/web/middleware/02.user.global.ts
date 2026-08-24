@@ -1,4 +1,8 @@
-export default defineNuxtRouteMiddleware(async () => {
+import { isUnauthenticatedPages } from "~/utils/navigation/pages/unanthenticated";
+
+export default defineNuxtRouteMiddleware(async (to) => {
+  if (isUnauthenticatedPages(to)) return;
+
   const oidc = useOidcAuth();
   if (!oidc.loggedIn.value) return;
 

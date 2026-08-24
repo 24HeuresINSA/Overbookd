@@ -41,7 +41,6 @@
           title="Mon compte"
           :value="2"
           :complete="step > 2"
-          :rules="accountStepRules"
           class="stepper-header"
         />
       </v-stepper-header>
@@ -60,13 +59,15 @@
               hint="Pas d'adresse insa 🙏"
               :rules="[rules.required, rules.email, rules.insaEmail]"
               persistent-hint
+              @enter="checkEmail"
             />
           </v-form>
 
-          <div class="stepper-actions mb-5">
+          <div class="stepper-actions mb-4">
             <v-btn
               :text="emailChecked ? 'Changer de compte' : 'Vérifier mon email'"
               color="primary"
+              :variant="emailChecked ? 'outlined' : 'elevated'"
               :disabled="
                 !emailChecked && emailRules.some((rule) => rule() !== true)
               "
@@ -80,9 +81,8 @@
             />
           </div>
 
-          <v-form class="stepper-form">
+          <v-form v-show="registerForm.needsPassword" class="stepper-form mt-6">
             <v-text-field
-              v-show="registerForm.needsPassword"
               v-model="password"
               type="password"
               label="Mot de passe*"
@@ -92,7 +92,6 @@
               required
             />
             <v-text-field
-              v-show="registerForm.needsPassword"
               v-model="repeatPassword"
               type="password"
               label="Confirme ton mot de passe*"
@@ -118,7 +117,6 @@
           title="Mes infos"
           :value="3"
           :complete="step > 3"
-          :rules="userInfoRules"
           class="stepper-header"
         />
       </v-stepper-header>
@@ -249,10 +247,10 @@ import {
   shouldSignVolunteerCharter,
   STAFF,
   VOLUNTEER,
-  type PasswordRequirement,
-  PASSWORD_NOT_REQUIRED,
+  type RegistrationAccountStatus,
+  registrationAccountStatuses,
 } from "@overbookd/registration";
-import { LOGIN_URL } from "@overbookd/web-page";
+import { HOME_URL, LOGIN_URL } from "@overbookd/web-page";
 import {
   required,
   minDate,
@@ -269,7 +267,7 @@ import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 import { REGISTER_FORM_KEY } from "@overbookd/configuration";
 import { planJauneAudioPlay } from "~/utils/easter-egg/jaune-audio";
 import { planMembershipApplication } from "~/utils/registration/membership-application.utils";
-import { registrationSteps } from "@overbookd/http";
+import { hasRegistrationFormData, registrationSteps } from "@overbookd/http";
 import { ONE_SECOND_IN_MS } from "@overbookd/time";
 
 const route = useRoute();
@@ -280,13 +278,17 @@ const snackNotification = useSnackNotificationStore();
 const oidc = useOidcAuth();
 const myStore = useMyStore();
 
+const DEFAULT_BIRTHDAY = "2000-01-01";
+
 configurationStore.fetch(REGISTER_FORM_KEY);
 const registerFormDescription = computed<string>(
   () => configurationStore.registerFormDescription,
 );
 
 const step = ref<number>(1);
-const passwordRequirment = ref<PasswordRequirement>(PASSWORD_NOT_REQUIRED);
+const accountStatus = ref<RegistrationAccountStatus>(
+  registrationAccountStatuses.EXISTING,
+);
 const emailChecked = ref<boolean>(false);
 
 const email = ref<string>("");
@@ -295,7 +297,7 @@ const repeatPassword = ref<string>("");
 const firstName = ref<string>("");
 const lastName = ref<string>("");
 const nickname = ref<string>("");
-const birthDay = ref<string>("2000-01-01");
+const birthDay = ref<string>(DEFAULT_BIRTHDAY);
 const phoneNumber = ref<string>("");
 const comment = ref<string>("");
 const teams = ref<RegistrationTeams>([]);
@@ -326,7 +328,7 @@ const mustSignVolunteerCharter = computed(() =>
 );
 
 const registerForm = computed<RegisterForm>(() => {
-  const form = RegisterForm.initFor(membership.value, passwordRequirment.value)
+  const form = RegisterForm.initFor(membership.value, accountStatus.value)
     .fillBirthDate(new Date(birthDay.value))
     .fillEmail(email.value)
     .fillFirstName(firstName.value)
@@ -355,25 +357,25 @@ const comingFromTeams = computed<TeamForRegistration[]>(() => {
 });
 
 const emailRules = computed(() => [
-  () => step.value < 2 || rules.required(email.value),
-  () => step.value < 2 || rules.email(email.value),
-  () => step.value < 2 || rules.insaEmail(email.value),
+  () => rules.required(email.value),
+  () => rules.email(email.value),
+  () => rules.insaEmail(email.value),
 ]);
 
 const passwordRules = computed(() =>
   registerForm.value.needsPassword
     ? [
-        () => step.value < 2 || rules.required(password.value),
-        () => step.value < 2 || rules.password(password.value),
-        () => step.value < 2 || rules.required(repeatPassword.value),
-        () => step.value < 2 || isSame(password.value)(repeatPassword.value),
+        () => rules.required(password.value),
+        () => rules.password(password.value),
+        () => rules.required(repeatPassword.value),
+        () => isSame(password.value)(repeatPassword.value),
       ]
     : [],
 );
-const accountStepRules = computed(() => [
-  ...emailRules.value,
-  ...passwordRules.value,
-]);
+const accountStepRules = computed(() => {
+  if (step.value <= 2) return [];
+  return [...emailRules.value, ...passwordRules.value];
+});
 
 const userInfoRules = computed(() => [
   () => step.value < 3 || rules.required(firstName.value),
@@ -403,17 +405,34 @@ const isFormInvalid = computed<boolean>(() => {
   );
 });
 
-const logout = async () => {
-  if (oidc.loggedIn) myStore.clear();
-  emailChecked.value = false;
-  passwordRequirment.value = PASSWORD_NOT_REQUIRED;
-  password.value = "";
-  repeatPassword.value = "";
-};
+onMounted(async () => {
+  if (!oidc.loggedIn.value) return;
+
+  const registrationStep = await registrationStore.checkAuthenticatedUser();
+  if (
+    registrationStep?.next === registrationSteps.FORM &&
+    hasRegistrationFormData(registrationStep)
+  ) {
+    step.value = 2;
+    emailChecked.value = true;
+    accountStatus.value = registrationStep.accountStatus;
+
+    const { user } = registrationStep;
+    email.value = user?.email ?? "";
+    firstName.value = user?.firstName ?? "";
+    lastName.value = user?.lastName ?? "";
+    nickname.value = user?.nickname ?? "";
+    birthDay.value = user?.birthDate
+      ? user.birthDate.toISOString().split("T")[0]
+      : DEFAULT_BIRTHDAY;
+    phoneNumber.value = user?.mobilePhone ?? "";
+    teams.value = user?.teams ?? [];
+    comment.value = user?.comment ?? "";
+  }
+});
 
 const checkEmail = async () => {
-  console.log("Checking email", email.value);
-  if (!email.value.trim()) return;
+  if (emailChecked.value || !email.value.trim()) return;
   const emailStep = await registrationStore.checkEmail(email.value);
 
   switch (emailStep?.next) {
@@ -426,11 +445,19 @@ const checkEmail = async () => {
       break;
     case registrationSteps.FORM:
       emailChecked.value = true;
-      passwordRequirment.value = emailStep.passwordRequirement;
+      accountStatus.value = emailStep.accountStatus;
       break;
     default:
       break;
   }
+};
+
+const logout = async () => {
+  if (oidc.loggedIn) myStore.clear();
+  emailChecked.value = false;
+  accountStatus.value = registrationAccountStatuses.EXISTING;
+  password.value = "";
+  repeatPassword.value = "";
 };
 
 const loading = ref<boolean>(false);
@@ -443,7 +470,7 @@ const register = async () => {
   }
 
   planJauneAudioPlay();
-  planMembershipApplication(token.value);
+  navigateTo(HOME_URL);
   loading.value = false;
 };
 

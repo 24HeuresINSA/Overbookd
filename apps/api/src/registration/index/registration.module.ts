@@ -20,7 +20,7 @@ import { PrismaMembershipApplicationForRegistrationRepository } from "./reposito
     {
       provide: PrismaNewcomerRepository,
       useFactory: (prisma: PrismaService) =>
-        new PrismaNewcomerRepository(prisma, new HashingUtilsService()),
+        new PrismaNewcomerRepository(prisma),
       inject: [PrismaService],
     },
     {

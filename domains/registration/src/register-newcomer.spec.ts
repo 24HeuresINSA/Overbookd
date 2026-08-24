@@ -1,17 +1,16 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
+  accountStatuses,
+  ExistingAccountFulfilledRegistration,
   FulfilledRegistration,
+  NewAccountFulfilledRegistration,
   Teams,
 } from "./register-form/fulfilled-registration.js";
 import { KARNA, TECKOS } from "@overbookd/team-code";
 import { RegisterNewcomer } from "./register-newcomer.js";
 import { InMemoryNewcomerRepository } from "./newcomer-repository.inmemory.js";
 import { STAFF, VOLUNTEER } from "./newcomer.js";
-import { RegistrationError } from "./register-form/register-form.js";
-import {
-  PASSWORD_NOT_REQUIRED,
-  PASSWORD_REQUIRED,
-} from "./register-form/password-requirement.js";
+import { RegistrationError } from "./register-form/registration.error.js";
 
 const email = "test@example.com";
 const firstName = "Titouan";
@@ -23,7 +22,8 @@ const comment = "Vous etes les meilleurs ! <3";
 const teams: Teams = [KARNA, TECKOS];
 const nickname = "Shagou";
 
-const staffRegisterForm: FulfilledRegistration = {
+const staffRegisterForm: NewAccountFulfilledRegistration = {
+  status: accountStatuses.NEW,
   lastName,
   firstName,
   mobilePhone,
@@ -41,7 +41,8 @@ const volunteerRegisterForm: FulfilledRegistration = {
   hasSignedVolunteerCharter: true,
 };
 
-const staffRegisterFormWithoutPassword: FulfilledRegistration = {
+const staffRegisterFormWithoutPassword: ExistingAccountFulfilledRegistration = {
+  status: accountStatuses.EXISTING,
   lastName,
   firstName,
   mobilePhone,
@@ -78,7 +79,7 @@ describe("Register newcomer", () => {
           const registree = await registerNewcomer.fromRegisterForm(
             registerForm,
             membership,
-            PASSWORD_REQUIRED,
+            accountStatuses.NEW,
           );
           const { password, ...personalData } = registerForm;
           const expectedRegistree = { ...personalData, id: 1, membership };
@@ -103,7 +104,7 @@ describe("Register newcomer", () => {
               const { email } = await registerNewcomer.fromRegisterForm(
                 form,
                 membership,
-                PASSWORD_REQUIRED,
+                accountStatuses.NEW,
               );
               expect(email).toBe(expectedEmail);
             },
@@ -123,12 +124,12 @@ describe("Register newcomer", () => {
               registerNewcomer.fromRegisterForm(
                 firstForm,
                 membership,
-                PASSWORD_REQUIRED,
+                accountStatuses.NEW,
               ),
               registerNewcomer.fromRegisterForm(
                 secondForm,
                 membership,
-                PASSWORD_REQUIRED,
+                accountStatuses.NEW,
               ),
             ]);
             expect(firstRegistree.id).not.toBe(secondRegistree.id);
@@ -147,7 +148,7 @@ describe("Register newcomer", () => {
                 registerNewcomer.fromRegisterForm(
                   { ...registerForm, email: registerEmail },
                   STAFF,
-                  PASSWORD_REQUIRED,
+                  accountStatuses.NEW,
                 ),
               ).rejects.toThrow(RegistrationError);
             },
@@ -166,7 +167,7 @@ describe("Register newcomer", () => {
           const registree = await registerNewcomer.fromRegisterForm(
             registerForm,
             membership,
-            PASSWORD_NOT_REQUIRED,
+            accountStatuses.EXISTING,
           );
 
           const expectedRegistree = { ...registerForm, id: 1, membership };
@@ -181,7 +182,7 @@ describe("Register newcomer", () => {
           const registree = await registerNewcomer.fromRegisterForm(
             formWithPassword,
             membership,
-            PASSWORD_NOT_REQUIRED,
+            accountStatuses.EXISTING,
           );
 
           const expectedRegistree = { ...registerForm, id: 1, membership };
@@ -202,7 +203,7 @@ describe("Register newcomer", () => {
             registerNewcomer.fromRegisterForm(
               registerForm,
               membership,
-              PASSWORD_REQUIRED,
+              accountStatuses.NEW,
             ),
           ).rejects.toThrow(RegistrationError);
         });

@@ -36,11 +36,10 @@ export function isTeamCode(code: string): code is TeamCode {
   return TEAM_CODES.includes(code as TeamCode);
 }
 
-export type FulfilledRegistration = {
+export type BaseFulfilledRegistration = {
   email: string;
   firstName: string;
   lastName: string;
-  password?: string;
   mobilePhone: string;
   nickname?: string;
   birthDate: Date;
@@ -49,3 +48,29 @@ export type FulfilledRegistration = {
   hasApprovedEULA: boolean;
   hasSignedVolunteerCharter?: boolean;
 };
+
+export const accountStatuses = {
+  EXISTING: "EXISTING",
+  NEW: "NEW",
+};
+
+export type AccountStatus =
+  (typeof accountStatuses)[keyof typeof accountStatuses];
+
+export type ExistingAccountFulfilledRegistration = BaseFulfilledRegistration & {
+  status: typeof accountStatuses.EXISTING;
+};
+
+export type NewAccountFulfilledRegistration = BaseFulfilledRegistration & {
+  status: typeof accountStatuses.NEW;
+  password: string;
+};
+
+export type FulfilledRegistration =
+  ExistingAccountFulfilledRegistration | NewAccountFulfilledRegistration;
+
+export function isNewAccountRegistration(
+  registration: Partial<FulfilledRegistration>,
+): registration is Partial<NewAccountFulfilledRegistration> {
+  return registration.status === accountStatuses.NEW;
+}
