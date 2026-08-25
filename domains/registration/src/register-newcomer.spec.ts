@@ -23,7 +23,6 @@ const teams: Teams = [KARNA, TECKOS];
 const nickname = "Shagou";
 
 const staffRegisterForm: NewAccountFulfilledRegistration = {
-  status: accountStatuses.NEW,
   lastName,
   firstName,
   mobilePhone,
@@ -42,7 +41,6 @@ const volunteerRegisterForm: FulfilledRegistration = {
 };
 
 const staffRegisterFormWithoutPassword: ExistingAccountFulfilledRegistration = {
-  status: accountStatuses.EXISTING,
   lastName,
   firstName,
   mobilePhone,
