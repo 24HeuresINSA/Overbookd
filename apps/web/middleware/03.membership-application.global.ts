@@ -1,6 +1,6 @@
 import { BE_AFFECTED } from "@overbookd/permission";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
-import { isUnauthenticatedPages } from "~/utils/navigation/pages/unanthenticated";
+import { isUnauthenticatedPages } from "~/utils/navigation/pages/unauthenticated";
 import { STAFF_APPLICATION_TOKEN_KEY } from "~/utils/registration/membership-application.utils";
 
 export default defineNuxtRouteMiddleware(async (to) => {

@@ -166,8 +166,7 @@ export class RegisterForm {
     const volunteerCharter = shouldSignVolunteerCharter(this.membership)
       ? { hasSignedVolunteerCharter: this.volunteerCharter.value }
       : {};
-    const password =
-      this.accountStatus === accountStatuses.NEW
+    const password = this.needsPassword
         ? { password: this.password.value }
         : {};
 

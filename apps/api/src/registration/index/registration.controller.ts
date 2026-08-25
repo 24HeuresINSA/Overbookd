@@ -92,9 +92,9 @@ export class RegistrationController {
   })
   checkAuthenticatedUser(
     @AuthenticatedUser() user: RequestHydratedUser,
-    @Query("withFormData") withFormData?: boolean = false,
+    @Query("withFormData") withFormData?: boolean,
   ): Promise<RegistrationFormStep | RegistrationCompletedStep> {
-    return this.registrationService.checkAuthenticatedUser(user, withFormData);
+    return this.registrationService.checkAuthenticatedUser(user, withFormData ?? false);
   }
 
   @Post()

@@ -5,7 +5,6 @@ import { RegistrationRepository } from "~/repositories/registration/registration
 import {
   hasHttpStringifiedRegistrationFormData,
   type RegistrationCompletedStep,
-  type RegistrationFormStep,
   type RegistrationFormStepWithData,
   type RegistrationLoginStep,
 } from "@overbookd/http";
@@ -20,7 +19,7 @@ export const useRegistrationStore = defineStore("registration", {
     },
 
     async checkAuthenticatedUser(): Promise<
-      RegistrationFormStep | RegistrationCompletedStep | undefined
+      RegistrationFormStepWithData | RegistrationCompletedStep | undefined
     > {
       const res =
         await RegistrationRepository.checkAuthenticatedUserWithFormData();

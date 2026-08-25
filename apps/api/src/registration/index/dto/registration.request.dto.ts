@@ -48,10 +48,7 @@ class FulfilledRegistrationRepresentation implements BaseFulfilledRegistration {
   @IsString()
   nickname?: string;
 
-  @ApiProperty({
-    required: true,
-    type: Date,
-  })
+  @ApiProperty({ type: Date })
   @IsDate()
   @Type(() => Date)
   birthDate: Date;
@@ -83,9 +80,7 @@ export class RegistrationRequestDto {
   @IsString()
   token: string;
 
-  @ApiProperty({
-    type: FulfilledRegistrationRepresentation,
-  })
+  @ApiProperty({ type: FulfilledRegistrationRepresentation })
   @Type(() => FulfilledRegistrationRepresentation)
   @ValidateNested()
   newcomer: FulfilledRegistration;
