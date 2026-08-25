@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { BadRequestException } from "@nestjs/common";
 import {
+  ApplyFor,
   FulfilledRegistration,
   RegisterNewcomer,
   VOLUNTEER,
@@ -37,6 +38,7 @@ import { RequestHydratedUser } from "../../authentication-zitadel/request-hydrat
 type Member = {
   forget: Readonly<ForgetMember>;
   register: Readonly<RegisterNewcomer>;
+  applyFor: ReadOnly<ApplyFor>;
 };
 
 type Service = {
@@ -147,11 +149,11 @@ export class RegistrationService {
       membership,
       status,
     );
-
+    
+    const email = fulfilledRegistration.email;
     if (isNewAccountRegistration(fulfilledRegistration)) {
-      console.log(fulfilledRegistration);
       const { userId } = await this.service.zitadel.createZitadelUser({
-        email: fulfilledRegistration.email,
+        email,
         firstName: fulfilledRegistration.firstName,
         lastName: fulfilledRegistration.lastName,
         nickname: fulfilledRegistration.nickname,
@@ -160,10 +162,13 @@ export class RegistrationService {
         password: fulfilledRegistration.password,
       });
       await this.repository.user.updateZitadelIdByEmail(
-        fulfilledRegistration.email,
+        email,
         userId,
       );
     }
+
+    if (token) await this.member.applyFor.staff({ email });
+    else await this.member.applyFor.volunteer({ email });
 
     this.publishNewcomerRegisteredEvent(registree);
   }

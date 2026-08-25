@@ -1,7 +1,7 @@
 import { Module } from "@nestjs/common";
 import { RegistrationController } from "./registration.controller";
 import { RegistrationService } from "./registration.service";
-import { RegisterNewcomer } from "@overbookd/registration";
+import { ApplyFor, RegisterNewcomer } from "@overbookd/registration";
 import { PrismaService } from "../../prisma.service";
 import { PrismaNewcomerRepository } from "./repository/newcomer-repository.prisma";
 import { PrismaModule } from "../../prisma.module";
@@ -13,6 +13,7 @@ import { ForgetMember } from "@overbookd/registration";
 import { ZitadelService } from "../../user/zitadel.service";
 import { PrismaUserForRegistrationRepository } from "./repository/user-repository.prisma";
 import { PrismaMembershipApplicationForRegistrationRepository } from "./repository/membership-application-repository.prisma";
+import { PrismaCandidates } from "../membership-application/common/repository/candidates.prisma";
 
 @Module({
   controllers: [RegistrationController],
@@ -53,25 +54,37 @@ import { PrismaMembershipApplicationForRegistrationRepository } from "./reposito
         new PrismaMembershipApplicationForRegistrationRepository(prisma),
       inject: [PrismaService],
     },
+    {
+      provide: PrismaCandidates,
+      useFactory: (prisma: PrismaService) => new PrismaCandidates(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: ApplyFor,
+      useFactory: (candidates: PrismaCandidates) => new ApplyFor(candidates),
+      inject: [PrismaCandidates],
+    },
     ZitadelService,
     {
       provide: RegistrationService,
       useFactory: (
         register: RegisterNewcomer,
         forget: ForgetMember,
+        applyFor: ApplyFor,
         event: DomainEventService,
         zitadel: ZitadelService,
         user: PrismaUserForRegistrationRepository,
         application: PrismaMembershipApplicationForRegistrationRepository,
       ) =>
         new RegistrationService(
-          { register, forget },
+          { register, forget, applyFor },
           { event, zitadel },
           { user, application },
         ),
       inject: [
         RegisterNewcomer,
         ForgetMember,
+        ApplyFor,
         DomainEventService,
         ZitadelService,
         PrismaUserForRegistrationRepository,
