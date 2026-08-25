@@ -1,8 +1,8 @@
 import type {
-  RegistrationFormStep,
   RegistrationLoginStep,
   RegistrationCompletedStep,
   RegistrationFormStepWithData,
+  RegistrationFormStepWithoutData,
 } from "@overbookd/http";
 import { type Credentials, RegisterForm } from "@overbookd/registration";
 import { HttpClient } from "~/utils/http/http-client";
@@ -18,13 +18,13 @@ export class RegistrationRepository {
   }
 
   static checkAuthenticatedUserWithFormData() {
-    return HttpClient.get<RegistrationFormStep | RegistrationCompletedStep>(
+    return HttpClient.get<RegistrationFormStepWithData | RegistrationCompletedStep>(
       `${this.basePath}/authenticated/check?withFormData=true`,
     );
   }
 
   static checkAuthenticatedUserWithoutFormData() {
-    return HttpClient.get<RegistrationFormStep | RegistrationCompletedStep>(
+    return HttpClient.get<RegistrationFormStepWithoutData | RegistrationCompletedStep>(
       `${this.basePath}/authenticated/check`,
     );
   }

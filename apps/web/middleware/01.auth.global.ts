@@ -1,14 +1,12 @@
 import { registrationSteps } from "@overbookd/http";
 import { HOME_URL, LOGIN_URL, REGISTER_URL } from "@overbookd/web-page";
-import { isUnauthenticatedPages } from "~/utils/navigation/pages/unanthenticated";
+import { isUnauthenticatedPages } from "~/utils/navigation/pages/unauthenticated";
 
 export default defineNuxtRouteMiddleware(async (to) => {
   // Plus d'explication sur l'utilisation de useOidcAuth ici :
   // https://nuxtoidc.cloud/composable
   const oidc = useOidcAuth();
   await oidc.fetch();
-
-  console.log("Middleware 01.auth.global.ts", to.path);
 
   const isLoggedIn = oidc.loggedIn.value;
 

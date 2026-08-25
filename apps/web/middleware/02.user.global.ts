@@ -1,4 +1,4 @@
-import { isUnauthenticatedPages } from "~/utils/navigation/pages/unanthenticated";
+import { isUnauthenticatedPages } from "~/utils/navigation/pages/unauthenticated";
 
 export default defineNuxtRouteMiddleware(async (to) => {
   if (isUnauthenticatedPages(to)) return;

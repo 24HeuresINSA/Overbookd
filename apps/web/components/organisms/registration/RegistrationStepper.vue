@@ -440,7 +440,7 @@ const checkEmail = async () => {
         INFO,
         "Un compte avec cet email existe déjà. Redirection vers la page de connexion.",
       );
-      setTimeout(() => oidc.login("zitadel"), 3 * ONE_SECOND_IN_MS);
+      setTimeout(() => oidc.login("zitadel"), 2 * ONE_SECOND_IN_MS);
       break;
     case registrationSteps.FORM:
       emailChecked.value = true;
