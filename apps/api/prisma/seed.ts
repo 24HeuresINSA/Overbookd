@@ -89,7 +89,7 @@ async function main() {
         lastName: user,
         nickname: null,
         birthDate: new Date(1990, 1, 1),
-        phoneNumber: "0612345678",
+        phoneNumber: "+33612345678",
         teams: {
           create: teams,
         },

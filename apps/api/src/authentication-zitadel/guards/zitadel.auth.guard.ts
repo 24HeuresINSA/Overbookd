@@ -50,7 +50,7 @@ export class ZitadelAuthGuard extends AuthGuard("zitadel") {
 
     const rawOverbookdData = await this.prisma.user.findFirst({
       where: {
-        zitadelId: zitadelUser.sub,
+        OR: [{ email: zitadelUser.email }, { zitadelId: zitadelUser.sub }],
       },
       select: {
         id: true,

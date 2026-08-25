@@ -8,7 +8,7 @@ import { type Credentials, RegisterForm } from "@overbookd/registration";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class RegistrationRepository {
-  private static readonly basePath = "registrations";
+  private static readonly basePath = "registration";
 
   static checkUnauthenticatedUser(email: string) {
     const cleanedEmail = email.toLowerCase().trim();

@@ -1,5 +1,6 @@
 import { registrationSteps } from "@overbookd/http";
 import { HOME_URL, LOGIN_URL, REGISTER_URL } from "@overbookd/web-page";
+import { useOidcUtils } from "~/composable/useOidcUtils";
 import { isUnauthenticatedPages } from "~/utils/navigation/pages/unauthenticated";
 
 export default defineNuxtRouteMiddleware(async (to) => {
@@ -7,6 +8,17 @@ export default defineNuxtRouteMiddleware(async (to) => {
   // https://nuxtoidc.cloud/composable
   const oidc = useOidcAuth();
   await oidc.fetch();
+
+  const snackNotification = useSnackNotificationStore();
+
+  const expireAt = oidc.user.value?.expireAt;
+  if (expireAt && expireAt < Date.now() / 1000) {
+    snackNotification.pushNotification(
+      FAILURE,
+      "Ta session a expiré, tu vas être redirigé vers la page de connexion.",
+    );
+    return useOidcUtils().handleLogout();
+  }
 
   const isLoggedIn = oidc.loggedIn.value;
 
@@ -19,7 +31,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
     if (!myStore.fullyRegistered) {
       const registrationStep = await myStore.checkRegistration();
       if (!registrationStep) {
-        const snackNotification = useSnackNotificationStore();
         snackNotification.pushNotification(
           FAILURE,
           "Une erreur est survenue 🥴 Essaye d'actualiser la page.",
