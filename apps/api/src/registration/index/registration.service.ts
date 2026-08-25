@@ -149,7 +149,7 @@ export class RegistrationService {
       membership,
       status,
     );
-    
+
     const email = fulfilledRegistration.email;
     if (isNewAccountRegistration(fulfilledRegistration)) {
       const { userId } = await this.service.zitadel.createZitadelUser({
@@ -161,10 +161,7 @@ export class RegistrationService {
         dateOfBirth: fulfilledRegistration.birthDate,
         password: fulfilledRegistration.password,
       });
-      await this.repository.user.updateZitadelIdByEmail(
-        email,
-        userId,
-      );
+      await this.repository.user.updateZitadelIdByEmail(email, userId);
     }
 
     if (token) await this.member.applyFor.staff({ email });
