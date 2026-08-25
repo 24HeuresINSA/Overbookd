@@ -167,8 +167,8 @@ export class RegisterForm {
       ? { hasSignedVolunteerCharter: this.volunteerCharter.value }
       : {};
     const password = this.needsPassword
-        ? { password: this.password.value }
-        : {};
+      ? { password: this.password.value }
+      : {};
 
     return {
       status: this.accountStatus,
