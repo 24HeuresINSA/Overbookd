@@ -1,6 +1,5 @@
 import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { HashingUtilsService } from "../src/hashing-utils/hashing-utils.service";
 import { categoriesAndGears } from "./seeders/gears";
 import { permissions } from "./seeders/permissions";
 import { defaultGeoLocation, signaLocations } from "./seeders/signa-locations";
@@ -73,7 +72,6 @@ async function main() {
 
   console.log("\nCreating users 👤");
 
-  const hashPassword = await new HashingUtilsService().hash("password");
   const savedUsers = await Promise.all(
     userTeamTuples.map(async (userTeam) => {
       const [user, teamNames] = userTeam;
@@ -92,7 +90,6 @@ async function main() {
         nickname: null,
         birthDate: new Date(1990, 1, 1),
         phoneNumber: "0612345678",
-        password: hashPassword,
         teams: {
           create: teams,
         },
@@ -101,7 +98,6 @@ async function main() {
       const userUpdateData = {
         firstName: user,
         lastName: user,
-        password: hashPassword,
       };
 
       await prisma.user.upsert({
