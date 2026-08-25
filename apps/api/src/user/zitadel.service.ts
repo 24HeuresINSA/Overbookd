@@ -3,6 +3,7 @@ import {
   ConflictException,
   HttpException,
   Injectable,
+  Logger,
 } from "@nestjs/common";
 import { OidcRole } from "@overbookd/oidc";
 import { ApiZitadelUser } from "./entities/zitadel-api-user.entity";
@@ -41,6 +42,8 @@ export class ZitadelService {
     Authorization: `Bearer ${this.ZITADEL_API_BEARER_TOKEN}`,
   };
 
+  private readonly logger = new Logger(ZitadelService.name);
+
   async getZitadelUserByEmail(userEmail: string): Promise<ApiZitadelUser> {
     const data = JSON.stringify({
       query: {
@@ -59,25 +62,26 @@ export class ZitadelService {
       ],
     });
 
-    const response = await fetch(`${this.ZITADEL_BASE_URL}/v2/users`, {
-      method: "POST",
-      body: data,
-      headers: this.headers,
-    });
-
-    return (await this.handleZitadelResponse(response)).result?.at(0);
+    const response = await this.safeFetch<{ result: ApiZitadelUser[] }>(
+      `${this.ZITADEL_BASE_URL}/v2/users`,
+      {
+        method: "POST",
+        body: data,
+        headers: this.headers,
+      },
+    );
+    return response.result?.at(0);
   }
 
   async getZitadelUserById(zitadelUserId: string): Promise<ApiZitadelUser> {
-    const response = await fetch(
+    const response = await this.safeFetch<{ user: ApiZitadelUser }>(
       `${this.ZITADEL_BASE_URL}/v2/users/${zitadelUserId}`,
       {
         method: "GET",
         headers: this.headers,
       },
     );
-
-    return (await this.handleZitadelResponse(response)).user;
+    return response.user;
   }
 
   async getZitadelRoles(
@@ -100,7 +104,7 @@ export class ZitadelService {
       ],
     });
 
-    const response = await fetch(
+    const response = await this.safeFetch<{ result: ApiZitadelRoles[] }>(
       `${this.ZITADEL_BASE_URL}/management/v1/users/grants/_search`,
       {
         method: "POST",
@@ -108,18 +112,16 @@ export class ZitadelService {
         headers: this.headers,
       },
     );
-
-    return (await this.handleZitadelResponse(response)).result?.at(0);
+    return response.result?.at(0);
   }
 
-  async updateZitadelRole(
+  updateZitadelRole(
     zitadelUserId: string,
     grantId: string,
     roleKeys: Array<OidcRole>,
   ) {
     const data = JSON.stringify({ roleKeys });
-
-    const response = await fetch(
+    return this.safeFetch(
       `${this.ZITADEL_BASE_URL}/management/v1/users/${zitadelUserId}/grants/${grantId}`,
       {
         method: "PUT",
@@ -127,11 +129,9 @@ export class ZitadelService {
         headers: this.headers,
       },
     );
-
-    return await this.handleZitadelResponse(response);
   }
 
-  async addZitadelRole(
+  addZitadelRole(
     zitadelUserId: string,
     roleKeys: Array<OidcRole>,
     projectId?: string,
@@ -140,8 +140,7 @@ export class ZitadelService {
       projectId: projectId ?? this.ZITADEL_OVERBOOKD_PROJECT_ID,
       roleKeys,
     });
-
-    const response = await fetch(
+    return this.safeFetch(
       `${this.ZITADEL_BASE_URL}/management/v1/users/${zitadelUserId}/grants`,
       {
         method: "POST",
@@ -149,23 +148,19 @@ export class ZitadelService {
         headers: this.headers,
       },
     );
-
-    return await this.handleZitadelResponse(response);
   }
 
-  async removeZitadelGrant(zitadelUserId: string, grantId: string) {
-    const response = await fetch(
+  removeZitadelGrant(zitadelUserId: string, grantId: string) {
+    return this.safeFetch(
       `${this.ZITADEL_BASE_URL}/management/v1/users/${zitadelUserId}/grants/${grantId}`,
       {
         method: "DELETE",
         headers: this.headers,
       },
     );
-
-    return await this.handleZitadelResponse(response);
   }
 
-  async updateZitadelUser(
+  updateZitadelUser(
     zitadelUserId: string,
     form: Partial<UpdateUserProfileForm>,
   ): Promise<ApiZitadelUserCreated> {
@@ -181,7 +176,7 @@ export class ZitadelService {
       : {};
     const reqBody = JSON.stringify({ ...profile, ...phone });
 
-    const response = await fetch(
+    return this.safeFetch(
       `${this.ZITADEL_BASE_URL}/v2/users/human/${zitadelUserId}`,
       {
         method: "PUT",
@@ -189,13 +184,9 @@ export class ZitadelService {
         headers: this.headers,
       },
     );
-
-    return await this.handleZitadelResponse(response);
   }
 
-  async createZitadelUser(
-    user: CreateUserForm,
-  ): Promise<ApiZitadelUserCreated> {
+  createZitadelUser(user: CreateUserForm): Promise<ApiZitadelUserCreated> {
     const metadata = this.buildMetadata({
       dateOfBirth: user.dateOfBirth,
     });
@@ -221,19 +212,17 @@ export class ZitadelService {
       },
     });
 
-    const response = await fetch(`${this.ZITADEL_BASE_URL}/v2/users/human`, {
+    return this.safeFetch(`${this.ZITADEL_BASE_URL}/v2/users/human`, {
       method: "POST",
       body: data,
       headers: this.headers,
     });
-
-    return await this.handleZitadelResponse(response);
   }
 
-  async updateMetadata(zitadelUserId: string, metadata: UserMetadataForm) {
+  updateMetadata(zitadelUserId: string, metadata: UserMetadataForm) {
     const zitadelMetadata = this.buildMetadata(metadata);
     const data = JSON.stringify({ metadata: zitadelMetadata });
-    const response = await fetch(
+    return this.safeFetch(
       `${this.ZITADEL_BASE_URL}/management/v1/users/${zitadelUserId}/metadata/_bulk`,
       {
         method: "POST",
@@ -241,8 +230,6 @@ export class ZitadelService {
         headers: this.headers,
       },
     );
-
-    return await this.handleZitadelResponse(response);
   }
 
   async addZitadelRoleIfNotGranted(
@@ -288,6 +275,18 @@ export class ZitadelService {
       value: btoa(OverDate.from(dateOfBirth).dateString),
     });
     return metadata;
+  }
+
+  private async safeFetch<T>(url: string, options: RequestInit): Promise<T> {
+    try {
+      const response = await fetch(url, options);
+      return await this.handleZitadelResponse(response);
+    } catch (error) {
+      const errorMessage =
+        "Erreur lors de la communication avec le service ZITADEL";
+      this.logger.error(errorMessage, error);
+      throw new HttpException(errorMessage, 500);
+    }
   }
 
   private async handleZitadelResponse(response: Response) {

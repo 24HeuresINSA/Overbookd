@@ -27,7 +27,7 @@ export class TeamService {
   private readonly logger = new Logger(TeamService.name);
 
   constructor(
-    private prisma: PrismaService,
+    private readonly prisma: PrismaService,
     private readonly joinTeams: JoinTeams,
     private readonly leaveTeam: LeaveTeam,
   ) {}

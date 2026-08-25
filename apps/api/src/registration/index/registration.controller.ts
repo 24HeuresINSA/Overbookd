@@ -41,8 +41,9 @@ import {
 import { Public } from "../../authentication-zitadel/decorators/public.decorator";
 import { RequestHydratedUser } from "../../authentication-zitadel/request-hydrated-user";
 import { AuthenticatedUser } from "../../authentication-zitadel/decorators/authenticated-user.decorator";
+import { MembershipApplicationErrorFilter } from "../membership-application/common/membership-application-error.filter";
 
-@Controller("registrations")
+@Controller("registration")
 @ApiTags("registration")
 @ApiSwaggerResponse()
 export class RegistrationController {
@@ -102,7 +103,7 @@ export class RegistrationController {
 
   @Post()
   @Public()
-  @UseFilters(RegistrationErrorFilter)
+  @UseFilters(RegistrationErrorFilter, MembershipApplicationErrorFilter)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
