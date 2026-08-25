@@ -42,7 +42,7 @@ const volunteerRegisterForm: FulfilledRegistration = {
 };
 
 const staffRegisterFormWithoutPassword: ExistingAccountFulfilledRegistration = {
-  status: accountStatus.EXISTING,
+  status: accountStatuses.EXISTING,
   lastName,
   firstName,
   mobilePhone,
