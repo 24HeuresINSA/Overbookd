@@ -38,7 +38,7 @@ import { RequestHydratedUser } from "../../authentication-zitadel/request-hydrat
 type Member = {
   forget: Readonly<ForgetMember>;
   register: Readonly<RegisterNewcomer>;
-  applyFor: ReadOnly<ApplyFor>;
+  applyFor: Readonly<ApplyFor>;
 };
 
 type Service = {

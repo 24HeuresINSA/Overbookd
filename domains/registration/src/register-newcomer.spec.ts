@@ -23,6 +23,7 @@ const teams: Teams = [KARNA, TECKOS];
 const nickname = "Shagou";
 
 const staffRegisterForm: NewAccountFulfilledRegistration = {
+  status: accountStatuses.NEW,
   lastName,
   firstName,
   mobilePhone,
@@ -41,6 +42,7 @@ const volunteerRegisterForm: FulfilledRegistration = {
 };
 
 const staffRegisterFormWithoutPassword: ExistingAccountFulfilledRegistration = {
+  status: accountStatus.EXISTING,
   lastName,
   firstName,
   mobilePhone,
@@ -79,7 +81,7 @@ describe("Register newcomer", () => {
             membership,
             accountStatuses.NEW,
           );
-          const { password, ...personalData } = registerForm;
+          const { password, status, ...personalData } = registerForm;
           const expectedRegistree = { ...personalData, id: 1, membership };
           expect(registree).toStrictEqual(expectedRegistree);
           expect(newcomerRepository.registrees).toContainEqual(
@@ -168,7 +170,8 @@ describe("Register newcomer", () => {
             accountStatuses.EXISTING,
           );
 
-          const expectedRegistree = { ...registerForm, id: 1, membership };
+          const { status, ...personalData } = registerForm;
+          const expectedRegistree = { ...personalData, id: 1, membership };
           expect(registree).toStrictEqual(expectedRegistree);
           expect(registree).not.toHaveProperty("password");
           expect(newcomerRepository.registrees).toContainEqual(
@@ -183,7 +186,8 @@ describe("Register newcomer", () => {
             accountStatuses.EXISTING,
           );
 
-          const expectedRegistree = { ...registerForm, id: 1, membership };
+          const { status, ...personalData } = registerForm;
+          const expectedRegistree = { ...personalData, id: 1, membership };
           expect(registree).toStrictEqual(expectedRegistree);
           expect(registree).not.toHaveProperty("password");
         });
