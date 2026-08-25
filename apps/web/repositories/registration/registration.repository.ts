@@ -25,7 +25,7 @@ export class RegistrationRepository {
 
   static checkAuthenticatedUserWithoutFormData() {
     return HttpClient.get<RegistrationFormStep | RegistrationCompletedStep>(
-      `${this.basePath}/authenticated/check?withFormData=false`,
+      `${this.basePath}/authenticated/check`,
     );
   }
 

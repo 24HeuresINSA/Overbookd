@@ -76,6 +76,7 @@ export class RegistrationController {
   @ApiQuery({
     type: Boolean,
     name: "withFormData",
+    required: false,
     description: "Whether to include the user data in the response or not",
   })
   @ApiResponse({
@@ -91,7 +92,7 @@ export class RegistrationController {
   })
   checkAuthenticatedUser(
     @AuthenticatedUser() user: RequestHydratedUser,
-    @Query("withFormData") withFormData: boolean,
+    @Query("withFormData") withFormData?: boolean = false,
   ): Promise<RegistrationFormStep | RegistrationCompletedStep> {
     return this.registrationService.checkAuthenticatedUser(user, withFormData);
   }
