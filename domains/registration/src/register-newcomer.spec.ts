@@ -22,7 +22,7 @@ const comment = "Vous etes les meilleurs ! <3";
 const teams: Teams = [KARNA, TECKOS];
 const nickname = "Shagou";
 
-const staffRegisterForm: NewAccountFulfilledRegistration = {
+const staffRegisterFormForNewAccount: NewAccountFulfilledRegistration = {
   status: accountStatuses.NEW,
   lastName,
   firstName,
@@ -36,13 +36,12 @@ const staffRegisterForm: NewAccountFulfilledRegistration = {
   hasApprovedEULA: true,
 };
 
-const volunteerRegisterForm: FulfilledRegistration = {
-  ...staffRegisterForm,
+const volunteerRegisterFormForNewAcccount: FulfilledRegistration = {
+  ...staffRegisterFormForNewAccount,
   hasSignedVolunteerCharter: true,
 };
 
-const staffRegisterFormWithoutPassword: ExistingAccountFulfilledRegistration = {
-  status: accountStatuses.EXISTING,
+const staffRegisterFormData = {
   lastName,
   firstName,
   mobilePhone,
@@ -53,11 +52,15 @@ const staffRegisterFormWithoutPassword: ExistingAccountFulfilledRegistration = {
   email,
   hasApprovedEULA: true,
 };
+const staffRegisterFormForExistingAccount: ExistingAccountFulfilledRegistration =
+  { ...staffRegisterFormData, status: accountStatuses.EXISTING };
 
-const volunteerRegisterFormWithoutPassword: FulfilledRegistration = {
-  ...staffRegisterFormWithoutPassword,
+const volunteerRegisterFormData = {
+  ...staffRegisterFormData,
   hasSignedVolunteerCharter: true,
 };
+const volunteerRegisterFormForExistingAccount: ExistingAccountFulfilledRegistration =
+  { ...volunteerRegisterFormData, status: accountStatuses.EXISTING };
 
 let registerNewcomer: RegisterNewcomer;
 let newcomerRepository: InMemoryNewcomerRepository;
@@ -70,8 +73,8 @@ describe("Register newcomer", () => {
     });
     describe.each`
       membership   | registerForm
-      ${STAFF}     | ${staffRegisterForm}
-      ${VOLUNTEER} | ${volunteerRegisterForm}
+      ${STAFF}     | ${staffRegisterFormForNewAccount}
+      ${VOLUNTEER} | ${volunteerRegisterFormForNewAcccount}
     `(
       "when receiving a valid $membership registration with password required",
       ({ membership, registerForm }) => {
@@ -79,7 +82,6 @@ describe("Register newcomer", () => {
           const registree = await registerNewcomer.fromRegisterForm(
             registerForm,
             membership,
-            accountStatuses.NEW,
           );
           const { password, status, ...personalData } = registerForm;
           const expectedRegistree = { ...personalData, id: 1, membership };
@@ -104,7 +106,6 @@ describe("Register newcomer", () => {
               const { email } = await registerNewcomer.fromRegisterForm(
                 form,
                 membership,
-                accountStatuses.NEW,
               );
               expect(email).toBe(expectedEmail);
             },
@@ -121,16 +122,8 @@ describe("Register newcomer", () => {
               email: "brole@protonmail.com",
             };
             const [firstRegistree, secondRegistree] = await Promise.all([
-              registerNewcomer.fromRegisterForm(
-                firstForm,
-                membership,
-                accountStatuses.NEW,
-              ),
-              registerNewcomer.fromRegisterForm(
-                secondForm,
-                membership,
-                accountStatuses.NEW,
-              ),
+              registerNewcomer.fromRegisterForm(firstForm, membership),
+              registerNewcomer.fromRegisterForm(secondForm, membership),
             ]);
             expect(firstRegistree.id).not.toBe(secondRegistree.id);
           });
@@ -148,7 +141,6 @@ describe("Register newcomer", () => {
                 registerNewcomer.fromRegisterForm(
                   { ...registerForm, email: registerEmail },
                   STAFF,
-                  accountStatuses.NEW,
                 ),
               ).rejects.toThrow(RegistrationError);
             },
@@ -158,8 +150,8 @@ describe("Register newcomer", () => {
     );
     describe.each`
       membership   | registerForm
-      ${STAFF}     | ${staffRegisterFormWithoutPassword}
-      ${VOLUNTEER} | ${volunteerRegisterFormWithoutPassword}
+      ${STAFF}     | ${staffRegisterFormForExistingAccount}
+      ${VOLUNTEER} | ${volunteerRegisterFormForExistingAccount}
     `(
       "when receiving a valid $membership registration without password required",
       ({ membership, registerForm }) => {
@@ -167,7 +159,6 @@ describe("Register newcomer", () => {
           const registree = await registerNewcomer.fromRegisterForm(
             registerForm,
             membership,
-            accountStatuses.EXISTING,
           );
 
           const { status, ...personalData } = registerForm;
@@ -183,7 +174,6 @@ describe("Register newcomer", () => {
           const registree = await registerNewcomer.fromRegisterForm(
             formWithPassword,
             membership,
-            accountStatuses.EXISTING,
           );
 
           const { status, ...personalData } = registerForm;
@@ -195,18 +185,14 @@ describe("Register newcomer", () => {
     );
     describe.each`
       membership   | registerForm
-      ${STAFF}     | ${staffRegisterFormWithoutPassword}
-      ${VOLUNTEER} | ${volunteerRegisterFormWithoutPassword}
+      ${STAFF}     | ${{ ...staffRegisterFormData, status: accountStatuses.NEW }}
+      ${VOLUNTEER} | ${{ ...volunteerRegisterFormData, status: accountStatuses.NEW }}
     `(
       "when receiving a $membership registration without password while password is required",
       ({ membership, registerForm }) => {
         it("should reject the registration", async () => {
           await expect(async () =>
-            registerNewcomer.fromRegisterForm(
-              registerForm,
-              membership,
-              accountStatuses.NEW,
-            ),
+            registerNewcomer.fromRegisterForm(registerForm, membership),
           ).rejects.toThrow(RegistrationError);
         });
       },
