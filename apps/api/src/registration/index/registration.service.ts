@@ -143,29 +143,32 @@ export class RegistrationService {
 
     const membership = this.getMembership(token);
 
-    const { status, ...personalData } = fulfilledRegistration;
-    const registree = await this.member.register.fromRegisterForm(
-      personalData,
-      membership,
-      status,
-    );
+    const zitadelUserPromise = isNewAccountRegistration(fulfilledRegistration)
+      ? this.service.zitadel.createZitadelUser({
+          email: fulfilledRegistration.email,
+          firstName: fulfilledRegistration.firstName,
+          lastName: fulfilledRegistration.lastName,
+          nickname: fulfilledRegistration.nickname,
+          phoneNumber: fulfilledRegistration.mobilePhone,
+          dateOfBirth: fulfilledRegistration.birthDate,
+          password: fulfilledRegistration.password,
+        })
+      : Promise.resolve(null);
 
-    const email = fulfilledRegistration.email;
-    if (isNewAccountRegistration(fulfilledRegistration)) {
-      const { userId } = await this.service.zitadel.createZitadelUser({
-        email,
-        firstName: fulfilledRegistration.firstName,
-        lastName: fulfilledRegistration.lastName,
-        nickname: fulfilledRegistration.nickname,
-        phoneNumber: fulfilledRegistration.mobilePhone,
-        dateOfBirth: fulfilledRegistration.birthDate,
-        password: fulfilledRegistration.password,
-      });
-      await this.repository.user.updateZitadelIdByEmail(email, userId);
+    const [registree, zitadelUser] = await Promise.all([
+      this.member.register.fromRegisterForm(fulfilledRegistration, membership),
+      zitadelUserPromise,
+    ]);
+
+    if (zitadelUser) {
+      await this.repository.user.updateZitadelIdByEmail(
+        fulfilledRegistration.email,
+        zitadelUser.userId,
+      );
     }
 
-    if (token) await this.member.applyFor.staff({ email });
-    else await this.member.applyFor.volunteer({ email });
+    if (token) await this.member.applyFor.staff({ email: registree.email });
+    else await this.member.applyFor.volunteer({ email: registree.email });
 
     this.publishNewcomerRegisteredEvent(registree);
   }
