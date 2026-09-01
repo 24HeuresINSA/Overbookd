@@ -1,8 +1,4 @@
-import type {
-  HasApplication,
-  StaffCandidate,
-  VolunteerCandidate,
-} from "@overbookd/http";
+import type { StaffCandidate, VolunteerCandidate } from "@overbookd/http";
 import type { CandidateToEnroll } from "@overbookd/registration";
 import { HttpClient } from "~/utils/http/http-client";
 
@@ -15,22 +11,6 @@ export class MembershipApplicationRepository {
 
   static fetchStaffLink() {
     return HttpClient.get<string>(`${this.basePath}/staffs/invitation-link`);
-  }
-
-  static getCurrentStaffApplication() {
-    return HttpClient.get<HasApplication>(`${this.basePath}/staffs/me`);
-  }
-
-  static submitStaffApplication(token: string) {
-    const options = {
-      serverErrorMessage:
-        "Oups, ta demande de candidature a échoué... Rééssaie de te connecter avec le lien fourni par le·a SG",
-    };
-    return HttpClient.post<void>(
-      `${this.basePath}/staffs/apply`,
-      { token },
-      options,
-    );
   }
 
   static rejectStaffCandidate(candidateId: number) {
@@ -59,14 +39,6 @@ export class MembershipApplicationRepository {
     return HttpClient.post<void>(`${this.basePath}/staffs/enroll`, {
       candidates,
     });
-  }
-
-  static getCurrentVolunteerApplication() {
-    return HttpClient.get<HasApplication>(`${this.basePath}/volunteers/me`);
-  }
-
-  static submitVolunteerApplication() {
-    return HttpClient.post<void>(`${this.basePath}/volunteers/apply`);
   }
 
   static getVolunteerCandidates() {

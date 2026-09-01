@@ -97,7 +97,6 @@ export type { AvailabilityForm } from "./volunteer-availability";
 export type {
   StaffCandidate,
   VolunteerCandidate,
-  HasApplication,
   RegistrationStepKey,
   RegistrationFormStepWithData,
   RegistrationFormStepWithoutData,

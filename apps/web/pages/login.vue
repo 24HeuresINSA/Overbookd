@@ -54,7 +54,6 @@ import { REGISTER_URL } from "@overbookd/web-page";
 import { pickRandomBackground, GLASS } from "~/domain/login/pictures";
 import { planJauneAudioPlay } from "~/utils/easter-egg/jaune-audio";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
-import { planMembershipApplication } from "~/utils/registration/membership-application.utils";
 
 definePageMeta({ layout: false });
 
@@ -68,7 +67,6 @@ const token = computed<string>(() => stringifyQueryParam(route.query.token));
 const login = async () => {
   await oidc.login("zitadel");
   planJauneAudioPlay();
-  planMembershipApplication(token.value);
 };
 
 const register = () => {
