@@ -16,15 +16,13 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { HasApplication, StaffCandidate } from "@overbookd/http";
+import { StaffCandidate } from "@overbookd/http";
 import { MembershipApplicationErrorFilter } from "../common/membership-application-error.filter";
 import { StaffMembershipApplicationService } from "./staff-membership-application.service";
 import { Permissions } from "../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { ENROLL_HARD } from "@overbookd/permission";
 import { EnrollCandidatesRequestDto } from "../common/dto/enroll-candidates.request.dto";
 import { StaffCandidateResponseDto } from "./dto/staff-candidate.response.dto";
-import { StaffCandidateTokenRequestDto } from "./dto/staff-candidate-token.request.dto";
-import { HasApplicationResponseDto } from "../common/dto/has-application.response.dto";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 import { AuthenticatedUser } from "../../../authentication-zitadel/decorators/authenticated-user.decorator";
 import { RequestHydratedUser } from "../../../authentication-zitadel/request-hydrated-user";
@@ -38,23 +36,6 @@ export class StaffMembershipApplicationController {
   constructor(
     private readonly applicationService: StaffMembershipApplicationService,
   ) {}
-
-  @Post("apply")
-  @HttpCode(204)
-  @ApiResponse({
-    status: 204,
-    description: "Staff application submitted",
-  })
-  @ApiBody({
-    type: StaffCandidateTokenRequestDto,
-    description: "Candidate",
-  })
-  applyFor(
-    @Body() { token }: StaffCandidateTokenRequestDto,
-    @AuthenticatedUser() { email }: RequestHydratedUser,
-  ): Promise<void> {
-    return this.applicationService.applyFor(email, token);
-  }
 
   @Get()
   @Permissions(ENROLL_HARD)
@@ -119,18 +100,6 @@ export class StaffMembershipApplicationController {
     @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<URL> {
     return this.applicationService.generateStaffInvitationLink(user);
-  }
-
-  @Get("me")
-  @ApiResponse({
-    status: 200,
-    description: "Get current staff application",
-    type: HasApplicationResponseDto,
-  })
-  getCurrentApplication(
-    @AuthenticatedUser() { email }: RequestHydratedUser,
-  ): Promise<HasApplication> {
-    return this.applicationService.getCurrentApplication(email);
   }
 
   @Delete(":candidateId")

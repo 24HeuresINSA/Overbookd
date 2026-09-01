@@ -7,7 +7,7 @@ import {
   VOLUNTEER,
 } from "@overbookd/registration";
 import { Users } from "../common/repository/users";
-import { HasApplication, VolunteerCandidate } from "@overbookd/http";
+import { VolunteerCandidate } from "@overbookd/http";
 import { EnrollCandidatesRepository } from "../common/repository/enroll-candidates";
 import { SOFT } from "@overbookd/team-code";
 import { ConfigurationService } from "../../../configuration/configuration.service";
@@ -30,16 +30,6 @@ export class VolunteerMembershipApplicationService {
     private readonly useCases: UseCases,
     private readonly repositories: Repositories,
   ) {}
-
-  async applyFor(email: string): Promise<void> {
-    return this.useCases.applyFor.volunteer({ email });
-  }
-
-  async getCurrentApplication(email: string): Promise<HasApplication> {
-    const hasApplication =
-      await this.repositories.enroll.hasVolunteerApplication(email);
-    return { hasApplication };
-  }
 
   async rejectVolunteerApplication(candidateId: number): Promise<void> {
     const email = await this.repositories.users.findEmailById(candidateId);

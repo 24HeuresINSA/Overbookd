@@ -20,8 +20,6 @@ export type VolunteerCandidate = StaffCandidate & {
   note?: string;
 };
 
-export type HasApplication = { hasApplication: boolean };
-
 export const registrationSteps = {
   LOGIN: "LOGIN",
   FORM: "FORM",

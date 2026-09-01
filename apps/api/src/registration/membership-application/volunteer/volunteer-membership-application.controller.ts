@@ -21,12 +21,9 @@ import { VolunteerMembershipApplicationService } from "./volunteer-membership-ap
 import { Permissions } from "../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { VolunteerCandidateResponseDto } from "./dto/volunteer-candidate.response";
 import { ENROLL_SOFT } from "@overbookd/permission";
-import { HasApplication, VolunteerCandidate } from "@overbookd/http";
+import { VolunteerCandidate } from "@overbookd/http";
 import { EnrollCandidatesRequestDto } from "../common/dto/enroll-candidates.request.dto";
-import { HasApplicationResponseDto } from "../common/dto/has-application.response.dto";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
-import { AuthenticatedUser } from "../../../authentication-zitadel/decorators/authenticated-user.decorator";
-import { RequestHydratedUser } from "../../../authentication-zitadel/request-hydrated-user";
 
 @Controller("registrations/membership-applications/volunteers")
 @ApiTags("registrations/membership-applications/volunteers")
@@ -37,16 +34,6 @@ export class VolunteerMembershipApplicationController {
   constructor(
     private readonly applicationService: VolunteerMembershipApplicationService,
   ) {}
-
-  @Post("apply")
-  @HttpCode(204)
-  @ApiResponse({
-    status: 204,
-    description: "Volunteer application submitted",
-  })
-  applyFor(@AuthenticatedUser() { email }: RequestHydratedUser): Promise<void> {
-    return this.applicationService.applyFor(email);
-  }
 
   @Get()
   @Permissions(ENROLL_SOFT)
@@ -96,18 +83,6 @@ export class VolunteerMembershipApplicationController {
   })
   enroll(@Body() { candidates }: EnrollCandidatesRequestDto): Promise<void> {
     return this.applicationService.enroll(candidates);
-  }
-
-  @Get("me")
-  @ApiResponse({
-    status: 200,
-    description: "Get current volunteer application",
-    type: HasApplicationResponseDto,
-  })
-  getCurrentApplication(
-    @AuthenticatedUser() { email }: RequestHydratedUser,
-  ): Promise<HasApplication> {
-    return this.applicationService.getCurrentApplication(email);
   }
 
   @Delete(":candidateId")
