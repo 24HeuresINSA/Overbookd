@@ -408,10 +408,7 @@ onMounted(async () => {
   if (!oidc.loggedIn.value) return;
 
   const registrationStep = await registrationStore.checkAuthenticatedUser();
-  if (
-    registrationStep?.next === registrationSteps.FORM &&
-    hasRegistrationFormData(registrationStep)
-  ) {
+  if (registrationStep && hasRegistrationFormData(registrationStep)) {
     step.value = 2;
     emailChecked.value = true;
     accountStatus.value = registrationStep.accountStatus;
