@@ -71,10 +71,11 @@ export class UserService {
 
     const data = {
       email: user.email,
+      zitadelId: user.zitadelId,
       firstName: user.givenName,
       lastName: user.familyName,
+      nickname: user.nickname,
       phoneNumber: user.phoneNumber,
-      zitadelId: user.zitadelId,
       birthDate: user.birthDate,
       profilePicture: user.profilePicture,
     };
