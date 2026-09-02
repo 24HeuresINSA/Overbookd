@@ -86,14 +86,10 @@ export class UserService {
     });
     await this.updateAdminTeamFromZitadel(user.id, user.zitadelRoles);
 
-    if (!user.birthDate) {
-      await this.zitadelService.updateMetadata(user.zitadelId, {
-        dateOfBirth: updatedUser.birthDate,
-      });
-    }
-    if (!user.phoneNumber) {
+    if (!user.birthDate || !user.phoneNumber) {
       await this.zitadelService.updateZitadelUser(user.zitadelId, {
         phoneNumber: updatedUser.phoneNumber,
+        dateOfBirth: updatedUser.birthDate,
       });
     }
   }
@@ -167,7 +163,7 @@ export class UserService {
         select: SELECT_MY_USER_INFORMATION,
       }),
       this.selectCharismaPeriods(),
-      this.zitadelService.updateMetadata(author.zitadelId, {
+      this.zitadelService.updateZitadelUser(author.zitadelId, {
         dateOfBirth: profile.birthDate,
       }),
     ]);

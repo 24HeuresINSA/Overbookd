@@ -14,6 +14,8 @@ import {
   isStaffRegistered,
   isVolunteerRegistered,
   registrationAccountStatuses,
+  NewAccountFulfilledRegistration,
+  ExistingAccountFulfilledRegistration,
 } from "@overbookd/registration";
 import { BE_AFFECTED } from "@overbookd/permission";
 import { DomainEventService } from "../../domain-event/domain-event.service";
@@ -47,6 +49,7 @@ type Service = {
 };
 
 export type UserForRegistrationRepository = {
+  getZitadelIdByEmail: (email: string) => Promise<string | null>;
   getByEmail: (email: string) => Promise<RegistrationFormStepUser>;
   getById: (id: number) => Promise<RegistrationFormStepUser>;
   updateZitadelIdByEmail: (email: string, zitadelId: string) => Promise<void>;
@@ -91,20 +94,19 @@ export class RegistrationService {
     withFormData: boolean,
   ): Promise<RegistrationFormStep | RegistrationCompletedStep> {
     if (!user.id) {
-      const zitadelUser = await this.service.zitadel.getZitadelUserById(
-        user.zitadelId,
-      );
-      const { email, profile, phone } = zitadelUser.human;
-      const stepUser: RegistrationFormStepUser = {
-        email: email.email,
-        firstName: profile.givenName,
-        lastName: profile.familyName,
-        nickname: profile.nickName,
-        mobilePhone: phone.phone,
-      };
+      const zitadelUser = withFormData
+        ? {
+            email: user.email,
+            firstName: user.givenName,
+            lastName: user.familyName,
+            nickname: user.nickname,
+            mobilePhone: user.phoneNumber,
+            birthDate: user.birthDate,
+          }
+        : undefined;
       return {
         next: registrationSteps.FORM,
-        user: withFormData ? stepUser : undefined,
+        user: zitadelUser,
         accountStatus: registrationAccountStatuses.EXISTING,
       };
     }
@@ -144,28 +146,13 @@ export class RegistrationService {
     const membership = this.getMembership(token);
 
     const zitadelUserPromise = isNewAccountRegistration(fulfilledRegistration)
-      ? this.service.zitadel.createZitadelUser({
-          email: fulfilledRegistration.email,
-          firstName: fulfilledRegistration.firstName,
-          lastName: fulfilledRegistration.lastName,
-          nickname: fulfilledRegistration.nickname,
-          phoneNumber: fulfilledRegistration.mobilePhone,
-          dateOfBirth: fulfilledRegistration.birthDate,
-          password: fulfilledRegistration.password,
-        })
-      : Promise.resolve(null);
+      ? this.createZitadelUser(fulfilledRegistration)
+      : this.updateZitadelUser(fulfilledRegistration);
 
-    const [registree, zitadelUser] = await Promise.all([
+    const [registree, _] = await Promise.all([
       this.member.register.fromRegisterForm(fulfilledRegistration, membership),
       zitadelUserPromise,
     ]);
-
-    if (zitadelUser) {
-      await this.repository.user.updateZitadelIdByEmail(
-        fulfilledRegistration.email,
-        zitadelUser.userId,
-      );
-    }
 
     if (token) await this.member.applyFor.staff({ email: registree.email });
     else await this.member.applyFor.volunteer({ email: registree.email });
@@ -175,6 +162,37 @@ export class RegistrationService {
 
   private getMembership(token?: string): Membership {
     return token ? STAFF : VOLUNTEER;
+  }
+
+  private async createZitadelUser(form: NewAccountFulfilledRegistration) {
+    const newZitadelUser = await this.service.zitadel.createZitadelUser({
+      email: form.email,
+      password: form.password,
+      firstName: form.firstName,
+      lastName: form.lastName,
+      nickname: form.nickname,
+      phoneNumber: form.mobilePhone,
+      dateOfBirth: form.birthDate,
+    });
+    return this.repository.user.updateZitadelIdByEmail(
+      form.email,
+      newZitadelUser.userId,
+    );
+  }
+
+  private async updateZitadelUser(form: ExistingAccountFulfilledRegistration) {
+    const zitadelId = await this.repository.user.getZitadelIdByEmail(
+      form.email,
+    );
+    if (zitadelId) {
+      return this.service.zitadel.updateZitadelUser(zitadelId, {
+        firstName: form.firstName,
+        lastName: form.lastName,
+        nickname: form.nickname,
+        phoneNumber: form.mobilePhone,
+        dateOfBirth: form.birthDate,
+      });
+    }
   }
 
   private publishNewcomerRegisteredEvent(

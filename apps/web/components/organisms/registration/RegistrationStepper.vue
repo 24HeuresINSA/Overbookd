@@ -27,11 +27,7 @@
 
           <div class="stepper-actions">
             <v-btn text="C'est parti ! 🚀" color="primary" @click="step = 2" />
-            <v-btn
-              text="Annuler"
-              variant="text"
-              @click="navigateTo(LOGIN_URL)"
-            />
+            <v-btn text="Annuler" variant="text" @click="returnToLoginPage" />
           </div>
         </v-stepper-window-item>
       </v-stepper-window>
@@ -47,7 +43,7 @@
 
       <v-stepper-window v-show="step == 2" direction="vertical">
         <v-stepper-window-item :value="2">
-          <v-form class="stepper-form">
+          <div class="stepper-form">
             <v-text-field
               v-model="email"
               label="Email*"
@@ -59,19 +55,24 @@
               hint="Pas d'adresse insa 🙏"
               :rules="[rules.required, rules.email, rules.insaEmail]"
               persistent-hint
-              @enter="checkEmail"
             />
-          </v-form>
+          </div>
 
           <div class="stepper-actions mb-4">
             <v-btn
-              :text="emailChecked ? 'Changer de compte' : 'Vérifier mon email'"
+              v-if="emailChecked"
+              text="Changer de compte"
               color="primary"
-              :variant="emailChecked ? 'outlined' : 'elevated'"
-              :disabled="
-                !emailChecked && emailRules.some((rule) => rule() !== true)
-              "
-              @click="() => (emailChecked ? logout() : checkEmail())"
+              variant="outlined"
+              @click="logout"
+            />
+            <v-btn
+              v-else
+              text="Vérifier mon email"
+              color="primary"
+              variant="elevated"
+              :disabled="emailRules.some((rule) => rule() !== true)"
+              @click="checkEmail"
             />
             <v-btn
               v-show="!emailChecked"
@@ -81,7 +82,7 @@
             />
           </div>
 
-          <v-form v-show="registerForm.needsPassword" class="stepper-form mt-6">
+          <div v-show="registerForm.needsPassword" class="stepper-form mt-6">
             <v-text-field
               v-model="password"
               type="password"
@@ -98,7 +99,7 @@
               :rules="[repeatPasswordRule]"
               required
             />
-          </v-form>
+          </div>
 
           <div v-show="emailChecked" class="stepper-actions">
             <v-btn
@@ -123,7 +124,7 @@
 
       <v-stepper-window v-show="step == 3" direction="vertical">
         <v-stepper-window-item :value="3">
-          <v-form class="stepper-form">
+          <div class="stepper-form">
             <v-text-field
               v-model="firstName"
               label="Prénom*"
@@ -163,10 +164,11 @@
               clearable
               hint="Laisse le champ vide si tu n'es pas dans une équipe 😉"
               persistent-hint
+              chips
               :rules="[twoTeamsMaximumRule]"
             />
             <CommentField v-model="comment" />
-          </v-form>
+          </div>
           <v-checkbox
             v-model="hasApprovedEULA"
             color="primary"
@@ -455,6 +457,13 @@ const logout = async () => {
   password.value = "";
   repeatPassword.value = "";
 };
+const returnToLoginPage = async () => {
+  if (oidc.loggedIn) {
+    await logout();
+    return oidc.logout();
+  }
+  navigateTo(LOGIN_URL);
+};
 
 const loading = ref<boolean>(false);
 const register = async () => {
@@ -489,12 +498,12 @@ const signVolunteerCharter = () => {
 .register {
   &-card {
     max-width: 1000px;
-    height: 100%;
     width: 100%;
     overflow-y: auto;
     position: relative;
     z-index: 2;
     padding: 0 !important;
+    margin: 0.5em !important;
   }
 
   &-illustration {
