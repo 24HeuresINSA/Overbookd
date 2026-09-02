@@ -6,8 +6,8 @@
       class="background"
       cover
     />
-    <StaffLinkExpiredAlert v-if="isInvitationExpired" class="alert" />
-    <RegistrationStepper v-else class="stepper" />
+    <StaffLinkExpiredAlert v-if="isInvitationExpired" />
+    <RegistrationStepper v-else />
   </div>
 </template>
 
@@ -46,18 +46,5 @@ const isInvitationExpired = computed<boolean>(() => {
   height: 100%;
   width: 100%;
   z-index: 1;
-}
-
-.alert {
-  z-index: 2;
-  flex: none;
-  margin: 0.5em;
-}
-
-.stepper {
-  position: relative;
-  z-index: 2;
-  height: 100%;
-  margin: 0.5em;
 }
 </style>

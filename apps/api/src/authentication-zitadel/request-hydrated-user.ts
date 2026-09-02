@@ -6,6 +6,7 @@ import {
   OverbookdOidcRole,
   oidcRoles,
 } from "@overbookd/oidc";
+import { isMobilePhoneNumberValid } from "@overbookd/registration";
 import { RawRequestUserData } from "./guards/zitadel.auth.guard";
 
 type ZitadelUserData = Omit<
@@ -31,7 +32,7 @@ export class RequestHydratedUser {
   readonly email: string;
   readonly familyName: string;
   readonly givenName: string;
-  readonly nickname: string;
+  readonly nickname?: string;
   readonly phoneNumber?: string;
   readonly birthDate?: Date;
   readonly profilePicture?: string;
@@ -59,14 +60,17 @@ export class RequestHydratedUser {
     const birthDate = new Date(userMetadataDecoded.dateOfBirth);
 
     return new RequestHydratedUser({
+      zitadelId: user.sub,
       email: user.email,
       familyName: user.family_name,
       givenName: user.given_name,
-      nickname: user.nickname,
-      phoneNumber: user.phone_number,
-      profilePicture: user.picture,
-      zitadelId: user.sub,
+      nickname: user.nickname ?? undefined,
+      phoneNumber:
+        user.phone_number && isMobilePhoneNumberValid(user.phone_number)
+          ? user.phone_number
+          : undefined,
       zitadelRoles: userRoles,
+      profilePicture: user.picture ?? undefined,
       birthDate: Number.isNaN(birthDate.getTime()) ? undefined : birthDate,
       ...user.overbookdData,
     });

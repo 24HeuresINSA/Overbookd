@@ -73,17 +73,6 @@ export class ZitadelService {
     return response.result?.at(0);
   }
 
-  async getZitadelUserById(zitadelUserId: string): Promise<ApiZitadelUser> {
-    const response = await this.safeFetch<{ user: ApiZitadelUser }>(
-      `${this.ZITADEL_BASE_URL}/v2/users/${zitadelUserId}`,
-      {
-        method: "GET",
-        headers: this.headers,
-      },
-    );
-    return response.user;
-  }
-
   async getZitadelRoles(
     zitadelUserId: string,
     projectId?: string,
@@ -160,32 +149,6 @@ export class ZitadelService {
     );
   }
 
-  updateZitadelUser(
-    zitadelUserId: string,
-    form: Partial<UpdateUserProfileForm>,
-  ): Promise<ApiZitadelUserCreated> {
-    const shouldUpdateProfile = form.firstName || form.lastName;
-    const givenName = form.firstName ? { givenName: form.firstName } : {};
-    const familyName = form.lastName ? { familyName: form.lastName } : {};
-    const nickName = form.nickname ? { nickName: form.nickname } : {};
-    const profile = shouldUpdateProfile
-      ? { profile: { ...givenName, ...familyName, ...nickName } }
-      : {};
-    const phone = form.phoneNumber
-      ? { phone: { phone: form.phoneNumber, isVerified: true } }
-      : {};
-    const reqBody = JSON.stringify({ ...profile, ...phone });
-
-    return this.safeFetch(
-      `${this.ZITADEL_BASE_URL}/v2/users/human/${zitadelUserId}`,
-      {
-        method: "PUT",
-        body: reqBody,
-        headers: this.headers,
-      },
-    );
-  }
-
   createZitadelUser(user: CreateUserForm): Promise<ApiZitadelUserCreated> {
     const metadata = this.buildMetadata({
       dateOfBirth: user.dateOfBirth,
@@ -219,7 +182,47 @@ export class ZitadelService {
     });
   }
 
-  updateMetadata(zitadelUserId: string, metadata: UserMetadataForm) {
+  updateZitadelUser(
+    zitadelUserId: string,
+    form: Partial<UpdateUserProfileForm & UserMetadataForm>,
+  ) {
+    const profilePromise =
+      form.firstName || form.lastName || form.nickname || form.phoneNumber
+        ? this.updateProfile(zitadelUserId, form)
+        : Promise.resolve();
+    const metadataPromise = form.dateOfBirth
+      ? this.updateMetadata(zitadelUserId, { dateOfBirth: form.dateOfBirth })
+      : Promise.resolve();
+    return Promise.all([profilePromise, metadataPromise]);
+  }
+
+  private updateProfile(
+    zitadelUserId: string,
+    form: Partial<UpdateUserProfileForm>,
+  ) {
+    const shouldUpdateProfile = form.firstName || form.lastName;
+    const givenName = form.firstName ? { givenName: form.firstName } : {};
+    const familyName = form.lastName ? { familyName: form.lastName } : {};
+    const nickName = form.nickname ? { nickName: form.nickname } : {};
+    const profile = shouldUpdateProfile
+      ? { profile: { ...givenName, ...familyName, ...nickName } }
+      : {};
+    const phone = form.phoneNumber
+      ? { phone: { phone: form.phoneNumber, isVerified: true } }
+      : {};
+    const reqBody = JSON.stringify({ ...profile, ...phone });
+
+    return this.safeFetch(
+      `${this.ZITADEL_BASE_URL}/v2/users/human/${zitadelUserId}`,
+      {
+        method: "PUT",
+        body: reqBody,
+        headers: this.headers,
+      },
+    );
+  }
+
+  private updateMetadata(zitadelUserId: string, metadata: UserMetadataForm) {
     const zitadelMetadata = this.buildMetadata(metadata);
     const data = JSON.stringify({ metadata: zitadelMetadata });
     return this.safeFetch(
