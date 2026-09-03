@@ -2,7 +2,7 @@
   "clean": true,
   "entry": ["src/index.ts"],
   "dts": true,
-  "format": ["cjs", "esm"],
+  "format": ["esm"],
   "keepNames": true,
   "tsconfig": "tsconfig.build.json"
 }
