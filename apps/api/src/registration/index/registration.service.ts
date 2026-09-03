@@ -181,18 +181,17 @@ export class RegistrationService {
   }
 
   private async updateZitadelUser(form: ExistingAccountFulfilledRegistration) {
-    const zitadelId = await this.repository.user.getZitadelIdByEmail(
-      form.email,
-    );
-    if (zitadelId) {
-      return this.service.zitadel.updateZitadelUser(zitadelId, {
-        firstName: form.firstName,
-        lastName: form.lastName,
-        nickname: form.nickname,
-        phoneNumber: form.mobilePhone,
-        dateOfBirth: form.birthDate,
-      });
-    }
+    const zitadelId =
+      (await this.repository.user.getZitadelIdByEmail(form.email)) ??
+      (await this.service.zitadel.getZitadelUserByEmail(form.email)).userId;
+
+    return this.service.zitadel.updateZitadelUser(zitadelId, {
+      firstName: form.firstName,
+      lastName: form.lastName,
+      nickname: form.nickname,
+      phoneNumber: form.mobilePhone,
+      dateOfBirth: form.birthDate,
+    });
   }
 
   private publishNewcomerRegisteredEvent(
