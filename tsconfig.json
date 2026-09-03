@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
-    "lib": ["ES2020", "ES2022"],
+    "target": "ES2023",
+    "module": "nodenext",
+    "lib": ["ES2020", "ES2022", "ES2023"],
     "esModuleInterop": true,
     "isolatedModules": true,
     "sourceMap": true,

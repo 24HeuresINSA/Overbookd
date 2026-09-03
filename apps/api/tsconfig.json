@@ -1,13 +1,13 @@
 {
   "extends": "../../tsconfig.all-modules-import.json",
   "compilerOptions": {
-    "module": "CommonJS",
+    "module": "nodenext",
     "declaration": false,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2022",
+    "target": "ES2023",
     "sourceMap": true,
     "outDir": "./dist",
     "incremental": true,
