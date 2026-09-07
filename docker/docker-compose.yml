@@ -17,7 +17,7 @@ services:
 
   traefik:
     container_name: overbookd-traefik
-    image: traefik:v3.7.12
+    image: traefik:v3.7.13
     restart: unless-stopped
     command:
       # Docker config
@@ -119,7 +119,7 @@ services:
 
   mail_catcher:
     container_name: overbookd-mail-catcher
-    image: sj26/mailcatcher:v0.10.0
+    image: sj26/mailcatcher:v0.11.0
     restart: unless-stopped
     networks:
       - overbookd_net-api
