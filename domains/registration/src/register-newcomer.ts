@@ -51,14 +51,15 @@ export class RegisterNewcomer {
 function stripRegistrationData(
   registration: FulfilledRegistration,
 ): BaseFulfilledRegistration {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { status, ...rest } = registration;
-
   if (isNewAccountRegistration(registration)) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { status, password, ...withoutPassword } = registration;
+    const {
+      status: _status,
+      password: _password,
+      ...withoutPassword
+    } = registration;
     return withoutPassword;
   }
 
+  const { status: _status, ...rest } = registration;
   return rest;
 }
