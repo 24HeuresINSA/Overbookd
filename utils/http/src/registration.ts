@@ -2,8 +2,9 @@ import { IProvidePeriod } from "@overbookd/time";
 import { UserWithTeams } from "@overbookd/user";
 import {
   FulfilledRegistration,
-  PasswordRequirement,
+  RegistrationAccountStatus,
 } from "@overbookd/registration";
+import { HttpStringified } from "./http-stringified";
 
 export type StaffCandidate = UserWithTeams & {
   email: string;
@@ -18,8 +19,6 @@ export type VolunteerCandidate = StaffCandidate & {
   birthDate: Date;
   note?: string;
 };
-
-export type HasApplication = { hasApplication: boolean };
 
 export const registrationSteps = {
   LOGIN: "LOGIN",
@@ -44,11 +43,17 @@ export type RegistrationFormStepUser = Partial<
   >
 >;
 
-export type RegistrationFormStep = {
+export type RegistrationFormStepWithoutData = {
   next: typeof registrationSteps.FORM;
-  user?: RegistrationFormStepUser;
-  passwordRequirement: PasswordRequirement;
 };
+
+export type RegistrationFormStepWithData = RegistrationFormStepWithoutData & {
+  user?: RegistrationFormStepUser;
+  accountStatus: RegistrationAccountStatus;
+};
+
+export type RegistrationFormStep =
+  RegistrationFormStepWithoutData | RegistrationFormStepWithData;
 
 export type RegistrationLoginStep = {
   next: typeof registrationSteps.LOGIN;
@@ -56,4 +61,19 @@ export type RegistrationLoginStep = {
 
 export type RegistrationCompletedStep = {
   next: typeof registrationSteps.COMPLETED;
+};
+
+export type RegistrationStep =
+  RegistrationFormStep | RegistrationLoginStep | RegistrationCompletedStep;
+
+export const hasHttpStringifiedRegistrationFormData = (
+  step: HttpStringified<RegistrationStep>,
+): step is HttpStringified<RegistrationFormStepWithData> => {
+  return step.next === registrationSteps.FORM && "accountStatus" in step;
+};
+
+export const hasRegistrationFormData = (
+  step: RegistrationStep,
+): step is RegistrationFormStepWithData => {
+  return step.next === registrationSteps.FORM && "accountStatus" in step;
 };

@@ -27,6 +27,11 @@ export type ConnectedZitadelUser = {
   family_name: string;
 
   /**
+   * The nickname of the user.
+   */
+  nickname: string | undefined;
+
+  /**
    * The user's email address.
    */
   email: string;

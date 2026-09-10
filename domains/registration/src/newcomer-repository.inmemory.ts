@@ -1,5 +1,5 @@
 import { numberGenerator } from "@overbookd/list";
-import { FulfilledRegistration } from "./register-form/fulfilled-registration.js";
+import { BaseFulfilledRegistration } from "./register-form/fulfilled-registration.js";
 import { NewcomerRepository } from "./register-newcomer.js";
 import {
   NewcomerRegistered,
@@ -20,13 +20,11 @@ export class InMemoryNewcomerRepository implements NewcomerRepository {
   }
 
   save<T extends Membership>(
-    fulfilledForm: FulfilledRegistration,
+    fulfilledForm: BaseFulfilledRegistration,
     membership: T,
   ): Promise<NewcomerRegistered<T>> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...registreePersonalData } = fulfilledForm;
     const registree = {
-      ...registreePersonalData,
+      ...fulfilledForm,
       id: this.idGenerator.next().value,
       membership,
     };

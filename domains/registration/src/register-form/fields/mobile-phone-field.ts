@@ -17,6 +17,6 @@ export class MobilePhoneField implements Field<string> {
   }
 
   static build(mobilePhone: string): MobilePhoneField {
-    return new MobilePhoneField(mobilePhone);
+    return new MobilePhoneField(mobilePhone.trim());
   }
 }

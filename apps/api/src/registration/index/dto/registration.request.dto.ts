@@ -1,6 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
+  BaseFulfilledRegistration,
   FulfilledRegistration,
+  RegistrationAccountStatus,
+  registrationAccountStatuses,
   RegistrationTeams,
 } from "@overbookd/registration";
 import { Type } from "class-transformer";
@@ -15,7 +18,15 @@ import {
   ValidateNested,
 } from "class-validator";
 
-class FulfilledRegistrationRepresentation implements FulfilledRegistration {
+class FulfilledRegistrationRepresentation implements BaseFulfilledRegistration {
+  @ApiProperty({ enum: registrationAccountStatuses })
+  @IsDefined()
+  status: RegistrationAccountStatus;
+
+  @IsOptional()
+  @IsString()
+  password?: string;
+
   @ApiProperty({ example: "test@example.com" })
   @IsEmail()
   email: string;
@@ -28,10 +39,6 @@ class FulfilledRegistrationRepresentation implements FulfilledRegistration {
   @IsString()
   lastName: string;
 
-  @IsDefined()
-  @IsString()
-  password: string;
-
   @ApiProperty({ example: "0701020304" })
   @IsDefined()
   @IsString()
@@ -41,14 +48,12 @@ class FulfilledRegistrationRepresentation implements FulfilledRegistration {
   @IsString()
   nickname?: string;
 
-  @ApiProperty({
-    required: true,
-    type: Date,
-  })
+  @ApiProperty({ type: Date })
   @IsDate()
   @Type(() => Date)
   birthDate: Date;
 
+  @ApiProperty({ required: false })
   @IsOptional()
   @IsString()
   comment?: string;

@@ -12,6 +12,7 @@ import {
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiParam,
   ApiQuery,
   ApiResponse,
   ApiTags,
@@ -27,27 +28,30 @@ import { ForgetRequestDto } from "./dto/forget.request.dto";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 import {
   RegistrationCompletedStepResponseDto,
-  RegistrationFormStepResponseDto,
+  RegistrationFormStepWithoutDataResponseDto,
+  RegistrationFormStepWithDataResponseDto,
   RegistrationLoginStepResponseDto,
 } from "./dto/registration-step.response.dto";
 import {
   RegistrationFormStep,
+  RegistrationFormStepWithData,
   RegistrationLoginStep,
   RegistrationCompletedStep,
 } from "@overbookd/http";
 import { Public } from "../../authentication-zitadel/decorators/public.decorator";
 import { RequestHydratedUser } from "../../authentication-zitadel/request-hydrated-user";
 import { AuthenticatedUser } from "../../authentication-zitadel/decorators/authenticated-user.decorator";
+import { MembershipApplicationErrorFilter } from "../membership-application/common/membership-application-error.filter";
 
-@Controller("registrations")
+@Controller("registration")
 @ApiTags("registration")
 @ApiSwaggerResponse()
 export class RegistrationController {
   constructor(private readonly registrationService: RegistrationService) {}
 
-  @Get("unauthenticated/check")
+  @Get("unauthenticated/check/:email")
   @Public()
-  @ApiQuery({
+  @ApiParam({
     type: String,
     name: "email",
     description: "Email to check",
@@ -58,37 +62,48 @@ export class RegistrationController {
     schema: {
       anyOf: [
         { $ref: getSchemaPath(RegistrationLoginStepResponseDto) },
-        { $ref: getSchemaPath(RegistrationFormStepResponseDto) },
+        { $ref: getSchemaPath(RegistrationFormStepWithDataResponseDto) },
       ],
     },
   })
   checkUnauthenticatedUser(
-    @Query("email") email: string,
-  ): Promise<RegistrationLoginStep | RegistrationFormStep> {
+    @Param("email") email: string,
+  ): Promise<RegistrationLoginStep | RegistrationFormStepWithData> {
     return this.registrationService.checkUnauthenticatedUser(email);
   }
 
   @Get("authenticated/check")
   @ApiBearerAuth()
+  @ApiQuery({
+    type: Boolean,
+    name: "withFormData",
+    required: false,
+    description: "Whether to include the user data in the response or not",
+  })
   @ApiResponse({
     status: 200,
     description: "Next Registration step",
     schema: {
       anyOf: [
-        { $ref: getSchemaPath(RegistrationFormStepResponseDto) },
+        { $ref: getSchemaPath(RegistrationFormStepWithDataResponseDto) },
+        { $ref: getSchemaPath(RegistrationFormStepWithoutDataResponseDto) },
         { $ref: getSchemaPath(RegistrationCompletedStepResponseDto) },
       ],
     },
   })
   checkAuthenticatedUser(
     @AuthenticatedUser() user: RequestHydratedUser,
+    @Query("withFormData") withFormData?: boolean,
   ): Promise<RegistrationFormStep | RegistrationCompletedStep> {
-    return this.registrationService.checkAuthenticatedUser(user);
+    return this.registrationService.checkAuthenticatedUser(
+      user,
+      withFormData ?? false,
+    );
   }
 
   @Post()
   @Public()
-  @UseFilters(RegistrationErrorFilter)
+  @UseFilters(RegistrationErrorFilter, MembershipApplicationErrorFilter)
   @HttpCode(204)
   @ApiResponse({
     status: 204,
@@ -99,7 +114,8 @@ export class RegistrationController {
     type: RegistrationRequestDto,
   })
   registerNewcomer(
-    @Body() { newcomer, token }: RegistrationRequestDto,
+    @Body()
+    { newcomer, token }: RegistrationRequestDto,
   ): Promise<void> {
     return this.registrationService.register(newcomer, token);
   }

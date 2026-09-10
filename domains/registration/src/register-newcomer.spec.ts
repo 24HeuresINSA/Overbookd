@@ -1,17 +1,16 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import {
+  accountStatuses,
+  ExistingAccountFulfilledRegistration,
   FulfilledRegistration,
+  NewAccountFulfilledRegistration,
   Teams,
 } from "./register-form/fulfilled-registration.js";
 import { KARNA, TECKOS } from "@overbookd/team-code";
 import { RegisterNewcomer } from "./register-newcomer.js";
 import { InMemoryNewcomerRepository } from "./newcomer-repository.inmemory.js";
 import { STAFF, VOLUNTEER } from "./newcomer.js";
-import { RegistrationError } from "./register-form/register-form.js";
-import {
-  PASSWORD_NOT_REQUIRED,
-  PASSWORD_REQUIRED,
-} from "./register-form/password-requirement.js";
+import { RegistrationError } from "./register-form/registration.error.js";
 
 const email = "test@example.com";
 const firstName = "Titouan";
@@ -23,7 +22,8 @@ const comment = "Vous etes les meilleurs ! <3";
 const teams: Teams = [KARNA, TECKOS];
 const nickname = "Shagou";
 
-const staffRegisterForm: FulfilledRegistration = {
+const staffRegisterFormForNewAccount: NewAccountFulfilledRegistration = {
+  status: accountStatuses.NEW,
   lastName,
   firstName,
   mobilePhone,
@@ -36,12 +36,12 @@ const staffRegisterForm: FulfilledRegistration = {
   hasApprovedEULA: true,
 };
 
-const volunteerRegisterForm: FulfilledRegistration = {
-  ...staffRegisterForm,
+const volunteerRegisterFormForNewAcccount: FulfilledRegistration = {
+  ...staffRegisterFormForNewAccount,
   hasSignedVolunteerCharter: true,
 };
 
-const staffRegisterFormWithoutPassword: FulfilledRegistration = {
+const staffRegisterFormData = {
   lastName,
   firstName,
   mobilePhone,
@@ -52,11 +52,15 @@ const staffRegisterFormWithoutPassword: FulfilledRegistration = {
   email,
   hasApprovedEULA: true,
 };
+const staffRegisterFormForExistingAccount: ExistingAccountFulfilledRegistration =
+  { ...staffRegisterFormData, status: accountStatuses.EXISTING };
 
-const volunteerRegisterFormWithoutPassword: FulfilledRegistration = {
-  ...staffRegisterFormWithoutPassword,
+const volunteerRegisterFormData = {
+  ...staffRegisterFormData,
   hasSignedVolunteerCharter: true,
 };
+const volunteerRegisterFormForExistingAccount: ExistingAccountFulfilledRegistration =
+  { ...volunteerRegisterFormData, status: accountStatuses.EXISTING };
 
 let registerNewcomer: RegisterNewcomer;
 let newcomerRepository: InMemoryNewcomerRepository;
@@ -69,8 +73,8 @@ describe("Register newcomer", () => {
     });
     describe.each`
       membership   | registerForm
-      ${STAFF}     | ${staffRegisterForm}
-      ${VOLUNTEER} | ${volunteerRegisterForm}
+      ${STAFF}     | ${staffRegisterFormForNewAccount}
+      ${VOLUNTEER} | ${volunteerRegisterFormForNewAcccount}
     `(
       "when receiving a valid $membership registration with password required",
       ({ membership, registerForm }) => {
@@ -78,9 +82,8 @@ describe("Register newcomer", () => {
           const registree = await registerNewcomer.fromRegisterForm(
             registerForm,
             membership,
-            PASSWORD_REQUIRED,
           );
-          const { password, ...personalData } = registerForm;
+          const { password, status, ...personalData } = registerForm;
           const expectedRegistree = { ...personalData, id: 1, membership };
           expect(registree).toStrictEqual(expectedRegistree);
           expect(newcomerRepository.registrees).toContainEqual(
@@ -103,7 +106,6 @@ describe("Register newcomer", () => {
               const { email } = await registerNewcomer.fromRegisterForm(
                 form,
                 membership,
-                PASSWORD_REQUIRED,
               );
               expect(email).toBe(expectedEmail);
             },
@@ -120,16 +122,8 @@ describe("Register newcomer", () => {
               email: "brole@protonmail.com",
             };
             const [firstRegistree, secondRegistree] = await Promise.all([
-              registerNewcomer.fromRegisterForm(
-                firstForm,
-                membership,
-                PASSWORD_REQUIRED,
-              ),
-              registerNewcomer.fromRegisterForm(
-                secondForm,
-                membership,
-                PASSWORD_REQUIRED,
-              ),
+              registerNewcomer.fromRegisterForm(firstForm, membership),
+              registerNewcomer.fromRegisterForm(secondForm, membership),
             ]);
             expect(firstRegistree.id).not.toBe(secondRegistree.id);
           });
@@ -140,9 +134,6 @@ describe("Register newcomer", () => {
             ${" T adk @gmail.com"}
             ${"Tadk @gmail.com"}
             ${"t adk@gmail.com"}
-            ${" takd@gmail.com"}
-            ${" takd@gmail.com"}
-            ${"tadk@gmail.com "}
           `(
             "should indicate that $registerEmail is not valid email",
             async ({ registerEmail }) => {
@@ -150,7 +141,6 @@ describe("Register newcomer", () => {
                 registerNewcomer.fromRegisterForm(
                   { ...registerForm, email: registerEmail },
                   STAFF,
-                  PASSWORD_REQUIRED,
                 ),
               ).rejects.toThrow(RegistrationError);
             },
@@ -160,8 +150,8 @@ describe("Register newcomer", () => {
     );
     describe.each`
       membership   | registerForm
-      ${STAFF}     | ${staffRegisterFormWithoutPassword}
-      ${VOLUNTEER} | ${volunteerRegisterFormWithoutPassword}
+      ${STAFF}     | ${staffRegisterFormForExistingAccount}
+      ${VOLUNTEER} | ${volunteerRegisterFormForExistingAccount}
     `(
       "when receiving a valid $membership registration without password required",
       ({ membership, registerForm }) => {
@@ -169,10 +159,10 @@ describe("Register newcomer", () => {
           const registree = await registerNewcomer.fromRegisterForm(
             registerForm,
             membership,
-            PASSWORD_NOT_REQUIRED,
           );
 
-          const expectedRegistree = { ...registerForm, id: 1, membership };
+          const { status, ...personalData } = registerForm;
+          const expectedRegistree = { ...personalData, id: 1, membership };
           expect(registree).toStrictEqual(expectedRegistree);
           expect(registree).not.toHaveProperty("password");
           expect(newcomerRepository.registrees).toContainEqual(
@@ -184,10 +174,10 @@ describe("Register newcomer", () => {
           const registree = await registerNewcomer.fromRegisterForm(
             formWithPassword,
             membership,
-            PASSWORD_NOT_REQUIRED,
           );
 
-          const expectedRegistree = { ...registerForm, id: 1, membership };
+          const { status, ...personalData } = registerForm;
+          const expectedRegistree = { ...personalData, id: 1, membership };
           expect(registree).toStrictEqual(expectedRegistree);
           expect(registree).not.toHaveProperty("password");
         });
@@ -195,18 +185,14 @@ describe("Register newcomer", () => {
     );
     describe.each`
       membership   | registerForm
-      ${STAFF}     | ${staffRegisterFormWithoutPassword}
-      ${VOLUNTEER} | ${volunteerRegisterFormWithoutPassword}
+      ${STAFF}     | ${{ ...staffRegisterFormData, status: accountStatuses.NEW }}
+      ${VOLUNTEER} | ${{ ...volunteerRegisterFormData, status: accountStatuses.NEW }}
     `(
       "when receiving a $membership registration without password while password is required",
       ({ membership, registerForm }) => {
         it("should reject the registration", async () => {
           await expect(async () =>
-            registerNewcomer.fromRegisterForm(
-              registerForm,
-              membership,
-              PASSWORD_REQUIRED,
-            ),
+            registerNewcomer.fromRegisterForm(registerForm, membership),
           ).rejects.toThrow(RegistrationError);
         });
       },

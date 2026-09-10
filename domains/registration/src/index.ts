@@ -58,22 +58,23 @@ export type {
   FulfilledRegistration,
   TeamCode as RegistrationTeamCode,
   Teams as RegistrationTeams,
+  BaseFulfilledRegistration,
+  ExistingAccountFulfilledRegistration,
+  NewAccountFulfilledRegistration,
+  AccountStatus as RegistrationAccountStatus,
 } from "./register-form/fulfilled-registration.js";
 export {
   TEAM_CODES as REGISTRATION_TEAM_CODES,
   isTeamCode as isRegistrationTeamCode,
+  accountStatuses as registrationAccountStatuses,
+  isNewAccountRegistration,
 } from "./register-form/fulfilled-registration.js";
 export {
   RegisterForm,
-  RegistrationError,
   shouldSignVolunteerCharter,
 } from "./register-form/register-form.js";
 export { SPECIAL_CHARS_REGEX_PATTERN } from "./register-form/fields/password-field.js";
-export {
-  PASSWORD_REQUIRED,
-  PASSWORD_NOT_REQUIRED,
-} from "./register-form/password-requirement.js";
-export type { PasswordRequirement } from "./register-form/password-requirement.js";
+export { RegistrationError } from "./register-form/registration.error.js";
 
 // Phone Number
 export {

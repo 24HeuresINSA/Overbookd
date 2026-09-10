@@ -1,12 +1,6 @@
 import { ForbiddenException } from "@nestjs/common";
-import { ADMIN } from "@overbookd/team-code";
-import { MANAGE_ADMINS } from "@overbookd/permission";
 import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
 import { DatabaseTeamCode } from "../user/user.model";
-
-export function canManageAdmins(teams: string[], author: RequestHydratedUser) {
-  return !teams.includes(ADMIN) || author.can(MANAGE_ADMINS);
-}
 
 export function checkMembership(user: RequestHydratedUser, team: string) {
   if (!user.isMemberOf(team)) {

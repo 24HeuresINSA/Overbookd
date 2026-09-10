@@ -27,6 +27,7 @@ import {
 import {
   BE_AFFECTED,
   HAVE_PERSONAL_ACCOUNT,
+  MANAGE_ADMINS,
   MANAGE_USERS,
   PAY_CONTRIBUTION,
 } from "@overbookd/permission";
@@ -41,7 +42,7 @@ import {
   MinimalCharismaPeriod,
   SELECT_CHARISMA_PERIOD,
 } from "../common/query/charisma.query";
-import { canManageAdmins, extractTeamCodes } from "../team/team.utils";
+import { extractTeamCodes } from "../team/team.utils";
 import { Charisma } from "@overbookd/charisma";
 import { ADMIN } from "@overbookd/team-code";
 import { friendAssigneesCount } from "../assignment/common/repository/assignment.query";
@@ -57,70 +58,40 @@ export class UserService {
   ) {}
 
   async userSync(user: RequestHydratedUser): Promise<void> {
+    if (!user.id) {
+      throw new UnauthorizedException(
+        "L'utilisateur n'est pas enregistré dans la base de données.",
+      );
+    }
+
     this.zitadelService.addZitadelRoleIfNotGranted(
       user.zitadelId,
       oidcRoles.USER,
     );
 
-    const userId =
-      (await this.getUserByZitadelId(user.zitadelId))?.id ??
-      (await this.getUserByEmail(user.email))?.id;
-
     const data = {
       email: user.email,
+      zitadelId: user.zitadelId,
       firstName: user.givenName,
       lastName: user.familyName,
+      nickname: user.nickname,
       phoneNumber: user.phoneNumber,
-      zitadelId: user.zitadelId,
       birthDate: user.birthDate,
       profilePicture: user.profilePicture,
     };
-
-    if (!userId) {
-      if (!user.birthDate || !user.phoneNumber) {
-        throw new UnauthorizedException(
-          "Les données de l'utilisateur sont incomplètes. Veuillez contacter un administrateur.",
-        );
-      }
-      const newUser = await this.prisma.user.create({
-        data,
-        select: { id: true },
-      });
-      await this.updateAdminTeamFromZitadel(newUser.id, user.zitadelRoles);
-      return;
-    }
-
     const updatedUser = await this.prisma.user.update({
-      where: { id: userId },
+      where: { id: user.id },
       data,
       select: { birthDate: true, phoneNumber: true },
     });
-    await this.updateAdminTeamFromZitadel(userId, user.zitadelRoles);
+    await this.updateAdminTeamFromZitadel(user.id, user.zitadelRoles);
 
-    if (!user.birthDate) {
-      await this.zitadelService.updateMetadata(user.zitadelId, {
+    if (!user.birthDate || !user.phoneNumber) {
+      await this.zitadelService.updateZitadelUser(user.zitadelId, {
+        phoneNumber: updatedUser.phoneNumber,
         dateOfBirth: updatedUser.birthDate,
       });
     }
-    if (!user.phoneNumber) {
-      await this.zitadelService.updateZitadelUser(user.zitadelId, {
-        phoneNumber: updatedUser.phoneNumber,
-      });
-    }
-  }
-
-  private getUserByZitadelId(zitadelId: string): Promise<User> {
-    return this.prisma.user.findUnique({
-      where: { zitadelId },
-      select: SELECT_USER_IDENTIFIER,
-    });
-  }
-
-  private getUserByEmail(email: string): Promise<User> {
-    return this.prisma.user.findUnique({
-      where: { email },
-      select: SELECT_USER_IDENTIFIER,
-    });
   }
 
   private async updateAdminTeamFromZitadel(
@@ -192,7 +163,7 @@ export class UserService {
         select: SELECT_MY_USER_INFORMATION,
       }),
       this.selectCharismaPeriods(),
-      this.zitadelService.updateMetadata(author.zitadelId, {
+      this.zitadelService.updateZitadelUser(author.zitadelId, {
         dateOfBirth: profile.birthDate,
       }),
     ]);
@@ -326,7 +297,7 @@ export class UserService {
     author: RequestHydratedUser,
   ): Promise<void> {
     const teams = await this.getUserTeams(id);
-    if (!canManageAdmins(teams, author)) {
+    if (teams.includes(ADMIN) && !author.can(MANAGE_ADMINS)) {
       throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
     }
     Promise.all([

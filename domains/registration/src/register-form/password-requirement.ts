@@ -1,5 +1,0 @@
-export const PASSWORD_REQUIRED = "PASSWORD_REQUIRED";
-export const PASSWORD_NOT_REQUIRED = "PASSWORD_NOT_REQUIRED";
-
-export type PasswordRequirement =
-  typeof PASSWORD_REQUIRED | typeof PASSWORD_NOT_REQUIRED;

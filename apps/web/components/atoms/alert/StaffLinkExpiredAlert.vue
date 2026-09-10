@@ -34,8 +34,11 @@ const returnToLoginPage = (event: PointerEvent) => {
 </script>
 
 <style lang="scss" scoped>
-.alert a {
-  color: $yellow-24h;
+.alert {
+  margin: 0.5em !important;
+  a {
+    color: $yellow-24h;
+  }
 }
 
 .return-btn {

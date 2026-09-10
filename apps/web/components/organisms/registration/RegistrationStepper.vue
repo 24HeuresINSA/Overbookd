@@ -18,7 +18,6 @@
           :value="1"
           :complete="step > 1"
           class="stepper-header"
-          editable
         />
       </v-stepper-header>
 
@@ -28,30 +27,104 @@
 
           <div class="stepper-actions">
             <v-btn text="C'est parti ! 🚀" color="primary" @click="step = 2" />
-            <v-btn
-              text="Annuler"
-              variant="text"
-              @click="navigateTo(LOGIN_URL)"
-            />
+            <v-btn text="Annuler" variant="text" @click="returnToLoginPage" />
           </div>
         </v-stepper-window-item>
       </v-stepper-window>
 
       <v-stepper-header>
         <v-stepper-item
-          title="Présentation"
-          subtitle="Dis nous en un peu plus sur toi"
+          title="Mon compte"
           :value="2"
           :complete="step > 2"
-          :rules="presentationRules"
           class="stepper-header"
-          editable
         />
       </v-stepper-header>
 
       <v-stepper-window v-show="step == 2" direction="vertical">
         <v-stepper-window-item :value="2">
-          <v-form class="data personal-data">
+          <div class="stepper-form">
+            <v-text-field
+              v-model="email"
+              label="Email*"
+              name="email"
+              autocomplete="email"
+              inputmode="email"
+              :disabled="emailChecked"
+              required
+              hint="Pas d'adresse insa 🙏"
+              :rules="[rules.required, rules.email, rules.insaEmail]"
+              persistent-hint
+            />
+          </div>
+
+          <div class="stepper-actions mb-4">
+            <v-btn
+              v-if="emailChecked"
+              text="Changer de compte"
+              color="primary"
+              variant="outlined"
+              @click="logout"
+            />
+            <v-btn
+              v-else
+              text="Vérifier mon email"
+              color="primary"
+              variant="elevated"
+              :disabled="emailRules.some((rule) => rule() !== true)"
+              @click="checkEmail"
+            />
+            <v-btn
+              v-show="!emailChecked"
+              text="Revenir"
+              variant="text"
+              @click="step = 1"
+            />
+          </div>
+
+          <div v-show="registerForm.needsPassword" class="stepper-form mt-6">
+            <v-text-field
+              v-model="password"
+              type="password"
+              label="Mot de passe*"
+              hint="Au moins une MAJUSCULE, minuscule, un chiffre, un caractères spécial et 12 caractères 🔒"
+              :rules="[rules.password]"
+              persistent-hint
+              required
+            />
+            <v-text-field
+              v-model="repeatPassword"
+              type="password"
+              label="Confirme ton mot de passe*"
+              :rules="[repeatPasswordRule]"
+              required
+            />
+          </div>
+
+          <div v-show="emailChecked" class="stepper-actions">
+            <v-btn
+              text="Dis-nous en plus sur toi !"
+              color="primary"
+              :disabled="accountStepRules.some((rule) => rule() !== true)"
+              @click="step = 3"
+            />
+            <v-btn text="Revenir" variant="text" @click="step = 1" />
+          </div>
+        </v-stepper-window-item>
+      </v-stepper-window>
+
+      <v-stepper-header>
+        <v-stepper-item
+          title="Mes infos"
+          :value="3"
+          :complete="step > 3"
+          class="stepper-header"
+        />
+      </v-stepper-header>
+
+      <v-stepper-window v-show="step == 3" direction="vertical">
+        <v-stepper-window-item :value="3">
+          <div class="stepper-form">
             <v-text-field
               v-model="firstName"
               label="Prénom*"
@@ -75,45 +148,6 @@
                 rules.birthdayMinDate,
               ]"
             />
-            <CommentField v-model="comment" />
-          </v-form>
-          <div class="stepper-actions">
-            <v-btn
-              text="Vous savez tout 🕵️"
-              color="primary"
-              @click="step = 3"
-            />
-            <v-btn text="Revenir" variant="text" @click="step = 1" />
-          </div>
-        </v-stepper-window-item>
-      </v-stepper-window>
-
-      <v-stepper-header>
-        <v-stepper-item
-          title="Contact"
-          subtitle="Comment on reste connectés ?"
-          :value="3"
-          :complete="step > 3"
-          :rules="contactRules"
-          class="stepper-header"
-          editable
-        />
-      </v-stepper-header>
-
-      <v-stepper-window v-show="step == 3" direction="vertical">
-        <v-stepper-window-item :value="3">
-          <v-form class="data contact-data">
-            <v-text-field
-              v-model="email"
-              label="Email*"
-              name="email"
-              autocomplete="email"
-              inputmode="email"
-              required
-              hint="Pas d'adresse insa 🙏"
-              :rules="[rules.required, rules.email, rules.insaEmail]"
-              persistent-hint
-            />
             <v-text-field
               v-model="phoneNumber"
               label="Ton 06 ?*"
@@ -130,47 +164,11 @@
               clearable
               hint="Laisse le champ vide si tu n'es pas dans une équipe 😉"
               persistent-hint
+              chips
               :rules="[twoTeamsMaximumRule]"
             />
-          </v-form>
-          <div class="stepper-actions">
-            <v-btn text="On se capte 🤙" color="primary" @click="step = 4" />
-            <v-btn text="Revenir" variant="text" @click="step = 2" />
+            <CommentField v-model="comment" />
           </div>
-        </v-stepper-window-item>
-      </v-stepper-window>
-
-      <v-stepper-header>
-        <v-stepper-item
-          title="Sécurité"
-          subtitle="Un mot de passe"
-          :value="4"
-          :complete="step > 4"
-          class="stepper-header"
-          editable
-        />
-      </v-stepper-header>
-
-      <v-stepper-window v-show="step == 4" direction="vertical">
-        <v-stepper-window-item :value="4">
-          <v-form class="data security-data">
-            <v-text-field
-              v-model="password"
-              type="password"
-              label="Mot de passe*"
-              required
-              hint="Au moins une MAJUSCULE, minuscule, un chiffre, un caractères spécial et 12 caractères 🔒"
-              persistent-hint
-              :rules="[rules.password]"
-            />
-            <v-text-field
-              v-model="repeatPassword"
-              type="password"
-              label="Confirme ton mot de passe*"
-              required
-              :rules="[repeatPasswordRule]"
-            />
-          </v-form>
           <v-checkbox
             v-model="hasApprovedEULA"
             color="primary"
@@ -207,37 +205,38 @@
 
           <div class="stepper-actions">
             <v-btn
-              text="M'inscrire"
+              text="Valider mon inscription"
               color="primary"
               :disabled="isFormInvalid"
               :loading="loading"
               @click="register"
             />
-            <v-btn text="Revenir" variant="text" @click="step = 3" />
+            <v-btn text="Revenir" variant="text" @click="step = 2" />
           </div>
         </v-stepper-window-item>
       </v-stepper-window>
     </v-stepper>
-
-    <v-dialog
-      v-model="isEULADialogOpen"
-      transition="dialog-bottom-transition"
-      fullscreen
-    >
-      <EULADialogCard @close="closeEULADialog" />
-    </v-dialog>
-    <v-dialog
-      v-model="isVolunteerCharterDialogOpen"
-      transition="dialog-bottom-transition"
-      fullscreen
-    >
-      <VolunteerCharterDialogCard
-        :has-signed="hasSignedVolunteerCharter"
-        @close="closeVolunteerCharterDialog"
-        @sign="signVolunteerCharter"
-      />
-    </v-dialog>
   </v-card>
+
+  <v-dialog
+    v-model="isEULADialogOpen"
+    transition="dialog-bottom-transition"
+    fullscreen
+  >
+    <EULADialogCard @close="closeEULADialog" />
+  </v-dialog>
+
+  <v-dialog
+    v-model="isVolunteerCharterDialogOpen"
+    transition="dialog-bottom-transition"
+    fullscreen
+  >
+    <VolunteerCharterDialogCard
+      :has-signed="hasSignedVolunteerCharter"
+      @close="closeVolunteerCharterDialog"
+      @sign="signVolunteerCharter"
+    />
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -250,9 +249,10 @@ import {
   shouldSignVolunteerCharter,
   STAFF,
   VOLUNTEER,
-  PASSWORD_REQUIRED,
+  type RegistrationAccountStatus,
+  registrationAccountStatuses,
 } from "@overbookd/registration";
-import { LOGIN_URL } from "@overbookd/web-page";
+import { HOME_URL, LOGIN_URL } from "@overbookd/web-page";
 import {
   required,
   minDate,
@@ -268,12 +268,18 @@ import { navigateTo } from "#app";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 import { REGISTER_FORM_KEY } from "@overbookd/configuration";
 import { planJauneAudioPlay } from "~/utils/easter-egg/jaune-audio";
-import { planMembershipApplication } from "~/utils/registration/membership-application.utils";
+import { hasRegistrationFormData, registrationSteps } from "@overbookd/http";
+import { ONE_SECOND_IN_MS } from "@overbookd/time";
 
 const route = useRoute();
 const registrationStore = useRegistrationStore();
 const configurationStore = useConfigurationStore();
 const teamStore = useTeamStore();
+const snackNotification = useSnackNotificationStore();
+const oidc = useOidcAuth();
+const myStore = useMyStore();
+
+const DEFAULT_BIRTHDAY = "2000-01-01";
 
 configurationStore.fetch(REGISTER_FORM_KEY);
 const registerFormDescription = computed<string>(
@@ -281,16 +287,21 @@ const registerFormDescription = computed<string>(
 );
 
 const step = ref<number>(1);
+const accountStatus = ref<RegistrationAccountStatus>(
+  registrationAccountStatuses.EXISTING,
+);
+const emailChecked = ref<boolean>(false);
+
+const email = ref<string>("");
+const password = ref<string>("");
+const repeatPassword = ref<string>("");
 const firstName = ref<string>("");
 const lastName = ref<string>("");
 const nickname = ref<string>("");
-const birthDay = ref<string>("2000-01-01");
-const email = ref<string>("");
+const birthDay = ref<string>(DEFAULT_BIRTHDAY);
 const phoneNumber = ref<string>("");
 const comment = ref<string>("");
 const teams = ref<RegistrationTeams>([]);
-const password = ref<string>("");
-const repeatPassword = ref<string>("");
 const hasApprovedEULA = ref<boolean>(false);
 const hasSignedVolunteerCharter = ref<boolean>(false);
 
@@ -307,10 +318,6 @@ const rules = {
 const token = computed<string>(() => stringifyQueryParam(route.query.token));
 const isVolunteerRegistration = computed<boolean>(() => !token.value);
 
-const cleanComment = computed<string | undefined>(
-  () => comment.value?.trim() || undefined,
-);
-
 const membership = computed<Membership>(() =>
   isVolunteerRegistration.value ? VOLUNTEER : STAFF,
 );
@@ -321,24 +328,22 @@ const mustSignVolunteerCharter = computed(() =>
   shouldSignVolunteerCharter(membership.value),
 );
 
-const cleanNickname = computed<string | undefined>(
-  () => nickname.value || undefined,
-);
-
 const registerForm = computed<RegisterForm>(() => {
-  const form = commentAction(
-    nicknameAction(RegisterForm.initFor(membership.value, PASSWORD_REQUIRED)),
-  )
+  const form = RegisterForm.initFor(membership.value, accountStatus.value)
     .fillBirthDate(new Date(birthDay.value))
     .fillEmail(email.value)
     .fillFirstName(firstName.value)
     .fillLastName(lastName.value)
+    .fillNickname(nickname.value)
     .fillMobilePhone(phoneNumber.value)
     .fillTeams(teams.value)
-    .fillPassword(password.value);
+    .fillComment(comment.value);
+  const withPassword = form.needsPassword
+    ? form.fillPassword(password.value)
+    : form;
   const withEULA = hasApprovedEULA.value
-    ? form.approveEndUserLicenceAgreement()
-    : form.denyEndUserLicenceAgreement();
+    ? withPassword.approveEndUserLicenceAgreement()
+    : withPassword.denyEndUserLicenceAgreement();
   return hasSignedVolunteerCharter.value
     ? withEULA.signVolunteerCharter()
     : withEULA.denyVolunteerCharter();
@@ -352,53 +357,112 @@ const comingFromTeams = computed<TeamForRegistration[]>(() => {
   }).filter((team): team is TeamForRegistration => team !== undefined);
 });
 
-const presentationRules = computed(() => [
-  () => step.value <= 2 || rules.required(firstName.value),
-  () => step.value <= 2 || rules.required(lastName.value),
-  () => step.value <= 2 || rules.required(birthDay.value),
-  () => step.value <= 2 || rules.birthdayMaxDate(birthDay.value),
-  () => step.value <= 2 || rules.birthdayMinDate(birthDay.value),
+const emailRules = computed(() => [
+  () => rules.required(email.value),
+  () => rules.email(email.value),
+  () => rules.insaEmail(email.value),
 ]);
 
-const contactRules = computed(() => [
-  () => step.value <= 3 || rules.required(email.value),
-  () => step.value <= 3 || rules.required(phoneNumber.value),
-  () => step.value <= 3 || rules.email(email.value),
-  () => step.value <= 3 || rules.insaEmail(email.value),
-  () => step.value <= 3 || rules.mobilePhone(phoneNumber.value),
-]);
+const passwordRules = computed(() =>
+  registerForm.value.needsPassword
+    ? [
+        () => rules.required(password.value),
+        () => rules.password(password.value),
+        () => rules.required(repeatPassword.value),
+        () => isSame(password.value)(repeatPassword.value),
+      ]
+    : [],
+);
+const accountStepRules = computed(() => {
+  if (step.value <= 2) return [];
+  return [...emailRules.value, ...passwordRules.value];
+});
 
-const securityRules = computed(() => [
-  () => step.value <= 3 || rules.required(password.value),
-  () => step.value <= 3 || rules.password(password.value),
-  () => step.value <= 3 || rules.required(hasApprovedEULA.value),
+const userInfoRules = computed(() => [
+  () => step.value < 3 || rules.required(firstName.value),
+  () => step.value < 3 || rules.required(lastName.value),
+  () => step.value < 3 || rules.required(birthDay.value),
+  () => step.value < 3 || rules.birthdayMaxDate(birthDay.value),
+  () => step.value < 3 || rules.birthdayMinDate(birthDay.value),
+  () => step.value < 3 || rules.required(phoneNumber.value),
+  () => step.value < 3 || rules.mobilePhone(phoneNumber.value),
+  () => step.value < 3 || rules.required(hasApprovedEULA.value),
   () =>
-    step.value <= 3 ||
+    step.value < 3 ||
     !mustSignVolunteerCharter.value ||
     rules.required(hasSignedVolunteerCharter.value),
 ]);
 
-const repeatPasswordRule = computed(() => isSame(password.value));
 const twoTeamsMaximumRule = computed(() => maxLength(2));
+const repeatPasswordRule = computed(() =>
+  registerForm.value.needsPassword ? isSame(password.value) : () => true,
+);
 
 const isFormInvalid = computed<boolean>(() => {
   return (
-    presentationRules.value.some((rule) => rule() !== true) ||
-    contactRules.value.some((rule) => rule() !== true) ||
-    securityRules.value.some((rule) => rule() !== true) ||
-    repeatPasswordRule.value(repeatPassword.value) !== true ||
+    passwordRules.value.some((rule) => rule() !== true) ||
+    userInfoRules.value.some((rule) => rule() !== true) ||
     registerForm.value.reasons.length > 0
   );
 });
 
-const commentAction = (form: RegisterForm) => {
-  if (!cleanComment.value) return form.clearComment();
-  return form.fillComment(cleanComment.value);
+onMounted(async () => {
+  if (!oidc.loggedIn.value) return;
+
+  const registrationStep = await registrationStore.checkAuthenticatedUser();
+  if (registrationStep && hasRegistrationFormData(registrationStep)) {
+    step.value = 2;
+    emailChecked.value = true;
+    accountStatus.value = registrationStep.accountStatus;
+
+    const { user } = registrationStep;
+    email.value = user?.email ?? "";
+    firstName.value = user?.firstName ?? "";
+    lastName.value = user?.lastName ?? "";
+    nickname.value = user?.nickname ?? "";
+    birthDay.value = user?.birthDate
+      ? user.birthDate.toISOString().split("T")[0]
+      : DEFAULT_BIRTHDAY;
+    phoneNumber.value = user?.mobilePhone ?? "";
+    teams.value = user?.teams ?? [];
+    comment.value = user?.comment ?? "";
+  }
+});
+
+const checkEmail = async () => {
+  if (emailChecked.value || !email.value.trim()) return;
+  const emailStep = await registrationStore.checkEmail(email.value);
+
+  switch (emailStep?.next) {
+    case registrationSteps.LOGIN:
+      snackNotification.pushNotification(
+        INFO,
+        "Un compte avec cet email existe déjà. Redirection vers la page de connexion.",
+      );
+      setTimeout(() => oidc.login("zitadel"), 2 * ONE_SECOND_IN_MS);
+      break;
+    case registrationSteps.FORM:
+      emailChecked.value = true;
+      accountStatus.value = emailStep.accountStatus;
+      break;
+    default:
+      break;
+  }
 };
 
-const nicknameAction = (form: RegisterForm) => {
-  if (!cleanNickname.value) return form.clearNickname();
-  return form.fillNickname(cleanNickname.value);
+const logout = async () => {
+  if (oidc.loggedIn) myStore.clear();
+  emailChecked.value = false;
+  accountStatus.value = registrationAccountStatuses.EXISTING;
+  password.value = "";
+  repeatPassword.value = "";
+};
+const returnToLoginPage = async () => {
+  if (oidc.loggedIn) {
+    await logout();
+    return oidc.logout();
+  }
+  navigateTo(LOGIN_URL);
 };
 
 const loading = ref<boolean>(false);
@@ -411,7 +475,7 @@ const register = async () => {
   }
 
   planJauneAudioPlay();
-  planMembershipApplication(token.value);
+  navigateTo(HOME_URL);
   loading.value = false;
 };
 
@@ -434,12 +498,12 @@ const signVolunteerCharter = () => {
 .register {
   &-card {
     max-width: 1000px;
-    height: 100%;
     width: 100%;
     overflow-y: auto;
     position: relative;
     z-index: 2;
     padding: 0 !important;
+    margin: 0.5em !important;
   }
 
   &-illustration {
@@ -468,13 +532,13 @@ const signVolunteerCharter = () => {
     gap: 5px;
     margin-top: 1em;
   }
-}
 
-.data {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 5px;
+  &-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 5px;
+  }
 }
 
 .eula-link {

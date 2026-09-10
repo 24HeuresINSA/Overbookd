@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { Teams } from "./fulfilled-registration.js";
+import { accountStatuses, Teams } from "./fulfilled-registration.js";
 import {
   BDE,
   HAUTS_DE_FRANCE,
@@ -9,21 +9,17 @@ import {
 } from "@overbookd/team-code";
 import { RegisterForm } from "./register-form.js";
 import { STAFF, VOLUNTEER } from "../newcomer.js";
-import {
-  PASSWORD_NOT_REQUIRED,
-  PASSWORD_REQUIRED,
-} from "./password-requirement.js";
 
 const AT_LEAST_12_CHAR_IN_PASSWORD =
-  "Il faut au moins 12 caractères dans le mot de passe";
+  "Il faut au moins 12 caractères dans le mot de passe.";
 const AT_LEAST_1_NUMBER_IN_PASSWORD =
-  "Il faut au moins un chiffre dans le mot de passe";
+  "Il faut au moins un chiffre dans le mot de passe.";
 const AT_LEAST_1_MAJ_IN_PASSWORD =
-  "Il faut au moins une MAJUSCULE dans le mot de passe";
+  "Il faut au moins une MAJUSCULE dans le mot de passe.";
 const AT_LEAST_1_MIN_IN_PASSWORD =
-  "Il faut au moins une minuscule dans le mot de passe";
+  "Il faut au moins une minuscule dans le mot de passe.";
 const AT_LEAST_1_SPECIAL_CHAR_IN_PASSWORD =
-  "Il faut au moins un caractère spécial (!@#$%^&*=+_{}[]()|.) dans le mot de passe";
+  "Il faut au moins un caractère spécial (!@#$%^&*=+_{}[]()|.) dans le mot de passe.";
 
 const email = "test@example.com";
 const firstName = "Titouan";
@@ -36,7 +32,7 @@ const teams: Teams = [KARNA, TECKOS];
 const nickname = "Shagou";
 
 function validFormWithPassword() {
-  return RegisterForm.initFor(VOLUNTEER, PASSWORD_REQUIRED)
+  return RegisterForm.initFor(VOLUNTEER, accountStatuses.NEW)
     .fillEmail(email)
     .fillFirstName(firstName)
     .fillLastName(lastName)
@@ -51,7 +47,7 @@ function validFormWithPassword() {
 }
 
 function validFormWithoutPassword() {
-  return RegisterForm.initFor(VOLUNTEER, PASSWORD_NOT_REQUIRED)
+  return RegisterForm.initFor(VOLUNTEER, accountStatuses.EXISTING)
     .fillEmail(email)
     .fillFirstName(firstName)
     .fillLastName(lastName)
@@ -75,6 +71,7 @@ describe("Register form", () => {
         it("should generate a fulfilled form with password", () => {
           const newcomer = validFormWithPassword().complete();
           expect(newcomer).toEqual({
+            status: accountStatuses.NEW,
             firstName,
             lastName,
             teams,
@@ -99,6 +96,7 @@ describe("Register form", () => {
       it("should generate a fulfilled form without password", () => {
         const newcomer = validFormWithoutPassword().complete();
         expect(newcomer).toEqual({
+          status: accountStatuses.EXISTING,
           firstName,
           lastName,
           teams,
@@ -153,7 +151,7 @@ describe("Register form", () => {
         const form = baseForm.fillEmail("example@insa-lyon.fr");
         expect(form.isValid).toBe(false);
       });
-      it("should indicate that insa email is forbiden", () => {
+      it("should indicate that insa email is forbidden", () => {
         const form = baseForm.fillEmail("example@insa-lyon.fr");
         expect(form.reasons).toHaveLength(1);
         expect(form.reasons).include("Pas d'adresse insa 🙏");
@@ -173,6 +171,14 @@ describe("Register form", () => {
         expect(form.reasons).include("Il faut renseigner un prenom");
       });
     });
+    describe("when firstName is filled with surrounding spaces", () => {
+      const baseForm = validFormWithPassword().clearFirstName();
+      it("should trim the firstName", () => {
+        const form = baseForm.fillFirstName("  Mon prenom  ");
+        expect(form.isValid).toBe(true);
+        expect(form.complete().firstName).toBe("Mon prenom");
+      });
+    });
   });
   describe("lastName rules", () => {
     describe("when lastName is filled with empty string", () => {
@@ -185,6 +191,14 @@ describe("Register form", () => {
         const form = baseForm.fillLastName("");
         expect(form.reasons).toHaveLength(1);
         expect(form.reasons).include("Il faut renseigner un nom");
+      });
+    });
+    describe("when lastName is filled with surrounding spaces", () => {
+      const baseForm = validFormWithPassword().clearLastName();
+      it("should trim the lastName", () => {
+        const form = baseForm.fillLastName("  Mon nom  ");
+        expect(form.isValid).toBe(true);
+        expect(form.complete().lastName).toBe("Mon nom");
       });
     });
   });
@@ -262,12 +276,11 @@ describe("Register form", () => {
         expect(baseForm.isValid).toBe(true);
       });
     });
-    describe("when nickname is filled with empty string", () => {
-      it("should indicate that nickname can't be empty", () => {
-        const form = baseForm.fillNickname("");
-        expect(form.isValid).toBe(false);
-        expect(form.reasons).toHaveLength(1);
-        expect(form.reasons).contain("Il faut renseigner un surnom");
+    describe("when nickname is filled with surrounding spaces", () => {
+      it("should trim the nickname", () => {
+        const form = baseForm.fillNickname("  Mon surnom  ");
+        expect(form.isValid).toBe(true);
+        expect(form.complete().nickname).toBe("Mon surnom");
       });
     });
   });
@@ -299,12 +312,11 @@ describe("Register form", () => {
         expect(baseForm.isValid).toBe(true);
       });
     });
-    describe("when comment is filled with empty string", () => {
-      it("should indicate that comment can't be empty", () => {
-        const form = baseForm.fillComment("");
-        expect(form.isValid).toBe(false);
-        expect(form.reasons).toHaveLength(1);
-        expect(form.reasons).contain("Il faut préciser ton commentaire");
+    describe("when comment is filled with surrounding spaces", () => {
+      it("should trim the comment", () => {
+        const form = baseForm.fillComment("  Mon commentaire  ");
+        expect(form.isValid).toBe(true);
+        expect(form.complete().comment).toBe("Mon commentaire");
       });
     });
   });
@@ -362,7 +374,7 @@ describe("Register form", () => {
       });
     });
     describe("when staff is not signing the volunteer charter", () => {
-      const unsignedForm = RegisterForm.initFor(STAFF, PASSWORD_REQUIRED)
+      const unsignedForm = RegisterForm.initFor(STAFF, accountStatuses.EXISTING)
         .fillEmail(email)
         .fillFirstName(firstName)
         .fillLastName(lastName)

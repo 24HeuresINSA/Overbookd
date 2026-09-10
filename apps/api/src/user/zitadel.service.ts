@@ -3,6 +3,7 @@ import {
   ConflictException,
   HttpException,
   Injectable,
+  Logger,
 } from "@nestjs/common";
 import { OidcRole } from "@overbookd/oidc";
 import { ApiZitadelUser } from "./entities/zitadel-api-user.entity";
@@ -14,6 +15,7 @@ import { ApiZitadelMetadata } from "./entities/zitadel-api-metadata.entity";
 type UpdateUserProfileForm = {
   firstName: string;
   lastName: string;
+  nickname?: string;
   phoneNumber: string;
 };
 
@@ -40,6 +42,8 @@ export class ZitadelService {
     Authorization: `Bearer ${this.ZITADEL_API_BEARER_TOKEN}`,
   };
 
+  private readonly logger = new Logger(ZitadelService.name);
+
   async getZitadelUserByEmail(userEmail: string): Promise<ApiZitadelUser> {
     const data = JSON.stringify({
       query: {
@@ -58,25 +62,15 @@ export class ZitadelService {
       ],
     });
 
-    const response = await fetch(`${this.ZITADEL_BASE_URL}/v2/users`, {
-      method: "POST",
-      body: data,
-      headers: this.headers,
-    });
-
-    return (await this.handleZitadelResponse(response)).result?.at(0);
-  }
-
-  async getZitadelUserById(zitadelUserId: string): Promise<ApiZitadelUser> {
-    const response = await fetch(
-      `${this.ZITADEL_BASE_URL}/v2/users/${zitadelUserId}`,
+    const response = await this.safeFetch<{ result: ApiZitadelUser[] }>(
+      `${this.ZITADEL_BASE_URL}/v2/users`,
       {
-        method: "GET",
+        method: "POST",
+        body: data,
         headers: this.headers,
       },
     );
-
-    return (await this.handleZitadelResponse(response)).user;
+    return response.result?.at(0);
   }
 
   async getZitadelRoles(
@@ -99,7 +93,7 @@ export class ZitadelService {
       ],
     });
 
-    const response = await fetch(
+    const response = await this.safeFetch<{ result: ApiZitadelRoles[] }>(
       `${this.ZITADEL_BASE_URL}/management/v1/users/grants/_search`,
       {
         method: "POST",
@@ -107,18 +101,16 @@ export class ZitadelService {
         headers: this.headers,
       },
     );
-
-    return (await this.handleZitadelResponse(response)).result?.at(0);
+    return response.result?.at(0);
   }
 
-  async updateZitadelRole(
+  updateZitadelRole(
     zitadelUserId: string,
     grantId: string,
     roleKeys: Array<OidcRole>,
   ) {
     const data = JSON.stringify({ roleKeys });
-
-    const response = await fetch(
+    return this.safeFetch(
       `${this.ZITADEL_BASE_URL}/management/v1/users/${zitadelUserId}/grants/${grantId}`,
       {
         method: "PUT",
@@ -126,11 +118,9 @@ export class ZitadelService {
         headers: this.headers,
       },
     );
-
-    return await this.handleZitadelResponse(response);
   }
 
-  async addZitadelRole(
+  addZitadelRole(
     zitadelUserId: string,
     roleKeys: Array<OidcRole>,
     projectId?: string,
@@ -139,8 +129,7 @@ export class ZitadelService {
       projectId: projectId ?? this.ZITADEL_OVERBOOKD_PROJECT_ID,
       roleKeys,
     });
-
-    const response = await fetch(
+    return this.safeFetch(
       `${this.ZITADEL_BASE_URL}/management/v1/users/${zitadelUserId}/grants`,
       {
         method: "POST",
@@ -148,52 +137,19 @@ export class ZitadelService {
         headers: this.headers,
       },
     );
-
-    return await this.handleZitadelResponse(response);
   }
 
-  async removeZitadelGrant(zitadelUserId: string, grantId: string) {
-    const response = await fetch(
+  removeZitadelGrant(zitadelUserId: string, grantId: string) {
+    return this.safeFetch(
       `${this.ZITADEL_BASE_URL}/management/v1/users/${zitadelUserId}/grants/${grantId}`,
       {
         method: "DELETE",
         headers: this.headers,
       },
     );
-
-    return await this.handleZitadelResponse(response);
   }
 
-  async updateZitadelUser(
-    zitadelUserId: string,
-    form: Partial<UpdateUserProfileForm>,
-  ): Promise<ApiZitadelUserCreated> {
-    const shouldUpdateProfile = form.firstName || form.lastName;
-    const givenName = form.firstName ? { givenName: form.firstName } : {};
-    const familyName = form.lastName ? { familyName: form.lastName } : {};
-    const profile = shouldUpdateProfile
-      ? { profile: { ...givenName, ...familyName } }
-      : {};
-    const phone = form.phoneNumber
-      ? { phone: { phone: form.phoneNumber, isVerified: true } }
-      : {};
-    const reqBody = JSON.stringify({ ...profile, ...phone });
-
-    const response = await fetch(
-      `${this.ZITADEL_BASE_URL}/v2/users/human/${zitadelUserId}`,
-      {
-        method: "PUT",
-        body: reqBody,
-        headers: this.headers,
-      },
-    );
-
-    return await this.handleZitadelResponse(response);
-  }
-
-  async createZitadelUser(
-    user: CreateUserForm,
-  ): Promise<ApiZitadelUserCreated> {
+  createZitadelUser(user: CreateUserForm): Promise<ApiZitadelUserCreated> {
     const metadata = this.buildMetadata({
       dateOfBirth: user.dateOfBirth,
     });
@@ -202,6 +158,7 @@ export class ZitadelService {
       profile: {
         givenName: user.firstName,
         familyName: user.lastName,
+        nickName: user.nickname,
         preferredLanguage: "fr",
       },
       email: {
@@ -218,19 +175,57 @@ export class ZitadelService {
       },
     });
 
-    const response = await fetch(`${this.ZITADEL_BASE_URL}/v2/users/human`, {
+    return this.safeFetch(`${this.ZITADEL_BASE_URL}/v2/users/human`, {
       method: "POST",
       body: data,
       headers: this.headers,
     });
-
-    return await this.handleZitadelResponse(response);
   }
 
-  async updateMetadata(zitadelUserId: string, metadata: UserMetadataForm) {
+  updateZitadelUser(
+    zitadelUserId: string,
+    form: Partial<UpdateUserProfileForm & UserMetadataForm>,
+  ) {
+    const profilePromise =
+      form.firstName || form.lastName || form.nickname || form.phoneNumber
+        ? this.updateProfile(zitadelUserId, form)
+        : Promise.resolve();
+    const metadataPromise = form.dateOfBirth
+      ? this.updateMetadata(zitadelUserId, { dateOfBirth: form.dateOfBirth })
+      : Promise.resolve();
+    return Promise.all([profilePromise, metadataPromise]);
+  }
+
+  private updateProfile(
+    zitadelUserId: string,
+    form: Partial<UpdateUserProfileForm>,
+  ) {
+    const shouldUpdateProfile = form.firstName || form.lastName;
+    const givenName = form.firstName ? { givenName: form.firstName } : {};
+    const familyName = form.lastName ? { familyName: form.lastName } : {};
+    const nickName = form.nickname ? { nickName: form.nickname } : {};
+    const profile = shouldUpdateProfile
+      ? { profile: { ...givenName, ...familyName, ...nickName } }
+      : {};
+    const phone = form.phoneNumber
+      ? { phone: { phone: form.phoneNumber, isVerified: true } }
+      : {};
+    const reqBody = JSON.stringify({ ...profile, ...phone });
+
+    return this.safeFetch(
+      `${this.ZITADEL_BASE_URL}/v2/users/human/${zitadelUserId}`,
+      {
+        method: "PUT",
+        body: reqBody,
+        headers: this.headers,
+      },
+    );
+  }
+
+  private updateMetadata(zitadelUserId: string, metadata: UserMetadataForm) {
     const zitadelMetadata = this.buildMetadata(metadata);
     const data = JSON.stringify({ metadata: zitadelMetadata });
-    const response = await fetch(
+    return this.safeFetch(
       `${this.ZITADEL_BASE_URL}/management/v1/users/${zitadelUserId}/metadata/_bulk`,
       {
         method: "POST",
@@ -238,8 +233,6 @@ export class ZitadelService {
         headers: this.headers,
       },
     );
-
-    return await this.handleZitadelResponse(response);
   }
 
   async addZitadelRoleIfNotGranted(
@@ -285,6 +278,18 @@ export class ZitadelService {
       value: btoa(OverDate.from(dateOfBirth).dateString),
     });
     return metadata;
+  }
+
+  private async safeFetch<T>(url: string, options: RequestInit): Promise<T> {
+    try {
+      const response = await fetch(url, options);
+      return await this.handleZitadelResponse(response);
+    } catch (error) {
+      const errorMessage =
+        "Erreur lors de la communication avec le service ZITADEL";
+      this.logger.error(errorMessage, error);
+      throw new HttpException(errorMessage, 500);
+    }
   }
 
   private async handleZitadelResponse(response: Response) {

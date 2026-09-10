@@ -1,5 +1,5 @@
 import type { RouteLocationNormalized } from "vue-router";
-import { isUnauthenticatedPages } from "../navigation/pages/unauthenticated";
+import { HOME_URL } from "@overbookd/web-page";
 
 const JAUNE_AUDIO_KEY = "playJaune";
 
@@ -9,7 +9,7 @@ export function playJauneAudio() {
 }
 
 export function playJauneAudioIfNeeded(to: RouteLocationNormalized) {
-  if (isUnauthenticatedPages(to)) return;
+  if (to.path !== HOME_URL) return;
 
   const shouldPlay = localStorage.getItem(JAUNE_AUDIO_KEY);
   if (shouldPlay === "true") {

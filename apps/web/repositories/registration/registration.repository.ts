@@ -1,25 +1,32 @@
 import type {
-  RegistrationFormStep,
   RegistrationLoginStep,
   RegistrationCompletedStep,
+  RegistrationFormStepWithData,
+  RegistrationFormStepWithoutData,
 } from "@overbookd/http";
 import { type Credentials, RegisterForm } from "@overbookd/registration";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class RegistrationRepository {
-  private static readonly basePath = "registrations";
+  private static readonly basePath = "registration";
 
   static checkUnauthenticatedUser(email: string) {
     const cleanedEmail = email.toLowerCase().trim();
-    return HttpClient.get<RegistrationLoginStep | RegistrationFormStep>(
+    return HttpClient.get<RegistrationLoginStep | RegistrationFormStepWithData>(
       `${this.basePath}/unauthenticated/check/${cleanedEmail}`,
     );
   }
 
-  static checkAuthenticatedUser() {
-    return HttpClient.get<RegistrationFormStep | RegistrationCompletedStep>(
-      `${this.basePath}/authenticated/check`,
-    );
+  static checkAuthenticatedUserWithFormData() {
+    return HttpClient.get<
+      RegistrationFormStepWithData | RegistrationCompletedStep
+    >(`${this.basePath}/authenticated/check?withFormData=true`);
+  }
+
+  static checkAuthenticatedUserWithoutFormData() {
+    return HttpClient.get<
+      RegistrationFormStepWithoutData | RegistrationCompletedStep
+    >(`${this.basePath}/authenticated/check`);
   }
 
   static registerNewcomer(form: RegisterForm, token?: string) {

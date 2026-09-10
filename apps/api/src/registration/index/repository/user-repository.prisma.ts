@@ -31,6 +31,14 @@ type DatabaseUser = UserName & {
 export class PrismaUserForRegistrationRepository implements UserForRegistrationRepository {
   constructor(private readonly prisma: PrismaService) {}
 
+  async getZitadelIdByEmail(email: string): Promise<string | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      select: { zitadelId: true },
+    });
+    return user?.zitadelId ?? null;
+  }
+
   async getByEmail(email: string): Promise<RegistrationFormStepUser> {
     const user = await this.prisma.user.findUnique({
       where: { email },
@@ -47,6 +55,16 @@ export class PrismaUserForRegistrationRepository implements UserForRegistrationR
     });
     if (!user) return undefined;
     return this.formatUser(user);
+  }
+
+  async updateZitadelIdByEmail(
+    email: string,
+    zitadelId: string,
+  ): Promise<void> {
+    await this.prisma.user.update({
+      where: { email },
+      data: { zitadelId },
+    });
   }
 
   private formatUser(user: DatabaseUser): RegistrationFormStepUser {
