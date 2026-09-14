@@ -20,6 +20,11 @@ export class SwitchMembershipApplication {
     );
     if (isCandidate) throw new AlreadyCandidateForMembership(newMembership);
 
-    return this.candidates.switchApplicationMembership(id, edition, membership, newMembership);
+    return this.candidates.switchApplicationMembership(
+      id,
+      edition,
+      membership,
+      newMembership,
+    );
   }
 }
