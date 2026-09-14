@@ -96,3 +96,4 @@ export {
   AlreadyCandidate,
 } from "./membership-application/candidature.error.js";
 export { RejectMembershipApplication } from "./membership-application/reject.js";
+export { SwitchMembershipApplication } from "./membership-application/switch.js";

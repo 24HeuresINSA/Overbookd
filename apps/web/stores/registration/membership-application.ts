@@ -76,7 +76,7 @@ export const useMembershipApplicationStore = defineStore(
         candidateId: VolunteerCandidate["id"],
       ) {
         const res =
-          await MembershipApplicationRepository.switchVolunteerToStaffApplication(
+          await MembershipApplicationRepository.switchStaffToVolunteerApplication(
             candidateId,
           );
         if (isHttpError(res)) return;

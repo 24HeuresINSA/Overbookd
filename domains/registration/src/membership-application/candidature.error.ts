@@ -14,10 +14,10 @@ export class AlreadyCandidate extends MembershipApplicationError {
   }
 }
 
-export class Rejected extends MembershipApplicationError {
+export class AlreadyCandidateForMembership extends MembershipApplicationError {
   constructor(readonly membership: Membership) {
     super(
-      `Ta candidature pour être ${readableMembership(membership)} a été rejetée pour cette édition`,
+      `Le·a candidat·e a déjà candidaté pour être ${readableMembership(membership)} pour cette édition`,
     );
   }
 }
@@ -25,7 +25,7 @@ export class Rejected extends MembershipApplicationError {
 export class AlreadyRejected extends MembershipApplicationError {
   constructor(readonly membership: Membership) {
     super(
-      `Le bénévole a déjà été rejeté pour être ${readableMembership(membership)} pour cette édition`,
+      `Le·a candidat·e a déjà été rejeté·e pour être ${readableMembership(membership)} pour cette édition`,
     );
   }
 }
@@ -33,7 +33,7 @@ export class AlreadyRejected extends MembershipApplicationError {
 export class NotRejected extends MembershipApplicationError {
   constructor(readonly membership: Membership) {
     super(
-      `Le bénévole n'a pas été rejeté pour être ${readableMembership(membership)} pour cette édition`,
+      `Le·a candidat·e n'a pas été rejeté·e pour être ${readableMembership(membership)} pour cette édition`,
     );
   }
 }

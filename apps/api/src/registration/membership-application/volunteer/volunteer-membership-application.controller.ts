@@ -20,7 +20,7 @@ import { MembershipApplicationErrorFilter } from "../common/membership-applicati
 import { VolunteerMembershipApplicationService } from "./volunteer-membership-application.service";
 import { Permissions } from "../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { VolunteerCandidateResponseDto } from "./dto/volunteer-candidate.response";
-import { ENROLL_SOFT } from "@overbookd/permission";
+import { ENROLL_HARD, ENROLL_SOFT } from "@overbookd/permission";
 import { VolunteerCandidate } from "@overbookd/http";
 import { EnrollCandidatesRequestDto } from "../common/dto/enroll-candidates.request.dto";
 import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
@@ -117,6 +117,25 @@ export class VolunteerMembershipApplicationController {
     @Param("candidateId", ParseIntPipe) candidateId: number,
   ): Promise<void> {
     return this.applicationService.cancelVolunteerApplicationRejection(
+      candidateId,
+    );
+  }
+
+  @Post(":candidateId/switch-to-staff")
+  @Permissions(ENROLL_HARD)
+  @HttpCode(204)
+  @ApiResponse({
+    status: 204,
+    description: "Volunteer application switched to staff",
+  })
+  @ApiParam({
+    name: "candidateId",
+    type: Number,
+  })
+  switchVolunteerToStaffApplication(
+    @Param("candidateId", ParseIntPipe) candidateId: number,
+  ): Promise<void> {
+    return this.applicationService.switchVolunteerToStaffApplication(
       candidateId,
     );
   }
