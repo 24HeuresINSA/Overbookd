@@ -21,7 +21,7 @@ describe("Reject one membership application", () => {
     it("should reject the application", async () => {
       const candidates = new InMemoryCandidates([leaStaffCandidate]);
       const reject = new RejectMembershipApplication(candidates);
-      await reject.applyOne(lea, STAFF);
+      await reject.applyOne(lea.id, STAFF);
       const expected = { ...leaStaffCandidate, isRejected: true };
       expect(candidates.staffs).toContainEqual(expected);
     });
@@ -31,29 +31,29 @@ describe("Reject one membership application", () => {
     it("should reject the application", async () => {
       const candidates = new InMemoryCandidates([oelCandidate]);
       const reject = new RejectMembershipApplication(candidates);
-      await reject.applyOne(oel, VOLUNTEER);
+      await reject.applyOne(oel.id, VOLUNTEER);
       const expected = { ...oelCandidate, isRejected: true };
       expect(candidates.volunteers).toContainEqual(expected);
     });
   });
 
   describe("when a candidate has already been rejected for staff membership for the current edition", () => {
-    it("should indicate that the candidate has already been rejected for staff membership for this edition", () => {
+    it("should indicate that the candidate has already been rejected for staff membership for this edition", async () => {
       const candidates = new InMemoryCandidates([rejectedOlopStaffCandidate]);
       const reject = new RejectMembershipApplication(candidates);
-      expect(async () => reject.applyOne(olop, STAFF)).rejects.toThrow(
+      await expect(async () => reject.applyOne(olop.id, STAFF)).rejects.toThrow(
         new AlreadyRejected(STAFF),
       );
     });
   });
 
   describe("when a candidate has already been rejected for volunteer membership for the current edition", () => {
-    it("should indicate that the candidate has already been rejected for volunteer membership for this edition", () => {
+    it("should indicate that the candidate has already been rejected for volunteer membership for this edition", async () => {
       const candidates = new InMemoryCandidates([rejectedDnamraCandidate]);
       const reject = new RejectMembershipApplication(candidates);
-      expect(async () => reject.applyOne(dnamra, VOLUNTEER)).rejects.toThrow(
-        new AlreadyRejected(VOLUNTEER),
-      );
+      await expect(async () =>
+        reject.applyOne(dnamra.id, VOLUNTEER),
+      ).rejects.toThrow(new AlreadyRejected(VOLUNTEER));
     });
   });
 
@@ -64,7 +64,7 @@ describe("Reject one membership application", () => {
         leaVolunteerCandidate,
       ]);
       const reject = new RejectMembershipApplication(candidates);
-      await reject.applyOne(lea, STAFF);
+      await reject.applyOne(lea.id, STAFF);
       const expected = { ...leaStaffCandidate, isRejected: true };
       expect(candidates.staffs).toContainEqual(expected);
       expect(candidates.volunteers).toContainEqual(leaVolunteerCandidate);
@@ -76,7 +76,7 @@ describe("Reject one membership application", () => {
         leaVolunteerCandidate,
       ]);
       const reject = new RejectMembershipApplication(candidates);
-      await reject.applyOne(lea, VOLUNTEER);
+      await reject.applyOne(lea.id, VOLUNTEER);
       const expected = { ...leaVolunteerCandidate, isRejected: true };
       expect(candidates.volunteers).toContainEqual(expected);
       expect(candidates.staffs).toContainEqual(leaStaffCandidate);
@@ -89,7 +89,7 @@ describe("Cancel one membership application rejection", () => {
     it("should cancel the rejection", async () => {
       const candidates = new InMemoryCandidates([rejectedOlopStaffCandidate]);
       const reject = new RejectMembershipApplication(candidates);
-      await reject.unapplyOne(olop, STAFF);
+      await reject.unapplyOne(olop.id, STAFF);
       const expected = { ...rejectedOlopStaffCandidate, isRejected: false };
       expect(candidates.staffs).toContainEqual(expected);
     });
@@ -99,29 +99,29 @@ describe("Cancel one membership application rejection", () => {
     it("should cancel the rejection", async () => {
       const candidates = new InMemoryCandidates([rejectedDnamraCandidate]);
       const reject = new RejectMembershipApplication(candidates);
-      await reject.unapplyOne(dnamra, VOLUNTEER);
+      await reject.unapplyOne(dnamra.id, VOLUNTEER);
       const expected = { ...rejectedDnamraCandidate, isRejected: false };
       expect(candidates.volunteers).toContainEqual(expected);
     });
   });
 
   describe("when a candidate is not rejected for staff membership for the current edition", () => {
-    it("should indicate that the candidate is not rejected for staff membership for this edition", () => {
+    it("should indicate that the candidate is not rejected for staff membership for this edition", async () => {
       const candidates = new InMemoryCandidates([leaStaffCandidate]);
       const reject = new RejectMembershipApplication(candidates);
-      expect(async () => reject.unapplyOne(lea, STAFF)).rejects.toThrow(
-        new NotRejected(STAFF),
-      );
+      await expect(async () =>
+        reject.unapplyOne(lea.id, STAFF),
+      ).rejects.toThrow(new NotRejected(STAFF));
     });
   });
 
   describe("when a candidate is not rejected for volunteer membership for the current edition", () => {
-    it("should indicate that the candidate is not rejected for volunteer membership for this edition", () => {
+    it("should indicate that the candidate is not rejected for volunteer membership for this edition", async () => {
       const candidates = new InMemoryCandidates([oelCandidate]);
       const reject = new RejectMembershipApplication(candidates);
-      expect(async () => reject.unapplyOne(oel, VOLUNTEER)).rejects.toThrow(
-        new NotRejected(VOLUNTEER),
-      );
+      await expect(async () =>
+        reject.unapplyOne(oel.id, VOLUNTEER),
+      ).rejects.toThrow(new NotRejected(VOLUNTEER));
     });
   });
 
@@ -132,7 +132,7 @@ describe("Cancel one membership application rejection", () => {
         rejectedOlopVolunteerCandidate,
       ]);
       const reject = new RejectMembershipApplication(candidates);
-      await reject.unapplyOne(olop, STAFF);
+      await reject.unapplyOne(olop.id, STAFF);
       const expected = { ...rejectedOlopStaffCandidate, isRejected: false };
       expect(candidates.staffs).toContainEqual(expected);
       expect(candidates.volunteers).toContainEqual(
@@ -146,7 +146,7 @@ describe("Cancel one membership application rejection", () => {
         rejectedOlopVolunteerCandidate,
       ]);
       const reject = new RejectMembershipApplication(candidates);
-      await reject.unapplyOne(olop, VOLUNTEER);
+      await reject.unapplyOne(olop.id, VOLUNTEER);
       const expected = { ...rejectedOlopVolunteerCandidate, isRejected: false };
       expect(candidates.volunteers).toContainEqual(expected);
       expect(candidates.staffs).toContainEqual(rejectedOlopStaffCandidate);

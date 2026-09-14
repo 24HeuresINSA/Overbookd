@@ -45,27 +45,40 @@
           </template>
 
           <template #item.action="{ item }">
-            <v-btn
-              v-if="!displayRejectedCandidates"
-              text="Rejeter la candidature"
-              color="error"
-              size="small"
-              @click="rejectCandidate(item.id)"
-            />
-            <v-btn
-              v-else
-              text="Restaurer la candidature"
-              color="warning"
-              size="small"
-              @click="cancelCandidateRejection(item.id)"
-            />
-            <v-btn
-              v-if="canEnrollVolunteer"
-              text="Passer en admission bénévole"
-              color="secondary"
-              size="small"
-              @click="switchToVolunteerApplication(item.id)"
-            />
+            <div class="actions">
+              <v-btn
+                v-if="!displayRejectedCandidates"
+                icon="mdi-cancel"
+                aria-label="Rejeter la candidature"
+                title="Rejeter la candidature"
+                color="error"
+                rounded="pill"
+                density="comfortable"
+                @click="rejectCandidate(item.id)"
+              />
+              <v-btn
+                v-else
+                icon="mdi-undo"
+                aria-label="Restaurer la candidature"
+                title="Restaurer la candidature"
+                size="large"
+                color="warning"
+                rounded="pill"
+                density="compact"
+                @click="cancelCandidateRejection(item.id)"
+              />
+              <v-btn
+                v-if="canEnrollVolunteer"
+                icon="mdi-account-heart"
+                aria-label="Passer en admission bénévole"
+                title="Passer en admission bénévole"
+                size="large"
+                color="secondary"
+                rounded="pill"
+                density="compact"
+                @click="switchToVolunteerApplication(item.id)"
+              />
+            </div>
           </template>
         </v-data-table>
       </v-card-text>
@@ -196,5 +209,10 @@ const switchToVolunteerApplication = (candidateId: number) => {
 
 .search-filter {
   margin: 5px 0;
+}
+
+.actions {
+  display: flex;
+  gap: 5px;
 }
 </style>

@@ -3,12 +3,12 @@ import {
   ApplyFor,
   EnrollCandidates,
   RejectMembershipApplication,
+  SwitchMembershipApplication,
 } from "@overbookd/registration";
 import { StaffMembershipApplicationController } from "./staff-membership-application.controller";
 import { PrismaModule } from "../../../prisma.module";
 import { PrismaService } from "../../../prisma.service";
 import { PrismaCandidates } from "../common/repository/candidates.prisma";
-import { PrismaUsers } from "../common/repository/users.prisma";
 import { StaffMembershipApplicationService } from "./staff-membership-application.service";
 import { PrismaEnrollCandidates } from "../common/repository/enroll-candidates.prisma";
 import { DomainEventModule } from "../../../domain-event/domain-event.module";
@@ -26,11 +26,6 @@ import { ConfigurationService } from "../../../configuration/configuration.servi
       inject: [PrismaService],
     },
     {
-      provide: PrismaUsers,
-      useFactory: (prisma: PrismaService) => new PrismaUsers(prisma),
-      inject: [PrismaService],
-    },
-    {
       provide: PrismaEnrollCandidates,
       useFactory: (prisma: PrismaService) => new PrismaEnrollCandidates(prisma),
       inject: [PrismaService],
@@ -44,6 +39,12 @@ import { ConfigurationService } from "../../../configuration/configuration.servi
       provide: RejectMembershipApplication,
       useFactory: (candidates: PrismaCandidates) =>
         new RejectMembershipApplication(candidates),
+      inject: [PrismaCandidates],
+    },
+    {
+      provide: SwitchMembershipApplication,
+      useFactory: (candidates: PrismaCandidates) =>
+        new SwitchMembershipApplication(candidates),
       inject: [PrismaCandidates],
     },
     {
@@ -65,20 +66,20 @@ import { ConfigurationService } from "../../../configuration/configuration.servi
       useFactory: (
         applyFor: ApplyFor,
         reject: RejectMembershipApplication,
-        users: PrismaUsers,
+        switchApplication: SwitchMembershipApplication,
         enrollCandidates: PrismaEnrollCandidates,
         enroll: EnrollCandidates,
         configuration: ConfigurationService,
       ) =>
         new StaffMembershipApplicationService(
-          { applyFor, reject, enroll },
-          { users, enroll: enrollCandidates },
+          { applyFor, reject, switchApplication, enroll },
+          { enroll: enrollCandidates },
           { configuration },
         ),
       inject: [
         ApplyFor,
         RejectMembershipApplication,
-        PrismaUsers,
+        SwitchMembershipApplication,
         PrismaEnrollCandidates,
         EnrollCandidates,
         ConfigurationService,

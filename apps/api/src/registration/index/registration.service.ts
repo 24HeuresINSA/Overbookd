@@ -154,8 +154,8 @@ export class RegistrationService {
       zitadelUserPromise,
     ]);
 
-    if (token) await this.member.applyFor.staff({ email: registree.email });
-    else await this.member.applyFor.volunteer({ email: registree.email });
+    if (token) await this.member.applyFor.staff(registree.id);
+    else await this.member.applyFor.volunteer(registree.id);
 
     this.publishNewcomerRegisteredEvent(registree);
   }
