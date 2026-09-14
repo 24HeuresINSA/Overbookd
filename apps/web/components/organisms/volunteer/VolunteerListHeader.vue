@@ -60,7 +60,6 @@
       <v-btn-toggle
         v-model="displayMode"
         color="primary"
-        size="small"
         class="icons-action__button"
         mandatory
         @update:model-value="updateDisplayModeParam"

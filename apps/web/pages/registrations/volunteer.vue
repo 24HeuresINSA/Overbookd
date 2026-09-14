@@ -170,7 +170,8 @@
       v-if="selectedUser"
       :volunteer="selectedUser"
       hide-delete-button
-      @close="closeCandidateInfoDialogue"
+      @updated="onUserUpdated"
+      @close="closeCandidateInfoDialog"
     >
       <template #additional-actions>
         <v-btn
@@ -333,19 +334,19 @@ const toggleRejectedCandidates = () => {
 
 const enrollCandidate = (candidate: VolunteerCandidate) => {
   membershipApplicationStore.enrollNewVolunteers([candidate]);
-  closeCandidateInfoDialogue();
+  closeCandidateInfoDialog();
 };
 const rejectCandidate = (candidateId: number) => {
   membershipApplicationStore.rejectVolunteerCandidate(candidateId);
-  closeCandidateInfoDialogue();
+  closeCandidateInfoDialog();
 };
 const cancelCandidateRejection = (candidateId: number) => {
   membershipApplicationStore.cancelVolunteerCandidateRejection(candidateId);
-  closeCandidateInfoDialogue();
+  closeCandidateInfoDialog();
 };
 const switchToStaffApplication = (candidateId: number) => {
   membershipApplicationStore.switchVolunteerToStaffApplication(candidateId);
-  closeCandidateInfoDialogue();
+  closeCandidateInfoDialog();
 };
 
 const willBeMinorAtEvent = ({ birthDate }: VolunteerCandidate): boolean => {
@@ -411,8 +412,14 @@ const openCandidateInfoDialog = async (
   await userStore.findUserById(item.id);
   isCandidateInfoDialogOpen.value = true;
 };
-const closeCandidateInfoDialogue = () => {
+const closeCandidateInfoDialog = () => {
   isCandidateInfoDialogOpen.value = false;
+};
+const onUserUpdated = async () => {
+  if (displayRejectedCandidates.value)
+    await membershipApplicationStore.fetchRejectedVolunteerCandidates();
+  else await membershipApplicationStore.fetchVolunteerCandidates();
+  closeCandidateInfoDialog();
 };
 
 const updateTeamsParam = (teams: Team[]) => {
