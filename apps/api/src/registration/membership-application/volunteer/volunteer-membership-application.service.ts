@@ -4,24 +4,23 @@ import {
   CandidateToEnroll,
   EnrollCandidates,
   RejectMembershipApplication,
+  STAFF,
+  SwitchMembershipApplication,
   VOLUNTEER,
 } from "@overbookd/registration";
-import { Users } from "../common/repository/users";
 import { VolunteerCandidate } from "@overbookd/http";
 import { EnrollCandidatesRepository } from "../common/repository/enroll-candidates";
 import { SOFT } from "@overbookd/team-code";
-import { ConfigurationService } from "../../../configuration/configuration.service";
 
 type UseCases = {
   applyFor: Readonly<ApplyFor>;
   reject: Readonly<RejectMembershipApplication>;
+  switchApplication: Readonly<SwitchMembershipApplication>;
   enroll: Readonly<EnrollCandidates>;
 };
 
 type Repositories = {
-  users: Readonly<Users>;
   enroll: Readonly<EnrollCandidatesRepository>;
-  configuration: Readonly<ConfigurationService>;
 };
 
 @Injectable()
@@ -32,15 +31,21 @@ export class VolunteerMembershipApplicationService {
   ) {}
 
   async rejectVolunteerApplication(candidateId: number): Promise<void> {
-    const email = await this.repositories.users.findEmailById(candidateId);
-    return this.useCases.reject.applyOne({ email }, VOLUNTEER);
+    return this.useCases.reject.applyOne(candidateId, VOLUNTEER);
   }
 
   async cancelVolunteerApplicationRejection(
     candidateId: number,
   ): Promise<void> {
-    const email = await this.repositories.users.findEmailById(candidateId);
-    return this.useCases.reject.unapplyOne({ email }, VOLUNTEER);
+    return this.useCases.reject.unapplyOne(candidateId, VOLUNTEER);
+  }
+
+  async switchVolunteerToStaffApplication(candidateId: number): Promise<void> {
+    return this.useCases.switchApplication.applyOne(
+      candidateId,
+      VOLUNTEER,
+      STAFF,
+    );
   }
 
   getCandidates(): Promise<VolunteerCandidate[]> {

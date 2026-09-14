@@ -2,19 +2,18 @@ import { Module } from "@nestjs/common";
 import { VolunteerMembershipApplicationController } from "./volunteer-membership-application.controller";
 import { PrismaCandidates } from "../common/repository/candidates.prisma";
 import { PrismaService } from "../../../prisma.service";
-import { PrismaUsers } from "../common/repository/users.prisma";
 import { PrismaEnrollCandidates } from "../common/repository/enroll-candidates.prisma";
 import {
   ApplyFor,
   EnrollCandidates,
   RejectMembershipApplication,
+  SwitchMembershipApplication,
 } from "@overbookd/registration";
 import { VolunteerMembershipApplicationService } from "./volunteer-membership-application.service";
 import { PrismaModule } from "../../../prisma.module";
 import { DomainEventService } from "../../../domain-event/domain-event.service";
 import { PrismaMemberships } from "../common/repository/memberships.prisma";
 import { DomainEventModule } from "../../../domain-event/domain-event.module";
-import { ConfigurationService } from "../../../configuration/configuration.service";
 import { ConfigurationModule } from "../../../configuration/configuration.module";
 
 @Module({
@@ -23,11 +22,6 @@ import { ConfigurationModule } from "../../../configuration/configuration.module
     {
       provide: PrismaCandidates,
       useFactory: (prisma: PrismaService) => new PrismaCandidates(prisma),
-      inject: [PrismaService],
-    },
-    {
-      provide: PrismaUsers,
-      useFactory: (prisma: PrismaService) => new PrismaUsers(prisma),
       inject: [PrismaService],
     },
     {
@@ -44,6 +38,12 @@ import { ConfigurationModule } from "../../../configuration/configuration.module
       provide: RejectMembershipApplication,
       useFactory: (candidates: PrismaCandidates) =>
         new RejectMembershipApplication(candidates),
+      inject: [PrismaCandidates],
+    },
+    {
+      provide: SwitchMembershipApplication,
+      useFactory: (candidates: PrismaCandidates) =>
+        new SwitchMembershipApplication(candidates),
       inject: [PrismaCandidates],
     },
     {
@@ -64,22 +64,20 @@ import { ConfigurationModule } from "../../../configuration/configuration.module
       useFactory: (
         applyFor: ApplyFor,
         reject: RejectMembershipApplication,
-        users: PrismaUsers,
+        switchApplication: SwitchMembershipApplication,
         enrollCandidates: PrismaEnrollCandidates,
         enroll: EnrollCandidates,
-        configuration: ConfigurationService,
       ) =>
         new VolunteerMembershipApplicationService(
-          { applyFor, reject, enroll },
-          { users, enroll: enrollCandidates, configuration },
+          { applyFor, reject, switchApplication, enroll },
+          { enroll: enrollCandidates },
         ),
       inject: [
         ApplyFor,
         RejectMembershipApplication,
-        PrismaUsers,
+        SwitchMembershipApplication,
         PrismaEnrollCandidates,
         EnrollCandidates,
-        ConfigurationService,
       ],
     },
   ],

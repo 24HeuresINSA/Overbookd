@@ -5,74 +5,71 @@ export class PrismaCandidates implements Candidates {
   constructor(private readonly prisma: PrismaService) {}
 
   async isCandidate(
-    email: string,
+    id: Candidate["id"],
     edition: number,
     membership: Membership,
   ): Promise<boolean> {
     const application = await this.prisma.membershipApplication.findFirst({
-      where: {
-        user: { email },
-        edition,
-        membership,
-      },
+      where: { userId: id, edition, membership },
     });
     return application !== null;
   }
 
   async isRejected(
-    email: string,
+    id: Candidate["id"],
     edition: number,
     membership: Membership,
   ): Promise<boolean> {
     const rejectedApplication =
       await this.prisma.membershipApplication.findFirst({
-        where: {
-          user: { email },
-          edition,
-          membership,
-          isRejected: true,
-        },
+        where: { userId: id, edition, membership, isRejected: true },
       });
     return rejectedApplication !== null;
   }
 
   async add({
-    email,
+    id,
     edition,
     membership,
     isRejected,
     candidatedAt,
   }: Candidate): Promise<void> {
     await this.prisma.membershipApplication.create({
-      data: {
-        user: { connect: { email } },
-        edition,
-        membership,
-        isRejected,
-        candidatedAt,
-      },
+      data: { userId: id, edition, membership, isRejected, candidatedAt },
     });
   }
 
   async reject(
-    email: string,
+    id: Candidate["id"],
     edition: number,
     membership: Membership,
   ): Promise<void> {
-    await this.prisma.membershipApplication.updateMany({
-      where: { user: { email }, edition, membership },
+    await this.prisma.membershipApplication.update({
+      where: { userId_edition_membership: { userId: id, edition, membership } },
       data: { isRejected: true },
     });
   }
 
   async cancelRejection(
-    email: string,
+    id: Candidate["id"],
     edition: number,
     membership: Membership,
   ): Promise<void> {
-    await this.prisma.membershipApplication.updateMany({
-      where: { user: { email }, edition, membership },
+    await this.prisma.membershipApplication.update({
+      where: { userId_edition_membership: { userId: id, edition, membership } },
       data: { isRejected: false },
+    });
+  }
+
+  async switchApplicationMembership(
+    id: number,
+    edition: number,
+    membership: Membership,
+    newMembership: Membership,
+  ): Promise<void> {
+    await this.prisma.membershipApplication.update({
+      where: { userId_edition_membership: { userId: id, edition, membership } },
+      data: { isRejected: false, membership: newMembership },
     });
   }
 }
