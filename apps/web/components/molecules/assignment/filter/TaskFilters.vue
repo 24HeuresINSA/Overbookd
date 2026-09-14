@@ -9,6 +9,7 @@
       clearable
       @click:clear="search = ''"
     />
+
     <SearchTeams
       v-model="requiredTeams"
       label="Chercher par équipe(s) requise(s)"
@@ -18,6 +19,7 @@
       hide-details
       clearable
     />
+
     <SearchTeam
       v-model="inChargeTeam"
       label="Chercher par équipe responsable"
@@ -26,56 +28,48 @@
       hide-details
       clearable
     />
+
+    <v-combobox
+      v-model="category"
+      :items="categoryItems"
+      label="Chercher une catégorie"
+      class="filters__field"
+      density="compact"
+      clearable
+      return-object
+      hide-details
+    />
+
     <div class="filters-row">
-      <v-combobox
-        v-model="category"
-        :items="categoryItems"
-        label="Chercher une catégorie"
-        class="filters-row__field"
+      <v-switch
+        v-if="isOrgaTask"
+        v-model="hasAssignedFriends"
+        label="Ami·e·s affecté·e·s"
         density="compact"
-        clearable
-        return-object
+        color="primary"
+        class="filters-row__switch"
         hide-details
       />
-      <v-btn
-        v-show="!isOrgaTask"
-        v-tooltip:bottom="
-          completed
-            ? 'Afficher uniquement les FTs non terminées'
-            : 'Afficher toutes les FTs'
-        "
-        :variant="completed ? 'elevated' : 'outlined'"
-        density="compact"
-        size="small"
-        color="primary"
-        class="filters-row__btn"
-        hide-details
-        @click="completed = !completed"
-      >
-        <template #default>
-          <span>Toutes<br />les FTs</span>
-        </template>
-      </v-btn>
-      <v-btn
-        v-show="isOrgaTask"
-        v-tooltip:bottom="
-          hasAssignedFriends
-            ? 'Afficher toutes les tâches'
-            : 'Afficher uniquement les tâches avec au moins un·e ami·e assigné·e'
-        "
-        :variant="hasAssignedFriends ? 'elevated' : 'outlined'"
-        density="compact"
-        size="small"
-        color="primary"
-        class="filters-row__btn"
-        hide-details
-        @click="hasAssignedFriends = !hasAssignedFriends"
-      >
-        <template #default>
-          <span>Amis<br />assignés</span>
-        </template>
-      </v-btn>
+      <template v-else>
+        <v-switch
+          v-model="completed"
+          label="FTs completées"
+          density="compact"
+          color="primary"
+          class="filters-row__switch"
+          hide-details
+        />
+        <v-switch
+          v-model="past"
+          label="FTs passées"
+          density="compact"
+          color="primary"
+          class="filters-row__switch"
+          hide-details
+        />
+      </template>
     </div>
+
     <p class="stats">
       {{ counterLabel }}
       <span class="font-weight-bold">{{ listLength }}</span>
@@ -118,6 +112,7 @@ const category = defineModel<DisplayableCategory | TaskPriority | undefined>(
   "category",
 );
 const completed = defineModel<boolean>("completed", { default: false });
+const past = defineModel<boolean>("past", { default: false });
 const hasAssignedFriends = defineModel<boolean>("hasAssignedFriends", {
   default: false,
 });
@@ -157,14 +152,11 @@ const counterLabel = computed<string>(() =>
 
 .filters-row {
   display: flex;
-  gap: 10px;
+  gap: 0 10px;
   align-items: center;
-  &__field {
-    width: 100%;
-  }
-  &__btn {
-    height: 100%;
-    max-width: 20%;
+  flex-wrap: wrap;
+  &__switch {
+    margin: -5px 0 -5px 10px;
   }
 }
 </style>

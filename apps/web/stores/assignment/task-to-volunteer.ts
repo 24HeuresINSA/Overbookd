@@ -47,13 +47,13 @@ export const useAssignTaskToVolunteerStore = defineStore(
       async fetchAssignableTasks() {
         const res = await TaskToVolunteerRepository.getAssignableTasks();
         if (isHttpError(res)) return;
-        this.tasks.toAssign = res;
+        this.tasks.toAssign = res.map(castTaskForAssignmentWithDate);
       },
 
       async fetchAllTasks() {
         const res = await TaskToVolunteerRepository.getAllTasks();
         if (isHttpError(res)) return;
-        this.tasks.all = res;
+        this.tasks.all = res.map(castTaskForAssignmentWithDate);
       },
 
       async selectTask(taskId: number) {
@@ -124,6 +124,15 @@ export const useAssignTaskToVolunteerStore = defineStore(
     },
   },
 );
+
+function castTaskForAssignmentWithDate(
+  task: HttpStringified<TaskForAssignment>,
+): TaskForAssignment {
+  return {
+    ...task,
+    lastAssignmentEnd: new Date(task.lastAssignmentEnd),
+  };
+}
 
 function castTaskWithAssignmentsSummaryWithDate(
   task: HttpStringified<TaskWithAssignmentsSummary>,

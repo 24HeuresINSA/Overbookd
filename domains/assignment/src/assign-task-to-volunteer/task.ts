@@ -30,4 +30,5 @@ export type Task = TaskCategorized & {
 
 export type TaskForAssignment = TaskCategorized & {
   teams: string[];
+  lastAssignmentEnd: Date;
 };
