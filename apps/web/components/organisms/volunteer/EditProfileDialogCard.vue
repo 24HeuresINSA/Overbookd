@@ -45,7 +45,7 @@
           />
           <v-text-field
             v-tooltip:top="
-              'Tu dois passer par les responsables bénévoles ou le.a secrétaire général.e pour changer ton email 🙏'
+              'Tu dois passer par les responsables bénévoles ou le·a secrétaire général·e pour changer ton email 🙏'
             "
             :model-value="email"
             label="Email*"
