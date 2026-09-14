@@ -166,13 +166,15 @@ export class RegistrationService {
 
   private async createZitadelUser(form: NewAccountFulfilledRegistration) {
     const newZitadelUser = await this.service.zitadel.createZitadelUser({
+      profile: {
+        givenName: form.firstName,
+        familyName: form.lastName,
+        nickName: form.nickname,
+      },
       email: form.email,
-      password: form.password,
-      firstName: form.firstName,
-      lastName: form.lastName,
-      nickname: form.nickname,
       phoneNumber: form.mobilePhone,
       dateOfBirth: form.birthDate,
+      password: form.password,
     });
     return this.repository.user.updateZitadelIdByEmail(
       form.email,
@@ -186,9 +188,11 @@ export class RegistrationService {
       (await this.service.zitadel.getZitadelUserByEmail(form.email)).userId;
 
     return this.service.zitadel.updateZitadelUser(zitadelId, {
-      firstName: form.firstName,
-      lastName: form.lastName,
-      nickname: form.nickname,
+      profile: {
+        givenName: form.firstName,
+        familyName: form.lastName,
+        nickName: form.nickname,
+      },
       phoneNumber: form.mobilePhone,
       dateOfBirth: form.birthDate,
     });

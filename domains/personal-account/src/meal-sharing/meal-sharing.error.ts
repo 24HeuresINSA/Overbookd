@@ -23,7 +23,7 @@ export class GuestNotFound extends MealSharingError {
 
 export class OnlyChefCan extends MealSharingError {
   private constructor(chef: Adherent, action: string) {
-    super(`Seul le.a chef.fe ${chef.name} peut ${action}`);
+    super(`Seul le·a chef·fe ${chef.name} peut ${action}`);
   }
 
   static recordExpenseFor({ chef }: SharedMeal) {

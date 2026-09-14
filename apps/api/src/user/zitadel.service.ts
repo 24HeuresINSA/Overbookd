@@ -12,22 +12,26 @@ import { ApiZitadelUserCreated } from "./entities/zitadel-api-user-created.entit
 import { OverDate } from "@overbookd/time";
 import { ApiZitadelMetadata } from "./entities/zitadel-api-metadata.entity";
 
-type UpdateUserProfileForm = {
-  firstName: string;
-  lastName: string;
-  nickname?: string;
-  phoneNumber: string;
+type UserProfileForm = {
+  givenName: string;
+  familyName: string;
+  nickName?: string;
 };
 
-type CreateUserForm = UpdateUserProfileForm & {
+type UpdateUserForm = {
+  profile: UserProfileForm;
+  phoneNumber: string;
   email: string;
-  password: string;
-  dateOfBirth: Date;
 };
 
 type UserMetadataForm = {
   dateOfBirth: Date;
 };
+
+type CreateUserForm = UpdateUserForm &
+  UserMetadataForm & {
+    password: string;
+  };
 
 @Injectable()
 export class ZitadelService {
@@ -156,9 +160,7 @@ export class ZitadelService {
 
     const data = JSON.stringify({
       profile: {
-        givenName: user.firstName,
-        familyName: user.lastName,
-        nickName: user.nickname,
+        ...user.profile,
         preferredLanguage: "fr",
       },
       email: {
@@ -184,10 +186,10 @@ export class ZitadelService {
 
   updateZitadelUser(
     zitadelUserId: string,
-    form: Partial<UpdateUserProfileForm & UserMetadataForm>,
+    form: Partial<UpdateUserForm & UserMetadataForm>,
   ) {
     const profilePromise =
-      form.firstName || form.lastName || form.nickname || form.phoneNumber
+      form.profile || form.email || form.phoneNumber
         ? this.updateProfile(zitadelUserId, form)
         : Promise.resolve();
     const metadataPromise = form.dateOfBirth
@@ -196,21 +198,20 @@ export class ZitadelService {
     return Promise.all([profilePromise, metadataPromise]);
   }
 
-  private updateProfile(
-    zitadelUserId: string,
-    form: Partial<UpdateUserProfileForm>,
-  ) {
-    const shouldUpdateProfile = form.firstName || form.lastName;
-    const givenName = form.firstName ? { givenName: form.firstName } : {};
-    const familyName = form.lastName ? { familyName: form.lastName } : {};
-    const nickName = form.nickname ? { nickName: form.nickname } : {};
-    const profile = shouldUpdateProfile
-      ? { profile: { ...givenName, ...familyName, ...nickName } }
+  private updateProfile(zitadelUserId: string, form: Partial<UpdateUserForm>) {
+    const profile = form.profile
+      ? {
+          profile: {
+            ...form.profile,
+            nickName: form.profile.nickName ?? "",
+          },
+        }
       : {};
+    const email = form.email ? { email: { email: form.email } } : {};
     const phone = form.phoneNumber
       ? { phone: { phone: form.phoneNumber, isVerified: true } }
       : {};
-    const reqBody = JSON.stringify({ ...profile, ...phone });
+    const reqBody = JSON.stringify({ ...profile, ...email, ...phone });
 
     return this.safeFetch(
       `${this.ZITADEL_BASE_URL}/v2/users/human/${zitadelUserId}`,

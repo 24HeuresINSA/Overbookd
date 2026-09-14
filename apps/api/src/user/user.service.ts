@@ -156,7 +156,7 @@ export class UserService {
     author: RequestHydratedUser,
     profile: Partial<Profile>,
   ): Promise<MyUserInformation | null> {
-    const [updatedUser, charismaPeriods] = await Promise.all([
+    const [updatedUser, charismaPeriods, _] = await Promise.all([
       this.prisma.user.update({
         where: { id: author.id },
         data: profile,
@@ -164,9 +164,16 @@ export class UserService {
       }),
       this.selectCharismaPeriods(),
       this.zitadelService.updateZitadelUser(author.zitadelId, {
+        profile: {
+          givenName: profile.firstName,
+          familyName: profile.lastName,
+          nickName: profile.nickname,
+        },
+        phoneNumber: profile.phoneNumber,
         dateOfBirth: profile.birthDate,
       }),
     ]);
+
     return UserService.formatToMyInformation(updatedUser, charismaPeriods);
   }
 
@@ -268,11 +275,23 @@ export class UserService {
     const [user, charismaPeriods] = await Promise.all([
       this.prisma.user.update({
         where: { id: targetId },
-        select: SELECT_USER_PERSONAL_DATA,
+        select: { ...SELECT_USER_PERSONAL_DATA, zitadelId: true },
         data: userData,
       }),
       this.selectCharismaPeriods(),
     ]);
+
+    await this.zitadelService.updateZitadelUser(user.zitadelId, {
+      profile: {
+        givenName: userData.firstName,
+        familyName: userData.lastName,
+        nickName: userData.nickname,
+      },
+      email: user.email,
+      phoneNumber: userData.phoneNumber,
+      dateOfBirth: userData.birthDate,
+    });
+
     return UserService.formatToPersonalData(user, charismaPeriods);
   }
 

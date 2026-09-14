@@ -13,19 +13,17 @@ export class UpdateUserRequestDto implements UserUpdateForm {
     required: false,
     description: "The first name of the user",
   })
-  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  firstName?: string;
+  firstName: string;
 
   @ApiProperty({
     required: false,
     description: "The last name of the user",
   })
-  @IsOptional()
   @IsString()
   @IsNotEmpty()
-  lastName?: string;
+  lastName: string;
 
   @ApiProperty({
     required: false,
