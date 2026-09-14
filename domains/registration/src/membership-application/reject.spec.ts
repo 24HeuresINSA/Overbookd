@@ -15,6 +15,7 @@ import {
 import { RejectMembershipApplication } from "./reject.js";
 import { AlreadyRejected, NotRejected } from "./candidature.error.js";
 import { STAFF, VOLUNTEER } from "../newcomer.js";
+import type { Candidate } from "./candidates.js";
 
 describe("Reject one membership application", () => {
   describe("when a candidate has applied for staff membership for the current edition", () => {
@@ -22,7 +23,10 @@ describe("Reject one membership application", () => {
       const candidates = new InMemoryCandidates([leaStaffCandidate]);
       const reject = new RejectMembershipApplication(candidates);
       await reject.applyOne(lea.id, STAFF);
-      const expected = { ...leaStaffCandidate, isRejected: true };
+      const expected: Candidate = {
+        ...leaStaffCandidate,
+        isRejected: true,
+      };
       expect(candidates.staffs).toContainEqual(expected);
     });
   });
@@ -32,7 +36,10 @@ describe("Reject one membership application", () => {
       const candidates = new InMemoryCandidates([oelCandidate]);
       const reject = new RejectMembershipApplication(candidates);
       await reject.applyOne(oel.id, VOLUNTEER);
-      const expected = { ...oelCandidate, isRejected: true };
+      const expected: Candidate = {
+        ...oelCandidate,
+        isRejected: true,
+      };
       expect(candidates.volunteers).toContainEqual(expected);
     });
   });
@@ -65,7 +72,10 @@ describe("Reject one membership application", () => {
       ]);
       const reject = new RejectMembershipApplication(candidates);
       await reject.applyOne(lea.id, STAFF);
-      const expected = { ...leaStaffCandidate, isRejected: true };
+      const expected: Candidate = {
+        ...leaStaffCandidate,
+        isRejected: true,
+      };
       expect(candidates.staffs).toContainEqual(expected);
       expect(candidates.volunteers).toContainEqual(leaVolunteerCandidate);
     });
@@ -77,7 +87,10 @@ describe("Reject one membership application", () => {
       ]);
       const reject = new RejectMembershipApplication(candidates);
       await reject.applyOne(lea.id, VOLUNTEER);
-      const expected = { ...leaVolunteerCandidate, isRejected: true };
+      const expected: Candidate = {
+        ...leaVolunteerCandidate,
+        isRejected: true,
+      };
       expect(candidates.volunteers).toContainEqual(expected);
       expect(candidates.staffs).toContainEqual(leaStaffCandidate);
     });
@@ -90,7 +103,10 @@ describe("Cancel one membership application rejection", () => {
       const candidates = new InMemoryCandidates([rejectedOlopStaffCandidate]);
       const reject = new RejectMembershipApplication(candidates);
       await reject.unapplyOne(olop.id, STAFF);
-      const expected = { ...rejectedOlopStaffCandidate, isRejected: false };
+      const expected: Candidate = {
+        ...rejectedOlopStaffCandidate,
+        isRejected: false,
+      };
       expect(candidates.staffs).toContainEqual(expected);
     });
   });
@@ -100,7 +116,10 @@ describe("Cancel one membership application rejection", () => {
       const candidates = new InMemoryCandidates([rejectedDnamraCandidate]);
       const reject = new RejectMembershipApplication(candidates);
       await reject.unapplyOne(dnamra.id, VOLUNTEER);
-      const expected = { ...rejectedDnamraCandidate, isRejected: false };
+      const expected: Candidate = {
+        ...rejectedDnamraCandidate,
+        isRejected: false,
+      };
       expect(candidates.volunteers).toContainEqual(expected);
     });
   });
@@ -133,7 +152,10 @@ describe("Cancel one membership application rejection", () => {
       ]);
       const reject = new RejectMembershipApplication(candidates);
       await reject.unapplyOne(olop.id, STAFF);
-      const expected = { ...rejectedOlopStaffCandidate, isRejected: false };
+      const expected: Candidate = {
+        ...rejectedOlopStaffCandidate,
+        isRejected: false,
+      };
       expect(candidates.staffs).toContainEqual(expected);
       expect(candidates.volunteers).toContainEqual(
         rejectedOlopVolunteerCandidate,
@@ -147,7 +169,10 @@ describe("Cancel one membership application rejection", () => {
       ]);
       const reject = new RejectMembershipApplication(candidates);
       await reject.unapplyOne(olop.id, VOLUNTEER);
-      const expected = { ...rejectedOlopVolunteerCandidate, isRejected: false };
+      const expected: Candidate = {
+        ...rejectedOlopVolunteerCandidate,
+        isRejected: false,
+      };
       expect(candidates.volunteers).toContainEqual(expected);
       expect(candidates.staffs).toContainEqual(rejectedOlopStaffCandidate);
     });
