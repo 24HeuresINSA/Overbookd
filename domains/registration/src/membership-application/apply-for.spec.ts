@@ -18,13 +18,14 @@ import {
   oel,
   dnamra,
 } from "./candidate.test-utils.js";
+import type { Candidate } from "./candidates.js";
 
 describe("Apply for staff membership", () => {
   describe("when someone is applying for staff membership", () => {
     describe("and the candidate did NOT apply yet", () => {
       it("should be listed as staff candidate", async () => {
         const candidate = { id: 6 };
-        const expectedCandidate = {
+        const expectedCandidate: Candidate = {
           ...candidate,
           membership: STAFF,
           edition: Edition.current,
@@ -50,7 +51,7 @@ describe("Apply for staff membership", () => {
 
     describe("and the candidate has already applied for a previous edition", () => {
       it("should be listed as staff candidate", async () => {
-        const expectedCandidate = {
+        const expectedCandidate: Candidate = {
           ...noelCandidate,
           edition: Edition.current,
           candidatedAt: expect.any(Date),
@@ -74,7 +75,7 @@ describe("Apply for staff membership", () => {
 
     describe("and the candidated has already applied for a volunteer membership for the current edition", () => {
       it("should be listed as a staff candidate", async () => {
-        const expectedCandidate = {
+        const expectedCandidate: Candidate = {
           ...oelCandidate,
           membership: STAFF,
           edition: Edition.current,
@@ -89,7 +90,7 @@ describe("Apply for staff membership", () => {
 
     describe("and the candidated is already rejected for volunteer membership for for the current edition", () => {
       it("should be listed as a staff candidate", async () => {
-        const expectedCandidate = {
+        const expectedCandidate: Candidate = {
           ...rejectedDnamraCandidate,
           membership: STAFF,
           edition: Edition.current,
@@ -110,7 +111,7 @@ describe("Apply for volunteer membership", () => {
     describe("and the candidate did NOT apply yet", () => {
       it("should be listed as volunteer candidate", async () => {
         const candidate = { id: 6 };
-        const expectedCandidate = {
+        const expectedCandidate: Candidate = {
           ...candidate,
           membership: VOLUNTEER,
           edition: Edition.current,
@@ -136,7 +137,7 @@ describe("Apply for volunteer membership", () => {
 
     describe("and the candidate has already applied for a previous edition", () => {
       it("should be listed as volunteer candidate", async () => {
-        const expectedCandidate = {
+        const expectedCandidate: Candidate = {
           ...culCandidate,
           edition: Edition.current,
           candidatedAt: expect.any(Date),
@@ -160,7 +161,7 @@ describe("Apply for volunteer membership", () => {
 
     describe("and the candidated has already applied for a staff membership for the current edition", () => {
       it("should be listed as a volunteer candidate", async () => {
-        const expectedCandidate = {
+        const expectedCandidate: Candidate = {
           ...noelCandidate,
           membership: VOLUNTEER,
           edition: Edition.current,
@@ -175,7 +176,7 @@ describe("Apply for volunteer membership", () => {
 
     describe("and the candidated is already rejected for staff membership for the current edition", () => {
       it("should be listed as a volunteer candidate", async () => {
-        const expectedCandidate = {
+        const expectedCandidate: Candidate = {
           ...rejectedOlopStaffCandidate,
           membership: VOLUNTEER,
           edition: Edition.current,

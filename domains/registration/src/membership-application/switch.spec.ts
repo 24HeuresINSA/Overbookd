@@ -19,7 +19,10 @@ describe("Switch a membership application", () => {
       const candidates = new InMemoryCandidates([leaVolunteerCandidate]);
       const switchApplication = new SwitchMembershipApplication(candidates);
       await switchApplication.applyOne(lea.id, VOLUNTEER, STAFF);
-      const expected: Candidate = { ...leaStaffCandidate, membership: STAFF };
+      const expected: Candidate = {
+        ...leaStaffCandidate,
+        membership: STAFF,
+      };
       expect(candidates.staffs).toContainEqual(expected);
       expect(candidates.volunteers).toHaveLength(0);
     });
