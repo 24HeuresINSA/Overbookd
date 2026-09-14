@@ -14,7 +14,7 @@
       </v-expansion-panel-title>
       <v-expansion-panel-text>
         <div>
-          <h3>Description organisateur</h3>
+          <h3>Description organisateur·rice</h3>
           <RichEditor
             v-model="staffRegistrationFormDescription"
             scope="staff-description"

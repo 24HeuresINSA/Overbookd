@@ -23,6 +23,12 @@ export class MembershipApplicationRepository {
     );
   }
 
+  static switchStaffToVolunteerApplication(candidateId: number) {
+    return HttpClient.post<void>(
+      `${this.basePath}/staffs/${candidateId}/switch-to-volunteer`,
+    );
+  }
+
   static getStaffCandidates() {
     return HttpClient.get<StaffCandidate[]>(`${this.basePath}/staffs`);
   }
@@ -72,6 +78,12 @@ export class MembershipApplicationRepository {
   static cancelVolunteerCandidateRejection(candidateId: number) {
     return HttpClient.post<void>(
       `${this.basePath}/volunteers/${candidateId}/cancel-rejection`,
+    );
+  }
+
+  static switchVolunteerToStaffApplication(candidateId: number) {
+    return HttpClient.post<void>(
+      `${this.basePath}/volunteers/${candidateId}/switch-to-staff`,
     );
   }
 }

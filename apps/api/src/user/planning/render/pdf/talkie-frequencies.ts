@@ -14,9 +14,11 @@ export class TalkieFrequencies {
     ];
     const allFrequencies = [
       ...baseFrequencies,
-      { text: "3 : Sécurité (Organisateurs, Protection Civile, STAFF, S3SI)" },
+      {
+        text: "3 : Sécurité (Organisateur·rice·s, Protection Civile, STAFF, S3SI)",
+      },
       { text: "4 : Courses" },
-      { text: "5 : Electriciens" },
+      { text: "5 : Electricien·ne·s" },
       { text: "6 : Concerts" },
     ];
     const frequenciesToDisplay = shouldDisplayAllFrequencies
