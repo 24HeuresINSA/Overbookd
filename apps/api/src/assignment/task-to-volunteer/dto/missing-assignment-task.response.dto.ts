@@ -18,4 +18,7 @@ export class TaskForAssignmentResponseDto
 
   @ApiProperty({ type: String, isArray: true })
   teams: string[];
+
+  @ApiProperty({ type: Date })
+  lastAssignmentEnd: Date;
 }

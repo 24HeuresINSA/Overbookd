@@ -104,6 +104,10 @@ export class AssignTaskToVolunteer {
       return new Set([...teams, ...missingMembers]);
     }, new Set<string>());
 
+    const lastAssignmentEnd = task.assignments
+      .map(({ end }) => end)
+      .reduce((a, b) => (a > b ? a : b));
+
     return {
       id: task.id,
       name: task.name,
@@ -111,6 +115,7 @@ export class AssignTaskToVolunteer {
       category: task.category,
       inChargeTeam: task.inChargeTeam,
       teams: Array.from(missingTeamMembers),
+      lastAssignmentEnd,
     };
   }
 
@@ -133,6 +138,10 @@ export class AssignTaskToVolunteer {
       ),
     );
 
+    const lastAssignmentEnd = task.assignments
+      .map(({ end }) => end)
+      .reduce((a, b) => (a > b ? a : b));
+
     return {
       id: task.id,
       name: task.name,
@@ -140,6 +149,7 @@ export class AssignTaskToVolunteer {
       category: task.category,
       inChargeTeam: task.inChargeTeam,
       teams: Array.from(teams),
+      lastAssignmentEnd,
     };
   }
 
