@@ -264,11 +264,14 @@ import {
   isSame,
   maxLength,
 } from "~/utils/rules/input.rules";
-import { navigateTo } from "#app";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 import { REGISTER_FORM_KEY } from "@overbookd/configuration";
 import { planJauneAudioPlay } from "~/utils/easter-egg/jaune-audio";
-import { hasRegistrationFormData, registrationSteps } from "@overbookd/http";
+import {
+  hasRegistrationFormData,
+  registrationSteps,
+  type RegistrationFormStepUser,
+} from "@overbookd/http";
 import { ONE_SECOND_IN_MS } from "@overbookd/time";
 
 const route = useRoute();
@@ -406,6 +409,21 @@ const isFormInvalid = computed<boolean>(() => {
   );
 });
 
+const prefillUserPersonalInformation = (
+  user: RegistrationFormStepUser | undefined,
+) => {
+  email.value = user?.email ?? "";
+  firstName.value = user?.firstName ?? "";
+  lastName.value = user?.lastName ?? "";
+  nickname.value = user?.nickname ?? "";
+  birthDay.value = user?.birthDate
+    ? user.birthDate.toISOString().split("T")[0]
+    : DEFAULT_BIRTHDAY;
+  phoneNumber.value = user?.mobilePhone ?? "";
+  teams.value = user?.teams ?? [];
+  comment.value = user?.comment ?? "";
+};
+
 onMounted(async () => {
   if (!oidc.loggedIn.value) return;
 
@@ -414,18 +432,7 @@ onMounted(async () => {
     step.value = 2;
     emailChecked.value = true;
     accountStatus.value = registrationStep.accountStatus;
-
-    const { user } = registrationStep;
-    email.value = user?.email ?? "";
-    firstName.value = user?.firstName ?? "";
-    lastName.value = user?.lastName ?? "";
-    nickname.value = user?.nickname ?? "";
-    birthDay.value = user?.birthDate
-      ? user.birthDate.toISOString().split("T")[0]
-      : DEFAULT_BIRTHDAY;
-    phoneNumber.value = user?.mobilePhone ?? "";
-    teams.value = user?.teams ?? [];
-    comment.value = user?.comment ?? "";
+    prefillUserPersonalInformation(registrationStep.user);
   }
 });
 
@@ -444,6 +451,7 @@ const checkEmail = async () => {
     case registrationSteps.FORM:
       emailChecked.value = true;
       accountStatus.value = emailStep.accountStatus;
+      prefillUserPersonalInformation(emailStep.user);
       break;
     default:
       break;
@@ -462,7 +470,7 @@ const returnToLoginPage = async () => {
     await logout();
     return oidc.logout();
   }
-  navigateTo(LOGIN_URL);
+  await navigateTo(LOGIN_URL);
 };
 
 const loading = ref<boolean>(false);
@@ -475,7 +483,7 @@ const register = async () => {
   }
 
   planJauneAudioPlay();
-  navigateTo(HOME_URL);
+  await navigateTo(HOME_URL);
   loading.value = false;
 };
 
