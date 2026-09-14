@@ -2,7 +2,7 @@
   <div class="background-wrapper">
     <v-img
       src="/registration/volunteers_on_main_stage.jpg"
-      alt="Les organisateurs de la 50ème édition des 24 heures de l'INSA"
+      alt="Les organisateur·rice·s de la 50ème édition des 24 heures de l'INSA"
       class="background"
       cover
     />

@@ -294,7 +294,7 @@ const membership = computed<Membership>(() =>
   isVolunteerRegistration.value ? VOLUNTEER : STAFF,
 );
 const membershipLabel = computed<string>(() =>
-  membership.value === STAFF ? "Organisateur" : "Bénévole",
+  membership.value === STAFF ? "Organisateur·rice" : "Bénévole",
 );
 const mustSignVolunteerCharter = computed(() =>
   shouldSignVolunteerCharter(membership.value),

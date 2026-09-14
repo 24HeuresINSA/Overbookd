@@ -4,7 +4,7 @@
     <v-card-text>
       <v-text-field
         :model-value="inviteStaffLink?.href"
-        label="Lien d'invitation pour les futurs organisateurs"
+        label="Lien d'invitation pour les futurs organisateur·rice·s"
         placeholder="Pas de lien encore généré"
         :hint="expirationInviteStaffLinkDate"
         :persistent-hint="hasInviteStaffLink"

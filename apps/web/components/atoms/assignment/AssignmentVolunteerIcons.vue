@@ -99,7 +99,7 @@ const preferenceAssignmentIcon = computed<AssignmentPreferenceIcon | null>(
 const getNoFriendLabel = (candidateFriendCount: number): string => {
   const noFriendsLabel = "N'a aucun·e ami·e";
   if (!candidateFriendCount) return noFriendsLabel;
-  return `${noFriendsLabel} bénévole mais a ${candidateFriendCount} ${pluralize("ami·e", candidateFriendCount, "·s")} ${pluralize("candidat", candidateFriendCount)} `;
+  return `${noFriendsLabel} bénévole mais a ${candidateFriendCount} ${pluralize("ami·e", candidateFriendCount, "·s")} ${pluralize("candidat·e", candidateFriendCount, "·s")}`;
 };
 
 const shouldShowFriendAssignedIcon = computed<boolean>(
