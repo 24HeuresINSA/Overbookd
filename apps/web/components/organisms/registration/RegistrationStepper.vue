@@ -413,7 +413,7 @@ const isFormInvalid = computed<boolean>(() => {
 const prefillUserPersonalInformation = (
   user: RegistrationFormStepUser | undefined,
 ) => {
-  email.value = user?.email ?? "";
+  email.value = user?.email ?? email.value;
   firstName.value = user?.firstName ?? "";
   lastName.value = user?.lastName ?? "";
   nickname.value = user?.nickname ?? "";
