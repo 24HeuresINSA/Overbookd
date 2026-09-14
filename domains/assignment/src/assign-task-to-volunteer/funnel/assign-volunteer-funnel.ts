@@ -27,7 +27,9 @@ export class AssignVolunteerFunnel
   async assign(): Promise<ReadyToStart> {
     if (!areEveryCandidateFulfillingDemand(this._candidates)) {
       return Promise.reject(
-        new FunnelError("Les candidats ne sont pas tous affecte a une equipe"),
+        new FunnelError(
+          "Les candidat·e·s ne sont pas toustes affecté·e·s a une équipe",
+        ),
       );
     }
     const { taskId, mobilizationId, assignmentId } = this.assignment;

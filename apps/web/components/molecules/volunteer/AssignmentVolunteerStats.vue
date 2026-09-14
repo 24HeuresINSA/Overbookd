@@ -27,7 +27,7 @@
           <br />
           {{ stats.friendCount.candidateCount }}
           {{ pluralize("ami·e", stats.friendCount.candidateCount, "·s") }}
-          {{ pluralize("candidat", stats.friendCount.candidateCount) }}
+          {{ pluralize("candidat·e", stats.friendCount.candidateCount, "·s") }}
         </span>
       </span>
     </v-tooltip>

@@ -45,7 +45,8 @@
           {{ volunteerCount }} {{ pluralize("bénévole", volunteerCount) }}
         </div>
         <div v-if="candidateCount">
-          {{ candidateCount }} {{ pluralize("candidat", candidateCount) }}
+          {{ candidateCount }}
+          {{ pluralize("candidat·e", candidateCount, "·s") }}
         </div>
       </template>
 

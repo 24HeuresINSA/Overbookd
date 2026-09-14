@@ -8,7 +8,7 @@
   >
     <p>
       <strong>
-        Le lien pour s'inscrire en tant qu'organisateur n'est plus valable.
+        Le lien pour s'inscrire en tant qu'organisateur·rice n'est plus valable.
       </strong>
       <br />
       Contacte

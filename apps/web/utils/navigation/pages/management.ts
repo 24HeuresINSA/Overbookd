@@ -37,16 +37,16 @@ const CONFIGURATION_PAGE: PageInSummary = {
 
 const REGISTRATIONS_HARD_PAGE: PageInSummary = {
   icon: "mdi-account-multiple-plus",
-  title: "Admission Organisateurs",
+  title: "Admission Organisateur·rice·s",
   permission: ENROLL_HARD,
   to: REGISTRATIONS_STAFF_URL,
   description:
-    "Permet d'enrôler les nouveaux arrivants en tant qu'organisateurs",
+    "Permet d'enrôler les nouveaux arrivants en tant qu'organisateur·rice·s",
   mobileSupport: false,
   canBeFavorite: true,
   hasParam: false,
   keywords: [
-    "admission-organisateurs",
+    "admission-organisateur·rice·s",
     "nouveaux-arrivants",
     "inscriptions",
     "admissions",

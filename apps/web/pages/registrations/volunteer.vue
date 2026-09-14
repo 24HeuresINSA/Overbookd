@@ -25,11 +25,11 @@
 
     <v-card>
       <v-card-title class="registrations__title">
-        <span>Candidats bénévoles</span>
+        <span>Candidat·e·s bénévoles</span>
         <v-btn
           icon="mdi-export"
-          aria-label="Exporter les candidats"
-          title="Exporter les candidats"
+          aria-label="Exporter les candidat·e·s"
+          title="Exporter les candidat·e·s"
           color="secondary"
           rounded="pill"
           density="comfortable"
@@ -42,8 +42,8 @@
           :headers="headers"
           :items="filteredCandidates"
           :loading="loading"
-          loading-text="Chargement des candidats..."
-          :no-data-text="`Aucun candidat ${displayRejectedCandidates ? 'rejeté' : ''}`"
+          loading-text="Chargement des candidat·e·s..."
+          :no-data-text="`Aucun candidat·e${displayRejectedCandidates ? ' rejeté·e' : ''}`"
           :mobile="isMobile"
           return-object
           @click:row="openCandidateInfoDialog"
@@ -60,7 +60,7 @@
                   <v-text-field
                     v-model="filters.search"
                     v-bind="props"
-                    label="Rechercher un candidat"
+                    label="Rechercher un·e candidat·e"
                     class="search-filter"
                     density="compact"
                     clearable
@@ -81,46 +81,10 @@
                 @update:model-value="updateTeamsParam"
               />
               <v-btn
-                text="Candidats rejetés"
+                text="Candidat·e·s rejeté·e·s"
                 color="secondary"
                 :variant="displayRejectedCandidates ? 'elevated' : 'outlined'"
                 @click="toggleRejectedCandidates"
-              />
-            </div>
-          </template>
-
-          <template #item.actions="{ item }">
-            <div class="actions">
-              <v-btn
-                v-if="!displayRejectedCandidates"
-                icon="mdi-check"
-                aria-label="Enrôler le candidat"
-                title="Enrôler le candidat"
-                color="success"
-                rounded="pill"
-                density="comfortable"
-                @click.stop="enrollCandidate(item)"
-              />
-              <v-btn
-                v-if="!displayRejectedCandidates"
-                icon="mdi-cancel"
-                aria-label="Rejeter la candidature"
-                title="Rejeter la candidature"
-                color="error"
-                rounded="pill"
-                density="comfortable"
-                @click.stop="rejectCandidate(item.id)"
-              />
-              <v-btn
-                v-else
-                icon="mdi-undo"
-                aria-label="Restaurer la candidature"
-                title="Restaurer la candidature"
-                size="large"
-                color="warning"
-                rounded="pill"
-                density="compact"
-                @click.stop="cancelCandidateRejection(item.id)"
               />
             </div>
           </template>
@@ -149,6 +113,53 @@
           <template #item.mobilePhone="{ item }">
             {{ formatPhoneNumber(item.mobilePhone) }}
           </template>
+
+          <template #item.actions="{ item }">
+            <div class="actions">
+              <v-btn
+                v-if="!displayRejectedCandidates"
+                icon="mdi-check"
+                aria-label="Enrôler le·a candidat·e"
+                title="Enrôler le·a candidat·e"
+                color="success"
+                rounded="pill"
+                density="comfortable"
+                @click.stop="enrollCandidate(item)"
+              />
+              <v-btn
+                v-if="!displayRejectedCandidates"
+                icon="mdi-cancel"
+                aria-label="Rejeter la candidature"
+                title="Rejeter la candidature"
+                color="error"
+                rounded="pill"
+                density="comfortable"
+                @click.stop="rejectCandidate(item.id)"
+              />
+              <v-btn
+                v-else
+                icon="mdi-undo"
+                aria-label="Restaurer la candidature"
+                title="Restaurer la candidature"
+                size="large"
+                color="warning"
+                rounded="pill"
+                density="compact"
+                @click.stop="cancelCandidateRejection(item.id)"
+              />
+              <v-btn
+                v-if="canEnrollStaff"
+                icon="mdi-account-hard-hat"
+                aria-label="Passer en admission orga"
+                title="Passer en admission orga"
+                size="large"
+                color="secondary"
+                rounded="pill"
+                density="compact"
+                @click.stop="switchToStaffApplication(item.id)"
+              />
+            </div>
+          </template>
         </v-data-table>
       </v-card-text>
     </v-card>
@@ -164,7 +175,7 @@
       <template #additional-actions>
         <v-btn
           v-if="!displayRejectedCandidates"
-          text="Enrôler le candidat"
+          text="Enrôler le·a candidat·e"
           color="primary"
           size="large"
           @click="selectedCandidate && enrollCandidate(selectedCandidate)"
@@ -179,10 +190,19 @@
         <v-btn
           v-else
           text="Restaurer la candidature"
-          color="secondary"
+          color="warning"
           size="large"
           @click="
             selectedCandidate && cancelCandidateRejection(selectedCandidate.id)
+          "
+        />
+        <v-btn
+          v-if="canEnrollStaff"
+          text="Passer en admission orga"
+          color="secondary"
+          size="large"
+          @click="
+            selectedCandidate && switchToStaffApplication(selectedCandidate.id)
           "
         />
       </template>
@@ -223,6 +243,7 @@ import { buildVolunteerCandidateWithRejectionStatus } from "~/utils/registration
 import { CSVBuilder } from "@overbookd/csv";
 import { downloadCsv } from "~/utils/file/download.utils";
 import { formatPhoneNumber } from "@overbookd/registration";
+import { ENROLL_HARD } from "@overbookd/permission";
 
 useHead({ title: "Admissions bénévoles" });
 
@@ -230,18 +251,22 @@ const membershipApplicationStore = useMembershipApplicationStore();
 const layoutStore = useLayoutStore();
 const userStore = useUserStore();
 const configurationStore = useConfigurationStore();
+const myStore = useMyStore();
+
 const showTooltip = ref<boolean>(false);
 
 const headers = [
-  { title: "Actions", value: "actions" },
   { title: "Date de candidature", value: "candidatedAt", sortable: true },
   { title: "Nom", value: "name" },
   { title: "Charisme", value: "charisma", sortable: true },
   { title: "Équipes", value: "teams", sortable: true },
   { title: "Email", value: "email" },
   { title: "Téléphone", value: "mobilePhone" },
+  { title: "Actions", value: "actions" },
 ];
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
+
+const canEnrollStaff = computed<boolean>(() => myStore.can(ENROLL_HARD));
 
 const filters = ref<VolunteerFilters>({
   search: "",
@@ -316,6 +341,10 @@ const rejectCandidate = (candidateId: number) => {
 };
 const cancelCandidateRejection = (candidateId: number) => {
   membershipApplicationStore.cancelVolunteerCandidateRejection(candidateId);
+  closeCandidateInfoDialogue();
+};
+const switchToStaffApplication = (candidateId: number) => {
+  membershipApplicationStore.switchVolunteerToStaffApplication(candidateId);
   closeCandidateInfoDialogue();
 };
 
