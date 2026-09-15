@@ -270,6 +270,7 @@ import { REGISTER_FORM_KEY } from "@overbookd/configuration";
 import { planJauneAudioPlay } from "~/utils/easter-egg/jaune-audio";
 import { hasRegistrationFormData, registrationSteps } from "@overbookd/http";
 import { ONE_SECOND_IN_MS } from "@overbookd/time";
+import { useOidcUtils } from "~/composable/useOidcUtils";
 
 const route = useRoute();
 const registrationStore = useRegistrationStore();
@@ -439,7 +440,7 @@ const checkEmail = async () => {
         INFO,
         "Un compte avec cet email existe déjà. Redirection vers la page de connexion.",
       );
-      setTimeout(() => oidc.login("zitadel"), 2 * ONE_SECOND_IN_MS);
+      setTimeout(() => useOidcUtils().login(), 2 * ONE_SECOND_IN_MS);
       break;
     case registrationSteps.FORM:
       emailChecked.value = true;
@@ -450,19 +451,19 @@ const checkEmail = async () => {
   }
 };
 
-const logout = async () => {
-  if (oidc.loggedIn) myStore.clear();
+const logout = () => {
+  if (oidc.loggedIn.value) myStore.clear();
   emailChecked.value = false;
   accountStatus.value = registrationAccountStatuses.EXISTING;
   password.value = "";
   repeatPassword.value = "";
 };
 const returnToLoginPage = async () => {
-  if (oidc.loggedIn) {
-    await logout();
+  if (oidc.loggedIn.value) {
+    logout();
     return oidc.logout();
   }
-  navigateTo(LOGIN_URL);
+  await navigateTo(LOGIN_URL);
 };
 
 const loading = ref<boolean>(false);
@@ -475,7 +476,7 @@ const register = async () => {
   }
 
   planJauneAudioPlay();
-  navigateTo(HOME_URL);
+  await navigateTo(HOME_URL);
   loading.value = false;
 };
 

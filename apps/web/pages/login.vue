@@ -51,6 +51,7 @@
 <script lang="ts" setup>
 import { ONE_SECOND_IN_MS } from "@overbookd/time";
 import { REGISTER_URL } from "@overbookd/web-page";
+import { useOidcUtils } from "~/composable/useOidcUtils";
 import { pickRandomBackground, GLASS } from "~/domain/login/pictures";
 import { planJauneAudioPlay } from "~/utils/easter-egg/jaune-audio";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
@@ -61,17 +62,17 @@ const config = useRuntimeConfig();
 const version = config.public.version;
 
 const route = useRoute();
-const oidc = useOidcAuth();
+const oidcUtils = useOidcUtils();
 
 const token = computed<string>(() => stringifyQueryParam(route.query.token));
 const login = async () => {
-  await oidc.login("zitadel");
+  await oidcUtils.login();
   planJauneAudioPlay();
 };
 
-const register = () => {
+const register = async () => {
   const query = token.value ? { token: token.value } : {};
-  navigateTo({ path: REGISTER_URL, query });
+  await navigateTo({ path: REGISTER_URL, query });
 };
 
 const image = ref<string>(pickRandomBackground());
