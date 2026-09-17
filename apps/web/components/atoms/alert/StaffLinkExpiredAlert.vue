@@ -12,7 +12,7 @@
       </strong>
       <br />
       Contacte
-      <a :href="`mailto:${SG_EMAIL}`"> le.a secrétaire général.e </a>
+      <a :href="`mailto:${SG_EMAIL}`"> le·a secrétaire général·e </a>
       pour recevoir un nouveau lien.
     </p>
     <p>

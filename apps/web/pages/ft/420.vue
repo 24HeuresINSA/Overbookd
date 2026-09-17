@@ -19,7 +19,7 @@
 
     <v-img src="/img/croutard.jpg" alt="Croutard" />
     <v-card>
-      <v-card-title>BONSOIR, cher.e orga</v-card-title>
+      <v-card-title>BONSOIR, cher·e orga</v-card-title>
       <v-card-text class="ft-420__content">
         <p>
           Quel plaisir de te retrouver ici ! Je t’écris depuis un passé que
@@ -92,7 +92,7 @@
         <p>
           4- Récupère la poudre en grattant ton torchon au-dessus d’un récipient
           qui tient la chaleur. Pro-tip : comme t’es évidemment pas assez
-          équipé.e, tu peux fabriquer une petite barquette en pliant du papier
+          équipé·e, tu peux fabriquer une petite barquette en pliant du papier
           alu, c’est stylé et pratique. Par contre faut pas éternuer, sinon tu
           vas la péter. Étape importante right here : fous ton récipient et son
           contenu à 145°C pendant 7 minutes. Tu m’as bien lu, les chiffres sont
@@ -129,7 +129,7 @@
           sont obtenues et la température stabilisée, tu peux te reposer.
         </p>
         <p>
-          7 - Te voilà parti.e pour 5 heures minimum, huit si t'es du genre
+          7 - Te voilà parti·e pour 5 heures minimum, huit si t'es du genre
           performance sportive. Surveille toujours la température et les
           bubulles. Ne couvre jamais le mélange ! Laisse l'eau s'évaporer,
           quitte à en remettre doucement toutes les demis-heures ou toutes les
@@ -138,7 +138,7 @@
           perturber ta belle interface liquide-liquide. Pour faire passer le
           temps, tu peux essayer de lire l'avenir dans les remous aqueux de tes
           feuilles de thé, touiller le mélange, mais pas trop souvent, baiser
-          sauvagement (sans arrêter de surveiller la casserole bien sûr) l'un.e
+          sauvagement (sans arrêter de surveiller la casserole bien sûr) l'un·e
           des fans innombrables qui se pressent pour te voir à l'ouvrage, dire
           des bêtises à tes voisins ou bien te rappeler à quel point c'était
           mieux avant.

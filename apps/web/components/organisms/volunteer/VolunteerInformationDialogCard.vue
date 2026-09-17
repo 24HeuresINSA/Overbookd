@@ -327,14 +327,14 @@ const updateAvailabilities = () => emit("update-availabilities");
 const updatedVolunteer = computed<UserUpdateForm>(() => {
   const trimmedNickname = nickname.value?.trim() || null;
   const trimmedNote = note.value?.trim() || null;
-  const trimmedComment = props.volunteer.comment?.trim() || null;
   return {
+    firstName: props.volunteer.firstName,
+    lastName: props.volunteer.lastName,
     nickname: trimmedNickname,
     birthDate: new Date(birthDay.value),
     phoneNumber: phoneNumber.value,
     email: email.value.trim(),
     note: trimmedNote,
-    comment: trimmedComment,
   };
 });
 

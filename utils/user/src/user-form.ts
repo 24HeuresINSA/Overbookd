@@ -1,6 +1,6 @@
 export type UserUpdateForm = {
-  firstName?: string;
-  lastName?: string;
+  firstName: string;
+  lastName: string;
   nickname?: string | null;
   email?: string;
   birthDate?: Date;
