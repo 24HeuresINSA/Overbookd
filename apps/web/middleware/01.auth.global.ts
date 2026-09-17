@@ -9,15 +9,12 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const oidc = useOidcAuth();
   await oidc.fetch();
 
-  const snackNotification = useSnackNotificationStore();
-
   const expireAt = oidc.user.value?.expireAt;
   if (expireAt && expireAt < Date.now() / 1000) {
-    snackNotification.pushNotification(
-      FAILURE,
+    sendFailureNotification(
       "Ta session a expiré, tu vas être redirigé vers la page de connexion.",
     );
-    return useOidcUtils().handleLogout();
+    return useOidcUtils().login();
   }
 
   const isLoggedIn = oidc.loggedIn.value;
@@ -31,8 +28,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
     if (!myStore.fullyRegistered) {
       const registrationStep = await myStore.checkRegistration();
       if (!registrationStep) {
-        snackNotification.pushNotification(
-          FAILURE,
+        sendFailureNotification(
           "Une erreur est survenue 🥴 Essaye d'actualiser la page.",
         );
       }

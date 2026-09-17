@@ -79,11 +79,14 @@ async function handleFetchError(
   res: Response,
   serverErrorMessage: string,
 ): Promise<Error> {
+  if (res.status === 440) useOidcUtils().login();
+
   const error = await res.json();
   const isServerError = res.status >= 500 && res.status < 600;
   const message = isServerError
     ? serverErrorMessage
     : error.message || res.statusText;
+
   sendFailureNotification(message);
   return new Error(message);
 }

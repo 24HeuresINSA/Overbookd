@@ -3,7 +3,12 @@ import { retrievePermissions } from "../../team/utils/permissions";
 import { ConnectedZitadelUser } from "../zitadel-types";
 import { PrismaService } from "../../prisma.service";
 import { Reflector } from "@nestjs/core";
-import { ExecutionContext, Injectable } from "@nestjs/common";
+import {
+  ExecutionContext,
+  HttpException,
+  Injectable,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { lastValueFrom, Observable } from "rxjs";
 import { AdditionalOverbookdUserData } from "../request-hydrated-user";
 import { IS_PUBLIC_KEY } from "../decorators/public.decorator";
@@ -41,47 +46,53 @@ export class ZitadelAuthGuard extends AuthGuard("zitadel") {
       }
     }
 
-    const result = await super.canActivate(context);
-    const canActivate =
-      result instanceof Observable ? await lastValueFrom(result) : result;
+    try {
+      const result = await super.canActivate(context);
+      const canActivate =
+        result instanceof Observable ? await lastValueFrom(result) : result;
 
-    const zitadelUser: ConnectedZitadelUser | undefined = request.user;
-    if (!zitadelUser) return canActivate;
+      const zitadelUser: ConnectedZitadelUser | undefined = request.user;
+      if (!zitadelUser) return canActivate;
 
-    const rawOverbookdData = await this.prisma.user.findFirst({
-      where: {
-        OR: [{ email: zitadelUser.email }, { zitadelId: zitadelUser.sub }],
-      },
-      select: {
-        id: true,
-        teams: {
-          select: {
-            team: {
-              select: {
-                code: true,
-                permissions: {
-                  select: {
-                    permissionName: true,
+      const rawOverbookdData = await this.prisma.user.findFirst({
+        where: {
+          OR: [{ email: zitadelUser.email }, { zitadelId: zitadelUser.sub }],
+        },
+        select: {
+          id: true,
+          teams: {
+            select: {
+              team: {
+                select: {
+                  code: true,
+                  permissions: {
+                    select: {
+                      permissionName: true,
+                    },
                   },
                 },
               },
             },
           },
         },
-      },
-    });
-    if (!rawOverbookdData) return canActivate;
+      });
+      if (!rawOverbookdData) return canActivate;
 
-    const userData: RawRequestUserData = {
-      ...zitadelUser,
-      overbookdData: {
-        id: rawOverbookdData.id,
-        permissions: retrievePermissions(rawOverbookdData.teams),
-        teams: rawOverbookdData.teams.map(({ team }) => team.code),
-      },
-    };
-    request.user = userData;
+      const userData: RawRequestUserData = {
+        ...zitadelUser,
+        overbookdData: {
+          id: rawOverbookdData.id,
+          permissions: retrievePermissions(rawOverbookdData.teams),
+          teams: rawOverbookdData.teams.map(({ team }) => team.code),
+        },
+      };
+      request.user = userData;
 
-    return canActivate;
+      return canActivate;
+    } catch (error) {
+      if (error instanceof UnauthorizedException)
+        throw new HttpException({ message: "Session expirée" }, 440);
+      throw error;
+    }
   }
 }
