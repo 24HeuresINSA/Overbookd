@@ -18,6 +18,7 @@
         v-model:in-charge-team="searchedInChargeTeam"
         v-model:category="searchedCategory"
         v-model:completed="displayCompleted"
+        v-model:past="displayPast"
         :list-length="filteredTasks.length"
         class="filters"
       />
@@ -51,6 +52,7 @@ const searchedRequiredTeams = ref<Team[]>([]);
 const searchedInChargeTeam = ref<Team | undefined>();
 const searchedCategory = ref<DisplayableCategory | TaskPriority | undefined>();
 const displayCompleted = ref<boolean>(false);
+const displayPast = ref<boolean>(false);
 
 const isSideBarClosed = ref<boolean>(false);
 const toggleSideBar = () => {
@@ -73,19 +75,25 @@ const searchableTasks = computed<Searchable<TaskForAssignment>[]>(() => {
 });
 
 const filteredTasks = computed<TaskForAssignment[]>(() =>
-  searchableTasks.value.filter((task) => {
-    return (
+  searchableTasks.value.filter(
+    (task) =>
+      filterByPastCriterion(displayPast.value)(task) &&
       keepMatchingSearchCriteria(searchedTaskName.value)(task) &&
       filterByRequiredTeams(searchedRequiredTeams.value)(task) &&
       filterByInChargeTeam(searchedInChargeTeam.value)(task) &&
-      filterByCategoryOrPriority(searchedCategory.value)(task)
-    );
-  }),
+      filterByCategoryOrPriority(searchedCategory.value)(task),
+  ),
 );
 
 const shouldShowTaskList = computed<boolean>(
   () => filteredTasks.value.length > 0,
 );
+
+const filterByPastCriterion = (
+  showPast: boolean,
+): ((task: TaskForAssignment) => boolean) => {
+  return (task) => showPast || task.lastAssignmentEnd > new Date();
+};
 
 const filterByRequiredTeams = (
   searchedTeams: Team[],
@@ -97,6 +105,7 @@ const filterByRequiredTeams = (
         )
     : () => true;
 };
+
 const filterByInChargeTeam = (
   teamSearched: Team | undefined,
 ): ((task: TaskForAssignment) => boolean) => {
@@ -106,6 +115,7 @@ const filterByInChargeTeam = (
       : teamSearched?.code === task.inChargeTeam;
   };
 };
+
 const isTaskPriority = (
   category: DisplayableCategory | TaskPriority,
 ): category is TaskPriority => {
@@ -119,6 +129,7 @@ const filterByCategoryOrPriority = (
     ? filterByPriority(categorySearched)
     : filterByCategory(categorySearched);
 };
+
 const filterByCategory = (
   categorySearched: DisplayableCategory,
 ): ((task: TaskForAssignment) => boolean) => {
@@ -127,6 +138,7 @@ const filterByCategory = (
     return task.category === categorySearched;
   };
 };
+
 const filterByPriority = (
   prioritySearched: TaskPriority,
 ): ((task: TaskForAssignment) => boolean) => {
