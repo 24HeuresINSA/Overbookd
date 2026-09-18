@@ -60,7 +60,6 @@ definePageMeta({ layout: false });
 const config = useRuntimeConfig();
 const version = config.public.version;
 
-const route = useRoute();
 const oidcUtils = useOidcUtils();
 
 const login = async () => {
