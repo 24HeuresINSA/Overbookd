@@ -26,6 +26,7 @@ const firstName = "Titouan";
 const lastName = "Moula";
 const password = "P4ssW0rd123^";
 const mobilePhone = "0601020304";
+const internationalMobilePhone = "+33 6 01 02 03 04";
 const birthDate = new Date("2000-01-01");
 const comment = "Vous etes les meilleurs ! <3";
 const teams: Teams = [KARNA, TECKOS];
@@ -51,7 +52,7 @@ function validFormWithoutPassword() {
     .fillEmail(email)
     .fillFirstName(firstName)
     .fillLastName(lastName)
-    .fillMobilePhone(mobilePhone)
+    .fillMobilePhone(internationalMobilePhone)
     .fillNickname(nickname)
     .fillBirthDate(birthDate)
     .fillComment(comment)
@@ -80,7 +81,7 @@ describe("Register form", () => {
             birthDate,
             password,
             email,
-            mobilePhone,
+            mobilePhone: internationalMobilePhone,
             hasApprovedEULA: true,
             hasSignedVolunteerCharter: true,
           });
@@ -104,7 +105,7 @@ describe("Register form", () => {
           nickname,
           birthDate,
           email,
-          mobilePhone,
+          mobilePhone: internationalMobilePhone,
           hasApprovedEULA: true,
           hasSignedVolunteerCharter: true,
         });

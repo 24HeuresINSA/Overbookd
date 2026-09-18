@@ -82,6 +82,7 @@ export {
   isPhoneNumberValid,
   formatPhoneNumber,
   formatPhoneLink,
+  formatPhoneNumberToInternational,
   formatEmailLink,
 } from "./phone-number/phone-number.js";
 

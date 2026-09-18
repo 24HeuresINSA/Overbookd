@@ -118,6 +118,7 @@ import {
   isAssignmentPreference,
   type AssignmentPreferenceType,
 } from "@overbookd/preference";
+import { formatPhoneNumberToInternational } from "@overbookd/registration";
 import { HARD } from "@overbookd/team-code";
 import { formatLocalDate } from "@overbookd/time";
 import { assignmentPreferenceDetailedLabels } from "~/utils/assignment/preference";
@@ -199,7 +200,7 @@ const save = async () => {
     lastName: lastName.value,
     nickname: nickname.value?.trim() ? nickname.value : null,
     birthDate: new Date(birthDay.value),
-    phoneNumber: phoneNumber.value,
+    phoneNumber: formatPhoneNumberToInternational(phoneNumber.value),
     comment: comment.value ? comment.value : null,
   };
   await myStore.updateMyProfile(newProfileData);
