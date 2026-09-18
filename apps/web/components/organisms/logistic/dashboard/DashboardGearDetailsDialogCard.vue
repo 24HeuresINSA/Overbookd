@@ -35,10 +35,10 @@
           </summary>
           <ul v-if="gearDetails.borrows.length">
             <li v-for="borrow in gearDetails.borrows" :key="borrow.id">
-              <nuxt-link :to="`${BORROW_GEARS_URL}/${borrow.id}`">
+              <NuxtLink :to="`${BORROW_GEARS_URL}/${borrow.id}`">
                 Emprunt #{{ borrow.id }} - {{ borrow.lender }}:
                 <strong>{{ borrow.quantity }}</strong>
-              </nuxt-link>
+              </NuxtLink>
             </li>
           </ul>
           <p v-else>Aucun emprunt</p>
@@ -60,10 +60,10 @@
           </summary>
           <ul v-if="gearDetails.activities.length">
             <li v-for="activity in gearDetails.activities" :key="activity.id">
-              <nuxt-link :to="`${FA_URL}/${activity.id}#inquiry`">
+              <NuxtLink :to="`${FA_URL}/${activity.id}#inquiry`">
                 FA #{{ activity.id }} - {{ activity.name }}:
                 <strong>{{ activity.quantity }}</strong>
-              </nuxt-link>
+              </NuxtLink>
             </li>
           </ul>
           <p v-else>Aucune demande</p>
@@ -78,10 +78,10 @@
           </summary>
           <ul v-if="gearDetails.tasks.length">
             <li v-for="task in gearDetails.tasks" :key="task.id">
-              <nuxt-link :to="`${FT_URL}/${task.id}#inquiry`">
+              <NuxtLink :to="`${FT_URL}/${task.id}#inquiry`">
                 FT #{{ task.id }} - {{ task.name }}:
                 <strong>{{ task.quantity }}</strong>
-              </nuxt-link>
+              </NuxtLink>
             </li>
           </ul>
           <p v-else>Aucune demande</p>

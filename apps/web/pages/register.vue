@@ -6,25 +6,42 @@
       class="background"
       cover
     />
-    <StaffLinkExpiredAlert v-if="isInvitationExpired" />
-    <RegistrationStepper v-else />
+    <StaffLinkExpiredAlert v-if="isInvitationExpired" class="content" />
+    <RegistrationStepper v-else :token class="content" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { InviteStaff, LINK_EXPIRED } from "@overbookd/registration";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
+import {
+  getStaffToken,
+  removeStaffToken,
+  saveStaffToken,
+} from "~/utils/registration/staff-token";
 
 definePageMeta({ layout: false });
 
 const route = useRoute();
 
-const token = computed<string>(() => stringifyQueryParam(route.query.token));
+const token = computed<string>(() => {
+  const token = stringifyQueryParam(route.query.token);
+  if (token) {
+    if (InviteStaff.isTokenExpired(token) !== LINK_EXPIRED)
+      saveStaffToken(token);
+    return token;
+  }
+
+  const savedToken = getStaffToken();
+  if (InviteStaff.isTokenExpired(savedToken) === LINK_EXPIRED)
+    removeStaffToken();
+
+  return savedToken;
+});
 
 const isInvitationExpired = computed<boolean>(() => {
   if (!token.value) return false;
-  const currentUrl = new URL(window.location.href);
-  return InviteStaff.isLinkExpired(currentUrl) === LINK_EXPIRED;
+  return InviteStaff.isTokenExpired(token.value) === LINK_EXPIRED;
 });
 </script>
 
@@ -46,5 +63,10 @@ const isInvitationExpired = computed<boolean>(() => {
   height: 100%;
   width: 100%;
   z-index: 1;
+}
+
+.content {
+  z-index: 2;
+  margin: 1em !important;
 }
 </style>

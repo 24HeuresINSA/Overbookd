@@ -3,7 +3,7 @@ import {
   formatDateWithExplicitMonthAndDay,
   ONE_SECOND_IN_MS,
 } from "@overbookd/time";
-import { LOGIN_URL } from "@overbookd/web-page";
+import { REGISTER_URL } from "@overbookd/web-page";
 
 export type WithExpiration = {
   exp: number;
@@ -20,7 +20,7 @@ type LinkGeneration = {
 
 export class InviteStaff {
   static byLink({ domain, token }: LinkGeneration): URL {
-    const baseUrl = new URL(`https://${domain}${LOGIN_URL}`);
+    const baseUrl = new URL(`https://${domain}${REGISTER_URL}`);
     baseUrl.searchParams.append(TOKEN, token);
     return baseUrl;
   }

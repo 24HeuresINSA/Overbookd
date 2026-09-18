@@ -25,7 +25,7 @@
           <FestivalEventReviewerChips :preview="item" />
         </v-list-item>
         <v-list-item v-if="myTasks.length > MAX_TASKS">
-          <nuxt-link :to="`${FT_URL}?adherent=${currentAdherent?.id}`">
+          <NuxtLink :to="`${FT_URL}?adherent=${currentAdherent?.id}`">
             <v-btn
               text="Voir mes FTs"
               color="secondary"
@@ -33,7 +33,7 @@
               density="comfortable"
               class="home-card__button"
             />
-          </nuxt-link>
+          </NuxtLink>
         </v-list-item>
       </v-list>
       <span v-else class="no-content-label">

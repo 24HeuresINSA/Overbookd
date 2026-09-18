@@ -39,7 +39,7 @@
 
             <p class="login-form__not-registered-label">
               Pas de compte ?
-              <a text="Inscription" class="link" @click="register" />
+              <NuxtLink text="Inscription" class="link" :to="REGISTER_URL" />
             </p>
           </div>
         </v-card-text>
@@ -54,25 +54,17 @@ import { REGISTER_URL } from "@overbookd/web-page";
 import { useOidcUtils } from "~/composable/useOidcUtils";
 import { pickRandomBackground, GLASS } from "~/domain/login/pictures";
 import { planJauneAudioPlay } from "~/utils/easter-egg/jaune-audio";
-import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 
 definePageMeta({ layout: false });
 
 const config = useRuntimeConfig();
 const version = config.public.version;
 
-const route = useRoute();
 const oidcUtils = useOidcUtils();
 
-const token = computed<string>(() => stringifyQueryParam(route.query.token));
 const login = async () => {
   await oidcUtils.login();
   planJauneAudioPlay();
-};
-
-const register = async () => {
-  const query = token.value ? { token: token.value } : {};
-  await navigateTo({ path: REGISTER_URL, query });
 };
 
 const image = ref<string>(pickRandomBackground());

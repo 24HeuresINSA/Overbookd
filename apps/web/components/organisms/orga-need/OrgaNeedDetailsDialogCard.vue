@@ -25,9 +25,9 @@
         </h3>
         <ul v-if="details.tasks.length">
           <li v-for="task in details.tasks" :key="task.id">
-            <nuxt-link :to="`${FT_URL}/${task.id}`">
+            <NuxtLink :to="`${FT_URL}/${task.id}`">
               FT #{{ task.id }} - {{ task.name }}
-            </nuxt-link>
+            </NuxtLink>
             <v-chip color="tertiary" size="x-small" class="ml-1">
               {{ task.count }}
             </v-chip>

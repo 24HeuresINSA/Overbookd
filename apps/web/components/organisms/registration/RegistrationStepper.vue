@@ -155,6 +155,7 @@
               :rules="[rules.required, rules.mobilePhone]"
             />
             <v-select
+              v-if="isVolunteerRegistration"
               v-model="teams"
               multiple
               label="Équipes"
@@ -167,7 +168,7 @@
               chips
               :rules="[twoTeamsMaximumRule]"
             />
-            <CommentField v-model="comment" />
+            <CommentField v-if="isVolunteerRegistration" v-model="comment" />
           </div>
           <v-checkbox
             v-model="hasApprovedEULA"
@@ -216,27 +217,27 @@
         </v-stepper-window-item>
       </v-stepper-window>
     </v-stepper>
+
+    <v-dialog
+      v-model="isEULADialogOpen"
+      transition="dialog-bottom-transition"
+      fullscreen
+    >
+      <EULADialogCard @close="closeEULADialog" />
+    </v-dialog>
+
+    <v-dialog
+      v-model="isVolunteerCharterDialogOpen"
+      transition="dialog-bottom-transition"
+      fullscreen
+    >
+      <VolunteerCharterDialogCard
+        :has-signed="hasSignedVolunteerCharter"
+        @close="closeVolunteerCharterDialog"
+        @sign="signVolunteerCharter"
+      />
+    </v-dialog>
   </v-card>
-
-  <v-dialog
-    v-model="isEULADialogOpen"
-    transition="dialog-bottom-transition"
-    fullscreen
-  >
-    <EULADialogCard @close="closeEULADialog" />
-  </v-dialog>
-
-  <v-dialog
-    v-model="isVolunteerCharterDialogOpen"
-    transition="dialog-bottom-transition"
-    fullscreen
-  >
-    <VolunteerCharterDialogCard
-      :has-signed="hasSignedVolunteerCharter"
-      @close="closeVolunteerCharterDialog"
-      @sign="signVolunteerCharter"
-    />
-  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -264,7 +265,6 @@ import {
   isSame,
   maxLength,
 } from "~/utils/rules/input.rules";
-import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 import { REGISTER_FORM_KEY } from "@overbookd/configuration";
 import { planJauneAudioPlay } from "~/utils/easter-egg/jaune-audio";
 import {
@@ -274,8 +274,8 @@ import {
 } from "@overbookd/http";
 import { ONE_SECOND_IN_MS } from "@overbookd/time";
 import { useOidcUtils } from "~/composable/useOidcUtils";
+import { removeStaffToken } from "~/utils/registration/staff-token";
 
-const route = useRoute();
 const registrationStore = useRegistrationStore();
 const configurationStore = useConfigurationStore();
 const teamStore = useTeamStore();
@@ -284,6 +284,21 @@ const oidc = useOidcAuth();
 const myStore = useMyStore();
 
 const DEFAULT_BIRTHDAY = "2000-01-01";
+
+const { token } = defineProps({
+  token: { type: String, required: true },
+});
+const isVolunteerRegistration = computed<boolean>(() => !token);
+
+const membership = computed<Membership>(() =>
+  isVolunteerRegistration.value ? VOLUNTEER : STAFF,
+);
+const membershipLabel = computed<string>(() =>
+  membership.value === STAFF ? "Organisateur" : "Bénévole",
+);
+const mustSignVolunteerCharter = computed(() =>
+  shouldSignVolunteerCharter(membership.value),
+);
 
 configurationStore.fetch(REGISTER_FORM_KEY);
 const registerFormDescription = computed<string>(
@@ -318,19 +333,6 @@ const rules = {
   mobilePhone: isMobilePhoneNumber,
   password: passwordRule,
 };
-
-const token = computed<string>(() => stringifyQueryParam(route.query.token));
-const isVolunteerRegistration = computed<boolean>(() => !token.value);
-
-const membership = computed<Membership>(() =>
-  isVolunteerRegistration.value ? VOLUNTEER : STAFF,
-);
-const membershipLabel = computed<string>(() =>
-  membership.value === STAFF ? "Organisateur" : "Bénévole",
-);
-const mustSignVolunteerCharter = computed(() =>
-  shouldSignVolunteerCharter(membership.value),
-);
 
 const registerForm = computed<RegisterForm>(() => {
   const form = RegisterForm.initFor(membership.value, accountStatus.value)
@@ -477,12 +479,13 @@ const returnToLoginPage = async () => {
 const loading = ref<boolean>(false);
 const register = async () => {
   loading.value = true;
-  const res = await registrationStore.register(registerForm.value, token.value);
+  const res = await registrationStore.register(registerForm.value, token);
   if (!res) {
     loading.value = false;
     return;
   }
 
+  removeStaffToken();
   planJauneAudioPlay();
   await navigateTo(HOME_URL);
   loading.value = false;
@@ -509,10 +512,8 @@ const signVolunteerCharter = () => {
     max-width: 1000px;
     width: 100%;
     overflow-y: auto;
-    position: relative;
-    z-index: 2;
     padding: 0 !important;
-    margin: 0.5em !important;
+    height: 100%;
   }
 
   &-illustration {

@@ -1,16 +1,20 @@
 <template>
   <DesktopPageTitle />
   <div class="quick-filters">
-    <nuxt-link :to="`${FT_URL}?adherent=${me?.id}`">
-      <v-btn text="Mes FTs" variant="outlined" color="primary" />
-    </nuxt-link>
-    <nuxt-link
+    <v-btn
+      text="Mes FTs"
+      :to="`${FT_URL}?adherent=${me?.id}`"
+      variant="outlined"
+      color="primary"
+    />
+    <v-btn
       v-for="team in teamsWithTasks"
       :key="team.code"
+      :text="`FTs de ${team.name}`"
       :to="`${FT_URL}?team=${team.code}`"
-    >
-      <v-btn :text="`FTs de ${team.name}`" variant="outlined" color="primary" />
-    </nuxt-link>
+      variant="outlined"
+      color="primary"
+    />
   </div>
   <main class="task ft">
     <FtFilter v-model="filters" class="task__filtering" />
