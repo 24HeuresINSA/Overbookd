@@ -1,9 +1,12 @@
 <template>
   <DesktopPageTitle />
   <div class="quick-filters">
-    <nuxt-link :to="`${FA_URL}?adherent=${me?.id}`">
-      <v-btn text="Mes FAs" variant="outlined" color="primary" />
-    </nuxt-link>
+    <v-btn
+      text="Mes FAs"
+      :to="`${FA_URL}?adherent=${me?.id}`"
+      variant="outlined"
+      color="primary"
+    />
   </div>
   <main class="activity fa">
     <FaFilter v-model="filters" class="activity__filtering" />
@@ -292,6 +295,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .quick-filters {
+  margin-bottom: 5px;
   padding: 0px 10px;
   display: flex;
   gap: 5px 10px;

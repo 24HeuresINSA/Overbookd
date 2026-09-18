@@ -17,7 +17,7 @@
     </p>
     <p>
       Si tu veux t'inscrire en tant que bénévole sur le festival c'est par
-      <nuxt-link :to="REGISTER_URL">ici</nuxt-link>
+      <NuxtLink text="ici" :to="REGISTER_URL" />
     </p>
     <v-btn text="Retour" class="return-btn" @click="returnToLoginPage" />
   </v-alert>
@@ -35,7 +35,7 @@ const returnToLoginPage = (event: PointerEvent) => {
 
 <style lang="scss" scoped>
 .alert {
-  margin: 0.5em !important;
+  flex: none;
   a {
     color: $yellow-24h;
   }

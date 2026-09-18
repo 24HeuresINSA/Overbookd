@@ -1,6 +1,6 @@
 <template>
   <div class="application">
-    <nuxt-link class="application__link" :to="HOME_URL">
+    <NuxtLink class="application__link" :to="HOME_URL">
       <img
         class="logo"
         :src="`/img/logo/${logo}`"
@@ -8,7 +8,7 @@
         @click="onClick"
       />
       <span class="version">{{ versionString }}</span>
-    </nuxt-link>
+    </NuxtLink>
   </div>
 </template>
 

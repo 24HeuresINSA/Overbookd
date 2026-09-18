@@ -26,9 +26,9 @@
 
       <ul>
         <li>
-          <nuxt-link :to="AVAILABILITIES_URL">
+          <NuxtLink :to="AVAILABILITIES_URL">
             Renseigner <strong>tes disponibilités</strong>
-          </nuxt-link>
+          </NuxtLink>
         </li>
         <li>Nous donner le <strong>nom de tes ami·e·s</strong></li>
         <li>
@@ -36,9 +36,9 @@
           sur toi. 🤗
         </li>
         <li v-if="!isEnrolled">
-          <nuxt-link :to="VOLUNTEER_CHARTER_URL">
+          <NuxtLink :to="VOLUNTEER_CHARTER_URL">
             Lire et signer <strong>la Charte Bénévole</strong>
-          </nuxt-link>
+          </NuxtLink>
         </li>
       </ul>
 
