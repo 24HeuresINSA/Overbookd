@@ -11,4 +11,4 @@ deploy:
     - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
     - when: never
   script:
-    - 'curl -H "Authorization: Bearer ${WATCHTOWER_API_KEY}" "${WATCHTOWER_BASE_URL}/v1/update"'
+    - 'curl -X POST -H "Authorization: Bearer ${WATCHTOWER_API_KEY}" "${WATCHTOWER_BASE_URL}/v1/update"'
