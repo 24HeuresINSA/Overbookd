@@ -1,5 +1,11 @@
 <template>
-  <v-layout class="layout">
+  <v-layout
+    class="layout"
+    :class="{
+      'watermark-preprod': isPreProd,
+      'watermark-ctma': isCetaitMieuxAvant,
+    }"
+  >
     <Header />
     <DesktopSideNav
       @flip-content="flipContent"
@@ -168,6 +174,8 @@ const unflipContent = () => {
 </script>
 
 <style lang="scss" scoped>
+@use "~/assets/watermark.scss" as *;
+
 $surface-color: rgb(var(--v-theme-surface));
 $background-color: rgb(var(--v-theme-background));
 

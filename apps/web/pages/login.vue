@@ -55,7 +55,7 @@ import { useOidcUtils } from "~/composable/useOidcUtils";
 import { pickRandomBackground, GLASS } from "~/domain/login/pictures";
 import { planJauneAudioPlay } from "~/utils/easter-egg/jaune-audio";
 
-definePageMeta({ layout: false });
+definePageMeta({ layout: "unauthenticated" });
 
 const config = useRuntimeConfig();
 const version = config.public.version;
