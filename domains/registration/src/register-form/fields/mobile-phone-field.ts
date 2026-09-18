@@ -1,4 +1,7 @@
-import { isMobilePhoneNumberValid } from "../../phone-number/phone-number.js";
+import {
+  formatPhoneNumberToInternational,
+  isMobilePhoneNumberValid,
+} from "../../phone-number/phone-number.js";
 import { Field } from "./field.js";
 
 export class MobilePhoneField implements Field<string> {
@@ -17,6 +20,8 @@ export class MobilePhoneField implements Field<string> {
   }
 
   static build(mobilePhone: string): MobilePhoneField {
-    return new MobilePhoneField(mobilePhone.trim());
+    const internationalMobilePhone =
+      formatPhoneNumberToInternational(mobilePhone);
+    return new MobilePhoneField(internationalMobilePhone);
   }
 }

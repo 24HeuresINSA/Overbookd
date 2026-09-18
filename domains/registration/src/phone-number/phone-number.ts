@@ -26,15 +26,21 @@ export function isPhoneNumberValid(phoneNumber: string): boolean {
 
 export function formatPhoneNumber(phoneNumber: string): string {
   const parsedNumber = parseNumber(phoneNumber);
-  if (!parsedNumber.valid) return phoneNumber;
+  if (!parsedNumber.valid) return phoneNumber.trim();
   return isFrenchNumber(parsedNumber)
     ? parsedNumber.number.national
     : parsedNumber.number.international;
 }
 
+export function formatPhoneNumberToInternational(phoneNumber: string): string {
+  const parsedNumber = parseNumber(phoneNumber);
+  if (!parsedNumber.valid) return phoneNumber.trim();
+  return parsedNumber.number.international;
+}
+
 export function formatPhoneLink(phoneNumber: string): string {
   const parsedNumber = parseNumber(phoneNumber);
-  if (!parsedNumber.valid) return `tel:${phoneNumber}`;
+  if (!parsedNumber.valid) return `tel:${phoneNumber.trim()}`;
   return isFrenchNumber(parsedNumber)
     ? parsedNumber.number.rfc3966
     : buildWhatsAppLink(parsedNumber.number.e164);

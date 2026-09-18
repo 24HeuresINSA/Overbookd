@@ -57,6 +57,7 @@
 
 <script lang="ts" setup>
 import type { Contractor } from "@overbookd/festival-event";
+import { formatPhoneNumberToInternational } from "@overbookd/registration";
 import { isEmail, isPhoneNumber, required } from "~/utils/rules/input.rules";
 
 const emit = defineEmits(["add", "update", "close"]);
@@ -116,7 +117,7 @@ const confirmContractor = () => {
   const contractor = {
     firstName: firstName.value,
     lastName: lastName.value,
-    phoneNumber: phoneNumber.value,
+    phoneNumber: formatPhoneNumberToInternational(phoneNumber.value),
     email: emailValue || null,
     company: companyValue || null,
     comment: commentValue || null,

@@ -210,7 +210,11 @@ import { formatLocalDate } from "@overbookd/time";
 import { HARD, PERSONNE } from "@overbookd/team-code";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
 import { PLANNING_URL } from "@overbookd/web-page";
-import { formatEmailLink, formatPhoneLink } from "@overbookd/registration";
+import {
+  formatEmailLink,
+  formatPhoneLink,
+  formatPhoneNumberToInternational,
+} from "@overbookd/registration";
 import {
   NON_MANAGEABLE_TEAMS,
   isTeamManageable,
@@ -332,7 +336,7 @@ const updatedVolunteer = computed<UserUpdateForm>(() => {
     lastName: props.volunteer.lastName,
     nickname: trimmedNickname,
     birthDate: new Date(birthDay.value),
-    phoneNumber: phoneNumber.value,
+    phoneNumber: formatPhoneNumberToInternational(phoneNumber.value),
     email: email.value.trim(),
     note: trimmedNote,
   };
