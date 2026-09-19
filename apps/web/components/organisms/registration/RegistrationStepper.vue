@@ -265,7 +265,10 @@ import {
   isSame,
   maxLength,
 } from "~/utils/rules/input.rules";
-import { REGISTER_FORM_KEY } from "@overbookd/configuration";
+import {
+  STAFF_REGISTER_FORM_KEY,
+  VOLUNTEER_REGISTER_FORM_KEY,
+} from "@overbookd/configuration";
 import { planJauneAudioPlay } from "~/utils/easter-egg/jaune-audio";
 import {
   hasRegistrationFormData,
@@ -300,9 +303,15 @@ const mustSignVolunteerCharter = computed(() =>
   shouldSignVolunteerCharter(membership.value),
 );
 
-configurationStore.fetch(REGISTER_FORM_KEY);
-const registerFormDescription = computed<string>(
-  () => configurationStore.registerFormDescription,
+configurationStore.fetch(
+  membership.value === STAFF
+    ? STAFF_REGISTER_FORM_KEY
+    : VOLUNTEER_REGISTER_FORM_KEY,
+);
+const registerFormDescription = computed<string>(() =>
+  membership.value === STAFF
+    ? configurationStore.staffRegisterFormDescription
+    : configurationStore.volunteerRegisterFormDescription,
 );
 
 const step = ref<number>(1);
