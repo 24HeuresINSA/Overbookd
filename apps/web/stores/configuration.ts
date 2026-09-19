@@ -16,6 +16,7 @@ import { ConfigurationRepository } from "~/repositories/configuration.repository
 import { isHttpError } from "~/utils/http/http-error.utils";
 
 type RegistrationFormValue = {
+  isVolunteerRegistrationOpen: boolean;
   volunteerDescription: string;
   staffDescription: string;
 };
@@ -57,14 +58,21 @@ export const useConfigurationStore = defineStore("configuration", {
     registrationForm(): RegistrationFormValue {
       const registrationForm = this.get(REGISTRATION_FORM_KEY);
       const defaultValue: RegistrationFormValue = {
+        isVolunteerRegistrationOpen: true,
         volunteerDescription: defaultVolunteerCommitmentPresentation,
         staffDescription: defaultStaffCommitmentPresentation,
       };
       if (!isObject(registrationForm)) return defaultValue;
 
+      const isVolunteerRegistrationOpen =
+        registrationForm.isVolunteerRegistrationOpen;
       const volunteerDescription = registrationForm.volunteerDescription;
       const staffDescription = registrationForm.staffDescription;
       return {
+        isVolunteerRegistrationOpen:
+          typeof isVolunteerRegistrationOpen !== "boolean"
+            ? true
+            : isVolunteerRegistrationOpen,
         volunteerDescription:
           typeof volunteerDescription !== "string"
             ? defaultVolunteerCommitmentPresentation

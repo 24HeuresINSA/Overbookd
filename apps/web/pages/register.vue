@@ -7,11 +7,16 @@
       cover
     />
     <StaffLinkExpiredAlert v-if="isInvitationExpired" class="content" />
-    <RegistrationStepper v-else :token class="content" />
+    <VolunteerRegistrationClosedAlert
+      v-else-if="!token && !isVolunteerRegistrationOpen"
+      class="content"
+    />
+    <RegistrationStepper v-else :token="token" class="content" />
   </div>
 </template>
 
 <script lang="ts" setup>
+import { REGISTRATION_FORM_KEY } from "@overbookd/configuration";
 import { InviteStaff, LINK_EXPIRED } from "@overbookd/registration";
 import { stringifyQueryParam } from "~/utils/http/url-params.utils";
 import {
@@ -23,6 +28,9 @@ import {
 definePageMeta({ layout: "unauthenticated" });
 
 const route = useRoute();
+const configurationStore = useConfigurationStore();
+
+configurationStore.fetch(REGISTRATION_FORM_KEY);
 
 const token = computed<string>(() => {
   const token = stringifyQueryParam(route.query.token);
@@ -43,6 +51,10 @@ const isInvitationExpired = computed<boolean>(() => {
   if (!token.value) return false;
   return InviteStaff.isTokenExpired(token.value) === LINK_EXPIRED;
 });
+
+const isVolunteerRegistrationOpen = computed<boolean>(
+  () => configurationStore.registrationForm.isVolunteerRegistrationOpen,
+);
 </script>
 
 <style lang="scss" scoped>

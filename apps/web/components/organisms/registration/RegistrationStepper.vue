@@ -265,7 +265,6 @@ import {
   isSame,
   maxLength,
 } from "~/utils/rules/input.rules";
-import { REGISTRATION_FORM_KEY } from "@overbookd/configuration";
 import { planJauneAudioPlay } from "~/utils/easter-egg/jaune-audio";
 import {
   hasRegistrationFormData,
@@ -300,7 +299,6 @@ const mustSignVolunteerCharter = computed(() =>
   shouldSignVolunteerCharter(membership.value),
 );
 
-configurationStore.fetch(REGISTRATION_FORM_KEY);
 const registrationFormDescription = computed<string>(() =>
   isVolunteerRegistration.value
     ? configurationStore.registrationForm.volunteerDescription
