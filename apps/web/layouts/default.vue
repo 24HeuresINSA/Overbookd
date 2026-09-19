@@ -2,8 +2,8 @@
   <v-layout
     class="layout"
     :class="{
-      'watermark-preprod': isPreProd,
-      'watermark-ctma': isCetaitMieuxAvant,
+      'watermark-preprod': isPreProd(),
+      'watermark-ctma': isCetaitMieuxAvant(),
     }"
   >
     <Header />
@@ -70,7 +70,7 @@ import {
   saveContentFlipped,
   saveContentUnflipped,
 } from "~/utils/easter-egg/flip-content";
-import { CETAITMIEUXAVANT, PREPROD } from "~/utils/navigation/url.constant";
+import { isCetaitMieuxAvant, isPreProd } from "~/utils/navigation/url.constant";
 import { pickDefaultTheme } from "~/utils/vuetify/theme/theme.utils";
 import type { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
 
@@ -82,14 +82,9 @@ const { fetchMyRefusedActivities, fetchMyRefusedTasks } =
 const faStore = useFestivalActivityStore();
 const ftStore = useFestivalTaskStore();
 
-const config = useRuntimeConfig();
-const url: string = config.public.baseURL;
 const favicon = useFavicon();
-
-const isPreProd: boolean = url.includes(PREPROD);
-const isCetaitMieuxAvant: boolean = url.includes(CETAITMIEUXAVANT);
-if (isPreProd) favicon.value = "/favicon-preprod.ico";
-if (isCetaitMieuxAvant) favicon.value = "/favicon-ctma.ico";
+if (isPreProd()) favicon.value = "/favicon-preprod.ico";
+if (isCetaitMieuxAvant()) favicon.value = "/favicon-ctma.ico";
 
 const isMyFestivalActivity = (activity: FestivalActivity): boolean =>
   activity.inCharge.adherent.id === myStore.loggedUser?.id;
