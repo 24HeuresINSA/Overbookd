@@ -44,18 +44,22 @@ const CTMA_TOOLTIP_DESCRIPTION =
 
 const route = useRoute();
 const pageTitle = computed<string>(() => findPage(route.path)?.title || "");
-const preProd: boolean = isPreProd();
-const ctma: boolean = isCetaitMieuxAvant();
 
-const watermark = computed<string | undefined>(() =>
-  preProd ? PREPROD : ctma ? "ctma" : undefined,
-);
-const watermarkTooltipTitle = computed<string>(() =>
-  preProd ? PREPROD_TOOLTIP_TITLE : ctma ? CTMA_TOOLTIP_TITLE : "",
-);
-const watermarkTooltipDescription = computed<string>(() =>
-  preProd ? PREPROD_TOOLTIP_DESCRIPTION : ctma ? CTMA_TOOLTIP_DESCRIPTION : "",
-);
+const watermark = computed<string | undefined>(() => {
+  if (isPreProd()) return PREPROD;
+  if (isCetaitMieuxAvant()) return "ctma";
+  return undefined;
+});
+const watermarkTooltipTitle = computed<string>(() => {
+  if (isPreProd()) return PREPROD_TOOLTIP_TITLE;
+  if (isCetaitMieuxAvant()) return CTMA_TOOLTIP_TITLE;
+  return "";
+});
+const watermarkTooltipDescription = computed<string>(() => {
+  if (isPreProd()) return PREPROD_TOOLTIP_DESCRIPTION;
+  if (isCetaitMieuxAvant()) return CTMA_TOOLTIP_DESCRIPTION;
+  return "";
+});
 </script>
 
 <style lang="scss" scoped>
