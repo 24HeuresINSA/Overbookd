@@ -20,13 +20,12 @@ export class PrismaNewcomerRepository implements NewcomerRepository {
 
   async save<T extends Membership>(
     fulfilledForm: BaseFulfilledRegistration,
-    registrationMembership: T,
+    membership: T,
   ): Promise<NewcomerRegistered<T>> {
     const { mobilePhone, ...similarProperties } = fulfilledForm;
     const data = {
       ...similarProperties,
       phoneNumber: mobilePhone,
-      registrationMembership,
       teams: {
         createMany: {
           data: fulfilledForm.teams.map((team: RegistrationTeamCode) => ({
@@ -46,7 +45,7 @@ export class PrismaNewcomerRepository implements NewcomerRepository {
     return {
       ...similarProperties,
       id,
-      membership: registrationMembership,
+      membership,
       mobilePhone,
     };
   }

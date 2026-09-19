@@ -117,7 +117,6 @@ entity "User" as User {
   * createdAt : DateTime
   * updatedAt : DateTime
   * isDeleted : Boolean
-  registrationMembership : Membership
   note : String
   * hasApprovedEULA : Boolean
   * hasSignedVolunteerCharter : Boolean
@@ -607,7 +606,6 @@ BorrowGearRequest }o--|| CatalogGear
 BreakPeriod }o--|| User
 ' ManyToMany Relations
 ' enum relations
-User |o--|| Membership
 Preference |o--|| AssignmentPreference
 MembershipApplication |o--|| Membership
 Transaction |o--|| TransactionType
