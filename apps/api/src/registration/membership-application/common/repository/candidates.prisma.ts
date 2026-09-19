@@ -69,7 +69,7 @@ export class PrismaCandidates implements Candidates {
   ): Promise<void> {
     await this.prisma.membershipApplication.update({
       where: { userId_edition_membership: { userId: id, edition, membership } },
-      data: { isRejected: false, membership: newMembership },
+      data: { membership: newMembership },
     });
   }
 }

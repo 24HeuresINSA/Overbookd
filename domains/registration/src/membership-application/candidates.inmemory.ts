@@ -73,7 +73,7 @@ export class InMemoryCandidates implements Candidates {
       candidate.id === id &&
       candidate.edition == edition &&
       candidate.membership === membership
-        ? { ...candidate, isRejected: false, membership: newMembership }
+        ? { ...candidate, membership: newMembership }
         : candidate,
     );
   }
