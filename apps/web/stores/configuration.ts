@@ -2,8 +2,7 @@ import {
   canReadConfiguration,
   EVENT_DATE_KEY,
   ORGA_WEEK_DATE_KEY,
-  VOLUNTEER_REGISTER_FORM_KEY,
-  STAFF_REGISTER_FORM_KEY,
+  REGISTRATION_FORM_KEY,
   USEFUL_LINKS_KEY,
   type Configuration,
 } from "@overbookd/configuration";
@@ -15,6 +14,11 @@ import {
 import { Duration, OverDate, type IProvidePeriod } from "@overbookd/time";
 import { ConfigurationRepository } from "~/repositories/configuration.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
+
+type RegistrationFormValue = {
+  volunteerDescription: string;
+  staffDescription: string;
+};
 
 type State = {
   configurations: Configuration[];
@@ -50,26 +54,26 @@ export const useConfigurationStore = defineStore("configuration", {
       return OverDate.fromLocal(new Date(start)).date;
     },
 
-    volunteerRegisterFormDescription(): string {
-      const registerForm = this.get(VOLUNTEER_REGISTER_FORM_KEY);
-      if (!isObject(registerForm) || !("description" in registerForm)) {
-        return defaultVolunteerCommitmentPresentation;
-      }
-      const description = registerForm.description;
-      if (typeof description !== "string")
-        return defaultVolunteerCommitmentPresentation;
-      return description;
-    },
+    registrationForm(): RegistrationFormValue {
+      const registerForm = this.get(REGISTRATION_FORM_KEY);
+      const defaultValue: RegistrationFormValue = {
+        volunteerDescription: defaultVolunteerCommitmentPresentation,
+        staffDescription: defaultStaffCommitmentPresentation,
+      };
+      if (!isObject(registerForm)) return defaultValue;
 
-    staffRegisterFormDescription(): string {
-      const registerForm = this.get(STAFF_REGISTER_FORM_KEY);
-      if (!isObject(registerForm) || !("description" in registerForm)) {
-        return defaultStaffCommitmentPresentation;
-      }
-      const description = registerForm.description;
-      if (typeof description !== "string")
-        return defaultStaffCommitmentPresentation;
-      return description;
+      const volunteerDescription = registerForm.volunteerDescription;
+      const staffDescription = registerForm.staffDescription;
+      return {
+        volunteerDescription:
+          typeof volunteerDescription !== "string"
+            ? defaultVolunteerCommitmentPresentation
+            : (volunteerDescription as string),
+        staffDescription:
+          typeof staffDescription !== "string"
+            ? defaultStaffCommitmentPresentation
+            : (staffDescription as string),
+      };
     },
 
     usefulLinks(): { googleCalendar?: string; slack?: string } {

@@ -16,38 +16,38 @@
         <div>
           <h3>Formulaire organisateur</h3>
           <RichEditor
-            v-model="staffRegisterFormDescription"
+            v-model="staffRegistrationFormDescription"
             scope="staff-description"
           />
           <div class="description-actions">
             <v-btn
               text="Remplacer par le template"
               color="secondary"
-              @click="replaceStaffRegisterDescriptionByTemplate"
+              @click="replaceStaffRegistrationDescriptionByTemplate"
             />
             <v-btn
               text="Enregistrer"
               color="primary"
-              @click="saveStaffRegisterFormDescription"
+              @click="saveRegistrationFormDescriptions"
             />
           </div>
           <v-divider class="my-5" />
           <div>
             <h3>Formulaire bénévole</h3>
             <RichEditor
-              v-model="volunteerRegisterFormDescription"
+              v-model="volunteerRegistrationFormDescription"
               scope="volunteer-description"
             />
             <div class="description-actions">
               <v-btn
                 text="Remplacer par le template"
                 color="secondary"
-                @click="replaceVolunteerRegisterDescriptionByTemplate"
+                @click="replaceVolunteerRegistrationDescriptionByTemplate"
               />
               <v-btn
                 text="Enregistrer"
                 color="primary"
-                @click="saveVolunteerRegisterFormDescription"
+                @click="saveRegistrationFormDescriptions"
               />
             </div>
           </div>
@@ -137,8 +137,7 @@
 import {
   EVENT_DATE_KEY,
   ORGA_WEEK_DATE_KEY,
-  VOLUNTEER_REGISTER_FORM_KEY,
-  STAFF_REGISTER_FORM_KEY,
+  REGISTRATION_FORM_KEY,
   USEFUL_LINKS_KEY,
 } from "@overbookd/configuration";
 import {
@@ -160,30 +159,26 @@ const dateOrgaWeekStart = ref<Date>(
 );
 const usefulLinks = ref(configurationStore.usefulLinks);
 
-const staffRegisterFormDescription = ref<string>(
-  configurationStore.staffRegisterFormDescription,
+const staffRegistrationFormDescription = ref<string>(
+  configurationStore.registrationForm.staffDescription,
 );
-const replaceStaffRegisterDescriptionByTemplate = () => {
-  staffRegisterFormDescription.value = defaultStaffCommitmentPresentation;
-};
-const saveStaffRegisterFormDescription = async () => {
-  await configurationStore.save({
-    key: STAFF_REGISTER_FORM_KEY,
-    value: { description: staffRegisterFormDescription.value },
-  });
-};
-
-const volunteerRegisterFormDescription = ref<string>(
-  configurationStore.volunteerRegisterFormDescription,
+const volunteerRegistrationFormDescription = ref<string>(
+  configurationStore.registrationForm.volunteerDescription,
 );
-const replaceVolunteerRegisterDescriptionByTemplate = () => {
-  volunteerRegisterFormDescription.value =
+const replaceStaffRegistrationDescriptionByTemplate = () => {
+  staffRegistrationFormDescription.value = defaultStaffCommitmentPresentation;
+};
+const replaceVolunteerRegistrationDescriptionByTemplate = () => {
+  volunteerRegistrationFormDescription.value =
     defaultVolunteerCommitmentPresentation;
 };
-const saveVolunteerRegisterFormDescription = async () => {
+const saveRegistrationFormDescriptions = async () => {
   await configurationStore.save({
-    key: VOLUNTEER_REGISTER_FORM_KEY,
-    value: { description: volunteerRegisterFormDescription.value },
+    key: REGISTRATION_FORM_KEY,
+    value: {
+      staffDescription: staffRegistrationFormDescription.value,
+      volunteerDescription: volunteerRegistrationFormDescription.value,
+    },
   });
 };
 
