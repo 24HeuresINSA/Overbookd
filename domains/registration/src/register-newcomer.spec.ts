@@ -79,13 +79,14 @@ describe("Register newcomer", () => {
       "when receiving a valid $membership registration with password required",
       ({ membership, registerForm }) => {
         it("should register the associated newcomer", async () => {
-          const registree = await registerNewcomer.fromRegisterForm(
+          const newcomer = await registerNewcomer.fromRegisterForm(
             registerForm,
             membership,
           );
           const { password, status, ...personalData } = registerForm;
-          const expectedRegistree = { ...personalData, id: 1, membership };
-          expect(registree).toStrictEqual(expectedRegistree);
+          const expectedRegistree = { ...personalData, id: 1 };
+          const expectedNewcomer = { ...expectedRegistree, membership };
+          expect(newcomer).toStrictEqual(expectedNewcomer);
           expect(newcomerRepository.registrees).toContainEqual(
             expectedRegistree,
           );
@@ -121,11 +122,11 @@ describe("Register newcomer", () => {
               ...registerForm,
               email: "brole@protonmail.com",
             };
-            const [firstRegistree, secondRegistree] = await Promise.all([
+            const [firstNewcomer, secondNewcomer] = await Promise.all([
               registerNewcomer.fromRegisterForm(firstForm, membership),
               registerNewcomer.fromRegisterForm(secondForm, membership),
             ]);
-            expect(firstRegistree.id).not.toBe(secondRegistree.id);
+            expect(firstNewcomer.id).not.toBe(secondNewcomer.id);
           });
         });
         describe("when receiving newcomer with space(s) in email", () => {
@@ -156,30 +157,35 @@ describe("Register newcomer", () => {
       "when receiving a valid $membership registration without password required",
       ({ membership, registerForm }) => {
         it("should register the associated newcomer without password", async () => {
-          const registree = await registerNewcomer.fromRegisterForm(
+          const newcomer = await registerNewcomer.fromRegisterForm(
             registerForm,
             membership,
           );
 
           const { status, ...personalData } = registerForm;
-          const expectedRegistree = { ...personalData, id: 1, membership };
-          expect(registree).toStrictEqual(expectedRegistree);
-          expect(registree).not.toHaveProperty("password");
+          const expectedRegistree = { ...personalData, id: 1 };
+          const expectedNewcomer = { ...expectedRegistree, membership };
+          expect(newcomer).toStrictEqual(expectedNewcomer);
+          expect(newcomer).not.toHaveProperty("password");
           expect(newcomerRepository.registrees).toContainEqual(
             expectedRegistree,
           );
         });
         it("should ignore provided password", async () => {
           const formWithPassword = { ...registerForm, password };
-          const registree = await registerNewcomer.fromRegisterForm(
+          const newcomer = await registerNewcomer.fromRegisterForm(
             formWithPassword,
             membership,
           );
 
           const { status, ...personalData } = registerForm;
-          const expectedRegistree = { ...personalData, id: 1, membership };
-          expect(registree).toStrictEqual(expectedRegistree);
-          expect(registree).not.toHaveProperty("password");
+          const expectedRegistree = { ...personalData, id: 1 };
+          const expectedNewcomer = { ...expectedRegistree, membership };
+          expect(newcomer).toStrictEqual(expectedNewcomer);
+          expect(newcomer).not.toHaveProperty("password");
+          expect(newcomerRepository.registrees).toContainEqual(
+            expectedRegistree,
+          );
         });
       },
     );

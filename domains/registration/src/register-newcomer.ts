@@ -1,4 +1,4 @@
-import { Membership, NewcomerRegistered } from "./newcomer.js";
+import { Membership, NewcomerRegistered, Registree } from "./newcomer.js";
 import {
   BaseFulfilledRegistration,
   FulfilledRegistration,
@@ -7,16 +7,16 @@ import {
 import { RegisterForm } from "./register-form/register-form.js";
 
 export type NewcomerRepository = {
-  save: <T extends Membership>(
-    fulfilledForm: BaseFulfilledRegistration,
-    membership: T,
-  ) => Promise<NewcomerRegistered<T>>;
+  save: (fulfilledForm: BaseFulfilledRegistration) => Promise<Registree>;
 };
 
 export class RegisterNewcomer {
   constructor(private readonly newcomerRepository: NewcomerRepository) {}
 
-  async fromRegisterForm(form: FulfilledRegistration, membership: Membership) {
+  async fromRegisterForm(
+    form: FulfilledRegistration,
+    membership: Membership,
+  ): Promise<NewcomerRegistered<Membership>> {
     const dataForm = RegisterForm.initFor(membership, form.status)
       .fillEmail(form.email)
       .fillFirstName(form.firstName)
@@ -44,7 +44,8 @@ export class RegisterNewcomer {
     const fulfilledForm = withVolunteerCharter.complete();
     const personalData = stripRegistrationData(fulfilledForm);
 
-    return this.newcomerRepository.save(personalData, membership);
+    const registree = await this.newcomerRepository.save(personalData);
+    return { ...registree, membership };
   }
 }
 
