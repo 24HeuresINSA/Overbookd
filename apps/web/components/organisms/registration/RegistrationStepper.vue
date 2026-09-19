@@ -23,7 +23,7 @@
 
       <v-stepper-window v-show="step == 1" direction="vertical">
         <v-stepper-window-item :value="1">
-          <div v-html-safe="registerFormDescription" />
+          <div v-html-safe="registrationFormDescription" />
 
           <div class="stepper-actions">
             <v-btn text="C'est parti ! 🚀" color="primary" @click="step = 2" />
@@ -265,7 +265,7 @@ import {
   isSame,
   maxLength,
 } from "~/utils/rules/input.rules";
-import { REGISTER_FORM_KEY } from "@overbookd/configuration";
+import { REGISTRATION_FORM_KEY } from "@overbookd/configuration";
 import { planJauneAudioPlay } from "~/utils/easter-egg/jaune-audio";
 import {
   hasRegistrationFormData,
@@ -294,15 +294,17 @@ const membership = computed<Membership>(() =>
   isVolunteerRegistration.value ? VOLUNTEER : STAFF,
 );
 const membershipLabel = computed<string>(() =>
-  membership.value === STAFF ? "Organisateur" : "Bénévole",
+  isVolunteerRegistration.value ? "Bénévole" : "Organisateur",
 );
 const mustSignVolunteerCharter = computed(() =>
   shouldSignVolunteerCharter(membership.value),
 );
 
-configurationStore.fetch(REGISTER_FORM_KEY);
-const registerFormDescription = computed<string>(
-  () => configurationStore.registerFormDescription,
+configurationStore.fetch(REGISTRATION_FORM_KEY);
+const registrationFormDescription = computed<string>(() =>
+  isVolunteerRegistration.value
+    ? configurationStore.registrationForm.volunteerDescription
+    : configurationStore.registrationForm.staffDescription,
 );
 
 const step = ref<number>(1);

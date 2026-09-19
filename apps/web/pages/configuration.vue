@@ -10,24 +10,47 @@
   <v-expansion-panels rounded="xl">
     <v-expansion-panel class="collapse">
       <v-expansion-panel-title>
-        <h2>Description du formulaire d'inscription</h2>
+        <h2>Formulaire d'inscription</h2>
       </v-expansion-panel-title>
       <v-expansion-panel-text>
-        <RichEditor
-          v-model="registerFormDescription"
-          scope="registration-description"
-        />
-        <div class="description-actions">
-          <v-btn
-            text="Remplacer par le template"
-            color="secondary"
-            @click="replaceRegisterDescriptionByTemplate"
+        <div>
+          <h3>Description organisateur</h3>
+          <RichEditor
+            v-model="staffRegistrationFormDescription"
+            scope="staff-description"
           />
-          <v-btn
-            text="Enregistrer"
-            color="primary"
-            @click="saveRegisterFormDescription"
-          />
+          <div class="description-actions">
+            <v-btn
+              text="Remplacer par le template"
+              color="secondary"
+              @click="replaceStaffRegistrationDescriptionByTemplate"
+            />
+            <v-btn
+              text="Enregistrer"
+              color="primary"
+              @click="saveRegistrationFormDescriptions"
+            />
+          </div>
+          <v-divider class="my-5" />
+          <div>
+            <h3>Description bénévole</h3>
+            <RichEditor
+              v-model="volunteerRegistrationFormDescription"
+              scope="volunteer-description"
+            />
+            <div class="description-actions">
+              <v-btn
+                text="Remplacer par le template"
+                color="secondary"
+                @click="replaceVolunteerRegistrationDescriptionByTemplate"
+              />
+              <v-btn
+                text="Enregistrer"
+                color="primary"
+                @click="saveRegistrationFormDescriptions"
+              />
+            </div>
+          </div>
         </div>
       </v-expansion-panel-text>
     </v-expansion-panel>
@@ -114,10 +137,13 @@
 import {
   EVENT_DATE_KEY,
   ORGA_WEEK_DATE_KEY,
-  REGISTER_FORM_KEY,
+  REGISTRATION_FORM_KEY,
   USEFUL_LINKS_KEY,
 } from "@overbookd/configuration";
-import { defaultCommitmentPresentation } from "@overbookd/registration";
+import {
+  defaultVolunteerCommitmentPresentation,
+  defaultStaffCommitmentPresentation,
+} from "@overbookd/registration";
 
 useHead({ title: "Config admin" });
 
@@ -131,18 +157,28 @@ const dateEventStart = ref<Date>(configurationStore.eventStartDate);
 const dateOrgaWeekStart = ref<Date>(
   configurationStore.orgaWeekStartDate ?? new Date(),
 );
-const registerFormDescription = ref<string>(
-  configurationStore.registerFormDescription,
-);
 const usefulLinks = ref(configurationStore.usefulLinks);
 
-const replaceRegisterDescriptionByTemplate = () => {
-  registerFormDescription.value = defaultCommitmentPresentation;
+const staffRegistrationFormDescription = ref<string>(
+  configurationStore.registrationForm.staffDescription,
+);
+const volunteerRegistrationFormDescription = ref<string>(
+  configurationStore.registrationForm.volunteerDescription,
+);
+const replaceStaffRegistrationDescriptionByTemplate = () => {
+  staffRegistrationFormDescription.value = defaultStaffCommitmentPresentation;
 };
-const saveRegisterFormDescription = async () => {
+const replaceVolunteerRegistrationDescriptionByTemplate = () => {
+  volunteerRegistrationFormDescription.value =
+    defaultVolunteerCommitmentPresentation;
+};
+const saveRegistrationFormDescriptions = async () => {
   await configurationStore.save({
-    key: REGISTER_FORM_KEY,
-    value: { description: registerFormDescription.value },
+    key: REGISTRATION_FORM_KEY,
+    value: {
+      staffDescription: staffRegistrationFormDescription.value,
+      volunteerDescription: volunteerRegistrationFormDescription.value,
+    },
   });
 };
 
@@ -173,6 +209,10 @@ const saveUsefulLinks = async () => {
 </script>
 
 <style lang="scss" scoped>
+h3 {
+  margin-bottom: 5px;
+}
+
 .gif {
   margin-bottom: 15px;
 }

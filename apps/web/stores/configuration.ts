@@ -2,15 +2,23 @@ import {
   canReadConfiguration,
   EVENT_DATE_KEY,
   ORGA_WEEK_DATE_KEY,
-  REGISTER_FORM_KEY,
+  REGISTRATION_FORM_KEY,
   USEFUL_LINKS_KEY,
   type Configuration,
 } from "@overbookd/configuration";
 import { updateItemToList } from "@overbookd/list";
-import { defaultCommitmentPresentation } from "@overbookd/registration";
+import {
+  defaultVolunteerCommitmentPresentation,
+  defaultStaffCommitmentPresentation,
+} from "@overbookd/registration";
 import { Duration, OverDate, type IProvidePeriod } from "@overbookd/time";
 import { ConfigurationRepository } from "~/repositories/configuration.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
+
+type RegistrationFormValue = {
+  volunteerDescription: string;
+  staffDescription: string;
+};
 
 type State = {
   configurations: Configuration[];
@@ -46,14 +54,26 @@ export const useConfigurationStore = defineStore("configuration", {
       return OverDate.fromLocal(new Date(start)).date;
     },
 
-    registerFormDescription(): string {
-      const registerForm = this.get(REGISTER_FORM_KEY);
-      if (!isObject(registerForm) || !("description" in registerForm)) {
-        return defaultCommitmentPresentation;
-      }
-      const description = registerForm.description;
-      if (typeof description !== "string") return defaultCommitmentPresentation;
-      return description;
+    registrationForm(): RegistrationFormValue {
+      const registrationForm = this.get(REGISTRATION_FORM_KEY);
+      const defaultValue: RegistrationFormValue = {
+        volunteerDescription: defaultVolunteerCommitmentPresentation,
+        staffDescription: defaultStaffCommitmentPresentation,
+      };
+      if (!isObject(registrationForm)) return defaultValue;
+
+      const volunteerDescription = registrationForm.volunteerDescription;
+      const staffDescription = registrationForm.staffDescription;
+      return {
+        volunteerDescription:
+          typeof volunteerDescription !== "string"
+            ? defaultVolunteerCommitmentPresentation
+            : volunteerDescription,
+        staffDescription:
+          typeof staffDescription !== "string"
+            ? defaultStaffCommitmentPresentation
+            : staffDescription,
+      };
     },
 
     usefulLinks(): { googleCalendar?: string; slack?: string } {
