@@ -2,12 +2,16 @@ import {
   canReadConfiguration,
   EVENT_DATE_KEY,
   ORGA_WEEK_DATE_KEY,
-  REGISTER_FORM_KEY,
+  VOLUNTEER_REGISTER_FORM_KEY,
+  STAFF_REGISTER_FORM_KEY,
   USEFUL_LINKS_KEY,
   type Configuration,
 } from "@overbookd/configuration";
 import { updateItemToList } from "@overbookd/list";
-import { defaultCommitmentPresentation } from "@overbookd/registration";
+import {
+  defaultVolunteerCommitmentPresentation,
+  defaultStaffCommitmentPresentation,
+} from "@overbookd/registration";
 import { Duration, OverDate, type IProvidePeriod } from "@overbookd/time";
 import { ConfigurationRepository } from "~/repositories/configuration.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
@@ -46,13 +50,25 @@ export const useConfigurationStore = defineStore("configuration", {
       return OverDate.fromLocal(new Date(start)).date;
     },
 
-    registerFormDescription(): string {
-      const registerForm = this.get(REGISTER_FORM_KEY);
+    volunteerRegisterFormDescription(): string {
+      const registerForm = this.get(VOLUNTEER_REGISTER_FORM_KEY);
       if (!isObject(registerForm) || !("description" in registerForm)) {
-        return defaultCommitmentPresentation;
+        return defaultVolunteerCommitmentPresentation;
       }
       const description = registerForm.description;
-      if (typeof description !== "string") return defaultCommitmentPresentation;
+      if (typeof description !== "string")
+        return defaultVolunteerCommitmentPresentation;
+      return description;
+    },
+
+    staffRegisterFormDescription(): string {
+      const registerForm = this.get(STAFF_REGISTER_FORM_KEY);
+      if (!isObject(registerForm) || !("description" in registerForm)) {
+        return defaultStaffCommitmentPresentation;
+      }
+      const description = registerForm.description;
+      if (typeof description !== "string")
+        return defaultStaffCommitmentPresentation;
       return description;
     },
 

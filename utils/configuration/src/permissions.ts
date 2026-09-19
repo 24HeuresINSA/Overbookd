@@ -1,6 +1,7 @@
 import {
   type ConfigurationKey,
-  REGISTER_FORM_KEY,
+  VOLUNTEER_REGISTER_FORM_KEY,
+  STAFF_REGISTER_FORM_KEY,
   EVENT_DATE_KEY,
   ORGA_WEEK_DATE_KEY,
   INVITE_STAFF_LINK_KEY,
@@ -31,7 +32,14 @@ type ConfigurationWithPermissions = {
 
 const configurationsWithPermissions: ConfigurationWithPermissions[] = [
   {
-    key: REGISTER_FORM_KEY,
+    key: VOLUNTEER_REGISTER_FORM_KEY,
+    permissions: {
+      read: ALL,
+      write: MANAGE_CONFIG,
+    },
+  },
+  {
+    key: STAFF_REGISTER_FORM_KEY,
     permissions: {
       read: ALL,
       write: MANAGE_CONFIG,

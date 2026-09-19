@@ -1,4 +1,7 @@
-export { defaultCommitmentPresentation } from "./registration.constant.js";
+export {
+  defaultVolunteerCommitmentPresentation,
+  defaultStaffCommitmentPresentation,
+} from "./registration.constant.js";
 export type {
   MemberRegistered,
   Membership,

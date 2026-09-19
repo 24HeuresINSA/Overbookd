@@ -7,10 +7,14 @@ import {
   Configuration,
   EVENT_DATE_KEY,
   ORGA_WEEK_DATE_KEY,
-  REGISTER_FORM_KEY,
+  VOLUNTEER_REGISTER_FORM_KEY,
+  STAFF_REGISTER_FORM_KEY,
   USEFUL_LINKS_KEY,
 } from "@overbookd/configuration";
-import { defaultCommitmentPresentation } from "@overbookd/registration";
+import {
+  defaultVolunteerCommitmentPresentation,
+  defaultStaffCommitmentPresentation,
+} from "@overbookd/registration";
 import { SlugifyService } from "@overbookd/slugify";
 import { teams } from "./seeders/teams";
 import { userTeamTuples } from "./seeders/users";
@@ -208,17 +212,29 @@ async function main() {
   });
 
   console.log("----------------------------------------------------------");
-  console.log("Inserting register form text");
-  const registerFormConfig: Configuration = {
-    key: REGISTER_FORM_KEY,
+  console.log("Inserting register form descriptions");
+  const volunteerRegisterFormConfig: Configuration = {
+    key: VOLUNTEER_REGISTER_FORM_KEY,
     value: {
-      description: defaultCommitmentPresentation,
+      description: defaultVolunteerCommitmentPresentation,
     },
   };
   await prisma.configuration.upsert({
-    where: { key: REGISTER_FORM_KEY },
-    update: registerFormConfig,
-    create: registerFormConfig,
+    where: { key: VOLUNTEER_REGISTER_FORM_KEY },
+    update: volunteerRegisterFormConfig,
+    create: volunteerRegisterFormConfig,
+  });
+
+  const staffRegisterFormConfig: Configuration = {
+    key: STAFF_REGISTER_FORM_KEY,
+    value: {
+      description: defaultStaffCommitmentPresentation,
+    },
+  };
+  await prisma.configuration.upsert({
+    where: { key: STAFF_REGISTER_FORM_KEY },
+    update: staffRegisterFormConfig,
+    create: staffRegisterFormConfig,
   });
 
   console.log("----------------------------------------------------------");

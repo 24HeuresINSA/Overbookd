@@ -10,24 +10,47 @@
   <v-expansion-panels rounded="xl">
     <v-expansion-panel class="collapse">
       <v-expansion-panel-title>
-        <h2>Description du formulaire d'inscription</h2>
+        <h2>Description des formulaires d'inscription</h2>
       </v-expansion-panel-title>
       <v-expansion-panel-text>
-        <RichEditor
-          v-model="registerFormDescription"
-          scope="registration-description"
-        />
-        <div class="description-actions">
-          <v-btn
-            text="Remplacer par le template"
-            color="secondary"
-            @click="replaceRegisterDescriptionByTemplate"
+        <div>
+          <h3>Formulaire organisateur</h3>
+          <RichEditor
+            v-model="staffRegisterFormDescription"
+            scope="registration-description"
           />
-          <v-btn
-            text="Enregistrer"
-            color="primary"
-            @click="saveRegisterFormDescription"
-          />
+          <div class="description-actions">
+            <v-btn
+              text="Remplacer par le template"
+              color="secondary"
+              @click="replaceStaffRegisterDescriptionByTemplate"
+            />
+            <v-btn
+              text="Enregistrer"
+              color="primary"
+              @click="saveStaffRegisterFormDescription"
+            />
+          </div>
+
+          <div>
+            <h3>Formulaire bénévole</h3>
+            <RichEditor
+              v-model="volunteerRegisterFormDescription"
+              scope="registration-description"
+            />
+            <div class="description-actions">
+              <v-btn
+                text="Remplacer par le template"
+                color="secondary"
+                @click="replaceVolunteerRegisterDescriptionByTemplate"
+              />
+              <v-btn
+                text="Enregistrer"
+                color="primary"
+                @click="saveVolunteerRegisterFormDescription"
+              />
+            </div>
+          </div>
         </div>
       </v-expansion-panel-text>
     </v-expansion-panel>
@@ -114,10 +137,14 @@
 import {
   EVENT_DATE_KEY,
   ORGA_WEEK_DATE_KEY,
-  REGISTER_FORM_KEY,
+  VOLUNTEER_REGISTER_FORM_KEY,
+  STAFF_REGISTER_FORM_KEY,
   USEFUL_LINKS_KEY,
 } from "@overbookd/configuration";
-import { defaultCommitmentPresentation } from "@overbookd/registration";
+import {
+  defaultVolunteerCommitmentPresentation,
+  defaultStaffCommitmentPresentation,
+} from "@overbookd/registration";
 
 useHead({ title: "Config admin" });
 
@@ -131,18 +158,32 @@ const dateEventStart = ref<Date>(configurationStore.eventStartDate);
 const dateOrgaWeekStart = ref<Date>(
   configurationStore.orgaWeekStartDate ?? new Date(),
 );
-const registerFormDescription = ref<string>(
-  configurationStore.registerFormDescription,
-);
 const usefulLinks = ref(configurationStore.usefulLinks);
 
-const replaceRegisterDescriptionByTemplate = () => {
-  registerFormDescription.value = defaultCommitmentPresentation;
+const staffRegisterFormDescription = ref<string>(
+  configurationStore.staffRegisterFormDescription,
+);
+const replaceStaffRegisterDescriptionByTemplate = () => {
+  staffRegisterFormDescription.value = defaultStaffCommitmentPresentation;
 };
-const saveRegisterFormDescription = async () => {
+const saveStaffRegisterFormDescription = async () => {
   await configurationStore.save({
-    key: REGISTER_FORM_KEY,
-    value: { description: registerFormDescription.value },
+    key: STAFF_REGISTER_FORM_KEY,
+    value: { description: staffRegisterFormDescription.value },
+  });
+};
+
+const volunteerRegisterFormDescription = ref<string>(
+  configurationStore.volunteerRegisterFormDescription,
+);
+const replaceVolunteerRegisterDescriptionByTemplate = () => {
+  volunteerRegisterFormDescription.value =
+    defaultVolunteerCommitmentPresentation;
+};
+const saveVolunteerRegisterFormDescription = async () => {
+  await configurationStore.save({
+    key: VOLUNTEER_REGISTER_FORM_KEY,
+    value: { description: volunteerRegisterFormDescription.value },
   });
 };
 
