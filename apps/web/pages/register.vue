@@ -20,7 +20,7 @@ import {
   saveStaffToken,
 } from "~/utils/registration/staff-token";
 
-definePageMeta({ layout: false });
+definePageMeta({ layout: "unauthenticated" });
 
 const route = useRoute();
 

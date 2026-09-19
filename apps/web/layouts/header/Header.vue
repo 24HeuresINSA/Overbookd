@@ -27,7 +27,11 @@
 import Logo from "./Logo.vue";
 import HeaderProfile from "./HeaderProfile.vue";
 import { findPage } from "~/utils/navigation/find-page.utils";
-import { CETAITMIEUXAVANT, PREPROD } from "~/utils/navigation/url.constant";
+import {
+  isCetaitMieuxAvant,
+  isPreProd,
+  PREPROD,
+} from "~/utils/navigation/url.constant";
 
 const PREPROD_TOOLTIP_TITLE =
   "Tu es sur la version de pré-production d'Overbookd.";
@@ -39,31 +43,23 @@ const CTMA_TOOLTIP_DESCRIPTION =
   "Le site et les données sont une copie d'Overbookd de l'année précédente.";
 
 const route = useRoute();
-const config = useRuntimeConfig();
-const url: string = config.public.baseURL;
-
-const isPreProd: boolean = url.includes(PREPROD);
-const isCetaitMieuxAvant: boolean = url.includes(CETAITMIEUXAVANT);
-
 const pageTitle = computed<string>(() => findPage(route.path)?.title || "");
 
-const watermark = computed<string | undefined>(() =>
-  isPreProd ? PREPROD : isCetaitMieuxAvant ? "ctma" : undefined,
-);
-const watermarkTooltipTitle = computed<string>(() =>
-  isPreProd
-    ? PREPROD_TOOLTIP_TITLE
-    : isCetaitMieuxAvant
-      ? CTMA_TOOLTIP_TITLE
-      : "",
-);
-const watermarkTooltipDescription = computed<string>(() =>
-  isPreProd
-    ? PREPROD_TOOLTIP_DESCRIPTION
-    : isCetaitMieuxAvant
-      ? CTMA_TOOLTIP_DESCRIPTION
-      : "",
-);
+const watermark = computed<string | undefined>(() => {
+  if (isPreProd()) return PREPROD;
+  if (isCetaitMieuxAvant()) return "ctma";
+  return undefined;
+});
+const watermarkTooltipTitle = computed<string>(() => {
+  if (isPreProd()) return PREPROD_TOOLTIP_TITLE;
+  if (isCetaitMieuxAvant()) return CTMA_TOOLTIP_TITLE;
+  return "";
+});
+const watermarkTooltipDescription = computed<string>(() => {
+  if (isPreProd()) return PREPROD_TOOLTIP_DESCRIPTION;
+  if (isCetaitMieuxAvant()) return CTMA_TOOLTIP_DESCRIPTION;
+  return "";
+});
 </script>
 
 <style lang="scss" scoped>

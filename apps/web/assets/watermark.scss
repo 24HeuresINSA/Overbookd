@@ -1,0 +1,29 @@
+@mixin watermark($image) {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background-image: url($image);
+    background-repeat: repeat;
+    background-position: 0 0;
+    background-size: 140px 100px;
+
+    opacity: 0.08;
+    pointer-events: none;
+    user-select: none;
+    z-index: 9999;
+  }
+}
+
+.watermark-preprod {
+  @include watermark("/img/watermark/preprod.svg");
+}
+
+.watermark-ctma {
+  @include watermark("/img/watermark/ctma.svg");
+}
