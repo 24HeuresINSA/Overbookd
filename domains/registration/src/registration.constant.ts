@@ -1,9 +1,8 @@
 const readableVolunteerCommitmentPresentation = `
 <p>Hello et merci d'être venu·e jusqu'ici ! 🤗</p>
 <p>
-Le festival des 24 heures de l'INSA n'est possible que grâce aux
-plus de
-<strong>400 bénévoles</strong> qui, comme toi, ont accepté de venir
+Le festival des 24 heures de l'INSA n'est possible que grâce aux plus
+de <strong>400 bénévoles</strong> qui, comme toi, ont accepté de venir
 nous donner un coup de main pour préparer, organiser et faire en
 sorte que les festivaliers passent le meilleur moment possible. 🎉
 </p>
@@ -40,7 +39,7 @@ Si tu as la moindre question, n'hésite pas a contacter le·a
 <p>Que l'aventure commence ! 🔥</p>`;
 
 export const defaultVolunteerCommitmentPresentation =
-  readableVolunteerCommitmentPresentation.replace(/\n/g, "");
+  readableVolunteerCommitmentPresentation.replace(/\n/g, " ");
 
 export const defaultStaffCommitmentPresentation =
-  readableStaffCommitmentPresentation.replace(/\n/g, "");
+  readableStaffCommitmentPresentation.replace(/\n/g, " ");

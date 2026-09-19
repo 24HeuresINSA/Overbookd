@@ -17,7 +17,7 @@
           <h3>Formulaire organisateur</h3>
           <RichEditor
             v-model="staffRegisterFormDescription"
-            scope="registration-description"
+            scope="staff-description"
           />
           <div class="description-actions">
             <v-btn
@@ -31,12 +31,12 @@
               @click="saveStaffRegisterFormDescription"
             />
           </div>
-
+          <v-divider class="my-5" />
           <div>
             <h3>Formulaire bénévole</h3>
             <RichEditor
               v-model="volunteerRegisterFormDescription"
-              scope="registration-description"
+              scope="volunteer-description"
             />
             <div class="description-actions">
               <v-btn
@@ -214,6 +214,10 @@ const saveUsefulLinks = async () => {
 </script>
 
 <style lang="scss" scoped>
+h3 {
+  margin-bottom: 5px;
+}
+
 .gif {
   margin-bottom: 15px;
 }
