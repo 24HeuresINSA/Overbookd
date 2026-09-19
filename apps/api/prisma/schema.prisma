@@ -36,23 +36,22 @@ enum Membership {
 }
 
 model User {
-  id                        Int         @id @default(autoincrement())
-  zitadelId                 String?     @unique @map("zitadel_id")
-  firstName                 String      @map("first_name") @db.VarChar(30)
-  lastName                  String      @map("last_name") @db.VarChar(30)
-  nickname                  String?     @db.VarChar(30)
-  email                     String      @unique
-  birthDate                 DateTime    @map("birth_date")
-  phoneNumber               String      @map("phone_number") @db.VarChar(30)
+  id                        Int      @id @default(autoincrement())
+  zitadelId                 String?  @unique @map("zitadel_id")
+  firstName                 String   @map("first_name") @db.VarChar(30)
+  lastName                  String   @map("last_name") @db.VarChar(30)
+  nickname                  String?  @db.VarChar(30)
+  email                     String   @unique
+  birthDate                 DateTime @map("birth_date")
+  phoneNumber               String   @map("phone_number") @db.VarChar(30)
   comment                   String?
-  profilePicture            String?     @map("profile_picture")
-  createdAt                 DateTime    @default(now()) @map("created_at")
-  updatedAt                 DateTime    @updatedAt @map("updated_at")
-  isDeleted                 Boolean     @default(false) @map("is_deleted")
-  registrationMembership    Membership? @map("registration_membership")
-  note                      String?     @db.Text
-  hasApprovedEULA           Boolean     @default(false) @map("has_approved_eula")
-  hasSignedVolunteerCharter Boolean     @default(false) @map("has_signed_volunteer_charter")
+  profilePicture            String?  @map("profile_picture")
+  createdAt                 DateTime @default(now()) @map("created_at")
+  updatedAt                 DateTime @updatedAt @map("updated_at")
+  isDeleted                 Boolean  @default(false) @map("is_deleted")
+  note                      String?  @db.Text
+  hasApprovedEULA           Boolean  @default(false) @map("has_approved_eula")
+  hasSignedVolunteerCharter Boolean  @default(false) @map("has_signed_volunteer_charter")
 
   preference Preference?
   teams      UserTeam[]

@@ -91,20 +91,17 @@ export class MailService implements OnApplicationBootstrap {
   onApplicationBootstrap(): void {
     this.eventStore.staffsRegistered.subscribe(({ data: event }) => {
       this.logger.log("Send welcome-staff mail");
-      this.logger.debug(JSON.stringify(event));
       this.welcome(event);
     });
 
     this.eventStore.volunteersRegistered.subscribe(({ data: event }) => {
       this.logger.log("Send welcome-volunteer mail");
-      this.logger.debug(JSON.stringify(event));
       this.welcome(event);
     });
 
     this.eventStore.volunteersEnrolled.subscribe(
       async ({ data: enrolling }) => {
         this.logger.log("Send volunteer-enrolled mail");
-        this.logger.debug(JSON.stringify(enrolling));
         const volunteer = await this.members.byId(enrolling.candidate.id);
         this.enrollVolunteer(volunteer);
       },

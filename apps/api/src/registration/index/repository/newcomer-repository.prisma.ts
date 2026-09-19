@@ -1,9 +1,8 @@
 import {
   BaseFulfilledRegistration,
-  Membership,
-  NewcomerRegistered,
   NewcomerRepository,
   RegistrationTeamCode,
+  Registree,
 } from "@overbookd/registration";
 import { PrismaService } from "../../../prisma.service";
 
@@ -18,15 +17,11 @@ export class PrismaNewcomerRepository implements NewcomerRepository {
     return existing !== null;
   }
 
-  async save<T extends Membership>(
-    fulfilledForm: BaseFulfilledRegistration,
-    registrationMembership: T,
-  ): Promise<NewcomerRegistered<T>> {
+  async save(fulfilledForm: BaseFulfilledRegistration): Promise<Registree> {
     const { mobilePhone, ...similarProperties } = fulfilledForm;
     const data = {
       ...similarProperties,
       phoneNumber: mobilePhone,
-      registrationMembership,
       teams: {
         createMany: {
           data: fulfilledForm.teams.map((team: RegistrationTeamCode) => ({
@@ -46,7 +41,6 @@ export class PrismaNewcomerRepository implements NewcomerRepository {
     return {
       ...similarProperties,
       id,
-      membership: registrationMembership,
       mobilePhone,
     };
   }
