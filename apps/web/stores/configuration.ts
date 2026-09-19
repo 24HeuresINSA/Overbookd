@@ -55,15 +55,15 @@ export const useConfigurationStore = defineStore("configuration", {
     },
 
     registrationForm(): RegistrationFormValue {
-      const registerForm = this.get(REGISTRATION_FORM_KEY);
+      const registrationForm = this.get(REGISTRATION_FORM_KEY);
       const defaultValue: RegistrationFormValue = {
         volunteerDescription: defaultVolunteerCommitmentPresentation,
         staffDescription: defaultStaffCommitmentPresentation,
       };
-      if (!isObject(registerForm)) return defaultValue;
+      if (!isObject(registrationForm)) return defaultValue;
 
-      const volunteerDescription = registerForm.volunteerDescription;
-      const staffDescription = registerForm.staffDescription;
+      const volunteerDescription = registrationForm.volunteerDescription;
+      const staffDescription = registrationForm.staffDescription;
       return {
         volunteerDescription:
           typeof volunteerDescription !== "string"

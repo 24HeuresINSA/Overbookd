@@ -23,7 +23,7 @@
 
       <v-stepper-window v-show="step == 1" direction="vertical">
         <v-stepper-window-item :value="1">
-          <div v-html-safe="registerFormDescription" />
+          <div v-html-safe="registrationFormDescription" />
 
           <div class="stepper-actions">
             <v-btn text="C'est parti ! 🚀" color="primary" @click="step = 2" />
@@ -301,7 +301,7 @@ const mustSignVolunteerCharter = computed(() =>
 );
 
 configurationStore.fetch(REGISTRATION_FORM_KEY);
-const registerFormDescription = computed<string>(() =>
+const registrationFormDescription = computed<string>(() =>
   membership.value === STAFF
     ? configurationStore.registrationForm.staffDescription
     : configurationStore.registrationForm.volunteerDescription,

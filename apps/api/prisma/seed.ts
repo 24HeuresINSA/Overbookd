@@ -211,8 +211,8 @@ async function main() {
   });
 
   console.log("----------------------------------------------------------");
-  console.log("Inserting registration form settings");
-  const volunteerRegisterFormConfig: Configuration = {
+  console.log("Inserting registration form config");
+  const registrationFormConfig: Configuration = {
     key: REGISTRATION_FORM_KEY,
     value: {
       volunteerDescription: defaultVolunteerCommitmentPresentation,
@@ -221,8 +221,8 @@ async function main() {
   };
   await prisma.configuration.upsert({
     where: { key: REGISTRATION_FORM_KEY },
-    update: volunteerRegisterFormConfig,
-    create: volunteerRegisterFormConfig,
+    update: registrationFormConfig,
+    create: registrationFormConfig,
   });
 
   console.log("----------------------------------------------------------");

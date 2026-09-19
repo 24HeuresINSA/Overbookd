@@ -10,11 +10,11 @@
   <v-expansion-panels rounded="xl">
     <v-expansion-panel class="collapse">
       <v-expansion-panel-title>
-        <h2>Description des formulaires d'inscription</h2>
+        <h2>Formulaire d'inscription</h2>
       </v-expansion-panel-title>
       <v-expansion-panel-text>
         <div>
-          <h3>Formulaire organisateur</h3>
+          <h3>Description organisateur</h3>
           <RichEditor
             v-model="staffRegistrationFormDescription"
             scope="staff-description"
@@ -33,7 +33,7 @@
           </div>
           <v-divider class="my-5" />
           <div>
-            <h3>Formulaire bénévole</h3>
+            <h3>Description bénévole</h3>
             <RichEditor
               v-model="volunteerRegistrationFormDescription"
               scope="volunteer-description"
