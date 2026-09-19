@@ -14,6 +14,22 @@
       </v-expansion-panel-title>
       <v-expansion-panel-text>
         <div>
+          <h3>Inscription des bénévoles</h3>
+          <p>
+            L'inscription des bénévoles est actuellement
+            <strong>
+              {{ isVolunteerRegistrationOpen ? "ouverte" : "fermée" }} </strong>.
+          </p>
+          <v-btn
+            :model-value="isVolunteerRegistrationOpen"
+            :text="`${volunteerRegistrationStatusKeyword} l'inscription des bénévoles`"
+            :color="isVolunteerRegistrationOpen ? 'error' : 'success'"
+            class="mt-1"
+            @click="openVolunteerRegistrationStatusDialog"
+          />
+        </div>
+        <v-divider class="my-5" />
+        <div>
           <h3>Description organisateur·rice</h3>
           <RichEditor
             v-model="staffRegistrationFormDescription"
@@ -28,7 +44,7 @@
             <v-btn
               text="Enregistrer"
               color="primary"
-              @click="saveRegistrationFormDescriptions"
+              @click="saveRegistrationFormConfig"
             />
           </div>
           <v-divider class="my-5" />
@@ -47,7 +63,7 @@
               <v-btn
                 text="Enregistrer"
                 color="primary"
-                @click="saveRegistrationFormDescriptions"
+                @click="saveRegistrationFormConfig"
               />
             </div>
           </div>
@@ -131,6 +147,28 @@
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
+
+  <v-dialog v-model="isVolunteerRegistrationstatusDialogOpen" max-width="600px">
+    <ConfirmationDialogCard
+      :confirm-color="isVolunteerRegistrationOpen ? 'error' : 'success'"
+      @close="closeVolunteerRegistrationStatusDialog"
+      @confirm="switchVolunteerRegistrationStatus"
+    >
+      <template #title>
+        {{ volunteerRegistrationStatusKeyword }} l'inscription des bénévoles
+      </template>
+      <template #statement>
+        Êtes-vous sûr de vouloir
+        <strong> {{ volunteerRegistrationStatusKeyword.toUpperCase() }}</strong>
+        l'inscription des bénévoles ?
+        <br />
+        <i>
+          Cela n'impactera pas l'inscription des organisateurs via le lien
+          d'invitation.
+        </i>
+      </template>
+    </ConfirmationDialogCard>
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -159,6 +197,25 @@ const dateOrgaWeekStart = ref<Date>(
 );
 const usefulLinks = ref(configurationStore.usefulLinks);
 
+const isVolunteerRegistrationOpen = ref<boolean>(
+  configurationStore.registrationForm.isVolunteerRegistrationOpen,
+);
+const isVolunteerRegistrationstatusDialogOpen = ref<boolean>(false);
+const volunteerRegistrationStatusKeyword = computed<string>(() =>
+  isVolunteerRegistrationOpen.value ? "Fermer" : "Ouvrir",
+);
+const openVolunteerRegistrationStatusDialog = () => {
+  isVolunteerRegistrationstatusDialogOpen.value = true;
+};
+const closeVolunteerRegistrationStatusDialog = () => {
+  isVolunteerRegistrationstatusDialogOpen.value = false;
+};
+const switchVolunteerRegistrationStatus = () => {
+  isVolunteerRegistrationOpen.value = !isVolunteerRegistrationOpen.value;
+  saveRegistrationFormConfig();
+  closeVolunteerRegistrationStatusDialog();
+};
+
 const staffRegistrationFormDescription = ref<string>(
   configurationStore.registrationForm.staffDescription,
 );
@@ -172,10 +229,12 @@ const replaceVolunteerRegistrationDescriptionByTemplate = () => {
   volunteerRegistrationFormDescription.value =
     defaultVolunteerCommitmentPresentation;
 };
-const saveRegistrationFormDescriptions = async () => {
+
+const saveRegistrationFormConfig = async () => {
   await configurationStore.save({
     key: REGISTRATION_FORM_KEY,
     value: {
+      isVolunteerRegistrationOpen: isVolunteerRegistrationOpen.value,
       staffDescription: staffRegistrationFormDescription.value,
       volunteerDescription: volunteerRegistrationFormDescription.value,
     },

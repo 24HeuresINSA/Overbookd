@@ -215,6 +215,7 @@ async function main() {
   const registrationFormConfig: Configuration = {
     key: REGISTRATION_FORM_KEY,
     value: {
+      isVolunteerRegistrationOpen: true,
       volunteerDescription: defaultVolunteerCommitmentPresentation,
       staffDescription: defaultStaffCommitmentPresentation,
     },
