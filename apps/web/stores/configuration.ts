@@ -64,8 +64,11 @@ export const useConfigurationStore = defineStore("configuration", {
       };
       if (!isObject(registrationForm)) return defaultValue;
 
-      const { isVolunteerRegistrationOpen, volunteerDescription, staffDescription } =
-        registrationForm
+      const {
+        isVolunteerRegistrationOpen,
+        volunteerDescription,
+        staffDescription,
+      } = registrationForm;
       return {
         isVolunteerRegistrationOpen:
           typeof isVolunteerRegistrationOpen !== "boolean"
