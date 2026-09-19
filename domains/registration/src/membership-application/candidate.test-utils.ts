@@ -2,7 +2,7 @@ import { Edition } from "@overbookd/time";
 import { STAFF, VOLUNTEER } from "../newcomer.js";
 import { Candidate } from "./candidates.js";
 
-export const lea = { email: "lea.mouyno@gmail.com" };
+export const lea = { id: 1 };
 export const leaStaffCandidate: Candidate = {
   ...lea,
   membership: STAFF,
@@ -18,7 +18,7 @@ export const leaVolunteerCandidate: Candidate = {
   candidatedAt: new Date(),
 };
 
-export const noel = { email: "noel.ertsemud@gmail.com" };
+export const noel = { id: 2 };
 const previousEdition = Edition.current - 1;
 export const noelCandidate: Candidate = {
   ...noel,
@@ -28,7 +28,7 @@ export const noelCandidate: Candidate = {
   candidatedAt: new Date(),
 };
 
-export const olop = { email: "olop@gmail.com" };
+export const olop = { id: 3 };
 export const rejectedOlopStaffCandidate: Candidate = {
   ...olop,
   membership: STAFF,
@@ -45,7 +45,7 @@ export const rejectedOlopVolunteerCandidate: Candidate = {
   candidatedAt: new Date(),
 };
 
-export const oel = { email: "eol.anyuom@gmail.com" };
+export const oel = { id: 3 };
 export const oelCandidate: Candidate = {
   ...oel,
   membership: VOLUNTEER,
@@ -54,7 +54,7 @@ export const oelCandidate: Candidate = {
   candidatedAt: new Date(),
 };
 
-export const cul = { email: "cul.nehgahrednav@gmail.com" };
+export const cul = { id: 4 };
 export const culCandidate: Candidate = {
   ...cul,
   membership: VOLUNTEER,
@@ -63,7 +63,7 @@ export const culCandidate: Candidate = {
   candidatedAt: new Date(),
 };
 
-export const dnamra = { email: "dnamra.tenurb@gmail.com" };
+export const dnamra = { id: 5 };
 export const rejectedDnamraCandidate: Candidate = {
   ...dnamra,
   membership: VOLUNTEER,

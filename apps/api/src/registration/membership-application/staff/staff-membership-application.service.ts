@@ -6,8 +6,9 @@ import {
   InviteStaff,
   RejectMembershipApplication,
   STAFF,
+  SwitchMembershipApplication,
+  VOLUNTEER,
 } from "@overbookd/registration";
-import { Users } from "../common/repository/users";
 import { EnrollCandidatesRepository } from "../common/repository/enroll-candidates";
 import { StaffCandidate } from "@overbookd/http";
 import { HARD } from "@overbookd/team-code";
@@ -19,11 +20,11 @@ import { RequestHydratedUser } from "../../../authentication-zitadel/request-hyd
 type UseCases = {
   applyFor: Readonly<ApplyFor>;
   reject: Readonly<RejectMembershipApplication>;
+  switchApplication: Readonly<SwitchMembershipApplication>;
   enroll: Readonly<EnrollCandidates>;
 };
 
 type Repositories = {
-  users: Readonly<Users>;
   enroll: Readonly<EnrollCandidatesRepository>;
 };
 
@@ -40,13 +41,19 @@ export class StaffMembershipApplicationService {
   ) {}
 
   async rejectStaffApplication(candidateId: number): Promise<void> {
-    const email = await this.repositories.users.findEmailById(candidateId);
-    return this.useCases.reject.applyOne({ email }, STAFF);
+    return this.useCases.reject.applyOne(candidateId, STAFF);
   }
 
   async cancelStaffApplicationRejection(candidateId: number): Promise<void> {
-    const email = await this.repositories.users.findEmailById(candidateId);
-    return this.useCases.reject.unapplyOne({ email }, STAFF);
+    return this.useCases.reject.unapplyOne(candidateId, STAFF);
+  }
+
+  async switchStaffToVolunteerApplication(candidateId: number): Promise<void> {
+    return this.useCases.switchApplication.applyOne(
+      candidateId,
+      STAFF,
+      VOLUNTEER,
+    );
   }
 
   async getStaffInvitationLink(

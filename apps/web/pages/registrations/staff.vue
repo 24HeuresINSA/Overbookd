@@ -4,15 +4,15 @@
     <RegistrationConfigurationCard class="registration-configuration" />
 
     <v-card>
-      <v-card-title>Candidats</v-card-title>
+      <v-card-title>Candidat·e·s</v-card-title>
       <v-card-text>
         <v-data-table
           v-model="selectedCandidates"
           :headers="headers"
           :items="filteredCandidates"
           :loading="loading"
-          loading-text="Chargement des candidats..."
-          :no-data-text="`Aucun candidat ${displayRejectedCandidates ? 'rejeté' : ''}`"
+          loading-text="Chargement des candidat·e·s..."
+          :no-data-text="`Aucun candidat·e ${displayRejectedCandidates ? 'rejeté·e' : ''}`"
           :mobile="isMobile"
           show-select
           return-object
@@ -21,14 +21,14 @@
             <div class="filters">
               <v-text-field
                 v-model="searchedCandidate"
-                label="Rechercher un candidat"
+                label="Rechercher un·e candidat·e"
                 class="search-filter"
                 clearable
                 hide-details
                 @click:clear="searchedCandidate = ''"
               />
               <v-btn
-                text="Candidats rejetés"
+                text="Candidat·e·s rejetés"
                 color="secondary"
                 :variant="displayRejectedCandidates ? 'elevated' : 'outlined'"
                 @click="toggleRejectedCandidates"
@@ -45,20 +45,40 @@
           </template>
 
           <template #item.action="{ item }">
-            <v-btn
-              v-show="!displayRejectedCandidates"
-              text="Rejeter la candidature"
-              color="error"
-              size="small"
-              @click="rejectCandidate(item.id)"
-            />
-            <v-btn
-              v-show="displayRejectedCandidates"
-              text="Annuler le rejet"
-              color="error"
-              size="small"
-              @click="cancelCandidateRejection(item.id)"
-            />
+            <div class="actions">
+              <v-btn
+                v-if="!displayRejectedCandidates"
+                icon="mdi-cancel"
+                aria-label="Rejeter la candidature"
+                title="Rejeter la candidature"
+                color="error"
+                rounded="pill"
+                density="comfortable"
+                @click="rejectCandidate(item.id)"
+              />
+              <v-btn
+                v-else
+                icon="mdi-undo"
+                aria-label="Restaurer la candidature"
+                title="Restaurer la candidature"
+                size="large"
+                color="warning"
+                rounded="pill"
+                density="compact"
+                @click="cancelCandidateRejection(item.id)"
+              />
+              <v-btn
+                v-if="canEnrollVolunteer"
+                icon="mdi-account-heart"
+                aria-label="Passer en admission bénévole"
+                title="Passer en admission bénévole"
+                size="large"
+                color="secondary"
+                rounded="pill"
+                density="compact"
+                @click="switchToVolunteerApplication(item.id)"
+              />
+            </div>
           </template>
         </v-data-table>
       </v-card-text>
@@ -67,7 +87,7 @@
         <v-spacer />
         <v-btn
           v-if="!displayRejectedCandidates"
-          text="Enrôler en tant qu'organisateur"
+          text="Enrôler en tant qu'organisateur·rice"
           color="success"
           :disabled="noStaffSelected"
           size="large"
@@ -80,6 +100,7 @@
 
 <script lang="ts" setup>
 import type { StaffCandidate } from "@overbookd/http";
+import { ENROLL_SOFT } from "@overbookd/permission";
 import { formatDate } from "@overbookd/time";
 import {
   matchingSearchItems,
@@ -87,10 +108,11 @@ import {
 } from "~/utils/search/search.utils";
 import { toSearchable } from "~/utils/search/searchable-user.utils";
 
-useHead({ title: "Admissions organisateur" });
+useHead({ title: "Admissions organisateur·rice·s" });
 
 const membershipApplicationStore = useMembershipApplicationStore();
 const layoutStore = useLayoutStore();
+const myStore = useMyStore();
 
 const headers = [
   { title: "Date de candidature", value: "candidatedAt", sortable: true },
@@ -101,6 +123,8 @@ const headers = [
   { title: "Action", value: "action" },
 ];
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
+
+const canEnrollVolunteer = computed<boolean>(() => myStore.can(ENROLL_SOFT));
 
 const searchedCandidate = ref<string>("");
 const selectedCandidates = ref<StaffCandidate[]>([]);
@@ -161,6 +185,9 @@ const rejectCandidate = (candidateId: number) => {
 const cancelCandidateRejection = (candidateId: number) => {
   membershipApplicationStore.cancelStaffCandidateRejection(candidateId);
 };
+const switchToVolunteerApplication = (candidateId: number) => {
+  membershipApplicationStore.switchStaffToVolunteerApplication(candidateId);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -182,5 +209,10 @@ const cancelCandidateRejection = (candidateId: number) => {
 
 .search-filter {
   margin: 5px 0;
+}
+
+.actions {
+  display: flex;
+  gap: 5px;
 }
 </style>

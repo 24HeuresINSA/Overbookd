@@ -1,30 +1,19 @@
 import { Edition } from "@overbookd/time";
 import { STAFF, VOLUNTEER } from "../newcomer.js";
-import { Rejected, AlreadyCandidate } from "./candidature.error.js";
-import { Candidate, Candidates, Email } from "./candidates.js";
+import { AlreadyCandidate } from "./candidature.error.js";
+import { Candidate, Candidates } from "./candidates.js";
 
 export class ApplyFor {
   constructor(private readonly candidates: Candidates) {}
 
-  async staff({ email }: Email): Promise<void> {
+  async staff(id: Candidate["id"]): Promise<void> {
     const edition = Edition.current;
 
-    const hasRejectedApplication = await this.candidates.isRejected(
-      email,
-      edition,
-      STAFF,
-    );
-    if (hasRejectedApplication) throw new Rejected(STAFF);
-
-    const isCandidate = await this.candidates.isCandidate(
-      email,
-      edition,
-      STAFF,
-    );
+    const isCandidate = await this.candidates.isCandidate(id, edition, STAFF);
     if (isCandidate) throw new AlreadyCandidate(STAFF);
 
     const newCandidate: Candidate = {
-      email,
+      id,
       membership: STAFF,
       edition,
       isRejected: false,
@@ -33,25 +22,18 @@ export class ApplyFor {
     return this.candidates.add(newCandidate);
   }
 
-  async volunteer({ email }: Email): Promise<void> {
+  async volunteer(id: Candidate["id"]): Promise<void> {
     const edition = Edition.current;
 
-    const hasRejectedApplication = await this.candidates.isRejected(
-      email,
-      edition,
-      VOLUNTEER,
-    );
-    if (hasRejectedApplication) throw new Rejected(VOLUNTEER);
-
     const isCandidate = await this.candidates.isCandidate(
-      email,
+      id,
       edition,
       VOLUNTEER,
     );
     if (isCandidate) throw new AlreadyCandidate(VOLUNTEER);
 
     const newCandidate: Candidate = {
-      email,
+      id,
       membership: VOLUNTEER,
       edition,
       isRejected: false,

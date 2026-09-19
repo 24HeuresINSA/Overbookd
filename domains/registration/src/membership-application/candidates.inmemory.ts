@@ -5,26 +5,26 @@ export class InMemoryCandidates implements Candidates {
   constructor(private candidates: Candidate[]) {}
 
   async isCandidate(
-    email: string,
+    id: Candidate["id"],
     edition: number,
     membership: Membership,
   ): Promise<boolean> {
     return this.candidates.some(
       (candidate) =>
-        candidate.email === email &&
+        candidate.id === id &&
         candidate.edition === edition &&
         candidate.membership === membership,
     );
   }
 
   async isRejected(
-    email: string,
+    id: Candidate["id"],
     edition: number,
     membership: Membership,
   ): Promise<boolean> {
     return this.candidates.some(
       (candidate) =>
-        candidate.email === email &&
+        candidate.id === id &&
         candidate.edition === edition &&
         candidate.membership === membership &&
         candidate.isRejected,
@@ -36,12 +36,12 @@ export class InMemoryCandidates implements Candidates {
   }
 
   async reject(
-    email: string,
+    id: Candidate["id"],
     edition: number,
     membership: Membership,
   ): Promise<void> {
     this.candidates = this.candidates.map((candidate) =>
-      candidate.email === email &&
+      candidate.id === id &&
       candidate.edition === edition &&
       candidate.membership === membership
         ? { ...candidate, isRejected: true }
@@ -50,15 +50,30 @@ export class InMemoryCandidates implements Candidates {
   }
 
   async cancelRejection(
-    email: string,
+    id: Candidate["id"],
     edition: number,
     membership: Membership,
   ): Promise<void> {
     this.candidates = this.candidates.map((candidate) =>
-      candidate.email === email &&
+      candidate.id === id &&
       candidate.edition == edition &&
       candidate.membership === membership
         ? { ...candidate, isRejected: false }
+        : candidate,
+    );
+  }
+
+  async switchApplicationMembership(
+    id: Candidate["id"],
+    edition: number,
+    membership: Membership,
+    newMembership: Membership,
+  ): Promise<void> {
+    this.candidates = this.candidates.map((candidate) =>
+      candidate.id === id &&
+      candidate.edition == edition &&
+      candidate.membership === membership
+        ? { ...candidate, membership: newMembership }
         : candidate,
     );
   }

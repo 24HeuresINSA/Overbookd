@@ -72,6 +72,28 @@ export const useMembershipApplicationStore = defineStore(
         navigationBadgeStore.fetchStaffCandidates();
       },
 
+      async switchStaffToVolunteerApplication(
+        candidateId: VolunteerCandidate["id"],
+      ) {
+        const res =
+          await MembershipApplicationRepository.switchStaffToVolunteerApplication(
+            candidateId,
+          );
+        if (isHttpError(res)) return;
+        sendSuccessNotification("La candidature a été passée en bénévole");
+
+        this.staffCandidates = this.staffCandidates.filter(
+          ({ id }) => id !== candidateId,
+        );
+        this.rejectedStaffCandidates = this.rejectedStaffCandidates.filter(
+          ({ id }) => id !== candidateId,
+        );
+
+        const navigationBadgeStore = useNavigationBadgeStore();
+        navigationBadgeStore.fetchVolunteerCandidates();
+        navigationBadgeStore.fetchStaffCandidates();
+      },
+
       async fetchStaffCandidates() {
         const res = await MembershipApplicationRepository.getStaffCandidates();
         if (isHttpError(res)) return;
@@ -91,7 +113,7 @@ export const useMembershipApplicationStore = defineStore(
           await MembershipApplicationRepository.enrollNewStaffs(minimalStaffs);
         if (isHttpError(res)) return;
         sendSuccessNotification(
-          "Les candidats sélectionnés ont été enrôlés en tant qu'organisateurs",
+          "Les candidat·e·s sélectionné·e·s ont été enrôlé·e·s en tant qu'organisateur·rice·s",
         );
         this.staffCandidates = this.staffCandidates.filter(
           (staff) => !staffs.some(({ id }) => id === staff.id),
@@ -136,6 +158,29 @@ export const useMembershipApplicationStore = defineStore(
         navigationBadgeStore.fetchVolunteerCandidates();
       },
 
+      async switchVolunteerToStaffApplication(
+        candidateId: VolunteerCandidate["id"],
+      ) {
+        const res =
+          await MembershipApplicationRepository.switchVolunteerToStaffApplication(
+            candidateId,
+          );
+        if (isHttpError(res)) return;
+        sendSuccessNotification("La candidature a été passée en orga");
+
+        this.volunteerCandidates = this.volunteerCandidates.filter(
+          ({ id }) => id !== candidateId,
+        );
+        this.rejectedVolunteerCandidates =
+          this.rejectedVolunteerCandidates.filter(
+            ({ id }) => id !== candidateId,
+          );
+
+        const navigationBadgeStore = useNavigationBadgeStore();
+        navigationBadgeStore.fetchVolunteerCandidates();
+        navigationBadgeStore.fetchStaffCandidates();
+      },
+
       async fetchVolunteerCandidates() {
         const res =
           await MembershipApplicationRepository.getVolunteerCandidates();
@@ -160,7 +205,7 @@ export const useMembershipApplicationStore = defineStore(
           );
         if (isHttpError(res)) return;
         sendSuccessNotification(
-          "Les candidats sélectionnés ont été enrôlés en tant que bénévoles",
+          "Les candidat·e·s sélectionné·e·s ont été enrôlé·e·s en tant que bénévoles",
         );
         this.volunteerCandidates = this.volunteerCandidates.filter(
           (volunteer) => !volunteers.some(({ id }) => id === volunteer.id),

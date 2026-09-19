@@ -1,7 +1,7 @@
 import { Membership, STAFF, VOLUNTEER } from "../newcomer.js";
 
-export type Email = { email: string };
-export type Candidate = Email & {
+export type Candidate = {
+  id: number;
   membership: typeof STAFF | typeof VOLUNTEER;
   edition: number;
   isRejected: boolean;
@@ -10,20 +10,30 @@ export type Candidate = Email & {
 
 export type Candidates = {
   isCandidate(
-    email: string,
+    id: Candidate["id"],
     edition: number,
     membership: Membership,
   ): Promise<boolean>;
   isRejected(
-    email: string,
+    id: Candidate["id"],
     edition: number,
     membership: Membership,
   ): Promise<boolean>;
   add(candidate: Candidate): Promise<void>;
-  reject(email: string, edition: number, membership: Membership): Promise<void>;
-  cancelRejection(
-    email: string,
+  reject(
+    id: Candidate["id"],
     edition: number,
-    memebership: Membership,
+    membership: Membership,
+  ): Promise<void>;
+  cancelRejection(
+    id: Candidate["id"],
+    edition: number,
+    membership: Membership,
+  ): Promise<void>;
+  switchApplicationMembership(
+    id: Candidate["id"],
+    edition: number,
+    membership: Membership,
+    newMembership: Membership,
   ): Promise<void>;
 };
