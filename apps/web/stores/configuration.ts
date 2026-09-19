@@ -68,11 +68,11 @@ export const useConfigurationStore = defineStore("configuration", {
         volunteerDescription:
           typeof volunteerDescription !== "string"
             ? defaultVolunteerCommitmentPresentation
-            : (volunteerDescription as string),
+            : volunteerDescription,
         staffDescription:
           typeof staffDescription !== "string"
             ? defaultStaffCommitmentPresentation
-            : (staffDescription as string),
+            : staffDescription,
       };
     },
 

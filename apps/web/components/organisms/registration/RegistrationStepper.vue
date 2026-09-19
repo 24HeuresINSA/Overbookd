@@ -294,7 +294,7 @@ const membership = computed<Membership>(() =>
   isVolunteerRegistration.value ? VOLUNTEER : STAFF,
 );
 const membershipLabel = computed<string>(() =>
-  membership.value === STAFF ? "Organisateur" : "Bénévole",
+  isVolunteerRegistration.value ? "Bénévole" : "Organisateur",
 );
 const mustSignVolunteerCharter = computed(() =>
   shouldSignVolunteerCharter(membership.value),
@@ -302,9 +302,9 @@ const mustSignVolunteerCharter = computed(() =>
 
 configurationStore.fetch(REGISTRATION_FORM_KEY);
 const registrationFormDescription = computed<string>(() =>
-  membership.value === STAFF
-    ? configurationStore.registrationForm.staffDescription
-    : configurationStore.registrationForm.volunteerDescription,
+  isVolunteerRegistration.value
+    ? configurationStore.registrationForm.volunteerDescription
+    : configurationStore.registrationForm.staffDescription,
 );
 
 const step = ref<number>(1);

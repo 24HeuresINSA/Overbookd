@@ -1,9 +1,9 @@
-import { ONE_DAY_IN_MS } from "@overbookd/time";
+import { ONE_HOUR_IN_MS } from "@overbookd/time";
 
 const STAFF_TOKEN_KEY = "staffToken";
 
 export function saveStaffToken(token: string): void {
-  const item = { value: token, expiresAt: Date.now() + ONE_DAY_IN_MS };
+  const item = { value: token, expiresAt: Date.now() + 4 * ONE_HOUR_IN_MS };
   localStorage.setItem(STAFF_TOKEN_KEY, JSON.stringify(item));
 }
 
