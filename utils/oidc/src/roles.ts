@@ -1,6 +1,7 @@
 export const oidcRoles = {
   ADMIN: "overbookd_admin",
   USER: "overbookd_user",
+  GUEST: "overbookd_guest",
 } as const;
 
 export type OverbookdOidcRole = (typeof oidcRoles)[keyof typeof oidcRoles];

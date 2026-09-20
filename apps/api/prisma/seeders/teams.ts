@@ -236,6 +236,12 @@ export const teams: Team[] = [
     icon: "mdi-human-cane",
   },
   {
+    name: "Invité",
+    code: "invite",
+    color: "#FF00AA",
+    icon: "mdi-account-plus",
+  },
+  {
     name: "Voiture",
     code: "voiture",
     color: "#737F49",

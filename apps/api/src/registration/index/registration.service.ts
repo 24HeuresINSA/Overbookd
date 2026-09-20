@@ -36,6 +36,7 @@ import {
   RegistrationFormStepUser,
 } from "@overbookd/http";
 import { RequestHydratedUser } from "../../authentication-zitadel/request-hydrated-user";
+import { oidcRoles } from "@overbookd/oidc";
 
 type Member = {
   forget: Readonly<ForgetMember>;
@@ -94,6 +95,26 @@ export class RegistrationService {
     withFormData: boolean,
   ): Promise<RegistrationFormStep | RegistrationCompletedStep> {
     if (!user.id) {
+      if (user.zitadelRoles.includes(oidcRoles.GUEST)) {
+        const form: ExistingAccountFulfilledRegistration = {
+          email: user.email,
+          firstName: user.givenName,
+          lastName: user.familyName,
+          nickname: user.nickname,
+          mobilePhone: user.phoneNumber,
+          birthDate: user.birthDate,
+          teams: [],
+          hasApprovedEULA: true,
+          status: registrationAccountStatuses.EXISTING,
+        };
+        try {
+          await this.member.register.fromRegisterForm(form, STAFF);
+          return { next: registrationSteps.COMPLETED };
+        } catch {
+          // Invalid form (like phone or birthDate missing)
+        }
+      }
+
       const zitadelUser = withFormData
         ? {
             email: user.email,

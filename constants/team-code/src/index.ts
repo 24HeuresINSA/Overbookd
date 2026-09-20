@@ -7,6 +7,7 @@ export const PERSONNE = "personne";
 export const SG = "sg";
 export const SOFT = "soft";
 export const VIEUX = "vieux";
+export const INVITE = "invite";
 
 // CA
 export const CA = "ca";
