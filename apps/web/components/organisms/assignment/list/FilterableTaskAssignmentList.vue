@@ -24,6 +24,7 @@
         v-model:in-charge-team="searchedInChargeTeam"
         v-model:category="searchedCategory"
         v-model:has-assigned-friends="hasAssignedFriends"
+        v-model:past="displayPast"
         :list-length="filteredAssignments.length"
         class="filters"
       />
@@ -65,6 +66,7 @@ const searchedRequiredTeams = ref<Team[]>([]);
 const searchedInChargeTeam = ref<Team | undefined>();
 const searchedCategory = ref<DisplayableCategory | TaskPriority | undefined>();
 const hasAssignedFriends = ref<boolean>(false);
+const displayPast = ref<boolean>(false);
 
 const isSideBarClosed = ref<boolean>(false);
 const toggleSideBar = () => {
@@ -88,6 +90,7 @@ const searchableAssignments = computed<Searchable<AssignmentSummaryWithTask>[]>(
 const filteredAssignments = computed<AssignmentSummaryWithTask[]>(() =>
   searchableAssignments.value.filter((assignment) => {
     return (
+      filterByPastCriterion(displayPast.value)(assignment) &&
       keepMatchingSearchCriteria(searchedTaskName.value)(assignment) &&
       filterByRequiredTeams(searchedRequiredTeams.value)(assignment) &&
       filterByInChargeTeam(searchedInChargeTeam.value)(assignment) &&
@@ -103,6 +106,12 @@ const selectedVolunteer = computed<VolunteerWithAssignmentDuration | null>(
 const shouldShowAssignmentList = computed<boolean>(
   () => selectedVolunteer !== null && filteredAssignments.value.length > 0,
 );
+
+const filterByPastCriterion = (
+  showPast: boolean,
+): ((assignement: AssignmentSummaryWithTask) => boolean) => {
+  return (assignement) => showPast || assignement.end > new Date();
+};
 
 const filterByRequiredTeams = (
   searchedTeams: Team[],

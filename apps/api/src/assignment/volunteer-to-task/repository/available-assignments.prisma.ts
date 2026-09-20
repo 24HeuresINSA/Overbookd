@@ -52,7 +52,6 @@ export class PrismaAvailableAssignments implements AvailableAssignments {
       where: {
         mobilization: { teams: { some: { teamCode: { in: extendedTeams } } } },
         assignees: { none: { userId: volunteerId } },
-        end: { gt: new Date() },
       },
       select: {
         id: true,

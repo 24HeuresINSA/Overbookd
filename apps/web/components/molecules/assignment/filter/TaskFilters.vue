@@ -50,24 +50,23 @@
         class="filters-row__switch"
         hide-details
       />
-      <template v-else>
-        <v-switch
-          v-model="completed"
-          label="FTs completées"
-          density="compact"
-          color="primary"
-          class="filters-row__switch"
-          hide-details
-        />
-        <v-switch
-          v-model="past"
-          label="FTs passées"
-          density="compact"
-          color="primary"
-          class="filters-row__switch"
-          hide-details
-        />
-      </template>
+      <v-switch
+        v-else
+        v-model="completed"
+        label="FTs completées"
+        density="compact"
+        color="primary"
+        class="filters-row__switch"
+        hide-details
+      />
+      <v-switch
+        v-model="past"
+        label="FTs passées"
+        density="compact"
+        color="primary"
+        class="filters-row__switch"
+        hide-details
+      />
     </div>
 
     <p class="stats">
