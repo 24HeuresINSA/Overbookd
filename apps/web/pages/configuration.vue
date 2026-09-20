@@ -187,9 +187,7 @@ useHead({ title: "Config admin" });
 
 const configurationStore = useConfigurationStore();
 
-onMounted(async () => {
-  await configurationStore.fetchAll();
-});
+await configurationStore.fetchAll();
 
 const dateEventStart = ref<Date>(configurationStore.eventStartDate);
 const dateOrgaWeekStart = ref<Date>(
