@@ -9,6 +9,7 @@ import {
   OidcRole,
   oidcRoles,
   overviewOidcRoles,
+  vaultwardenOidcRoles,
   wikiOidcRoles,
 } from "@overbookd/oidc";
 
@@ -34,6 +35,10 @@ export class ZitadelRoleService implements OnApplicationBootstrap {
     {
       role: oidcRoles.GUEST,
       projectId: process.env.ZITADEL_OVERBOOKD_CTMA_PROJECT_ID,
+    },
+    {
+      role: vaultwardenOidcRoles.USER,
+      projectId: process.env.ZITADEL_VAULTWARDEN_PROJECT_ID,
     },
   ];
 
