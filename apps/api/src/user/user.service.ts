@@ -44,7 +44,7 @@ import {
 } from "../common/query/charisma.query";
 import { extractTeamCodes } from "../team/team.utils";
 import { Charisma } from "@overbookd/charisma";
-import { ADMIN } from "@overbookd/team-code";
+import { ADMIN, INVITE, PERSONNE } from "@overbookd/team-code";
 import { friendAssigneesCount } from "../assignment/common/repository/assignment.query";
 import { OverbookdOidcRole, oidcRoles } from "@overbookd/oidc";
 import { ZitadelService } from "./zitadel.service";
@@ -85,6 +85,7 @@ export class UserService {
       select: { birthDate: true, phoneNumber: true },
     });
     await this.updateAdminTeamFromZitadel(user.id, user.zitadelRoles);
+    await this.updateGuestTeamFromZitadel(user.id, user.zitadelRoles);
 
     if (!user.birthDate || !user.phoneNumber) {
       await this.zitadelService.updateZitadelUser(user.zitadelId, {
@@ -94,25 +95,56 @@ export class UserService {
     }
   }
 
-  private async updateAdminTeamFromZitadel(
+  private async updateTeamFromZitadel(
     userId: number,
-    zitadelRoles: OverbookdOidcRole[],
+    userRoles: OverbookdOidcRole[],
+    zitadelRole: OverbookdOidcRole,
+    team: string,
+    additionalTeams: string[] = [],
   ): Promise<void> {
-    const hasZitadelAdminRole = zitadelRoles.includes(oidcRoles.ADMIN);
-    const hasAdminTeam = await this.prisma.userTeam.findFirst({
-      where: { teamCode: ADMIN, userId },
+    const hasZitadelRole = userRoles.includes(zitadelRole);
+    const hasTeam = await this.prisma.userTeam.findFirst({
+      where: { teamCode: team, userId },
     });
-    if (hasZitadelAdminRole && !hasAdminTeam) {
-      await this.prisma.userTeam.create({
-        data: { userId, teamCode: ADMIN },
+    if (hasZitadelRole && !hasTeam) {
+      await this.prisma.userTeam.createMany({
+        data: [team, ...additionalTeams].map((teamCode) => ({
+          userId,
+          teamCode,
+        })),
       });
       return;
     }
-    if (!hasZitadelAdminRole && hasAdminTeam) {
+    if (!hasZitadelRole && hasTeam) {
       await this.prisma.userTeam.delete({
-        where: { userId_teamCode: { userId, teamCode: ADMIN } },
+        where: { userId_teamCode: { userId, teamCode: team } },
       });
     }
+  }
+
+  private async updateAdminTeamFromZitadel(
+    userId: number,
+    userRoles: OverbookdOidcRole[],
+  ): Promise<void> {
+    return this.updateTeamFromZitadel(
+      userId,
+      userRoles,
+      oidcRoles.ADMIN,
+      ADMIN,
+    );
+  }
+
+  private async updateGuestTeamFromZitadel(
+    userId: number,
+    userRoles: OverbookdOidcRole[],
+  ): Promise<void> {
+    return this.updateTeamFromZitadel(
+      userId,
+      userRoles,
+      oidcRoles.GUEST,
+      INVITE,
+      [PERSONNE],
+    );
   }
 
   async getById(

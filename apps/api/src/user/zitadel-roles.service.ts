@@ -28,11 +28,11 @@ export class ZitadelRoleService implements OnApplicationBootstrap {
       projectId: process.env.ZITADEL_OVERVIEW_PROJECT_ID,
     },
     {
-      role: oidcRoles.USER,
+      role: oidcRoles.GUEST,
       projectId: process.env.ZITADEL_OVERBOOKD_PREPROD_PROJECT_ID,
     },
     {
-      role: oidcRoles.USER,
+      role: oidcRoles.GUEST,
       projectId: process.env.ZITADEL_OVERBOOKD_CTMA_PROJECT_ID,
     },
   ];
