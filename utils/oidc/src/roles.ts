@@ -19,4 +19,12 @@ export const overviewOidcRoles = {
 export type OverviewOidcRole =
   (typeof overviewOidcRoles)[keyof typeof overviewOidcRoles];
 
-export type OidcRole = OverbookdOidcRole | WikiOidcRole | OverviewOidcRole;
+export const vaultwardenOidcRoles = {
+  USER: "vaultwarden_user",
+} as const;
+
+export type VaultwardenOidcRole =
+  (typeof vaultwardenOidcRoles)[keyof typeof vaultwardenOidcRoles];
+
+export type OidcRole =
+  OverbookdOidcRole | WikiOidcRole | OverviewOidcRole | VaultwardenOidcRole;
