@@ -18,8 +18,8 @@ from base64 import b64encode
 # CONSIGNES
 # =====================================================
 
-# Avant d'exécuter ce script, tu dois compléter les variables
-# ZITADEL_API_BEARER_TOKEN et ZITADEL_OVERBOOKD_PROJECT_ID.
+# Avant d'exécuter ce script, tu dois compléter la variable
+# ZITADEL_API_BEARER_TOKEN.
 
 # Tu dois également exporter la table "user" de la base de données
 # sous forme de fichier CSV (,) et le mettre à côté du script.
@@ -32,7 +32,7 @@ ZITADEL_BASE_URL = "https://zitadel.24heures.org"
 ZITADEL_API_BEARER_TOKEN = "xxxxxxxxxxxxxxxxx"
 ZITADEL_ORGANIZATION_ID = "277560954105954307"
 
-ZITADEL_OVERBOOKD_PROJECT_ID = "xxxxxxxxxxxxxxxxx"
+ZITADEL_OVERBOOKD_PROJECT_ID = "332175680848527383"
 OVERBOOKD_ROLE = "overbookd_user"
 
 CSV_FILE = "user.csv"
