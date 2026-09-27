@@ -1,3 +1,69 @@
+## [4.0.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.54.0...v4.0.0) (2026-09-27)
+
+### ⚠ BREAKING CHANGES
+
+* **registration:** passage à la 52ème édition 
+* **registration:** * Utilisation du SSO
+* Introduction du role guest (Read only), notamment pour ctma
+
+Approved-by: Titouan-Joseph CICORELLA <titouanjoseph@gmail.com>
+
+### Features
+
+* **api:** add guest role for preprod and CTMA [#2788](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2788) ([3336174](https://gitlab.com/24-heures-insa/overbookd-mono/commit/333617464e8319280b028e5ee8efa3accb532c31))
+* **api:** add zitadel roles depending on overbookd teams [#2769](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2769) ([b28dc4f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b28dc4f23968a26dfd6240e5a9172a92ad9f9a52))
+* **assignment:** can display past tasks in orga-task [#2789](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2789) ([04b8416](https://gitlab.com/24-heures-insa/overbookd-mono/commit/04b8416d0f82541df3186bfc15b3dc553a81731c))
+* **assignment:** can display past tasks in task-orga [#2751](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2751) ([a44dbf3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a44dbf3b042f28a196d594ed898fefbdabddb2e7))
+* implement SSO in registration stepper form [#2572](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2572) ([f3c453f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f3c453ffd8074fa75f56f0e39164d63f09900f39))
+* **registration:** add application membership switch [#2777](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2777) ([4574493](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4574493c38553d78138ec16b423889b6c70ac6fd))
+* **registration:** add config value to close volunteer registration [#2786](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2786) ([b81ebae](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b81ebaecb71e597672b0cf3a5bfb133740739a0a))
+* **sso:** implement zitadel connection [#2569](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2569) ([e15e338](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e15e3381d9cf0d8c1d26fe542ccc88dcfc25a99b))
+* **web:** use zitadel profile picture [#2765](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2765) ([a1d0d71](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a1d0d712cf1ec5ea11ea60b015f36750acb2d558))
+
+### Bug Fixes
+
+* add watermark for preprod & ctma [#2747](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2747) ([148db3e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/148db3e9331aad6552db8bce12d61302f35d5b12))
+* **api:** add vaultwarden user role to new organizers [#2774](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2774) ([b54f77b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b54f77b33c7db5ca5e8c01e185751054fede7bd9))
+* **api:** add zitadel roles on organizer enrolled [#2769](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2769) ([1f52733](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1f52733a947fc3ce16928f30df05edf16f3d099c))
+* **api:** docker build ([0112e5a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0112e5a95f7ac9405b586d2e518a02e3e8a528da))
+* **api:** handle user being logged out from zitadel but not overbookd [#2779](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2779) ([bf60be6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bf60be6b9df1e1353949e3673442ce057e9d3da8))
+* **api:** make hello endpoint public [#2569](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2569) ([8e116c4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8e116c463e0f8f2adf7dbafe97fc575683e11a00))
+* **api:** remove user password from seeder [#2775](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2775) ([4c0f3cc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4c0f3ccca2169772820c7fb24429cac388568e85))
+* **api:** user sync http status code [#2569](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2569) ([db477a0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/db477a01974ce1d2e308451c921ac1d29ca2e082))
+* **charisma:** remove user dependency from charisma package [#2755](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2755) ([f864c83](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f864c8343e4e1ed96a56df3395908328b75296d3))
+* **ci:** deploy pipeline [#2784](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2784) ([04317c4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/04317c427af1ec6ffbcd610d112d9e609c0eb75c))
+* **deps:** add conventional-changelog-writer ([9df4407](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9df4407af79ba8f868e569389aab42458322eb76))
+* **docker:** rename .env to .env.example [#2770](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2770) ([f9ce282](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f9ce2821ad6ada989cba7d6ce9abf6bb48b69f36))
+* **notifications:** remove old notifications system [#2764](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2764) ([91d8104](https://gitlab.com/24-heures-insa/overbookd-mono/commit/91d8104ed64029d1239d0b64296969e676fdd64c))
+* **registration:** add staff description [#2783](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2783) ([0f4c72e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0f4c72e88cbaf359ff0b6bc1bcacaed475750e0c))
+* **registration:** make phone numbers international [#2781](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2781) ([5004b3c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5004b3c5e41767b2b5dfef3976dcb737855330bb))
+* **registration:** prefill user information when registering with existing ob account [#2778](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2778) ([4c3eb37](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4c3eb374bdb9b9ceb9d19ed477b19c77d320571e))
+* **registration:** remove registration membership [#2785](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2785) ([de4ddd9](https://gitlab.com/24-heures-insa/overbookd-mono/commit/de4ddd935e9d7139872c21f9e9bc32f4fee17826))
+* **registration:** save staff token for zitadel login [#2782](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2782) ([a00fd23](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a00fd23569de831e0a15fc328c315497b3cc727e))
+* **registration:** use e164 phone number format [#2791](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2791) ([b90f1be](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b90f1bebbe098a2496e2ded4436624378f40f295))
+* **sso:** revert optional birth date & update phone on Zitadel [#2766](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2766) ([ac6694e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/ac6694e15d249208302d14d7bceb24829b732339))
+* **SSO:** save dateOfBirth in Zitadel if it doesn't exist [#2766](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2766) ([b394ee1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b394ee1b84f1b5e7e1affb45a02e93f83484033e))
+* **tools:** clean old scripts [#2768](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2768) ([a9cfb97](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a9cfb975cc80f50d83c68ffb33cb6520eddb9067))
+* **user:** update zitadel user on profile update [#2780](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2780) ([838bff3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/838bff3c464c796a7102343b792314e70e7cd760))
+* **watermark:** makes the watermark visible in dark mode [#2787](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2787) ([c672d65](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c672d65a90b55af4f58aa4cadfbf450c0ee27cbe))
+* **web:** fetch config before mount [#2786](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2786) ([3f6aca8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3f6aca83b681c0db08c2071cd0fae7d53bfaff2b))
+
+### Pre-Features
+
+* **registration:** add user check and adapt registration domain to password-less form [#2572](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2572) ([5a7d30c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5a7d30c7cf9ae8261540998549ef9e2713f71a9e))
+
+### Documentation
+
+* **api:** generate prisma schema [#2763](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2763) ([3793f39](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3793f39335548a94aa5c606ca57fd7d150bc4012))
+
+### Refactor
+
+* rename package team-constants to team-code [#2772](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2772) ([f41574e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f41574ef2b2af786997aad72b454174b9eb18023))
+
+### CI/CD
+
+* **triage:** remove old QoL rules ([5abadb3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5abadb3835224a17dba14ede302671bbf8f893bf))
+
 ## [3.54.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.53.10...v3.54.0) (2026-07-03)
 
 ### Features
