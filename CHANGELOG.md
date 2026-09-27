@@ -1,3 +1,9 @@
+## [4.0.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.0.0...v4.0.1) (2026-09-27)
+
+### Bug Fixes
+
+* **api:** skip duplicates when adding teams to guest user [#2792](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2792) ([e614f9c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e614f9cb1b4ebcf7ca8eedc31f85d865f7ee5026))
+
 ## [4.0.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v3.54.0...v4.0.0) (2026-09-27)
 
 ### ⚠ BREAKING CHANGES
