@@ -1,3 +1,9 @@
+## [4.0.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.0.1...v4.0.2) (2026-09-27)
+
+### Bug Fixes
+
+* **web:** update image max size to match zitadel [#2793](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2793) ([7241aaa](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7241aaa62d2e1a63872c22a2e3b696376a31f2e6))
+
 ## [4.0.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.0.0...v4.0.1) (2026-09-27)
 
 ### Bug Fixes
