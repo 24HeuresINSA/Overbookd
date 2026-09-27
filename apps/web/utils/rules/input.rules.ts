@@ -107,7 +107,7 @@ export function required(value: unknown) {
 }
 
 export function isImageSizeWithinLimit(value?: File | null): true | string {
-  const message = `Moins de ${Math.round(IMAGE_MAX_SIZE / (1024 * 1024))} Mo s'il te plaît 🙏`;
+  const message = `Moins de ${Math.round(IMAGE_MAX_SIZE / 1024)} Ko s'il te plaît 🙏`;
   return !value || value.size < IMAGE_MAX_SIZE || message;
 }
 
