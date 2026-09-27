@@ -112,6 +112,7 @@ export class UserService {
           userId,
           teamCode,
         })),
+        skipDuplicates: true,
       });
       return;
     }
