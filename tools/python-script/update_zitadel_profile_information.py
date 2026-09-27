@@ -93,7 +93,7 @@ def get_user_by_email(email: str):
 def update_user_information(user: dict, row: dict):
     first_name = get_field(row, "first_name")
     last_name = get_field(row, "last_name")
-    nick_name = get_field(row, "nickname")
+    nick_name = get_field(row, "nickname", required=False)
 
     user_id = user["userId"]
     payload = {

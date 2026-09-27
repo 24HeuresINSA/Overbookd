@@ -25,7 +25,7 @@ import requests
 ZITADEL_BASE_URL = "https://zitadel.24heures.org"
 ZITADEL_API_BEARER_TOKEN = "xxxxxxxxxxxxxxxxx"
 
-ZITADEL_OVERBOOKD_PROJECT_ID = "332175680848527383"
+ZITADEL_OVERBOOKD_PROJECT_ID = "380922094134755332"
 ZITADEL_WIKI_PROJECT_ID = "289024556977356803"
 ZITADEL_OVERVIEW_PROJECT_ID = "330577475434184727"
 ZITADEL_OVERBOOKD_PREPROD_PROJECT_ID = "332175680898859031"
@@ -38,7 +38,7 @@ WIKI_EDITOR_ROLE = "wiki_editor"
 OVERVIEW_VIEWER_ROLE = "overview_viewer"
 VAULTWARDEN_USER_ROLE = "vaultwarden_user"
 
-ORGANIZERS_ROLES = {
+ORGANIZERS_ROLES = [
     {
         "role": OVERBOOKD_USER_ROLE,
         "projectId": ZITADEL_OVERBOOKD_PROJECT_ID,
@@ -63,7 +63,7 @@ ORGANIZERS_ROLES = {
         "role": VAULTWARDEN_USER_ROLE,
         "projectId": ZITADEL_VAULTWARDEN_PROJECT_ID,
     },
-}
+]
 
 CSV_FILE = "user.csv"
 
@@ -227,6 +227,11 @@ def main():
                 continue
 
             try:
+                teams = get_field(row, "teams").split(", ")
+                if "vieux" not in teams and "hard" not in teams:
+                    print(f"[SKIP] ligne {row_number} - {email} bénévole")
+                    continue
+
                 existing_user = get_user_by_email(email)
 
                 if not existing_user:
