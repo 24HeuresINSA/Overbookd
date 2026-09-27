@@ -35,7 +35,7 @@ export function formatPhoneNumber(phoneNumber: string): string {
 export function formatPhoneNumberToInternational(phoneNumber: string): string {
   const parsedNumber = parseNumber(phoneNumber);
   if (!parsedNumber.valid) return phoneNumber.trim();
-  return parsedNumber.number.international;
+  return parsedNumber.number.e164;
 }
 
 export function formatPhoneLink(phoneNumber: string): string {
