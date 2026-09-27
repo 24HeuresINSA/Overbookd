@@ -6,9 +6,7 @@ DELETE FROM "charisma_period";
 DELETE FROM "contractor";
 DELETE FROM "festival_activity";
 DELETE FROM "festival_task";
-DELETE FROM "notification"
-DELETE FROM "purchase"
-DELETE FROM "volunteer_availability"
+DELETE FROM "volunteer_availability";
 DELETE FROM "charisma_event_participation";
 
 -- Remove all user team except hard, vieux, admin, fen, voiture, camion, conducteur, conducteur-fen
@@ -43,8 +41,8 @@ WHERE team_code IN
   (SELECT DISTINCT "team".code FROM "team"
   WHERE code = 'hard');
 
--- Add benevole team to vieux user
+-- Add personne team to vieux user
 INSERT INTO "user_team" ("user_id", "team_code")
-SELECT "user_id", 'benevole'
+SELECT "user_id", 'personne'
 FROM "user_team"
 WHERE "team_code" = 'vieux';
