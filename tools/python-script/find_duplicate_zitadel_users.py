@@ -93,9 +93,9 @@ def get_user_by_email(email: str):
 def get_user_by_name(name: str):
     payload = {
         "query": {
-        "offset": "0",
-        "limit": "0",
-        "asc": True,
+            "offset": "0",
+            "limit": "0",
+            "asc": True,
         },
         "sortingColumn": "USER_FIELD_NAME_DISPLAY_NAME",
         "queries": [
@@ -126,10 +126,12 @@ def get_matching_users(row: dict) -> set(str):
     last_name = get_field(row, "last_name")
 
     first_name_matches = get_user_by_name(first_name)
-    first_name_set = {match["human"]["email"]["email"] for match in first_name_matches}
+    first_name_set = {match["human"]["email"]["email"]
+                      for match in first_name_matches}
 
     last_name_matches = get_user_by_name(last_name)
-    last_name_set = {match["human"]["email"]["email"] for match in last_name_matches}
+    last_name_set = {match["human"]["email"]["email"]
+                     for match in last_name_matches}
 
     return first_name_set & last_name_set
 
@@ -155,12 +157,14 @@ def main():
                 existing_user = get_user_by_email(email)
 
                 if existing_user is not None and len(matching_users) <= 1:
-                    print(f"[SKIP] ligne {row_number} - {email} un seul compte")
+                    print(
+                        f"[SKIP] ligne {row_number} - {email} un seul compte")
                     non_duplicate += 1
                     continue
-                
+
                 if len(matching_users) == 0:
-                    print(f"[WARNING] ligne {row_number} - {email} pas de compte")
+                    print(
+                        f"[WARNING] ligne {row_number} - {email} pas de compte")
                     no_account += 1
                     continue
 
