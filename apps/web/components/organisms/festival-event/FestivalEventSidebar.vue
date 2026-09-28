@@ -431,8 +431,7 @@ const isConcerned = (review: ReviewStatus<"FT">): boolean => {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin: 25px 0;
-    height: 300;
+    margin: 20px 0;
 
     .icon {
       position: relative;
