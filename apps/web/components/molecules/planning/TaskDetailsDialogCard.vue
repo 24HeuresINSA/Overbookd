@@ -28,6 +28,14 @@
                   : "Aucun lieu assigné"
               }}
             </span>
+            <v-icon
+              v-if="mapsUrl"
+              icon="mdi-open-in-new"
+              size="small"
+              class="ml-1"
+              aria-label="Ouvrir dans Google Maps"
+              title="Ouvrir dans Google Maps"
+            />
           </v-chip>
           <v-chip
             color="primary"
@@ -117,13 +125,17 @@ const retrieveGeo = (geoLocation: GeoLocation): Coordinate => {
   return location.barycentre.coordinates;
 };
 
-const openLocation = () => {
+const mapsUrl = computed<string | undefined>(() => {
   const appointment = props.selectedTask.appointment;
-  if (!appointment) return;
+  if (!appointment) return undefined;
   const location = locationStore.getLocationById(appointment.id);
-  if (!location?.geoLocation) return;
+  if (!location?.geoLocation) return undefined;
   const { lat, lng } = retrieveGeo(location.geoLocation);
-  window.open(`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`);
+  return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+});
+
+const openLocation = () => {
+  if (mapsUrl.value) window.open(mapsUrl.value);
 };
 
 const emit = defineEmits(["close"]);
