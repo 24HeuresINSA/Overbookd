@@ -79,12 +79,12 @@
         <div class="event-date">
           <DateField
             v-model="dateOrgaWeekStart"
-            label="Début de la semaine orga"
+            label="Lundi de la semaine orga"
             hide-details
           />
           <DateField
             v-model="dateEventStart"
-            label="Début de la manif"
+            label="Vendredi de la manif"
             hide-details
           />
         </div>
