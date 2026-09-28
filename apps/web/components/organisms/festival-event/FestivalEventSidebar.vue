@@ -29,7 +29,10 @@
           <h3>{{ statusLabel }}</h3>
         </div>
 
-        <div :class="['icons', { 'flex-column': isSideBarClosed }]">
+        <div
+          v-if="reviewers.length > 0"
+          :class="['icons', { 'flex-column': isSideBarClosed }]"
+        >
           <div
             v-for="reviewer of reviewers"
             :key="reviewer.code"
