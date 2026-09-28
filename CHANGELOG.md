@@ -1,3 +1,10 @@
+## [4.0.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.0.2...v4.0.3) (2026-09-28)
+
+### Bug Fixes
+
+* **configuration:** add details on event dates [#2794](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2794) ([08943ec](https://gitlab.com/24-heures-insa/overbookd-mono/commit/08943ec5d0702bec47e0d9fe1011edca0dfa4c27))
+* **web:** festival event validation icon height [#2797](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2797) ([50c249a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/50c249af9b840cd75429faa99fa1d307899783a4))
+
 ## [4.0.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.0.1...v4.0.2) (2026-09-27)
 
 ### Bug Fixes
