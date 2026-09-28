@@ -12,7 +12,7 @@
           :items="filteredCandidates"
           :loading="loading"
           loading-text="Chargement des candidat·e·s..."
-          :no-data-text="`Aucun candidat·e ${displayRejectedCandidates ? 'rejeté·e' : ''}`"
+          :no-data-text="`Aucun·e candidat·e${displayRejectedCandidates ? ' rejeté·e' : ''}`"
           :mobile="isMobile"
           show-select
           return-object
@@ -28,7 +28,7 @@
                 @click:clear="searchedCandidate = ''"
               />
               <v-btn
-                text="Candidat·e·s rejetés"
+                text="Candidat·e·s rejeté·e·s"
                 color="secondary"
                 :variant="displayRejectedCandidates ? 'elevated' : 'outlined'"
                 @click="toggleRejectedCandidates"
