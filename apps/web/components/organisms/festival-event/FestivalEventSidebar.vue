@@ -23,40 +23,46 @@
       @click="toggleSideBar"
     />
     <v-card-text class="sidebar__text">
-      <div v-show="!isSideBarClosed" id="status">
-        <span class="dot" :class="status" />
-        <h3>{{ statusLabel }}</h3>
-      </div>
+      <div :class="['review-container', { dense: isSideBarClosed }]">
+        <div v-show="!isSideBarClosed" id="status">
+          <span class="dot" :class="status" />
+          <h3>{{ statusLabel }}</h3>
+        </div>
 
-      <div :class="['icons', { 'flex-column': isSideBarClosed }]">
-        <div
-          v-for="reviewer of reviewers"
-          :key="reviewer.code"
-          class="icon"
-          :class="{ closed: isSideBarClosed }"
+        <div :class="['icons', { 'flex-column': isSideBarClosed }]">
+          <div
+            v-for="reviewer of reviewers"
+            :key="reviewer.code"
+            class="icon"
+            :class="{ closed: isSideBarClosed }"
+          >
+            <v-icon
+              :class="getReviewerStatus(reviewer).toLowerCase()"
+              :icon="reviewer.icon"
+              size="26"
+              :aria-label="getReviewerTitle(reviewer)"
+              :title="getReviewerTitle(reviewer)"
+            />
+            <span class="icon-detail">{{ reviewer.name }}</span>
+          </div>
+        </div>
+
+        <v-btn
+          id="ask-for-review"
+          class="review-btn"
+          aria-label="Demande de relecture"
+          :title="isSideBarClosed ? 'Demande de relecture' : ''"
+          :disabled="!canAskForReview"
+          @click="askForReview"
         >
           <v-icon
-            :class="getReviewerStatus(reviewer).toLowerCase()"
-            :icon="reviewer.icon"
-            size="26"
-            :aria-label="getReviewerTitle(reviewer)"
-            :title="getReviewerTitle(reviewer)"
+            icon="mdi-rocket-launch-outline"
+            :class="{ 'mr-2': !isSideBarClosed }"
           />
-          <span class="icon-detail">{{ reviewer.name }}</span>
-        </div>
+          <p v-show="!isSideBarClosed">Demande de relecture</p>
+        </v-btn>
       </div>
 
-      <v-btn
-        id="ask-for-review"
-        class="review-btn"
-        aria-label="Demande de relecture"
-        :title="isSideBarClosed ? 'Demande de relecture' : ''"
-        :disabled="!canAskForReview"
-        @click="askForReview"
-      >
-        <v-icon class="mr-2">mdi-rocket-launch-outline</v-icon>
-        <p v-show="!isSideBarClosed">Demande de relecture</p>
-      </v-btn>
       <div v-show="!isSideBarClosed">
         <div v-for="team in myReviewers" :key="team.code" class="team-review">
           <v-btn
@@ -427,11 +433,20 @@ const isConcerned = (review: ReviewStatus<"FT">): boolean => {
     flex-shrink: 0;
   }
 
+  .review-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+
+    &.dense {
+      gap: 10px;
+    }
+  }
+
   .icons {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin: 20px 0;
 
     .icon {
       position: relative;
