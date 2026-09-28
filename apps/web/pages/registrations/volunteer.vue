@@ -43,7 +43,7 @@
           :items="filteredCandidates"
           :loading="loading"
           loading-text="Chargement des candidat·e·s..."
-          :no-data-text="`Aucun candidat·e${displayRejectedCandidates ? ' rejeté·e' : ''}`"
+          :no-data-text="`Aucun·e candidat·e${displayRejectedCandidates ? ' rejeté·e' : ''}`"
           :mobile="isMobile"
           return-object
           @click:row="openCandidateInfoDialog"
