@@ -24,7 +24,7 @@ const { alert } = defineProps(
   alert: {
     type: Object as PropType<SettleAlert>,
     required: true,
-  },
+  }
 );
 
 const emit = defineEmits(["dismiss"]);
