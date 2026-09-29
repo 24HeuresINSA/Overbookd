@@ -21,9 +21,7 @@
     />
     <v-btn id="expand-alerts" block color="primary" @click="toggleExpand">
       <v-icon left>
-        {{
-          expanded ? "mdi-arrow-collapse" : "mdi-arrow-expand"
-        }}
+        {{ expanded ? "mdi-arrow-collapse" : "mdi-arrow-expand" }}
       </v-icon>
       {{ expanded ? "Une seule alerte" : "Toutes les alertes" }}
     </v-btn>
