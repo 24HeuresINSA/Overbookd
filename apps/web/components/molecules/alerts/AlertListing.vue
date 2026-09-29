@@ -20,7 +20,11 @@
       @dismiss="dismiss('profilePicture')"
     />
     <v-btn id="expand-alerts" block color="primary" @click="toggleExpand">
-      <v-icon left>{{ expanded ? "mdi-arrow-collapse" : "mdi-arrow-expand" }}</v-icon>
+      <v-icon left>
+        {{
+          expanded ? "mdi-arrow-collapse" : "mdi-arrow-expand"
+        }}
+      </v-icon>
       {{ expanded ? "Une seule alerte" : "Toutes les alertes" }}
     </v-btn>
   </div>
@@ -35,11 +39,17 @@ const alertStore = useAlertStore();
 alertStore.fetchAlerts();
 
 const expanded = ref<boolean>(false);
-const toggleExpand = () => expanded.value = !expanded.value;
+const toggleExpand = () => (expanded.value = !expanded.value);
 
-const personalAccountAlert = computed<PersonalAccountAlert | undefined>(() => alertStore.alerts.personalAccount);
-const contributionAlert = computed<SettleAlert | undefined>(() => alertStore.alerts.contribution);
-const profilePictureAlert = computed<boolean | undefined>(() => alertStore.alerts.profilePicture);
+const personalAccountAlert = computed<PersonalAccountAlert | undefined>(
+  () => alertStore.alerts.personalAccount,
+);
+const contributionAlert = computed<SettleAlert | undefined>(
+  () => alertStore.alerts.contribution,
+);
+const profilePictureAlert = computed<boolean | undefined>(
+  () => alertStore.alerts.profilePicture,
+);
 
 const multipleAlerts = computed<boolean>(() => {
   const allAlerts = Object.values(alertStore.alerts);
@@ -80,7 +90,7 @@ const dismiss = (alert: keyof Alerts) => alertStore.dismiss(alert);
 }
 
 #contribution,
-#profile-picture, {
+#profile-picture {
   background-color: $yellow-24h;
   border-color: $yellow-24h;
   a {
