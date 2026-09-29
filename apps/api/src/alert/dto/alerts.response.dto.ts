@@ -1,7 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Alerts } from "@overbookd/alerts";
-import { IAlertAboutContribution, Summary as ContributionSummary } from "@overbookd/contribution";
-import { IAlertAboutPersonalAccount, Summary as PersonalAccountSummary } from "@overbookd/personal-account";
+import {
+  IAlertAboutContribution,
+  Summary as ContributionSummary,
+} from "@overbookd/contribution";
+import {
+  IAlertAboutPersonalAccount,
+  Summary as PersonalAccountSummary,
+} from "@overbookd/personal-account";
 import { PersonalAccountResponseDto } from "./personal-account.response.dto";
 import { ContributionResponseDto } from "./contribution.response.dto";
 
@@ -33,7 +39,6 @@ class PersonalAccountResponseDto implements IAlertAboutPersonalAccount {
   })
   balance: number;
 }
-
 
 export class AlertsResponseDto implements Alerts {
   @ApiProperty({
