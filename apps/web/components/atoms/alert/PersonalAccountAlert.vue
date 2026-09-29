@@ -26,7 +26,7 @@ const { alert } = defineProps(
   alert: {
     type: Object as PropType<PersonalAccountAlert>,
     required: true,
-  },
+  }
 );
 
 const balance = computed<string>(() => Money.cents(this.alert.balance).toString());
