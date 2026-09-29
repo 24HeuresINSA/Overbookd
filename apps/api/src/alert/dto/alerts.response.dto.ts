@@ -8,8 +8,6 @@ import {
   IAlertAboutPersonalAccount,
   Summary as PersonalAccountSummary,
 } from "@overbookd/personal-account";
-import { PersonalAccountResponseDto } from "./personal-account.response.dto";
-import { ContributionResponseDto } from "./contribution.response.dto";
 
 class ContributionResponseDto implements IAlertAboutContribution {
   @ApiProperty({
