@@ -89,7 +89,7 @@
           Es-tu sûr·e de vouloir continuer ?
         </template>
         <template #confirm-btn-content>
-          <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>Valider
+          <v-icon icon="mdi-checkbox-marked-circle-outline" left /> Valider
         </template>
       </ConfirmationDialogCard>
     </v-dialog>
