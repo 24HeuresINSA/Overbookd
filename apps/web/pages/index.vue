@@ -1,5 +1,6 @@
 <template>
   <DesktopPageTitle :title="titleMessage" />
+  <AlertListing />
   <v-container fluid class="pa-0">
     <v-row class="home" no-gutters>
       <v-col class="home">
@@ -51,9 +52,6 @@ import {
 import { OverDate } from "@overbookd/time";
 import { VOLUNTEER } from "@overbookd/registration";
 import { SOFT } from "@overbookd/team-code";
-
-const alertStore = useAlertStore();
-alertStore.fetchAlerts();
 
 const myStore = useMyStore();
 const me = computed(() => myStore.loggedUser);
