@@ -20,12 +20,12 @@
 import Vue from "vue";
 import { SettleAlert } from "@overbookd/contribution";
 
-const { alert } = defineProps(
+const { alert } = defineProps({
   alert: {
     type: Object as PropType<SettleAlert>,
     required: true,
-  }
-);
+  },
+});
 
 const emit = defineEmits(["dismiss"]);
 const dismiss = () => emit("dismiss");
