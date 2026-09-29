@@ -26,6 +26,7 @@
               density="compact"
               hide-details="auto"
               class="profile-picture__input"
+              show-size
             />
           </div>
           <div class="profile-fields">
@@ -94,6 +95,7 @@
           </p>
           <v-radio-group
             v-model="selectedAssignment"
+            hide-details="auto"
             @update:model-value="updateAssignmentPreference"
           >
             <v-hover
