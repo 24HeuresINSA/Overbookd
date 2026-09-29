@@ -52,10 +52,7 @@ import { PrismaContributions } from "./repository/contributions.prisma";
           personalAccount,
           contribution,
         }),
-      inject: [
-        PersonalAccountAlerting,
-        SettleAlerting,
-      ],
+      inject: [PersonalAccountAlerting, SettleAlerting],
     },
   ],
   exports: [PersonalAccountAlerting],

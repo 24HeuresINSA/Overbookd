@@ -1,7 +1,6 @@
 import type { Alerts } from "@overbookd/alerts";
 import { PersonalAccountAlerting } from "@overbookd/personal-account";
 import { SettleAlerting } from "@overbookd/contribution";
-import { User } from "@overbookd/user";
 import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
 
 type Alerting = {
@@ -13,10 +12,7 @@ export class AlertService {
   constructor(private readonly alert: Alerting) {}
 
   async getMyAlerts(volunteer: RequestHydratedUser): Promise<Alerts> {
-    const [
-      personalAccount,
-      contribution,
-    ] = await Promise.all([
+    const [personalAccount, contribution] = await Promise.all([
       this.alert.personalAccount.for(volunteer.id),
       this.alert.contribution.for(volunteer.id),
     ]);
