@@ -5,6 +5,4 @@ export type Alerts = {
   personalAccount?: IAlertAboutPersonalAccount;
   contribution?: IAlertAboutContribution;
   profilePicture?: boolean;
-  friends?: boolean;
-  notYetVolunteer?: boolean;
 };
