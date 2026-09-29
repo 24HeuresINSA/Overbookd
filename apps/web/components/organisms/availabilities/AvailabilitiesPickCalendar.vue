@@ -1,15 +1,7 @@
 <template>
   <OverCalendar>
     <template #manager>
-      <AvailabilititesCalendarManager
-        :day="days[0]"
-        :disable-previous="disablePrevious"
-        :disable-next="disableNext"
-        :cant-validate="cantValidate"
-        @previous="propagatePrevious"
-        @next="propagateNext"
-        @validate="propagateValidation"
-      />
+      <h3 class="period-indicator">{{ days[0]?.displayableMonthWithYear }}</h3>
     </template>
     <template #header>
       <AvailabilitiesCalendarHeader
@@ -39,21 +31,6 @@ import { findCharismaPerHour } from "~/utils/availabilities/availability-grid.ut
 
 const availabilityStore = useVolunteerAvailabilityStore();
 const charismaPeriodStore = useCharismaPeriodStore();
-
-defineProps({
-  disablePrevious: {
-    type: Boolean,
-    default: false,
-  },
-  disableNext: {
-    type: Boolean,
-    default: false,
-  },
-  cantValidate: {
-    type: Boolean,
-    default: false,
-  },
-});
 
 const days = defineModel<DayPresenter[]>({ required: true });
 
@@ -112,8 +89,16 @@ const selectOrUnselectDay = (day: DayPresenter) => {
   });
 };
 
-const emit = defineEmits(["previous", "next", "validate"]);
+const emit = defineEmits(["previous", "next"]);
 const propagatePrevious = () => emit("previous");
 const propagateNext = () => emit("next");
-const propagateValidation = () => emit("validate");
 </script>
+
+<style lang="scss" scoped>
+.period-indicator {
+  font-size: 1.5rem;
+  font-weight: normal;
+  text-transform: capitalize;
+  text-align: center;
+}
+</style>

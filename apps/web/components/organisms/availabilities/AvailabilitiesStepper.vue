@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="availabilities-stepper">
     <v-stepper v-model="step" class="mb-3 desktop-only" editable>
       <v-stepper-header>
         <v-stepper-item
@@ -11,19 +11,88 @@
         />
       </v-stepper-header>
     </v-stepper>
-    <h2 class="mb-3 mobile-only">
-      {{ calendarSteps[step - 1].title }}
-      <i>(Jour {{ mobileStepDayIndex + 1 }} sur {{ stepDays.length }})</i>
-    </h2>
-    <AvailabilitiesPickCalendar
-      v-model="calendarDays"
-      :disable-previous="shouldDisablePrevious"
-      :disable-next="shouldDisableNext"
-      :cant-validate="cannotValidate"
-      @previous="moveToPrevious"
-      @next="moveToNext"
-      @validate="saveAvailabilities"
-    />
+    <div class="mb-3 mobile-only">
+      <v-chip-group
+        :model-value="step"
+        mandatory
+        selected-class="text-primary"
+        @update:model-value="selectStep"
+      >
+        <v-chip
+          v-for="({ title }, index) in calendarSteps"
+          :key="`step-${index}`"
+          :text="title"
+          :value="index + 1"
+          variant="outlined"
+          filter
+        />
+      </v-chip-group>
+      <p class="hint">
+        Jour {{ mobileStepDayIndex + 1 }} sur {{ stepDays.length }} · glisse
+        pour changer de jour
+      </p>
+    </div>
+    <div v-touch="{ left: moveToNext, right: moveToPrevious }">
+      <AvailabilitiesPickCalendar
+        v-model="calendarDays"
+        @previous="moveToPrevious"
+        @next="moveToNext"
+      />
+    </div>
+    <div class="action-bar">
+      <v-btn
+        class="desktop-only"
+        icon="mdi-chevron-left"
+        aria-label="Période précédente"
+        title="Période précédente"
+        variant="tonal"
+        :disabled="shouldDisablePrevious"
+        @click="moveToPrevious"
+      />
+      <v-btn
+        text="Valider mes dispos"
+        color="success"
+        size="large"
+        class="action-bar__validate"
+        :disabled="cannotValidate"
+        :loading="isSaving"
+        @click="openValidationDialog"
+      />
+      <v-btn
+        class="desktop-only"
+        icon="mdi-chevron-right"
+        aria-label="Période suivante"
+        title="Période suivante"
+        variant="tonal"
+        :disabled="shouldDisableNext"
+        @click="moveToNext"
+      />
+      <ul class="legend action-bar__legend">
+        <li v-for="{ label, className } in LEGEND" :key="className">
+          <span class="legend__swatch" :class="className" />
+          {{ label }}
+        </li>
+      </ul>
+    </div>
+
+    <v-dialog v-model="isValidationDialogOpen" max-width="600">
+      <ConfirmationDialogCard
+        @close="closeValidationDialog"
+        @confirm="saveAvailabilities"
+      >
+        <template #title>Valider mes dispos</template>
+        <template #statement>
+          Tu es sur le point de valider tes disponibilités. Une fois
+          sauvegardées, elles
+          <strong class="text-error">ne pourront plus être modifiées</strong>.
+          <br />
+          Es-tu sûr·e de vouloir continuer ?
+        </template>
+        <template #confirm-btn-content>
+          <v-icon left> mdi-checkbox-marked-circle-outline </v-icon>Valider
+        </template>
+      </ConfirmationDialogCard>
+    </v-dialog>
   </div>
 </template>
 
@@ -35,6 +104,7 @@ import {
   type CalendarStep,
 } from "~/utils/availabilities/calendar-event-periods";
 import { DayPresenter } from "~/utils/calendar/day.presenter";
+import { useEventListener } from "@vueuse/core";
 
 const BASE_CALENDAR_STEPS: CalendarStep[] = [
   CalendarEventPeriods.preManif,
@@ -45,6 +115,12 @@ const EXTENDED_CALENDAR_STEPS: CalendarStep[] = [
   ...CalendarEventPeriods.collages,
   CalendarEventPeriods.prePreManif,
   ...BASE_CALENDAR_STEPS,
+];
+
+const LEGEND = [
+  { label: "Sélectionné", className: "selected" },
+  { label: "Sauvegardé", className: "validated" },
+  { label: "Moins de 2h", className: "error" },
 ];
 
 const myStore = useMyStore();
@@ -114,8 +190,103 @@ const moveToNext = () => {
   }
 };
 
+const selectStep = (value: unknown) => {
+  step.value = Number(value);
+  mobileStepDayIndex.value = 0;
+};
+
+useEventListener("keydown", (event: KeyboardEvent) => {
+  if ((event.target as HTMLElement).closest("input, textarea")) return;
+  if (event.key === "ArrowLeft") moveToPrevious();
+  if (event.key === "ArrowRight") moveToNext();
+});
+
+const isValidationDialogOpen = ref<boolean>(false);
+const openValidationDialog = () => (isValidationDialogOpen.value = true);
+const closeValidationDialog = () => (isValidationDialogOpen.value = false);
+
+const isSaving = ref<boolean>(false);
 const saveAvailabilities = async () => {
+  closeValidationDialog();
   if (!myStore.loggedUser) return;
+  isSaving.value = true;
   await availabilitiyStore.updateVolunteerAvailabilities(myStore.loggedUser.id);
+  isSaving.value = false;
 };
 </script>
+
+<style lang="scss" scoped>
+@use "~/assets/calendar.scss" as *;
+
+.hint {
+  font-size: 0.85rem;
+  color: rgba(var(--v-theme-on-surface), 0.7);
+}
+
+.availabilities-stepper {
+  @media screen and (max-width: $mobile-max-width) {
+    padding-bottom: 110px;
+  }
+}
+
+.action-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 12px 16px;
+  background-color: rgb(var(--v-theme-surface));
+  border-radius: $main-page-border-radius;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
+  &__validate {
+    flex: 0 0 auto;
+  }
+  &__legend {
+    order: -1;
+    flex: 1;
+  }
+
+  @media screen and (max-width: $mobile-max-width) {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 12px 16px calc($bottom-nav-height + 8px);
+    border-radius: $main-page-border-radius $main-page-border-radius 0 0;
+    &__validate {
+      flex: 1;
+    }
+    &__legend {
+      order: 1;
+      width: 100%;
+      flex: none;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+.legend {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  &__swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    pointer-events: none;
+  }
+}
+</style>
