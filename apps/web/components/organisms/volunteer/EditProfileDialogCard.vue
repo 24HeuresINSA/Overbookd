@@ -3,55 +3,77 @@
     <template #title>Modifier mon profil</template>
     <template #content>
       <v-form v-model="isFormValid" class="profile-form">
-        <v-file-input
-          v-model="profilePicture"
-          :rules="[isSupportedImageFile, isImageSizeWithinLimit]"
-          label="Photo de profil"
-          prepend-icon="mdi-camera"
-          :accept="IMAGE_EXTENSIONS"
-          show-size
-        />
-        <div class="profile-row">
-          <v-text-field
-            v-model="firstName"
-            label="Prénom*"
-            :rules="[required, maxLength(30)]"
-          />
-          <v-text-field
-            v-model="lastName"
-            label="Nom*"
-            :rules="[required, maxLength(30)]"
-          />
+        <div class="profile-identity">
+          <div class="profile-picture">
+            <img
+              v-if="picturePreview"
+              :src="picturePreview"
+              alt="Photo de profil"
+              class="profile-picture__photo"
+            />
+            <v-icon
+              v-else
+              icon="mdi-account-circle"
+              class="profile-picture__icon"
+            />
+            <v-file-input
+              v-model="profilePicture"
+              :rules="[isSupportedImageFile, isImageSizeWithinLimit]"
+              label="Changer la photo"
+              prepend-icon=""
+              prepend-inner-icon="mdi-camera"
+              :accept="IMAGE_EXTENSIONS"
+              density="compact"
+              hide-details="auto"
+              class="profile-picture__input"
+              show-size
+            />
+          </div>
+          <div class="profile-fields">
+            <div class="profile-row">
+              <v-text-field
+                v-model="firstName"
+                label="Prénom*"
+                :rules="[required, maxLength(30)]"
+              />
+              <v-text-field
+                v-model="lastName"
+                label="Nom*"
+                :rules="[required, maxLength(30)]"
+              />
+            </div>
+            <div class="profile-row">
+              <v-text-field
+                v-model="nickname"
+                label="Surnom"
+                :rules="[maxLength(30)]"
+                clearable
+              />
+              <v-text-field
+                v-model="birthDay"
+                label="Date de naissance*"
+                type="date"
+                :rules="[required, minDateRule, maxDateRule]"
+              />
+            </div>
+            <div class="profile-row">
+              <v-text-field
+                v-model="phoneNumber"
+                label="Téléphone portable*"
+                :rules="[required, isMobilePhoneNumber]"
+              />
+              <v-text-field
+                v-tooltip:top="
+                  'Tu dois passer par les responsables bénévoles ou le·a secrétaire général·e pour changer ton email 🙏'
+                "
+                :model-value="email"
+                label="Email*"
+                readonly
+              />
+            </div>
+          </div>
         </div>
-        <div class="profile-row">
-          <v-text-field
-            v-model="nickname"
-            label="Surnom"
-            :rules="[maxLength(30)]"
-            clearable
-          />
-          <v-text-field
-            v-model="birthDay"
-            label="Date de naissance*"
-            type="date"
-            :rules="[required, minDateRule, maxDateRule]"
-          />
-        </div>
-        <div class="profile-row">
-          <v-text-field
-            v-model="phoneNumber"
-            label="Téléphone portable*"
-            :rules="[required, isMobilePhoneNumber]"
-          />
-          <v-text-field
-            v-tooltip:top="
-              'Tu dois passer par les responsables bénévoles ou le·a secrétaire général·e pour changer ton email 🙏'
-            "
-            :model-value="email"
-            label="Email*"
-            readonly
-          />
-        </div>
+        <v-divider class="my-2" />
         <div class="planning-preference">
           <p class="planning-preference__label">
             Je souhaite avoir une version imprimée de mon planning :
@@ -73,6 +95,7 @@
           </p>
           <v-radio-group
             v-model="selectedAssignment"
+            hide-details="auto"
             @update:model-value="updateAssignmentPreference"
           >
             <v-hover
@@ -111,6 +134,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useObjectUrl } from "@vueuse/core";
 import { IMAGE_EXTENSIONS, type Preference } from "@overbookd/http";
 import {
   assignmentPreferences,
@@ -138,6 +162,10 @@ const preferenceStore = usePreferenceStore();
 const loggedUser = computed(() => myStore.loggedUser);
 
 const profilePicture = ref<File | null>(null);
+const selectedPictureUrl = useObjectUrl(profilePicture);
+const picturePreview = computed<string | null | undefined>(
+  () => selectedPictureUrl.value ?? loggedUser.value?.profilePicture,
+);
 
 const firstName = ref<string>(loggedUser.value?.firstName ?? "");
 const lastName = ref<string>(loggedUser.value?.lastName ?? "");
@@ -219,6 +247,48 @@ const save = async () => {
 
 <style lang="scss" scoped>
 .profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.profile-identity {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+}
+
+.profile-picture {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 180px;
+  flex-shrink: 0;
+  &__photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  &__icon {
+    font-size: 150px;
+    opacity: 0.8;
+  }
+  &__input {
+    width: 100%;
+  }
+}
+
+.profile-fields {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 5px;
