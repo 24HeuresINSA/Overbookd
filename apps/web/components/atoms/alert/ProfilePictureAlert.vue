@@ -2,17 +2,15 @@
   <v-alert
     icon="mdi-incognito"
     border="start"
+    density="compact"
     prominent
-    dismissible
-    @input="dismiss"
+    closable
+    @click:close="dismiss"
   >
-    <h2 class="summary">Pas de photo de profil 🥷</h2>
-    <p class="catch-phrase">
-      Tu peux <nuxt-link to="/profile">y remédier</nuxt-link>.
-    </p>
+    <h2 class="summary">Tu n'as pas de photo de profil 🥷</h2>
     <p class="details">
-      Avec une photo, il est plus facile de se retrouver pendant le festival
-      mais aussi à n'importe quel évènement de l'asso.
+      C'est pas très pratique pour te reconnaître. Pour en ajouter une, tu peux
+      cliquer sur le petit crayon de ton profil.
     </p>
   </v-alert>
 </template>
