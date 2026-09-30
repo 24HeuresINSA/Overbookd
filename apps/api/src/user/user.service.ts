@@ -228,7 +228,7 @@ export class UserService {
       : SELECT_USER_PERSONAL_DATA;
     const [volunteers, charismaPeriods] = await Promise.all([
       this.prisma.user.findMany({
-        where: hasPermission(BE_AFFECTED),
+        where: { ...IS_NOT_DELETED, ...hasPermission(BE_AFFECTED) },
         select: select,
         orderBy: { id: "asc" },
       }),
@@ -242,7 +242,7 @@ export class UserService {
   getAdherents(): Promise<User[]> {
     return this.prisma.user.findMany({
       orderBy: { id: "asc" },
-      where: hasPermission(PAY_CONTRIBUTION),
+      where: { ...IS_NOT_DELETED, ...hasPermission(PAY_CONTRIBUTION) },
       select: SELECT_USER_IDENTIFIER,
     });
   }
@@ -250,7 +250,7 @@ export class UserService {
   async getAllPersonalAccountConsumers(): Promise<Consumer[]> {
     const [consumers, charismaPeriods] = await Promise.all([
       this.prisma.user.findMany({
-        where: hasPermission(HAVE_PERSONAL_ACCOUNT),
+        where: { ...IS_NOT_DELETED, ...hasPermission(HAVE_PERSONAL_ACCOUNT) },
         select: {
           ...SELECT_USER_PERSONAL_DATA,
           ...SELECT_TRANSACTIONS_FOR_BALANCE,

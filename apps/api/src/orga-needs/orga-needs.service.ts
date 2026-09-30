@@ -178,7 +178,9 @@ export class OrgaNeedsService {
     return {
       volunteers: {
         select: { volunteerId: true },
-        where: { volunteer: this.teamMemberCondition(teams) },
+        where: {
+          volunteer: { ...IS_NOT_DELETED, ...this.teamMemberCondition(teams) },
+        },
       },
     };
   }
@@ -197,7 +199,11 @@ export class OrgaNeedsService {
 
   private requestVolunteerWithMembershipCondition(teams: string[]) {
     return {
-      volunteers: { some: { volunteer: this.teamMemberCondition(teams) } },
+      volunteers: {
+        some: {
+          volunteer: { ...IS_NOT_DELETED, ...this.teamMemberCondition(teams) },
+        },
+      },
     };
   }
 
@@ -208,7 +214,10 @@ export class OrgaNeedsService {
     const availabilities = await this.prisma.volunteerAvailability.findMany({
       where: {
         ...this.periodIncludedCondition(period),
-        user: this.teamMemberCondition(teams),
+        user: {
+          ...IS_NOT_DELETED,
+          ...this.teamMemberCondition(teams),
+        },
       },
       select: this.selectAvailabiliesAndTaksOn(period),
     });
@@ -337,6 +346,7 @@ export class OrgaNeedsService {
 
     const assignees = await this.prisma.user.findMany({
       where: {
+        ...IS_NOT_DELETED,
         ...this.teamMemberCondition(orgaNeedRequest.teams),
         ...this.assignedOrPartOfMobilizationDuring(orgaNeedRequest),
       },

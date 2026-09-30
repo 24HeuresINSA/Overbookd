@@ -32,6 +32,7 @@ export class PrismaAssignmentStats implements AssignmentStatsRepository {
     const [volunteers, charismaPeriods, assignmentStats] = await Promise.all([
       this.prisma.user.findMany({
         where: {
+          ...IS_NOT_DELETED,
           ...hasPermission(BE_AFFECTED),
           ...HAS_AVAILABILITIES,
         },

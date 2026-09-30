@@ -1,4 +1,5 @@
 import { AssignmentFriend } from "@overbookd/http";
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 import { PrismaService } from "../../../prisma.service";
 import { AssignmentFriends } from "../volunteer-to-task.service";
 import { SELECT_VOLUNTEER_ASSIGNMENT_FRIENDS } from "./volunteer.query";
@@ -9,7 +10,7 @@ export class PrismaAssignmentFriends implements AssignmentFriends {
 
   async findFriendsFor(volunteerId: number): Promise<AssignmentFriend[]> {
     const { friends, friendRequestors } = await this.prisma.user.findUnique({
-      where: { id: volunteerId },
+      where: { id: volunteerId, ...IS_NOT_DELETED },
       select: SELECT_VOLUNTEER_ASSIGNMENT_FRIENDS,
     });
 
