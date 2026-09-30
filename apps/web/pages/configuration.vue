@@ -18,7 +18,8 @@
           <p>
             L'inscription des bénévoles est actuellement
             <strong>
-              {{ isVolunteerRegistrationOpen ? "ouverte" : "fermée" }} </strong>.
+              {{ isVolunteerRegistrationOpen ? "ouverte" : "fermée" }} </strong
+            >.
           </p>
           <v-btn
             :model-value="isVolunteerRegistrationOpen"
@@ -192,7 +193,7 @@
       <template #title>
         {{ volunteerRegistrationStatusKeyword }} l'inscription des bénévoles
       </template>
-      <template #statement>
+      <template #content>
         Êtes-vous sûr de vouloir
         <strong> {{ volunteerRegistrationStatusKeyword.toUpperCase() }}</strong>
         l'inscription des bénévoles ?
