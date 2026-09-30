@@ -3,8 +3,8 @@
     icon="mdi-hand-coin"
     border="start"
     prominent
-    dismissible
-    @input="dismiss"
+    closable
+    @click:close="dismiss"
   >
     <h2 class="summary">{{ alert.summary }}</h2>
     <p class="catch-phrase">
