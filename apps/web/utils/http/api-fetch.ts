@@ -17,7 +17,7 @@ export type RequestOptions = {
   serverErrorMessage: string;
 };
 
-export type ApiResponse = object | string | number | void;
+export type ApiResponse = object | string | number | boolean | void;
 
 type Success<T extends ApiResponse> = T extends object
   ? HttpStringified<T>

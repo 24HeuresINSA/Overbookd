@@ -192,7 +192,7 @@
       <template #title>
         {{ volunteerRegistrationStatusKeyword }} l'inscription des bénévoles
       </template>
-      <template #statement>
+      <template #content>
         Êtes-vous sûr de vouloir
         <strong> {{ volunteerRegistrationStatusKeyword.toUpperCase() }}</strong>
         l'inscription des bénévoles ?

@@ -81,7 +81,7 @@
         @confirm="saveAvailabilities"
       >
         <template #title>Valider mes dispos</template>
-        <template #statement>
+        <template #content>
           Tu es sur le point de valider tes disponibilités. Une fois
           sauvegardées, elles
           <strong class="text-error">ne pourront plus être modifiées</strong>.

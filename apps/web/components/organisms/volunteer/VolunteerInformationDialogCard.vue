@@ -161,11 +161,11 @@
               @click="savePersonalData"
             />
             <v-btn
-              v-if="!isMe && !hideDeleteButton"
+              v-if="!isMe && showDeleteButton"
               text="Supprimer le bénévole"
               color="red"
               size="small"
-              @click="deleteVolunteer"
+              @click="deleteOrAnonymizeVolunteer"
             />
             <slot name="additional-actions" />
           </div>
@@ -228,7 +228,7 @@ const props = defineProps({
     type: Object as PropType<UserPersonalData>,
     required: true,
   },
-  hideDeleteButton: {
+  showDeleteButton: {
     type: Boolean,
     default: false,
   },
@@ -293,6 +293,8 @@ const emit = defineEmits([
   "update-friends",
   "update-availabilities",
   "updated",
+  "delete",
+  "anonymize",
 ]);
 
 const close = () => emit("close");
@@ -346,9 +348,11 @@ const savePersonalData = async () => {
   await userStore.updateUser(volunteerId.value, updatedVolunteer.value);
   emit("updated");
 };
-const deleteVolunteer = async () => {
-  await userStore.deleteUser(volunteerId.value);
-  emit("updated");
+const deleteOrAnonymizeVolunteer = async () => {
+  const shouldAnonymize = await userStore.shouldAnonymizeUser(
+    volunteerId.value,
+  );
+  emit(shouldAnonymize ? "anonymize" : "delete");
 };
 
 const sendEmail = () => {

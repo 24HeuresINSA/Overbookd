@@ -1,51 +1,52 @@
-export const I_M_ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE =
-  "Nous ne pouvons pas t'effacer d'Overbookd.\nTu es affecté à une tâche à venir.\nContacte les responsables bénévoles pour t'aider.";
+export const DEFAULT_ERROR_MESSAGE =
+  "Nous ne pouvons pas l'effacer d'Overbookd.\n";
 
-export const ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE =
-  "Nous ne pouvons pas l'effacer d'Overbookd.\nIel est affecté(e) à une tâche à venir.";
+export const HAS_FUTURE_ASSIGNMENT_ERROR_MESSAGE = `${DEFAULT_ERROR_MESSAGE}Iel est affecté·e à une tâche à venir.`;
 
-export const I_M_IN_DEBT_ERROR_MESSAGE =
-  "Nous ne pouvons pas t'effacer d'Overbookd.\nTu as des dettes auprès de l'association.\nContacte le secrétaire général pour t'aider.";
+export const IN_DEBT_ERROR_MESSAGE = `${DEFAULT_ERROR_MESSAGE}Iel a des dettes auprès de l'association.`;
 
-export const IN_DEBT_ERROR_MESSAGE =
-  "Nous ne pouvons pas l'effacer d'Overbookd.\nIel a des dettes auprès de l'association.";
-
-export const WRONG_CREDENTIALS_ERROR_MESSAGE =
-  "Nous ne pouvons pas t'effacer d'Overbookd.\nLe mot de passe et l'adresse mail ne correspondent pas";
-
-export const ALREADY_HAVE_TRANSACTIONS =
-  "Nous ne pouvons pas l'effacer d'Overbookd.\nIel a déjà effectué des transactions.";
+export const HAS_MONEY_ERROR_MESSAGE = `${DEFAULT_ERROR_MESSAGE}Iel a de l'argent auprès de l'association.`;
 
 export class ForgetMemberError extends Error {}
 
-export class AssignedInFuturTask extends ForgetMemberError {
-  constructor(isMyself: boolean = true) {
-    const message = isMyself
-      ? I_M_ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE
-      : ASSIGNED_IN_FUTUR_TASK_ERROR_MESSAGE;
+export class HasFutureAssignment extends ForgetMemberError {
+  constructor() {
+    super(HAS_FUTURE_ASSIGNMENT_ERROR_MESSAGE);
+  }
+}
 
-    super(message);
+export class HasOpenSharedMeal extends ForgetMemberError {
+  constructor(public readonly sharedMealDates: string[]) {
+    super(
+      `${DEFAULT_ERROR_MESSAGE}Iel est inscrit·e à des repas partagés non cloturés: ${sharedMealDates.join(", ")}.`,
+    );
+  }
+}
+
+export class HasTask extends ForgetMemberError {
+  constructor(public readonly taskIds: number[]) {
+    super(
+      `${DEFAULT_ERROR_MESSAGE}Iel est affecté·e aux FT : #${taskIds.join(", #")}.`,
+    );
+  }
+}
+
+export class HasActivity extends ForgetMemberError {
+  constructor(public readonly activityIds: number[]) {
+    super(
+      `${DEFAULT_ERROR_MESSAGE}Iel est affecté·e aux FA : #${activityIds.join(", #")}.`,
+    );
   }
 }
 
 export class InDebt extends ForgetMemberError {
-  constructor(isMyself: boolean = true) {
-    const message = isMyself
-      ? I_M_IN_DEBT_ERROR_MESSAGE
-      : IN_DEBT_ERROR_MESSAGE;
-
-    super(message);
+  constructor() {
+    super(IN_DEBT_ERROR_MESSAGE);
   }
 }
 
-export class WrongCrendentials extends ForgetMemberError {
+export class HasMoney extends ForgetMemberError {
   constructor() {
-    super(WRONG_CREDENTIALS_ERROR_MESSAGE);
-  }
-}
-
-export class HaveTransactions extends ForgetMemberError {
-  constructor() {
-    super(ALREADY_HAVE_TRANSACTIONS);
+    super(HAS_MONEY_ERROR_MESSAGE);
   }
 }

@@ -98,7 +98,7 @@
       @confirm="deleteSignage"
     >
       <template #title>Suppression de la signalisation</template>
-      <template #statement>
+      <template #content>
         Tu es sur le point de supprimer
         <strong>{{ selectedSignage?.name }}</strong> <br />
         Vérifie 2 fois avant de cliquer car elle sera également supprimée sur

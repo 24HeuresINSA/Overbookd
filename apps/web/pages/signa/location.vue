@@ -87,7 +87,7 @@
       @close="closeDeleteLocationDialog"
     >
       <template #title> Supprimer le lieu </template>
-      <template #statement>
+      <template #content>
         Tu es sur le point de supprimer le lieu
         <strong>{{ locationToDelete ? locationToDelete.name : "" }}.</strong>
         S'il est utilisé à plusieurs endroits, cela pourrait créer des

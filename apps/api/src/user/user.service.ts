@@ -49,12 +49,14 @@ import { friendAssigneesCount } from "../assignment/common/repository/assignment
 import { OverbookdOidcRole, oidcRoles } from "@overbookd/oidc";
 import { ZitadelService } from "./zitadel.service";
 import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
+import { ForgetMember } from "@overbookd/registration";
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly zitadelService: ZitadelService,
+    private readonly forget: ForgetMember,
   ) {}
 
   async userSync(user: RequestHydratedUser): Promise<void> {
@@ -175,14 +177,6 @@ export class UserService {
       this.selectCharismaPeriods(),
     ]);
     return UserService.formatToMyInformation(user, charismaPeriods);
-  }
-
-  async isDeleted(email: string): Promise<boolean | null> {
-    const user = await this.prisma.user.findUnique({
-      where: { email },
-      select: { isDeleted: true },
-    });
-    return user?.isDeleted ?? null;
   }
 
   async updateMyInformation(
@@ -333,33 +327,24 @@ export class UserService {
   }
 
   async deleteUser(id: number, author: RequestHydratedUser): Promise<void> {
-    const user = await this.prisma.user.findUnique({
-      where: { id },
-      select: { email: true },
-    });
-    if (!user) return;
+    const teams = await this.getUserTeams(id);
+    if (teams.includes(ADMIN) && !author.can(MANAGE_ADMINS)) {
+      throw new UnauthorizedException(
+        "Tu ne peux pas supprimer un membre de l'équipe admin.",
+      );
+    }
 
-    return this.softDeleteUser(id, author);
+    await this.forget.apply(id);
+  }
+
+  async shouldAnonymizeUser(id: number): Promise<boolean> {
+    return this.forget.shouldAnonymize(id);
   }
 
   private async selectCharismaPeriods(): Promise<MinimalCharismaPeriod[]> {
     return this.prisma.charismaPeriod.findMany({
       select: SELECT_CHARISMA_PERIOD,
     });
-  }
-
-  private async softDeleteUser(
-    id: number,
-    author: RequestHydratedUser,
-  ): Promise<void> {
-    const teams = await this.getUserTeams(id);
-    if (teams.includes(ADMIN) && !author.can(MANAGE_ADMINS)) {
-      throw new UnauthorizedException("Tu ne peux pas gérer l'équipe admin");
-    }
-    Promise.all([
-      this.prisma.user.updateMany({ where: { id }, data: { isDeleted: true } }),
-      this.prisma.userTeam.deleteMany({ where: { userId: id } }),
-    ]);
   }
 
   static formatToPersonalData(

@@ -169,7 +169,6 @@
     <VolunteerInformationDialogCard
       v-if="selectedUser"
       :volunteer="selectedUser"
-      hide-delete-button
       @updated="onUserUpdated"
       @close="closeCandidateInfoDialog"
     >

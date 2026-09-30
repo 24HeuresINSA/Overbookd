@@ -19,6 +19,8 @@ import { ZitadelService } from "./zitadel.service";
 import { ZitadelRoleService } from "./zitadel-roles.service";
 import { DomainEventService } from "../domain-event/domain-event.service";
 import { DomainEventModule } from "../domain-event/domain-event.module";
+import { PrismaForgetMemberRepository } from "./repository/forget-member-repository.prisma";
+import { ForgetMember } from "@overbookd/registration";
 
 @Module({
   imports: [
@@ -57,12 +59,27 @@ import { DomainEventModule } from "../domain-event/domain-event.module";
       useFactory: (breaks: PrismaBreaks) => new BreakPeriods(breaks),
       inject: [PrismaBreaks],
     },
+    {
+      provide: PrismaForgetMemberRepository,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaForgetMemberRepository(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: ForgetMember,
+      useFactory: (members: PrismaForgetMemberRepository) =>
+        new ForgetMember(members),
+      inject: [PrismaForgetMemberRepository],
+    },
     ZitadelService,
     {
       provide: UserService,
-      useFactory: (prisma: PrismaService, zitadelService: ZitadelService) =>
-        new UserService(prisma, zitadelService),
-      inject: [PrismaService, ZitadelService],
+      useFactory: (
+        prisma: PrismaService,
+        zitadelService: ZitadelService,
+        forget: ForgetMember,
+      ) => new UserService(prisma, zitadelService, forget),
+      inject: [PrismaService, ZitadelService, ForgetMember],
     },
     FileService,
     TeamService,

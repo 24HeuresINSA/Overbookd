@@ -1,9 +1,14 @@
 import { updateItemToList } from "@overbookd/list";
 import { AnonymousMember } from "./anonymous-member.js";
-import { Credentials, Member, MemberRepository } from "./forget-member.js";
+import { MemberRepository } from "./forget-member.js";
 
-type Task = {
-  end: Date;
+type Assignment = { end: Date };
+type Activity = { id: number };
+type Task = { id: number };
+
+type SharedMeal = {
+  date: string;
+  closed: boolean;
 };
 
 type Transaction = {
@@ -14,33 +19,70 @@ type Transaction = {
 export type StoredMember = {
   id: number;
   email: string;
-  password: string;
+  birthDate: Date;
+  assignments: Assignment[];
   tasks: Task[];
+  activities: Activity[];
   balance: number;
   transactions: Transaction[];
+  comment?: string;
+  note?: string;
+  profilePicture?: string;
+  sharedMeals: SharedMeal[];
 };
 
 export class InMemoryMemberRepository implements MemberRepository {
   constructor(private members: StoredMember[]) {}
 
-  hasTasks(email: string): Promise<boolean> {
+  hasFutureAssignments(id: number): Promise<boolean> {
     return Promise.resolve(
       this.members
-        .find((member) => member.email === email)
-        ?.tasks?.some(({ end }) => end.getTime() > Date.now()) ?? false,
+        .find((member) => member.id === id)
+        ?.assignments?.some(({ end }) => end.getTime() > Date.now()) ?? false,
     );
   }
 
-  hasDebts(email: string): Promise<boolean> {
+  activityIds(id: number): Promise<number[]> {
     return Promise.resolve(
-      (this.members.find((member) => member.email === email)?.balance ?? 0) < 0,
+      this.members
+        .find((member) => member.id === id)
+        ?.activities?.map((a) => a.id) ?? [],
     );
   }
 
-  hasTransactions(email: string): Promise<boolean> {
+  taskIds(id: number): Promise<number[]> {
     return Promise.resolve(
-      (this.members.find((member) => member.email === email)?.transactions
-        ?.length ?? 0) > 0,
+      this.members
+        .find((member) => member.id === id)
+        ?.tasks?.map((t) => t.id) ?? [],
+    );
+  }
+
+  openSharedMealDates(id: number): Promise<string[]> {
+    return Promise.resolve(
+      this.members
+        .find((member) => member.id === id)
+        ?.sharedMeals?.filter((sm) => !sm.closed)
+        .map((sm) => sm.date) ?? [],
+    );
+  }
+
+  hasDebts(id: number): Promise<boolean> {
+    return Promise.resolve(
+      (this.members.find((member) => member.id === id)?.balance ?? 0) < 0,
+    );
+  }
+
+  hasMoney(id: number): Promise<boolean> {
+    return Promise.resolve(
+      (this.members.find((member) => member.id === id)?.balance ?? 0) > 0,
+    );
+  }
+
+  hasTransactions(id: number): Promise<boolean> {
+    return Promise.resolve(
+      (this.members.find((member) => member.id === id)?.transactions?.length ??
+        0) > 0,
     );
   }
 
@@ -65,21 +107,5 @@ export class InMemoryMemberRepository implements MemberRepository {
 
   get storedMembers(): StoredMember[] {
     return this.members;
-  }
-
-  authenticate(credentials: Credentials): Promise<Member | null> {
-    const member = this.members.find(
-      ({ email, password }) =>
-        email === credentials.email && password === credentials.password,
-    );
-
-    return Promise.resolve(member ? { id: member.id } : null);
-  }
-
-  getId(email: string): Promise<number | null> {
-    const member = this.members.find((member) => member.email === email);
-    if (!member) return Promise.resolve(null);
-
-    return Promise.resolve(member.id);
   }
 }

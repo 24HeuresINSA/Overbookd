@@ -175,10 +175,14 @@ export class OrgaNeedsService {
   }
 
   private volunteerWithMembershipRequestsSelection(teams: string[]) {
-    const condition = {
-      volunteer: { ...IS_NOT_DELETED, ...this.teamMemberCondition(teams) },
+    return {
+      volunteers: {
+        select: { volunteerId: true },
+        where: {
+          volunteer: { ...IS_NOT_DELETED, ...this.teamMemberCondition(teams) },
+        },
+      },
     };
-    return { volunteers: { select: { volunteerId: true }, where: condition } };
   }
 
   private teamMemberRequestsSelection(teams: string[]) {
@@ -194,11 +198,13 @@ export class OrgaNeedsService {
   }
 
   private requestVolunteerWithMembershipCondition(teams: string[]) {
-    const condition = {
-      ...IS_NOT_DELETED,
-      ...this.teamMemberCondition(teams),
+    return {
+      volunteers: {
+        some: {
+          volunteer: { ...IS_NOT_DELETED, ...this.teamMemberCondition(teams) },
+        },
+      },
     };
-    return { volunteers: { some: { volunteer: condition } } };
   }
 
   private async getAvailabilities(
