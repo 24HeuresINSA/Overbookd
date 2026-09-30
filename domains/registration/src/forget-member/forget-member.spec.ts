@@ -141,7 +141,7 @@ describe("Forget member", () => {
         expect(
           async () => await forget.apply(withActivitiesMember.id),
         ).rejects.toThrow(
-          `${DEFAULT_ERROR_MESSAGE}Iel est affecté(e) aux FA : #1.`,
+          `${DEFAULT_ERROR_MESSAGE}Iel est affecté·e aux FA : #1.`,
         );
       });
     });
@@ -150,7 +150,7 @@ describe("Forget member", () => {
         expect(
           async () => await forget.apply(withTasksMember.id),
         ).rejects.toThrow(
-          `${DEFAULT_ERROR_MESSAGE}Iel est affecté(e) aux FT : #3.`,
+          `${DEFAULT_ERROR_MESSAGE}Iel est affecté·e aux FT : #3.`,
         );
       });
     });
@@ -159,7 +159,7 @@ describe("Forget member", () => {
         expect(
           async () => await forget.apply(withOpenSharedMealsMember.id),
         ).rejects.toThrow(
-          `${DEFAULT_ERROR_MESSAGE}Iel est inscrit(e) à des repas partagés non cloturés: 01/01/2025 SOIR.`,
+          `${DEFAULT_ERROR_MESSAGE}Iel est inscrit·e à des repas partagés non cloturés: 01/01/2025 SOIR.`,
         );
       });
     });
