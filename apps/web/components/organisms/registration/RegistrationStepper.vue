@@ -64,7 +64,7 @@
               text="Changer de compte"
               color="primary"
               variant="outlined"
-              @click="logout"
+              @click="changeAccount"
             />
             <v-btn
               v-else
@@ -73,6 +73,14 @@
               variant="elevated"
               :disabled="emailRules.some((rule) => rule() !== true)"
               @click="checkEmail"
+            />
+            <v-btn
+              v-if="oidc.loggedIn"
+              text="Se déconnecter"
+              prepend-icon="mdi-logout"
+              variant="outlined"
+              class="ml-2"
+              @click="handleLogout"
             />
             <v-btn
               v-show="!emailChecked"
@@ -280,6 +288,7 @@ const configurationStore = useConfigurationStore();
 const teamStore = useTeamStore();
 const snackNotification = useSnackNotificationStore();
 const oidc = useOidcAuth();
+const { handleLogout } = useOidcUtils();
 const myStore = useMyStore();
 
 const DEFAULT_BIRTHDAY = "2000-01-01";
@@ -461,7 +470,7 @@ const checkEmail = async () => {
   }
 };
 
-const logout = () => {
+const changeAccount = () => {
   if (oidc.loggedIn.value) myStore.clear();
   emailChecked.value = false;
   accountStatus.value = registrationAccountStatuses.EXISTING;
@@ -470,7 +479,7 @@ const logout = () => {
 };
 const returnToLoginPage = async () => {
   if (oidc.loggedIn.value) {
-    logout();
+    changeAccount();
     return oidc.logout();
   }
   await navigateTo(LOGIN_URL);
