@@ -1,6 +1,7 @@
 import type { AssignmentEvent } from "@overbookd/assignment";
 import type { Consumer, PlanningTask } from "@overbookd/http";
 import type {
+  Friend,
   MyUserInformation,
   Profile,
   User,
@@ -67,11 +68,11 @@ export class UserRepository {
   }
 
   static getUserFriends(userId: number) {
-    return HttpClient.get<UserWithTeams[]>(`friends/${userId}`);
+    return HttpClient.get<Friend[]>(`friends/${userId}`);
   }
 
   static addFriend(friendId: number) {
-    return HttpClient.post<UserWithTeams>("friends", { id: friendId });
+    return HttpClient.post<Friend>("friends", { id: friendId });
   }
 
   static removeFriend(friendId: number) {
@@ -79,7 +80,7 @@ export class UserRepository {
   }
 
   static addFriendToUser(userId: number, friendId: number) {
-    return HttpClient.post<UserWithTeams>(`friends/${userId}`, {
+    return HttpClient.post<Friend>(`friends/${userId}`, {
       id: friendId,
     });
   }

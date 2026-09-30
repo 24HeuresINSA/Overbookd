@@ -3,12 +3,7 @@
     <v-card-item class="meal__header">
       <template #prepend>
         <div class="chef-avatar" title="Chef·fe">
-          <v-avatar
-            color="secondary"
-            size="52"
-            :image="meal.chef.profilePicture"
-            :text="getInitials(meal.chef.name)"
-          />
+          <UserAvatar :picture="meal.chef.profilePicture" :size="52" />
           <v-icon icon="mdi-chef-hat" class="chef-avatar__hat" />
         </div>
       </template>
@@ -115,13 +110,7 @@
                 class="meal__guest"
               >
                 <template #prepend>
-                  <v-avatar
-                    color="secondary"
-                    size="32"
-                    :image="guest.profilePicture"
-                    :text="getInitials(guest.name)"
-                    class="meal__avatar"
-                  />
+                  <UserAvatar :picture="guest.profilePicture" />
                 </template>
                 <v-list-item-title>{{ guest.name }}</v-list-item-title>
                 <template #append>
@@ -179,7 +168,7 @@
         v-if="iAmChef"
         class="meal__action"
         color="secondary"
-        variant="tonal"
+        variant="flat"
         size="large"
         text="Clore le repas"
         prepend-icon="mdi-cash-multiple"
@@ -417,11 +406,6 @@ const disallowMultipleShotguns = () => {
     &:hover {
       background-color: rgba(var(--v-theme-secondary), 0.15);
     }
-  }
-
-  &__avatar {
-    font-size: 0.75rem;
-    font-weight: 500;
   }
 
   &__portions {

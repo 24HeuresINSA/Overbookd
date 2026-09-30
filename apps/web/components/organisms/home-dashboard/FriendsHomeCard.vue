@@ -35,9 +35,7 @@
           @click="openFriendDialog(friend)"
         >
           <template #prepend>
-            <v-avatar color="secondary" size="32" class="friends__avatar">
-              {{ getInitials(friend.firstName, friend.lastName) }}
-            </v-avatar>
+            <UserAvatar :picture="friend.profilePicture ?? undefined" />
           </template>
           <v-list-item-title>
             {{ buildUserNameWithNickname(friend) }}
@@ -178,11 +176,6 @@ const closeFriendDialog = () => (isFriendDialogOpen.value = false);
 
   &__remove:hover {
     color: rgb(var(--v-theme-error));
-  }
-
-  &__avatar {
-    font-size: 0.8rem;
-    font-weight: 500;
   }
 }
 </style>

@@ -8,7 +8,7 @@
         text="Historique des repas"
         prepend-icon="mdi-history"
         color="secondary"
-        variant="tonal"
+        variant="flat"
         size="large"
         block
         :to="SHARED_MEALS_HISTORY_URL"
@@ -41,7 +41,7 @@
       class="flex-1-1-0"
       prepend-icon="mdi-history"
       color="secondary"
-      variant="tonal"
+      variant="flat"
       size="large"
       :to="SHARED_MEALS_HISTORY_URL"
     />

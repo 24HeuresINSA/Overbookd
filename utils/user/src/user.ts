@@ -16,6 +16,10 @@ export type UserWithTeams = User & {
   teams: string[];
 };
 
+export type Friend = UserWithTeams & {
+  profilePicture?: string | null;
+};
+
 export type Profile = UserName & {
   email: string;
   birthDate: Date;

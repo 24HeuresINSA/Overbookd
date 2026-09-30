@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { UserWithTeams } from "@overbookd/user";
+import { Friend } from "@overbookd/user";
 
-export class FriendResponseDto implements UserWithTeams {
+export class FriendResponseDto implements Friend {
   @ApiProperty({
     required: true,
     description: "The id of the Friend",
@@ -37,4 +37,12 @@ export class FriendResponseDto implements UserWithTeams {
     isArray: true,
   })
   teams: string[];
+
+  @ApiProperty({
+    required: false,
+    description: "The profile picture url of the Friend",
+    type: String,
+    nullable: true,
+  })
+  profilePicture?: string | null;
 }
