@@ -11,11 +11,6 @@ datasource db {
   provider = "postgresql"
 }
 
-generator erd_uml {
-  provider = "prisma-generator-plantuml-erd"
-  output   = "./schema.puml"
-}
-
 enum TransactionType {
   INITIALIZATION
   DEPOSIT

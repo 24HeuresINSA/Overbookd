@@ -5,9 +5,7 @@ repos:
     rev: v6.0.0
     hooks:
       - id: trailing-whitespace
-        exclude: apps/api/prisma/schema.puml
       - id: end-of-file-fixer
-        exclude: apps/api/prisma/schema.puml
       - id: check-yaml
         exclude: '(^pnpm-lock\.yaml$|^\.gitlab/.*\.ya?ml$)'
       - id: check-added-large-files
