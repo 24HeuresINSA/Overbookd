@@ -43,8 +43,10 @@ export class PrismaForgetMemberRepository implements MemberRepository {
   async openSharedMealDates(id: number): Promise<string[]> {
     const sharedMeals = await this.prisma.sharedMeal.findMany({
       where: {
-        closedAt: null,
-        OR: [{ chefId: id }, { shotguns: { some: { guestId: id } } }],
+        AND: [
+          { OR: [{ closedAt: null }, { closedAt: { gt: new Date() } }] },
+          { OR: [{ chefId: id }, { shotguns: { some: { guestId: id } } }] },
+        ],
       },
       select: { date: true },
     });
@@ -116,9 +118,6 @@ export class PrismaForgetMemberRepository implements MemberRepository {
 
           availabilities: { deleteMany: {} },
           breaks: { deleteMany: {} },
-
-          shotguns: { deleteMany: {} },
-          chefMeals: { deleteMany: {} },
           charismaEventParticipations: { deleteMany: {} },
 
           faFeedbacks: { deleteMany: {} },

@@ -18,7 +18,6 @@ import {
 } from "./anonymous-member.js";
 
 const defaultData: Omit<StoredMember, "id" | "email"> = {
-  password: "P4ssW0rd1234^",
   birthDate: new Date("1990-01-01"),
   assignments: [],
   balance: 0,
@@ -116,28 +115,28 @@ describe("Forget member", () => {
     forget = new ForgetMember(memberRepository);
   });
   describe("when asking to forget a member", () => {
-    describe("when he has task assigned in futur", () => {
+    describe("when they have a task assigned in futur", () => {
       it("should indicate that we can't forget about assigned member", async () => {
         expect(
           async () => await forget.apply(withTaskMember.id),
         ).rejects.toThrow(HAS_FUTURE_ASSIGNMENT_ERROR_MESSAGE);
       });
     });
-    describe("when he has money in his account", () => {
-      it("should indicate that we can't forget about member with money in his account", async () => {
+    describe("when they have money in their account", () => {
+      it("should indicate that we can't forget about member with money in their account", async () => {
         expect(
           async () => await forget.apply(positiveBalanceMember.id),
         ).rejects.toThrow(HAS_MONEY_ERROR_MESSAGE);
       });
     });
-    describe("when he is in debt", () => {
+    describe("when they are in debt", () => {
       it("should indicate that we can't forget about in debt member", async () => {
         expect(async () => await forget.apply(inDebtMember.id)).rejects.toThrow(
           IN_DEBT_ERROR_MESSAGE,
         );
       });
     });
-    describe("when he has activities", () => {
+    describe("when they have activities", () => {
       it("should indicate that we can't forget about member with activities", async () => {
         expect(
           async () => await forget.apply(withActivitiesMember.id),
@@ -146,7 +145,7 @@ describe("Forget member", () => {
         );
       });
     });
-    describe("when he has tasks", () => {
+    describe("when they have tasks", () => {
       it("should indicate that we can't forget about member with tasks", async () => {
         expect(
           async () => await forget.apply(withTasksMember.id),
@@ -155,7 +154,7 @@ describe("Forget member", () => {
         );
       });
     });
-    describe("when he has open shared meals", () => {
+    describe("when they have open shared meals", () => {
       it("should indicate that we can't forget about member with future shared meals", async () => {
         expect(
           async () => await forget.apply(withOpenSharedMealsMember.id),
@@ -164,7 +163,7 @@ describe("Forget member", () => {
         );
       });
     });
-    describe("when he has transactions", () => {
+    describe("when they have transactions", () => {
       it("should anonymize member personal data", async () => {
         const anonymizedMember = await forget.apply(withTransactionsMember.id);
         expect(anonymizedMember).toEqual({
@@ -181,7 +180,7 @@ describe("Forget member", () => {
         });
       });
     });
-    describe("when he doesn't have transactions", () => {
+    describe("when they don't have any transactions", () => {
       it("should remove member data from storage", async () => {
         await forget.apply(withoutTransactionsMember.id);
         expect(memberRepository.storedMembers).not.toContainEqual(

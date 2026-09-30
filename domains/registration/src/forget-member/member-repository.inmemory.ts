@@ -19,7 +19,6 @@ type Transaction = {
 export type StoredMember = {
   id: number;
   email: string;
-  password: string;
   birthDate: Date;
   assignments: Assignment[];
   tasks: Task[];
