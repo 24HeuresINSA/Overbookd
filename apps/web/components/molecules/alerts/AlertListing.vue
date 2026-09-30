@@ -19,7 +19,7 @@
       class="alert"
       @dismiss="dismiss('profilePicture')"
     />
-    <v-btn id="expand-alerts" block color="primary" @click="toggleExpand">
+    <v-btn v-if="multipleAlerts" block color="primary" @click="toggleExpand">
       <v-icon left>
         {{ expanded ? "mdi-arrow-collapse" : "mdi-arrow-expand" }}
       </v-icon>
@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts" setup>
-import { PersonalAccountAlert } from "@overbookd/personal-account";
+import { PersonalAccountAlert as PersonalAccountAlertType } from "@overbookd/personal-account";
 import type { Alerts } from "@overbookd/alerts";
 import { SettleAlert } from "@overbookd/contribution";
 
@@ -39,7 +39,7 @@ alertStore.fetchAlerts();
 const expanded = ref<boolean>(false);
 const toggleExpand = () => (expanded.value = !expanded.value);
 
-const personalAccountAlert = computed<PersonalAccountAlert | undefined>(
+const personalAccountAlert = computed<PersonalAccountAlertType | undefined>(
   () => alertStore.alerts.personalAccount,
 );
 const contributionAlert = computed<SettleAlert | undefined>(
@@ -51,7 +51,7 @@ const profilePictureAlert = computed<boolean | undefined>(
 
 const multipleAlerts = computed<boolean>(() => {
   const allAlerts = Object.values(alertStore.alerts);
-  const displayedAlerts = allAlerts.filter((alert) => alert !== false);
+  const displayedAlerts = allAlerts.filter((alert) => !!alert);
   return displayedAlerts.length > 1;
 });
 
@@ -60,10 +60,8 @@ const dismiss = (alert: keyof Alerts) => alertStore.dismiss(alert);
 
 <style lang="scss" scoped>
 .alerts {
+  margin: 10px 0;
   .alert:nth-of-type(n + 2) {
-    display: none;
-  }
-  #expand-alerts {
     display: none;
   }
   &.multiple {
