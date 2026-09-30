@@ -26,9 +26,10 @@
     </section>
   </div>
 
-  <BottomActionBar class="mobile-buttons mobile-only">
+  <BottomActionBar class="mobile-only">
     <v-btn
       text="Proposer"
+      class="flex-1-1-0"
       prepend-icon="mdi-plus"
       color="primary"
       variant="flat"
@@ -37,6 +38,7 @@
     />
     <v-btn
       text="Historique"
+      class="flex-1-1-0"
       prepend-icon="mdi-history"
       color="secondary"
       variant="tonal"
@@ -114,9 +116,5 @@ mealSharingStore.fetchOnGoing();
   &__empty-hint {
     font-size: 0.9rem;
   }
-}
-
-.mobile-buttons > * {
-  flex: 1 1 0;
 }
 </style>

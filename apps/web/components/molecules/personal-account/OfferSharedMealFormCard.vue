@@ -44,7 +44,7 @@
 
       <v-switch
         v-model="areMultipleShotgunsAllowed"
-        label="Autoriser plusieurs portions par personne"
+        label="Autoriser les shotguns multiples"
         color="primary"
         density="compact"
         hide-details
