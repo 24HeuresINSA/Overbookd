@@ -20,7 +20,7 @@
 
       <v-card v-if="meals.length === 0" class="meals__empty">
         <v-icon icon="mdi-silverware-clean" size="64" />
-        <p>Aucun repas de prévu pour le moment 🍽️</p>
+        <p>Aucun repas de prévu pour le moment</p>
         <p class="meals__empty-hint">Lance-toi et propose le prochain !</p>
       </v-card>
     </section>
