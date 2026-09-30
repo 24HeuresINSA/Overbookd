@@ -21,20 +21,28 @@
     >
       <v-card>
         <div class="mobile_menu">
-          <div class="mobile_menu__item" @click="toggleCurrentTheme">
-            <v-icon>{{ themeIcon }}</v-icon>
+          <div
+            class="mobile_menu__item"
+            role="button"
+            @click="toggleCurrentTheme"
+          >
+            <v-icon :icon="themeIcon" />
             <span>{{ themeTitle }}</span>
           </div>
-          <div class="mobile_menu__item" @click="displayEULA">
-            <v-icon>mdi-book-open-variant-outline</v-icon>
+          <div class="mobile_menu__item" role="button" @click="displayEULA">
+            <v-icon icon="mdi-book-open-variant-outline" />
             <span>Voir les CGU</span>
           </div>
-          <div class="mobile_menu__item" @click="openQuestionDialog">
-            <v-icon>mdi-help-circle-outline</v-icon>
+          <div
+            class="mobile_menu__item"
+            role="button"
+            @click="openQuestionDialog"
+          >
+            <v-icon icon="mdi-help-circle-outline" />
             <span>Besoin d'aide ?</span>
           </div>
-          <div class="mobile_menu__item logout" @click="logout">
-            <v-icon>mdi-close-circle-outline</v-icon>
+          <div class="mobile_menu__item logout" role="button" @click="logout">
+            <v-icon icon="mdi-logout" />
             <span>Déconnexion</span>
           </div>
         </div>
@@ -43,16 +51,20 @@
 
     <div v-if="!isMobile" class="dropdown-container">
       <div class="dropdown-menu">
-        <div class="dropdown-menu__item" @click="toggleCurrentTheme">
-          <v-icon>{{ themeIcon }}</v-icon>
+        <div
+          class="dropdown-menu__item"
+          role="button"
+          @click="toggleCurrentTheme"
+        >
+          <v-icon :icon="themeIcon" />
           <span>{{ themeTitle }}</span>
         </div>
-        <div class="dropdown-menu__item" @click="displayEULA">
-          <v-icon>mdi-book-open-variant-outline</v-icon>
+        <div class="dropdown-menu__item" role="button" @click="displayEULA">
+          <v-icon icon="mdi-book-open-variant-outline" />
           <span>Voir les CGU</span>
         </div>
-        <div class="dropdown-menu__item logout" @click="logout">
-          <v-icon>mdi-close-circle-outline</v-icon>
+        <div class="dropdown-menu__item logout" role="button" @click="logout">
+          <v-icon icon="mdi-logout" />
           <span>Déconnexion</span>
         </div>
       </div>
