@@ -10,8 +10,7 @@
   >
     <h2 class="summary">{{ alert.summary }}</h2>
     <p class="details">
-      Tu es à <strong>{{ balance }}</strong
-      >, c'est déconné !
+      Tu es à <strong>{{ balance }}</strong>, c'est déconné !
       <br />
       Les comptes persos ne peuvent exister que si tout le monde joue le jeu en
       restant dans le positif. Sinon ça veut dire que :
