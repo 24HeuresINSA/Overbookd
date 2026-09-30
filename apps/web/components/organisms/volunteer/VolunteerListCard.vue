@@ -12,10 +12,6 @@
       return-object
       @click:row="propagateClickedVolunteer"
     >
-      <template #item.firstName="{ item }">
-        {{ buildUserNameWithNickname(item) }}
-      </template>
-
       <template #item.teams="{ item }">
         <div class="team-list">
           <TeamChip
@@ -60,10 +56,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  type UserPersonalData,
-  buildUserNameWithNickname,
-} from "@overbookd/user";
+import type { UserPersonalData } from "@overbookd/user";
 import type { Team } from "@overbookd/team";
 import { VIEW_VOLUNTEER_DETAILS } from "@overbookd/permission";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
@@ -89,8 +82,9 @@ const canViewVolunteerDetails = computed(() =>
 );
 const headers = computed<TableHeaders>(() => {
   const baseHeaders = [
-    { title: "Nom", key: "lastName", sortable: true },
     { title: "Prénom", key: "firstName", sortable: true },
+    { title: "Nom", key: "lastName", sortable: true },
+    { title: "Surnom", key: "nickname", sortable: true },
     { title: "Equipes", value: "teams" },
     { title: "Charisme", value: "charisma", sortable: true },
   ];
