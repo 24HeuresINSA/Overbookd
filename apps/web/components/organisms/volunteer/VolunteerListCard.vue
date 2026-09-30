@@ -82,8 +82,8 @@ const canViewVolunteerDetails = computed(() =>
 );
 const headers = computed<TableHeaders>(() => {
   const baseHeaders = [
-    { title: "Nom", key: "lastName", sortable: true },
     { title: "Prénom", key: "firstName", sortable: true },
+    { title: "Nom", key: "lastName", sortable: true },
     { title: "Surnom", key: "nickname", sortable: true },
     { title: "Equipes", value: "teams" },
     { title: "Charisme", value: "charisma", sortable: true },
