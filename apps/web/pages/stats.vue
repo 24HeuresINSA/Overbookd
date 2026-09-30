@@ -79,6 +79,7 @@ import {
 } from "~/utils/festival-event/stats.display";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import { LAST_EDITION_FESTIVAL_EVENT_STATS_KEY } from "@overbookd/configuration";
+import { Edition } from "@overbookd/time";
 
 useHead({ title: "Statistiques des FA" });
 
@@ -293,7 +294,7 @@ const additionalTaskDataset = computed(() => ({
 }));
 const pastYearDataset = computed(() => ({
   type: "line" as never,
-  label: "Validée à la 50ème",
+  label: `Validée à la ${Edition.current - 1}ème`,
   data: sortedOldEvents.value,
   borderColor: "blue",
   backgroundColor: "rgba(0, 0, 255, 0.6)",

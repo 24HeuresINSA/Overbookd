@@ -18,7 +18,8 @@
           <p>
             L'inscription des bénévoles est actuellement
             <strong>
-              {{ isVolunteerRegistrationOpen ? "ouverte" : "fermée" }} </strong>.
+              {{ isVolunteerRegistrationOpen ? "ouverte" : "fermée" }} </strong
+            >.
           </p>
           <v-btn
             :model-value="isVolunteerRegistrationOpen"
@@ -152,29 +153,33 @@
         <h2>Stats des FA & FT de l'édition précédente</h2>
       </v-expansion-panel-title>
       <v-expansion-panel-text>
-        <div>
-          <h3>Stats des FA</h3>
-          <FestivalEventStatList
-            :model-value="lastEditionFestivalEventStats.activities"
-            @remove="removeFestivalActivityStat"
-          />
-          <CreateFestivalEventStatForm @create="createFestivalActivityStat" />
+        <div class="festival-event-stats">
+          <div class="festival-event-stats__list">
+            <h3>Stats des FA</h3>
+            <FestivalEventStatList
+              :stats="lastEditionFestivalEventStats.activities"
+              festival-event="FA"
+              @remove="removeFestivalActivityStat"
+            />
+            <CreateFestivalEventStatForm
+              festival-event="FA"
+              @create="upsertFestivalActivityStat"
+            />
+          </div>
+          <v-divider class="mx-5" :vertical="isDesktop" />
+          <div class="festival-event-stats__list">
+            <h3>Stats des FT</h3>
+            <FestivalEventStatList
+              :stats="lastEditionFestivalEventStats.tasks"
+              festival-event="FT"
+              @remove="removeFestivalTaskStat"
+            />
+            <CreateFestivalEventStatForm
+              festival-event="FT"
+              @create="upsertFestivalTaskStat"
+            />
+          </div>
         </div>
-        <v-divider class="mx-5" vertical />
-        <div>
-          <h3>Stats des FT</h3>
-          <FestivalEventStatList
-            :model-value="lastEditionFestivalEventStats.tasks"
-            @remove="removeFestivalTaskStat"
-          />
-          <CreateFestivalEventStatForm @create="createFestivalTaskStat" />
-        </div>
-        <v-btn
-          text="Enregistrer"
-          color="primary"
-          class="save-btn"
-          @click="saveLastEditionFestivalEventStats"
-        />
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
@@ -214,6 +219,7 @@ import {
   type FestivalEventStatsConfigValue,
   type FestivalEventStatConfigValue,
 } from "@overbookd/configuration";
+import { updateItemToList } from "@overbookd/list";
 import {
   defaultVolunteerCommitmentPresentation,
   defaultStaffCommitmentPresentation,
@@ -223,6 +229,9 @@ useHead({ title: "Config admin" });
 
 const configurationStore = useConfigurationStore();
 await configurationStore.fetchAll();
+
+const layoutStore = useLayoutStore();
+const isDesktop = computed<boolean>(() => !layoutStore.isMobile);
 
 const isVolunteerRegistrationOpen = ref<boolean>(
   configurationStore.registrationForm.isVolunteerRegistrationOpen,
@@ -307,14 +316,36 @@ const saveLastEditionFestivalEventStats = async () => {
     value: lastEditionFestivalEventStats.value,
   });
 };
-const createFestivalActivityStat = async (
+const upsertFestivalActivityStat = async (
   stat: FestivalEventStatConfigValue,
 ) => {
-  lastEditionFestivalEventStats.value.activities.push(stat);
+  const existing = lastEditionFestivalEventStats.value.activities.findIndex(
+    (s) => s.code === stat.code,
+  );
+  if (existing === -1) {
+    lastEditionFestivalEventStats.value.activities.push(stat);
+  } else {
+    lastEditionFestivalEventStats.value.activities = updateItemToList(
+      lastEditionFestivalEventStats.value.activities,
+      existing,
+      stat,
+    );
+  }
   await saveLastEditionFestivalEventStats();
 };
-const createFestivalTaskStat = async (stat: FestivalEventStatConfigValue) => {
-  lastEditionFestivalEventStats.value.tasks.push(stat);
+const upsertFestivalTaskStat = async (stat: FestivalEventStatConfigValue) => {
+  const existing = lastEditionFestivalEventStats.value.tasks.findIndex(
+    (s) => s.code === stat.code,
+  );
+  if (existing === -1) {
+    lastEditionFestivalEventStats.value.tasks.push(stat);
+  } else {
+    lastEditionFestivalEventStats.value.tasks = updateItemToList(
+      lastEditionFestivalEventStats.value.tasks,
+      existing,
+      stat,
+    );
+  }
   await saveLastEditionFestivalEventStats();
 };
 const removeFestivalActivityStat = async (
@@ -337,7 +368,7 @@ const removeFestivalTaskStat = async (stat: FestivalEventStatConfigValue) => {
 
 <style lang="scss" scoped>
 h3 {
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .gif {
@@ -362,13 +393,25 @@ h3 {
 }
 
 .event-date,
-.useful-links {
+.useful-links,
+.festival-event-stats {
   display: flex;
   gap: 15px;
 }
 
 .useful-links {
   flex-direction: column;
+}
+
+.festival-event-stats {
+  width: 100%;
+  &__list {
+    flex: 1;
+    min-width: 0;
+  }
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+  }
 }
 
 .error {
