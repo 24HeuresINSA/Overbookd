@@ -30,7 +30,7 @@
 
 <script lang="ts" setup>
 import { PersonalAccountAlert } from "@overbookd/personal-account";
-import { Alerts } from "@overbookd/alerts";
+import type { Alerts } from "@overbookd/alerts";
 import { SettleAlert } from "@overbookd/contribution";
 
 const alertStore = useAlertStore();
