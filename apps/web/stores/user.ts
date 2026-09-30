@@ -4,6 +4,7 @@ import {
   castUserPersonalDataWithDate,
 } from "~/utils/http/cast-date/user.utils";
 import type {
+  Friend,
   User,
   UserPersonalData,
   UserUpdateForm,
@@ -21,7 +22,7 @@ type State = {
   volunteersWithAssignmentStats: VolunteerWithAssignmentStats[];
   adherents: User[];
   potentialFriends: User[];
-  myFriends: User[];
+  myFriends: Friend[];
 };
 
 export const useUserStore = defineStore("user", {

@@ -35,9 +35,7 @@
           @click="openFriendDialog(friend)"
         >
           <template #prepend>
-            <v-avatar color="secondary" size="32" class="friends__avatar">
-              {{ initials(friend) }}
-            </v-avatar>
+            <UserAvatar :picture="friend.profilePicture ?? undefined" />
           </template>
           <v-list-item-title>
             {{ buildUserNameWithNickname(friend) }}
@@ -112,9 +110,6 @@ const loggedUser = computed(() => myStore.loggedUser);
 const myFriends = computed(() => userStore.myFriends);
 const image = computed(() => (myFriends.value.length > 0 ? friendship : alone));
 
-const initials = ({ firstName, lastName }: User) =>
-  `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
-
 const sendFriendRequest = () => {
   if (newFriend.value === null) return;
   const isAskingHimSelf = loggedUser.value?.id === newFriend.value.id;
@@ -181,11 +176,6 @@ const closeFriendDialog = () => (isFriendDialogOpen.value = false);
 
   &__remove:hover {
     color: rgb(var(--v-theme-error));
-  }
-
-  &__avatar {
-    font-size: 0.8rem;
-    font-weight: 500;
   }
 }
 </style>

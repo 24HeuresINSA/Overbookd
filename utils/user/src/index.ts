@@ -1,4 +1,5 @@
 export type {
+  Friend,
   MyUserInformation,
   Profile,
   User,

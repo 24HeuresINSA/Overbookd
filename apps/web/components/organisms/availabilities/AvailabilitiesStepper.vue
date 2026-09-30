@@ -39,7 +39,7 @@
         @next="moveToNext"
       />
     </div>
-    <div class="action-bar">
+    <BottomActionBar>
       <v-btn
         class="desktop-only"
         icon="mdi-chevron-left"
@@ -73,7 +73,7 @@
           {{ label }}
         </li>
       </ul>
-    </div>
+    </BottomActionBar>
 
     <v-dialog v-model="isValidationDialogOpen" max-width="600">
       <ConfirmationDialogCard
@@ -223,24 +223,7 @@ const saveAvailabilities = async () => {
   color: rgba(var(--v-theme-on-surface), 0.7);
 }
 
-.availabilities-stepper {
-  @media screen and (max-width: $mobile-max-width) {
-    padding-bottom: 110px;
-  }
-}
-
 .action-bar {
-  position: sticky;
-  bottom: 0;
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 12px;
-  padding: 12px 16px;
-  background-color: rgb(var(--v-theme-surface));
-  border-radius: $main-page-border-radius;
-  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
   &__validate {
     flex: 0 0 auto;
   }
@@ -250,15 +233,6 @@ const saveAvailabilities = async () => {
   }
 
   @media screen and (max-width: $mobile-max-width) {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    flex-wrap: wrap;
-    margin: 0;
-    padding: 12px 16px calc($bottom-nav-height + 8px);
-    border-radius: $main-page-border-radius $main-page-border-radius 0 0;
     &__validate {
       flex: 1;
     }
