@@ -5,17 +5,17 @@
     border="start"
     dark
     prominent
-    dismissible
-    @input="dismiss"
+    closable
+    @click:close="dismiss"
   >
     <h2 class="summary">{{ alert.summary }}</h2>
-    <p class="catch-phrase">
-      Tu es à <strong>{{ balance }}</strong>, c'est déconné !
-    </p>
     <p class="details">
-      {{
-        "Les comptes persos ne peuvent exister que si tout le monde joue le jeu en restant dans le positif. Sinon ça veut dire que: Pas d'argent >> Pas de fûts >> Pas de manif >> Pas de manif."
-      }}
+      Tu es à <strong>{{ balance }}</strong
+      >, c'est déconné !
+      <br />
+      Les comptes persos ne peuvent exister que si tout le monde joue le jeu en
+      restant dans le positif. Sinon ça veut dire que :
+      {{ "Pas d'argent >> Pas de fûts >> Pas de manif >> Pas de manif." }}
     </p>
   </v-alert>
 </template>

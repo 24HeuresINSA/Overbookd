@@ -19,7 +19,7 @@ export class AlertService {
     return {
       personalAccount,
       contribution,
-      profilePicture: !!volunteer?.profilePicture,
+      profilePicture: !volunteer?.profilePicture,
     };
   }
 }

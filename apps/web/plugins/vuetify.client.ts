@@ -71,7 +71,6 @@ export default defineNuxtPlugin((nuxtApp) => {
         style: {
           borderRadius: CARD_RADIUS,
           margin: "5px",
-          padding: "15px",
         },
       },
       VField: { style: commonFieldBorderRadiusStyle },
