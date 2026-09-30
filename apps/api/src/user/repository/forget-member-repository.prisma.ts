@@ -30,9 +30,9 @@ export class PrismaForgetMemberRepository implements MemberRepository {
       where: {
         OR: [
           { administratorId: id },
-          { contactId: id },
-          { inChargeId: id },
-          { mobilizationId: id },
+          { contacts: { some: { contactId: id } } },
+          { inChargeVolunteers: { some: { volunteerId: id } } },
+          { mobilizations: { some: { assignees: { some: { userId: id } } } } },
         ],
       },
       select: { id: true },
@@ -42,7 +42,10 @@ export class PrismaForgetMemberRepository implements MemberRepository {
 
   async openSharedMealDates(id: number): Promise<string[]> {
     const sharedMeals = await this.prisma.sharedMeal.findMany({
-      where: { adherentId: id, closedAt: null },
+      where: {
+        closedAt: null,
+        OR: [{ chefId: id }, { shotguns: { some: { guestId: id } } }],
+      },
       select: { date: true },
     });
     return sharedMeals.map((sm) => sm.date);
@@ -84,44 +87,47 @@ export class PrismaForgetMemberRepository implements MemberRepository {
     id: number,
     anonymous: AnonymousMember,
   ): Promise<AnonymousMember> {
-    await this.prisma.user.update({
-      where: { id },
-      data: {
-        zitadelId: anonymous.oidcId,
-        firstName: anonymous.firstName,
-        lastName: anonymous.lastName,
-        phoneNumber: anonymous.mobilePhone,
-        birthDate: anonymous.birthDate,
-        nickname: anonymous.nickname,
-        comment: anonymous.comment,
-        note: anonymous.note,
-        email: anonymous.email,
+    await this.prisma.$transaction(async (tx) => {
+      await tx.preference.deleteMany({ where: { userId: id } });
+      await tx.user.update({
+        where: { id },
+        data: {
+          isDeleted: true,
 
-        hasApprovedEULA: false,
-        hasSignedVolunteerCharter: false,
-        profilePicture: null,
-        registrationMembership: null,
+          zitadelId: anonymous.oidcId,
+          firstName: anonymous.firstName,
+          lastName: anonymous.lastName,
+          phoneNumber: anonymous.mobilePhone,
+          birthDate: anonymous.birthDate,
+          nickname: anonymous.nickname,
+          comment: anonymous.comment,
+          note: anonymous.note,
+          email: anonymous.email,
 
-        teams: { deleteMany: {} },
-        preference: { delete: {} },
-        contributions: { deleteMany: {} },
-        friends: { deleteMany: {} },
-        friendRequestors: { deleteMany: {} },
-        membershipApplications: { deleteMany: {} },
+          hasApprovedEULA: false,
+          hasSignedVolunteerCharter: false,
+          profilePicture: null,
 
-        availabilities: { deleteMany: {} },
-        breaks: { deleteMany: {} },
+          teams: { deleteMany: {} },
+          contributions: { deleteMany: {} },
+          friends: { deleteMany: {} },
+          friendRequestors: { deleteMany: {} },
+          membershipApplications: { deleteMany: {} },
 
-        shotguns: { deleteMany: {} },
-        chefMeals: { deleteMany: {} },
-        charismaEventParticipations: { deleteMany: {} },
+          availabilities: { deleteMany: {} },
+          breaks: { deleteMany: {} },
 
-        faFeedbacks: { deleteMany: {} },
-        ftFeedbacks: { deleteMany: {} },
-        festivalActivityInstigations: { deleteMany: {} },
-        festivalTaskInstigations: { deleteMany: {} },
-        festivalTasksToReview: { deleteMany: {} },
-      },
+          shotguns: { deleteMany: {} },
+          chefMeals: { deleteMany: {} },
+          charismaEventParticipations: { deleteMany: {} },
+
+          faFeedbacks: { deleteMany: {} },
+          ftFeedbacks: { deleteMany: {} },
+          festivalActivityInstigations: { deleteMany: {} },
+          festivalTaskInstigations: { deleteMany: {} },
+          festivalTasksToReview: { deleteMany: {} },
+        },
+      });
     });
     return anonymous;
   }
