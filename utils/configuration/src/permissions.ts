@@ -80,7 +80,7 @@ const configurationsWithPermissions: ConfigurationWithPermissions[] = [
       read: VIEW_FESTIVAL_EVENTS_STATS,
       write: MANAGE_CONFIG,
     },
-  }
+  },
 ];
 
 export function canReadConfiguration(

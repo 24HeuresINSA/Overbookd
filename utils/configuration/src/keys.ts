@@ -4,7 +4,8 @@ export const ORGA_WEEK_DATE_KEY = "orgaWeekDate";
 export const INVITE_STAFF_LINK_KEY = "inviteStaffLink";
 export const VOLUNTEER_BRIEFING_TIME_WINDOW_KEY = "volunteerBriefingTimeWindow";
 export const USEFUL_LINKS_KEY = "usefulLinks";
-export const LAST_EDITION_FESTIVAL_EVENT_STATS_KEY = "lastEditionFestivalEventStats"
+export const LAST_EDITION_FESTIVAL_EVENT_STATS_KEY =
+  "lastEditionFestivalEventStats";
 
 export type ConfigurationKey =
   | typeof REGISTRATION_FORM_KEY
