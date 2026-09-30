@@ -146,6 +146,27 @@
         />
       </v-expansion-panel-text>
     </v-expansion-panel>
+
+    <v-expansion-panel class="collapse">
+      <v-expansion-panel-title>
+        <h2>Stats des FA & FT de l'édition précédente</h2>
+      </v-expansion-panel-title>
+      <v-expansion-panel-text>
+        <div>
+          <h3>Stats des FA</h3>
+        </div>
+        <v-divider class="my-5" />
+        <div>
+          <h3>Stats des FT</h3>
+        </div>
+        <v-btn
+          text="Enregistrer"
+          color="primary"
+          class="save-btn"
+          @click="saveLastYearFestivalEventStats"
+        />
+      </v-expansion-panel-text>
+    </v-expansion-panel>
   </v-expansion-panels>
 
   <v-dialog v-model="isVolunteerRegistrationstatusDialogOpen" max-width="600px">
@@ -177,6 +198,7 @@ import {
   ORGA_WEEK_DATE_KEY,
   REGISTRATION_FORM_KEY,
   USEFUL_LINKS_KEY,
+  LAST_EDITION_FESTIVAL_EVENT_STATS_KEY,
 } from "@overbookd/configuration";
 import {
   defaultVolunteerCommitmentPresentation,
@@ -186,14 +208,7 @@ import {
 useHead({ title: "Config admin" });
 
 const configurationStore = useConfigurationStore();
-
 await configurationStore.fetchAll();
-
-const dateEventStart = ref<Date>(configurationStore.eventStartDate);
-const dateOrgaWeekStart = ref<Date>(
-  configurationStore.orgaWeekStartDate ?? new Date(),
-);
-const usefulLinks = ref(configurationStore.usefulLinks);
 
 const isVolunteerRegistrationOpen = ref<boolean>(
   configurationStore.registrationForm.isVolunteerRegistrationOpen,
@@ -227,7 +242,6 @@ const replaceVolunteerRegistrationDescriptionByTemplate = () => {
   volunteerRegistrationFormDescription.value =
     defaultVolunteerCommitmentPresentation;
 };
-
 const saveRegistrationFormConfig = async () => {
   await configurationStore.save({
     key: REGISTRATION_FORM_KEY,
@@ -239,6 +253,10 @@ const saveRegistrationFormConfig = async () => {
   });
 };
 
+const dateEventStart = ref<Date>(configurationStore.eventStartDate);
+const dateOrgaWeekStart = ref<Date>(
+  configurationStore.orgaWeekStartDate ?? new Date(),
+);
 const isEventStartDateInvalid = computed<boolean>(
   () => dateOrgaWeekStart.value >= dateEventStart.value,
 );
@@ -257,9 +275,17 @@ const saveEventStartDate = async () => {
   ]);
 };
 
+const usefulLinks = ref(configurationStore.usefulLinks);
 const saveUsefulLinks = async () => {
   await configurationStore.save({
     key: USEFUL_LINKS_KEY,
+    value: usefulLinks.value,
+  });
+};
+
+const saveLastYearFestivalEventStats = async () => {
+  await configurationStore.save({
+    key: LAST_EDITION_FESTIVAL_EVENT_STATS_KEY,
     value: usefulLinks.value,
   });
 };

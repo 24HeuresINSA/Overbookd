@@ -1,9 +1,12 @@
 import { Team } from "@overbookd/team";
+import {
+  ADMIN,
+} from "@overbookd/team-code";
 
 export const teams: Team[] = [
   {
     name: "Admin",
-    code: "admin",
+    code: ADMIN,
     color: "#000000",
     icon: "mdi-eye-circle",
   },

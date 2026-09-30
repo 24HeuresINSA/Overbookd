@@ -9,6 +9,7 @@ import {
   ORGA_WEEK_DATE_KEY,
   REGISTRATION_FORM_KEY,
   USEFUL_LINKS_KEY,
+  LAST_EDITION_FESTIVAL_EVENT_STATS_KEY,
 } from "@overbookd/configuration";
 import {
   defaultVolunteerCommitmentPresentation,
@@ -19,6 +20,7 @@ import { teams } from "./seeders/teams";
 import { userTeamTuples } from "./seeders/users";
 import { signages } from "./seeders/signages";
 import { Team } from "@overbookd/team";
+import { HUMAIN, LOG_MATOS, CULTURE } from "@overbookd/team-code";
 import { Duration, OverDate } from "@overbookd/time";
 
 const url = process.env.DATABASE_URL;
@@ -239,6 +241,21 @@ async function main() {
     where: { key: USEFUL_LINKS_KEY },
     update: usefulLinksConfig,
     create: usefulLinksConfig,
+  });
+
+  console.log("----------------------------------------------------------");
+  console.log("Inserting last edition festival event stats");
+  const lastYearFestivalEventStatsConfig: Configuration = {
+    key: LAST_EDITION_FESTIVAL_EVENT_STATS_KEY,
+    value: {
+      activities: [{ code: HUMAIN, count: 2 }, { code: LOG_MATOS, count: 10 }, { code: CULTURE, count: 24 }],
+      tasks: [{ code: HUMAIN, count: 5 }, { code: LOG_MATOS, count: 79 }, { code: CULTURE, count: 58 }],
+    },
+  };
+  await prisma.configuration.upsert({
+    where: { key: LAST_EDITION_FESTIVAL_EVENT_STATS_KEY },
+    update: lastYearFestivalEventStatsConfig,
+    create: lastYearFestivalEventStatsConfig,
   });
 
   console.log("----------------------------------------------------------");
