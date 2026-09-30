@@ -67,10 +67,6 @@ import {
   type FestivalEventStatus,
   isFestivalActivityStatus,
 } from "~/utils/festival-event/festival-event.utils";
-import {
-  oldActivities,
-  oldTasks,
-} from "~/utils/festival-event/past-year.constant";
 import { hexToRGBA } from "~/utils/hex-to-rgba.utils";
 import { FA_URL, FT_URL } from "@overbookd/web-page";
 import { CTMA_URL } from "~/utils/navigation/url.constant";
@@ -82,6 +78,7 @@ import {
   type StatsDisplayMode,
 } from "~/utils/festival-event/stats.display";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
+import { LAST_EDITION_FESTIVAL_EVENT_STATS_KEY } from "@overbookd/configuration";
 
 useHead({ title: "Statistiques des FA" });
 
@@ -91,6 +88,9 @@ const route = useRoute();
 const myStore = useMyStore();
 const statsStore = useFestivalEventStatsStore();
 const teamStore = useTeamStore();
+
+const configurationStore = useConfigurationStore();
+configurationStore.fetch(LAST_EDITION_FESTIVAL_EVENT_STATS_KEY);
 
 const canReadFA = computed<boolean>(() => myStore.can(READ_FA));
 const canReadFT = computed<boolean>(() => myStore.can(READ_FT));
@@ -137,14 +137,19 @@ const findByStatus = (status: FestivalEventStatus): number[] => {
   return activityStats.value.map((stat) => stat.status[`${status}`]);
 };
 
-const sortedOldActivities = computed<number[]>(() =>
-  activityStats.value.map(
-    (stat) => oldActivities.get(stat.teamCode)?.valueOf() ?? 0,
-  ),
-);
-const sortedOldTasks = computed<number[]>(() =>
-  taskStats.value.map((stat) => oldTasks.get(stat.teamCode)?.valueOf() ?? 0),
-);
+const sortedOldActivities = computed<number[]>(() => {
+  const activities =
+    configurationStore.lastEditionFestivalEventStats.activities;
+  return activityStats.value.map(
+    (stat) => activities.find((a) => a.code === stat.teamCode)?.count ?? 0,
+  );
+});
+const sortedOldTasks = computed<number[]>(() => {
+  const tasks = configurationStore.lastEditionFestivalEventStats.tasks;
+  return taskStats.value.map(
+    (stat) => tasks.find((t) => t.code === stat.teamCode)?.count ?? 0,
+  );
+});
 const sortedOldEvents = computed<number[]>(() =>
   isDisplayTasksMode.value ? sortedOldTasks.value : sortedOldActivities.value,
 );

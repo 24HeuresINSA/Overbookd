@@ -9,5 +9,11 @@ export {
   configurationKeys,
 } from "./keys";
 export type { ConfigurationKey } from "./keys";
-export type { Configuration } from "./types";
+export type {
+  Configuration,
+  FestivalEventStatConfigValue,
+  FestivalEventStatsConfigValue,
+  RegistrationFormConfigValue,
+  UsefulLinksConfigValue,
+} from "./types";
 export { canReadConfiguration, canWriteConfiguration } from "./permissions";

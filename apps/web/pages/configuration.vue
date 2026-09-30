@@ -18,7 +18,8 @@
           <p>
             L'inscription des bénévoles est actuellement
             <strong>
-              {{ isVolunteerRegistrationOpen ? "ouverte" : "fermée" }} </strong>.
+              {{ isVolunteerRegistrationOpen ? "ouverte" : "fermée" }} </strong
+            >.
           </p>
           <v-btn
             :model-value="isVolunteerRegistrationOpen"
@@ -154,16 +155,26 @@
       <v-expansion-panel-text>
         <div>
           <h3>Stats des FA</h3>
+          <FestivalEventStatList
+            :model-value="lastEditionFestivalEventStats.activities"
+            @remove="removeFestivalActivityStat"
+          />
+          <CreateFestivalEventStatForm @create="createFestivalActivityStat" />
         </div>
-        <v-divider class="my-5" />
+        <v-divider class="mx-5" vertical />
         <div>
           <h3>Stats des FT</h3>
+          <FestivalEventStatList
+            :model-value="lastEditionFestivalEventStats.tasks"
+            @remove="removeFestivalTaskStat"
+          />
+          <CreateFestivalEventStatForm @create="createFestivalTaskStat" />
         </div>
         <v-btn
           text="Enregistrer"
           color="primary"
           class="save-btn"
-          @click="saveLastYearFestivalEventStats"
+          @click="saveLastEditionFestivalEventStats"
         />
       </v-expansion-panel-text>
     </v-expansion-panel>
@@ -199,6 +210,10 @@ import {
   REGISTRATION_FORM_KEY,
   USEFUL_LINKS_KEY,
   LAST_EDITION_FESTIVAL_EVENT_STATS_KEY,
+  type RegistrationFormConfigValue,
+  type UsefulLinksConfigValue,
+  type FestivalEventStatsConfigValue,
+  type FestivalEventStatConfigValue,
 } from "@overbookd/configuration";
 import {
   defaultVolunteerCommitmentPresentation,
@@ -243,13 +258,14 @@ const replaceVolunteerRegistrationDescriptionByTemplate = () => {
     defaultVolunteerCommitmentPresentation;
 };
 const saveRegistrationFormConfig = async () => {
+  const configValue: RegistrationFormConfigValue = {
+    isVolunteerRegistrationOpen: isVolunteerRegistrationOpen.value,
+    staffDescription: staffRegistrationFormDescription.value,
+    volunteerDescription: volunteerRegistrationFormDescription.value,
+  };
   await configurationStore.save({
     key: REGISTRATION_FORM_KEY,
-    value: {
-      isVolunteerRegistrationOpen: isVolunteerRegistrationOpen.value,
-      staffDescription: staffRegistrationFormDescription.value,
-      volunteerDescription: volunteerRegistrationFormDescription.value,
-    },
+    value: configValue,
   });
 };
 
@@ -275,7 +291,7 @@ const saveEventStartDate = async () => {
   ]);
 };
 
-const usefulLinks = ref(configurationStore.usefulLinks);
+const usefulLinks = ref<UsefulLinksConfigValue>(configurationStore.usefulLinks);
 const saveUsefulLinks = async () => {
   await configurationStore.save({
     key: USEFUL_LINKS_KEY,
@@ -283,11 +299,40 @@ const saveUsefulLinks = async () => {
   });
 };
 
-const saveLastYearFestivalEventStats = async () => {
+const lastEditionFestivalEventStats = ref<FestivalEventStatsConfigValue>(
+  configurationStore.lastEditionFestivalEventStats,
+);
+const saveLastEditionFestivalEventStats = async () => {
   await configurationStore.save({
     key: LAST_EDITION_FESTIVAL_EVENT_STATS_KEY,
-    value: usefulLinks.value,
+    value: lastEditionFestivalEventStats.value,
   });
+};
+const createFestivalActivityStat = async (
+  stat: FestivalEventStatConfigValue,
+) => {
+  lastEditionFestivalEventStats.value.activities.push(stat);
+  await saveLastEditionFestivalEventStats();
+};
+const createFestivalTaskStat = async (stat: FestivalEventStatConfigValue) => {
+  lastEditionFestivalEventStats.value.tasks.push(stat);
+  await saveLastEditionFestivalEventStats();
+};
+const removeFestivalActivityStat = async (
+  stat: FestivalEventStatConfigValue,
+) => {
+  lastEditionFestivalEventStats.value.activities =
+    lastEditionFestivalEventStats.value.activities.filter(
+      (s) => s.code !== stat.code,
+    );
+  await saveLastEditionFestivalEventStats();
+};
+const removeFestivalTaskStat = async (stat: FestivalEventStatConfigValue) => {
+  lastEditionFestivalEventStats.value.tasks =
+    lastEditionFestivalEventStats.value.tasks.filter(
+      (s) => s.code !== stat.code,
+    );
+  await saveLastEditionFestivalEventStats();
 };
 </script>
 

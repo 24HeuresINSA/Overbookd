@@ -4,7 +4,11 @@ import {
   ORGA_WEEK_DATE_KEY,
   REGISTRATION_FORM_KEY,
   USEFUL_LINKS_KEY,
+  LAST_EDITION_FESTIVAL_EVENT_STATS_KEY,
   type Configuration,
+  type FestivalEventStatsConfigValue,
+  type RegistrationFormConfigValue,
+  type UsefulLinksConfigValue,
 } from "@overbookd/configuration";
 import { updateItemToList } from "@overbookd/list";
 import {
@@ -14,12 +18,6 @@ import {
 import { Duration, OverDate, type IProvidePeriod } from "@overbookd/time";
 import { ConfigurationRepository } from "~/repositories/configuration.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
-
-type RegistrationFormValue = {
-  isVolunteerRegistrationOpen: boolean;
-  volunteerDescription: string;
-  staffDescription: string;
-};
 
 type State = {
   configurations: Configuration[];
@@ -55,9 +53,9 @@ export const useConfigurationStore = defineStore("configuration", {
       return OverDate.fromLocal(new Date(start)).date;
     },
 
-    registrationForm(): RegistrationFormValue {
+    registrationForm(): RegistrationFormConfigValue {
       const registrationForm = this.get(REGISTRATION_FORM_KEY);
-      const defaultValue: RegistrationFormValue = {
+      const defaultValue: RegistrationFormConfigValue = {
         isVolunteerRegistrationOpen: true,
         volunteerDescription: defaultVolunteerCommitmentPresentation,
         staffDescription: defaultStaffCommitmentPresentation,
@@ -85,12 +83,22 @@ export const useConfigurationStore = defineStore("configuration", {
       };
     },
 
-    usefulLinks(): { googleCalendar?: string; slack?: string } {
+    usefulLinks(): UsefulLinksConfigValue {
       const links = this.get(USEFUL_LINKS_KEY);
       if (!isObject(links)) return {};
       return {
         googleCalendar: toOptionalString(links.googleCalendar),
         slack: toOptionalString(links.slack),
+      };
+    },
+
+    lastEditionFestivalEventStats(): FestivalEventStatsConfigValue {
+      const stats = this.get(LAST_EDITION_FESTIVAL_EVENT_STATS_KEY);
+      if (!isObject(stats)) return { activities: [], tasks: [] };
+      const { activities, tasks } = stats;
+      return {
+        activities: Array.isArray(activities) ? activities : [],
+        tasks: Array.isArray(tasks) ? tasks : [],
       };
     },
   },

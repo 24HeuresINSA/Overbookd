@@ -10,6 +10,9 @@ import {
   REGISTRATION_FORM_KEY,
   USEFUL_LINKS_KEY,
   LAST_EDITION_FESTIVAL_EVENT_STATS_KEY,
+  UsefulLinksConfigValue,
+  RegistrationFormConfigValue,
+  FestivalEventStatsConfigValue,
 } from "@overbookd/configuration";
 import {
   defaultVolunteerCommitmentPresentation,
@@ -214,7 +217,7 @@ async function main() {
 
   console.log("----------------------------------------------------------");
   console.log("Inserting registration form config");
-  const registrationFormConfig: Configuration = {
+  const registrationFormConfig: Configuration<RegistrationFormConfigValue> = {
     key: REGISTRATION_FORM_KEY,
     value: {
       isVolunteerRegistrationOpen: true,
@@ -230,7 +233,7 @@ async function main() {
 
   console.log("----------------------------------------------------------");
   console.log("Inserting useful links");
-  const usefulLinksConfig: Configuration = {
+  const usefulLinksConfig: Configuration<UsefulLinksConfigValue> = {
     key: USEFUL_LINKS_KEY,
     value: {
       googleCalendar: "https://calendar.google.com",
@@ -245,13 +248,22 @@ async function main() {
 
   console.log("----------------------------------------------------------");
   console.log("Inserting last edition festival event stats");
-  const lastYearFestivalEventStatsConfig: Configuration = {
-    key: LAST_EDITION_FESTIVAL_EVENT_STATS_KEY,
-    value: {
-      activities: [{ code: HUMAIN, count: 2 }, { code: LOG_MATOS, count: 10 }, { code: CULTURE, count: 24 }],
-      tasks: [{ code: HUMAIN, count: 5 }, { code: LOG_MATOS, count: 79 }, { code: CULTURE, count: 58 }],
-    },
-  };
+  const lastYearFestivalEventStatsConfig: Configuration<FestivalEventStatsConfigValue> =
+    {
+      key: LAST_EDITION_FESTIVAL_EVENT_STATS_KEY,
+      value: {
+        activities: [
+          { code: HUMAIN, count: 2 },
+          { code: LOG_MATOS, count: 10 },
+          { code: CULTURE, count: 24 },
+        ],
+        tasks: [
+          { code: HUMAIN, count: 5 },
+          { code: LOG_MATOS, count: 79 },
+          { code: CULTURE, count: 58 },
+        ],
+      },
+    };
   await prisma.configuration.upsert({
     where: { key: LAST_EDITION_FESTIVAL_EVENT_STATS_KEY },
     update: lastYearFestivalEventStatsConfig,
