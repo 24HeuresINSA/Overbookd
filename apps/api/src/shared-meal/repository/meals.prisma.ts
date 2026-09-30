@@ -18,6 +18,7 @@ const SELECT_ADHERENT = {
   firstName: true,
   lastName: true,
   nickname: true,
+  profilePicture: true,
 };
 const SELECT_SHOTGUN = {
   guest: { select: SELECT_ADHERENT },
@@ -258,6 +259,7 @@ type DatabaseAdherent = {
   firstName: string;
   lastName: string;
   nickname: string;
+  profilePicture: string | null;
 };
 
 type DatabaseSharedMeal = {
@@ -305,14 +307,12 @@ function buildSharedMeal(saved: DatabaseSharedMeal): SharedMealBuilder {
 
 function convertToOnGoingBuilder(saved: DatabaseSharedMeal) {
   const createdAt = saved.createdAt;
-  const name = buildUserNameWithNickname(saved.chef);
-  const chef = { id: saved.chef.id, name };
+  const chef = buildAdherent(saved.chef);
   const meal = { menu: saved.menu, date: saved.date };
   const areShotgunsOpen = saved.areShotgunsOpen;
   const areMultipleShotgunsAllowed = saved.areMultipleShotgunsAllowed;
   const shotguns = saved.shotguns.map((shotgun) => ({
-    id: shotgun.guest.id,
-    name: buildUserNameWithNickname(shotgun.guest),
+    ...buildAdherent(shotgun.guest),
     date: shotgun.date,
     portions: shotgun.portions,
   }));
@@ -326,6 +326,12 @@ function convertToOnGoingBuilder(saved: DatabaseSharedMeal) {
     areMultipleShotgunsAllowed,
     shotguns,
   };
+}
+
+function buildAdherent(adherent: DatabaseAdherent): Adherent {
+  const name = buildUserNameWithNickname(adherent);
+  const profilePicture = adherent.profilePicture ?? undefined;
+  return { id: adherent.id, name, profilePicture };
 }
 
 function convertToPastBuilder(saved: DatabasePastSharedMeal) {

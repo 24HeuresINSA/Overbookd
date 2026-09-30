@@ -1,51 +1,49 @@
 <template>
   <DesktopPageTitle />
 
-  <div class="form-and-list">
-    <div class="form">
+  <div class="shared-meals-page">
+    <aside class="sidebar desktop-only">
       <OfferSharedMealFormCard />
-
-      <div class="see-history">
-        <v-btn
-          text="Voir l'historique des repas"
-          color="secondary"
-          size="large"
-          rounded
-          block
-          :to="SHARED_MEALS_HISTORY_URL"
-        />
-      </div>
-    </div>
-
-    <div class="meals">
-      <SharedMealCard
-        v-for="meal in meals"
-        :key="meal.id"
-        :meal="meal"
-        class="meal"
+      <v-btn
+        text="Historique des repas"
+        prepend-icon="mdi-history"
+        color="secondary"
+        variant="tonal"
+        size="large"
+        block
+        :to="SHARED_MEALS_HISTORY_URL"
       />
-    </div>
+    </aside>
+
+    <section class="meals">
+      <SharedMealCard v-for="meal in meals" :key="meal.id" :meal="meal" />
+
+      <v-card v-if="meals.length === 0" class="meals__empty">
+        <v-icon icon="mdi-silverware-clean" size="64" />
+        <p>Aucun repas de prévu pour le moment 🍽️</p>
+        <p class="meals__empty-hint">Lance-toi et propose le prochain !</p>
+      </v-card>
+    </section>
   </div>
 
-  <div class="mobile-buttons">
+  <BottomActionBar class="mobile-buttons mobile-only">
     <v-btn
-      text="Proposer un repas"
+      text="Proposer"
+      prepend-icon="mdi-plus"
       color="primary"
+      variant="flat"
       size="large"
-      rounded
-      block
       @click="openOfferDialog"
     />
-
     <v-btn
-      text="Voir l'historique des repas"
+      text="Historique"
+      prepend-icon="mdi-history"
       color="secondary"
+      variant="tonal"
       size="large"
-      rounded
-      block
       :to="SHARED_MEALS_HISTORY_URL"
     />
-  </div>
+  </BottomActionBar>
 
   <v-dialog v-model="isOfferDialogOpen" max-width="600px">
     <OfferSharedMealFormCard closable @close="closeOfferDialog" />
@@ -71,74 +69,54 @@ mealSharingStore.fetchOnGoing();
 </script>
 
 <style lang="scss" scoped>
-.mobile-buttons {
-  display: none;
-  position: fixed;
-  bottom: $bottom-nav-height;
-  left: 0;
-  right: 0;
-  padding: 10px 20px;
-  background-color: rgb(var(--v-theme-background));
+.shared-meals-page {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) 1fr;
+  align-items: start;
+  gap: $card-gap;
+  padding: $card-margin;
 
   @media screen and (max-width: $mobile-max-width) {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    grid-template-columns: 1fr;
   }
 }
 
-.form-and-list {
-  position: relative;
+.sidebar {
+  position: sticky;
+  top: 0;
   display: flex;
+  flex-direction: column;
+  gap: $card-gap;
+}
+
+.meals {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   align-items: start;
-  gap: 20px;
-  height: calc(90vh - #{$header-height});
-  overflow-y: scroll;
+  gap: $card-gap;
 
-  .form {
-    position: sticky;
-    top: 0;
-    flex: 2 1 0;
+  @media screen and (max-width: $mobile-max-width) {
+    grid-template-columns: 1fr;
+  }
 
+  &__empty {
+    grid-column: 1 / -1;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-
-    .see-history {
-      margin-inline: 20px;
-    }
-
-    @media screen and (max-width: $mobile-max-width) {
-      display: none;
-    }
+    align-items: center;
+    gap: 8px;
+    padding: 40px 20px;
+    text-align: center;
+    font-size: 1.1rem;
+    color: rgba(var(--v-theme-on-surface), 0.7);
   }
 
-  .meals {
-    flex: 3 1 0;
-    padding: 5px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    .meal {
-      min-width: 95%;
-    }
-
-    @media screen and (max-width: $mobile-max-width) {
-      margin-bottom: 120px;
-    }
+  &__empty-hint {
+    font-size: 0.9rem;
   }
+}
 
-  @media screen and (max-width: 1150px) {
-    flex-direction: column;
-    gap: 10px;
-    height: initial;
-
-    .form,
-    .meals {
-      position: relative;
-      flex: initial;
-      width: 100%;
-    }
-  }
+.mobile-buttons > * {
+  flex: 1 1 0;
 }
 </style>

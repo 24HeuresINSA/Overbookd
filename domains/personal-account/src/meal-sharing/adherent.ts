@@ -3,6 +3,7 @@ import { updateItemToList } from "@overbookd/list";
 export type Adherent = {
   id: number;
   name: string;
+  profilePicture?: string;
 };
 export type Shotgun = Adherent & {
   date: Date;

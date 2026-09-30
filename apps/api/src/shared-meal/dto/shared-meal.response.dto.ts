@@ -22,6 +22,9 @@ class AdherentResponseDto implements Adherent {
 
   @ApiProperty({ description: "complete name" })
   name: string;
+
+  @ApiProperty({ required: false, description: "profile picture url" })
+  profilePicture?: string;
 }
 
 class ShotgunResponseDto extends AdherentResponseDto implements Shotgun {

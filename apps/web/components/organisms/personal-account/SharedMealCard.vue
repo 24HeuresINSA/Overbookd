@@ -1,150 +1,191 @@
 <template>
-  <div>
-    <v-card>
-      <v-card-title class="meal-title">
-        <span class="meal-title__date">
-          {{ meal.meal.date }}
-        </span>
-
-        <div class="meal-title__chef" aria-label="Chef·fe" title="Chef·fe">
-          <v-icon>mdi-chef-hat</v-icon>
-          <span>{{ meal.chef.name }}</span>
+  <v-card class="meal">
+    <v-card-item class="meal__header">
+      <template #prepend>
+        <div class="chef-avatar" title="Chef·fe">
+          <v-avatar
+            color="secondary"
+            size="52"
+            :image="meal.chef.profilePicture"
+            :text="getInitials(meal.chef.name)"
+          />
+          <v-icon icon="mdi-chef-hat" class="chef-avatar__hat" />
         </div>
+      </template>
+      <v-card-title class="meal__date">
+        {{ meal.meal.date }}
       </v-card-title>
+      <v-card-subtitle class="meal__chef">
+        <span>Chef·fe : {{ iAmChef ? "toi" : meal.chef.name }}</span>
+      </v-card-subtitle>
 
-      <v-card-text class="column">
-        <div class="presentation">
-          <div class="column">
-            <v-textarea
-              :model-value="meal.meal.menu"
-              variant="outlined"
-              label="Au menu 🍴"
-              readonly
-              hide-details
-              :rows="4"
-            />
-          </div>
-
-          <div class="column">
-            <details>
-              <summary>
-                {{ meal.shotguns.length }}
-                {{ pluralize("convive", meal.shotguns.length) }}
-                -
-                {{ meal.portionCount }}
-                {{ pluralize("portion", meal.portionCount) }}
-                <span v-show="myPortionCount > 0">
-                  (dont {{ myPortionCount }}
-                  {{ pluralize("portion", myPortionCount) }} pour moi)
-                </span>
-              </summary>
-
-              <ul>
-                <li v-for="guest in meal.shotguns" :key="guest.id">
-                  {{ guest.name }}
-                  ({{ guest.portions }}
-                  {{ pluralize("portion", guest.portions) }})
-
-                  <div class="actions">
-                    <v-btn
-                      v-if="iAmChef && guest.portions > 1"
-                      icon="mdi-numeric-negative-1"
-                      aria-label="Retirer une portion"
-                      title="Retirer une portion"
-                      size="small"
-                      density="comfortable"
-                      variant="flat"
-                      color="secondary"
-                      @click="removePortion(guest)"
-                    />
-
-                    <v-btn
-                      v-if="iAmChef"
-                      icon="mdi-exit-run"
-                      aria-label="Annuler le shotgun"
-                      title="Annuler le shotgun"
-                      size="small"
-                      density="comfortable"
-                      variant="flat"
-                      color="tertiary"
-                      @click="cancelShotgun(guest)"
-                    />
-                  </div>
-                </li>
-              </ul>
-            </details>
-
-            <div
-              :title="
-                getShotgunTitle(areMultipleShotgunsAllowed, myPortionCount)
-              "
-            >
-              <v-btn
-                color="primary"
-                size="large"
-                :text="
-                  areShotgunsOpen
-                    ? areMultipleShotgunsAllowed && myPortionCount > 0
-                      ? 'Ajouter une portion'
-                      : 'Shotgun'
-                    : 'Les shotguns sont fermés'
-                "
-                append-icon="mdi-account-multiple-plus"
-                :disabled="!canIShotgun"
-                block
-                @click="shotgun"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div v-if="iAmChef" class="presentation">
-          <div class="column">
+      <template #append>
+        <v-menu v-if="iAmChef" location="bottom end">
+          <template #activator="{ props: menuProps }">
             <v-btn
-              color="secondary"
-              text="Clore le repas"
-              append-icon="mdi-cash-multiple"
-              @click="openRecordExpenseDialog"
+              v-bind="menuProps"
+              icon="mdi-dots-vertical"
+              variant="text"
+              aria-label="Gérer le repas"
+              title="Gérer le repas"
             />
-
-            <v-btn
-              color="tertiary"
-              text="Annuler le repas"
-              append-icon="mdi-cancel"
-              @click="openCancelConfirmationDialog"
-            />
-          </div>
-
-          <div class="column">
-            <v-btn
-              :color="areShotgunsOpen ? 'tertiary' : 'secondary'"
-              :text="
-                areShotgunsOpen ? 'Fermer les shotguns' : 'Ouvrir les shotguns'
-              "
-              :append-icon="
+          </template>
+          <v-list class="meal-menu" density="comfortable">
+            <v-list-subheader class="meal-menu__header">
+              Gestion du repas
+            </v-list-subheader>
+            <v-list-item
+              :prepend-icon="
                 areShotgunsOpen ? 'mdi-door-closed' : 'mdi-door-open'
               "
+              :title="
+                areShotgunsOpen ? 'Fermer les shotguns' : 'Ouvrir les shotguns'
+              "
+              rounded="lg"
               @click="toggleShotguns"
             />
-
-            <v-btn
-              :color="areMultipleShotgunsAllowed ? 'tertiary' : 'secondary'"
-              :text="
-                areMultipleShotgunsAllowed
-                  ? 'Retirer les shotguns multiples'
-                  : 'Autoriser les shotguns multiples'
-              "
-              :append-icon="
+            <v-list-item
+              :prepend-icon="
                 areMultipleShotgunsAllowed
                   ? 'mdi-account-multiple-remove-outline'
                   : 'mdi-account-multiple-plus-outline'
               "
+              :title="
+                areMultipleShotgunsAllowed
+                  ? 'Retirer les shotguns multiples'
+                  : 'Autoriser les shotguns multiples'
+              "
+              rounded="lg"
               @click="toggleMultipleShotguns"
             />
+            <v-divider class="my-1" />
+            <v-list-item
+              prepend-icon="mdi-cancel"
+              title="Annuler le repas"
+              base-color="error"
+              rounded="lg"
+              class="meal-menu__danger"
+              @click="openCancelConfirmationDialog"
+            />
+          </v-list>
+        </v-menu>
+      </template>
+    </v-card-item>
+
+    <v-card-text class="meal__content">
+      <div class="meal__menu">
+        <h4 class="meal__section-title">
+          <v-icon icon="mdi-silverware" size="small" /> Au menu
+        </h4>
+        <p>{{ meal.meal.menu }}</p>
+      </div>
+
+      <div class="meal__guests">
+        <button
+          type="button"
+          class="meal__guests-toggle"
+          :aria-expanded="areGuestsShown"
+          @click="areGuestsShown = !areGuestsShown"
+        >
+          <span class="meal__section-title">
+            <v-icon icon="mdi-account-group" size="small" />
+            {{ meal.shotguns.length }}
+            {{ pluralize("convive", meal.shotguns.length) }} ·
+            {{ meal.portionCount }}
+            {{ pluralize("portion", meal.portionCount) }}
+          </span>
+          <v-icon
+            icon="mdi-chevron-down"
+            class="meal__chevron"
+            :class="{ 'meal__chevron--open': areGuestsShown }"
+          />
+        </button>
+
+        <v-expand-transition>
+          <div v-show="areGuestsShown">
+            <v-list
+              v-if="meal.shotguns.length > 0"
+              density="compact"
+              class="meal__guest-list"
+            >
+              <v-list-item
+                v-for="guest in meal.shotguns"
+                :key="guest.id"
+                rounded="lg"
+                class="meal__guest"
+              >
+                <template #prepend>
+                  <v-avatar
+                    color="secondary"
+                    size="32"
+                    :image="guest.profilePicture"
+                    :text="getInitials(guest.name)"
+                    class="meal__avatar"
+                  />
+                </template>
+                <v-list-item-title>{{ guest.name }}</v-list-item-title>
+                <template #append>
+                  <span v-if="guest.portions > 1" class="meal__portions">
+                    ×{{ guest.portions }}
+                  </span>
+                  <template v-if="iAmChef">
+                    <v-btn
+                      v-if="guest.portions > 1"
+                      icon="mdi-minus"
+                      size="small"
+                      variant="text"
+                      aria-label="Retirer une portion"
+                      title="Retirer une portion"
+                      @click="removePortion(guest)"
+                    />
+                    <v-btn
+                      icon="mdi-close"
+                      size="small"
+                      variant="text"
+                      class="meal__remove"
+                      aria-label="Annuler le shotgun"
+                      title="Annuler le shotgun"
+                      @click="cancelShotgun(guest)"
+                    />
+                  </template>
+                </template>
+              </v-list-item>
+            </v-list>
+            <span v-else class="meal__empty">
+              Personne pour l'instant, sois le·a premier·e !
+            </span>
           </div>
-        </div>
-      </v-card-text>
-    </v-card>
+        </v-expand-transition>
+      </div>
+    </v-card-text>
+
+    <v-card-actions class="meal__actions">
+      <div
+        class="meal__action"
+        :title="getShotgunTitle(areMultipleShotgunsAllowed, myPortionCount)"
+      >
+        <v-btn
+          color="primary"
+          variant="flat"
+          size="large"
+          :text="shotgunText"
+          prepend-icon="mdi-account-multiple-plus"
+          :disabled="!canIShotgun"
+          block
+          @click="shotgun"
+        />
+      </div>
+      <v-btn
+        v-if="iAmChef"
+        class="meal__action"
+        color="secondary"
+        variant="tonal"
+        size="large"
+        text="Clore le repas"
+        prepend-icon="mdi-cash-multiple"
+        @click="openRecordExpenseDialog"
+      />
+    </v-card-actions>
 
     <v-dialog v-model="isRecordExpenseDialogOpen" max-width="600px">
       <RecordSharedMealExpenseDialogCard
@@ -185,7 +226,7 @@
         </template>
       </ConfirmationDialogCard>
     </v-dialog>
-  </div>
+  </v-card>
 </template>
 
 <script lang="ts" setup>
@@ -229,6 +270,16 @@ const areMultipleShotgunsAllowed = computed<boolean>(
 const canIShotgun = computed<boolean>(() =>
   builder.value.canShotgun(me.value.id),
 );
+
+const shotgunText = computed<string>(() => {
+  if (!areShotgunsOpen.value) return "Les shotguns sont fermés";
+  if (myPortionCount.value === 0) return "Shotgun";
+  return areMultipleShotgunsAllowed.value
+    ? "Ajouter une portion"
+    : "Déjà shotgun !";
+});
+
+const areGuestsShown = ref<boolean>(false);
 
 const isRecordExpenseDialogOpen = ref<boolean>(false);
 const openRecordExpenseDialog = () => (isRecordExpenseDialogOpen.value = true);
@@ -283,72 +334,157 @@ const disallowMultipleShotguns = () => {
 </script>
 
 <style lang="scss" scoped>
-.meal-title {
-  text-transform: capitalize;
+.meal {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  column-gap: 10px;
-  flex-wrap: wrap;
-  padding-right: 40px;
+  flex-direction: column;
+
+  &__date {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    white-space: normal;
+    text-transform: capitalize;
+  }
 
   &__chef {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    font-size: smaller;
-    white-space: normal;
-
-    @media screen and (max-width: $mobile-max-width) {
-      flex-direction: row;
-      gap: 5px;
-      margin-bottom: 3px;
-    }
-  }
-}
-
-.column {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.presentation {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
-
-  > * {
-    flex: 1 1 0;
+    gap: 6px;
+    margin-top: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    opacity: 0.85;
   }
 
-  @media screen and (max-width: $mobile-max-width) {
+  &__content {
+    display: flex;
     flex-direction: column;
+    gap: 14px;
+    flex-grow: 1;
+  }
+
+  &__section-title {
+    display: flex;
     align-items: center;
-    > * {
-      min-width: 100%;
-    }
-  }
-}
-
-details {
-  summary {
-    min-height: 28px;
-    align-content: center;
+    gap: 6px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: rgb(var(--v-theme-secondary));
   }
 
-  li {
+  &__menu .meal__section-title {
+    margin-bottom: 6px;
+  }
+
+  &__menu p {
+    white-space: pre-line;
+    padding: 10px 14px;
+    border-radius: $field-border-radius;
+    background-color: rgba(var(--v-theme-on-surface), 0.05);
+  }
+
+  &__guests-toggle {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 5px;
-    padding: 0 5px;
-
-    .actions {
-      display: flex;
-      gap: 5px;
+    width: 100%;
+    padding: 4px 8px 4px 0;
+    border-radius: $field-border-radius;
+    transition: background-color 0.2s;
+    &:hover {
+      background-color: rgba(var(--v-theme-secondary), 0.1);
     }
+  }
+
+  &__chevron {
+    transition: transform 0.2s;
+    &--open {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__guest-list {
+    margin-top: 6px;
+    padding: 0;
+    max-height: 240px;
+    overflow-y: auto;
+    background: transparent;
+  }
+
+  &__guest {
+    transition: background-color 0.2s;
+    &:hover {
+      background-color: rgba(var(--v-theme-secondary), 0.15);
+    }
+  }
+
+  &__avatar {
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  &__portions {
+    font-weight: 600;
+    margin-right: 4px;
+  }
+
+  &__remove:hover {
+    color: rgb(var(--v-theme-error));
+  }
+
+  &__empty {
+    font-size: 0.9rem;
+    opacity: 0.7;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 16px 16px;
+
+    .meal__action {
+      flex: 1 1 200px;
+      margin: 0;
+    }
+  }
+}
+
+.chef-avatar {
+  position: relative;
+  margin-top: 10px;
+
+  &__hat {
+    position: absolute;
+    top: -17px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 30px;
+    color: $dark-24h;
+    filter: drop-shadow(0 0 1px $white);
+  }
+}
+
+.meal-menu {
+  min-width: 260px;
+  padding: 6px;
+  border-radius: $main-page-border-radius !important;
+
+  &__header {
+    font-weight: 500;
+    color: rgb(var(--v-theme-secondary));
+  }
+
+  .v-list-item {
+    margin-bottom: 2px;
+    &:hover {
+      background-color: rgba(var(--v-theme-secondary), 0.15);
+    }
+  }
+
+  &__danger:hover {
+    background-color: rgba(var(--v-theme-error), 0.12) !important;
   }
 }
 </style>

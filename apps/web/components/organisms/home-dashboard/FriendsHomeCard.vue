@@ -36,7 +36,7 @@
         >
           <template #prepend>
             <v-avatar color="secondary" size="32" class="friends__avatar">
-              {{ initials(friend) }}
+              {{ getInitials(friend.firstName, friend.lastName) }}
             </v-avatar>
           </template>
           <v-list-item-title>
@@ -111,9 +111,6 @@ const newFriend = ref<User | null>(null);
 const loggedUser = computed(() => myStore.loggedUser);
 const myFriends = computed(() => userStore.myFriends);
 const image = computed(() => (myFriends.value.length > 0 ? friendship : alone));
-
-const initials = ({ firstName, lastName }: User) =>
-  `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
 
 const sendFriendRequest = () => {
   if (newFriend.value === null) return;
