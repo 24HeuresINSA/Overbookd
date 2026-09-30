@@ -6,6 +6,7 @@ import {
   INVITE_STAFF_LINK_KEY,
   VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
   USEFUL_LINKS_KEY,
+  LAST_EDITION_FESTIVAL_EVENT_STATS_KEY,
 } from "./keys";
 import {
   type Permission,
@@ -14,6 +15,7 @@ import {
   MANAGE_CONFIG,
   VIEW_USEFUL_LINKS,
   ENROLL_HARD,
+  VIEW_FESTIVAL_EVENTS_STATS,
 } from "@overbookd/permission";
 
 const ALL = "ALL";
@@ -69,6 +71,13 @@ const configurationsWithPermissions: ConfigurationWithPermissions[] = [
     key: USEFUL_LINKS_KEY,
     permissions: {
       read: VIEW_USEFUL_LINKS,
+      write: MANAGE_CONFIG,
+    },
+  },
+  {
+    key: LAST_EDITION_FESTIVAL_EVENT_STATS_KEY,
+    permissions: {
+      read: VIEW_FESTIVAL_EVENTS_STATS,
       write: MANAGE_CONFIG,
     },
   },

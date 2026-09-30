@@ -146,6 +146,41 @@
         />
       </v-expansion-panel-text>
     </v-expansion-panel>
+
+    <v-expansion-panel class="collapse">
+      <v-expansion-panel-title>
+        <h2>Stats des FA & FT de l'édition précédente</h2>
+      </v-expansion-panel-title>
+      <v-expansion-panel-text>
+        <div class="festival-event-stats">
+          <div class="festival-event-stats__list">
+            <h3>Stats des FA</h3>
+            <FestivalEventStatList
+              :stats="lastEditionFestivalEventStats.activities"
+              festival-event="FA"
+              @remove="removeFestivalActivityStat"
+            />
+            <CreateFestivalEventStatForm
+              festival-event="FA"
+              @create="upsertFestivalActivityStat"
+            />
+          </div>
+          <v-divider class="mx-5" :vertical="isDesktop" />
+          <div class="festival-event-stats__list">
+            <h3>Stats des FT</h3>
+            <FestivalEventStatList
+              :stats="lastEditionFestivalEventStats.tasks"
+              festival-event="FT"
+              @remove="removeFestivalTaskStat"
+            />
+            <CreateFestivalEventStatForm
+              festival-event="FT"
+              @create="upsertFestivalTaskStat"
+            />
+          </div>
+        </div>
+      </v-expansion-panel-text>
+    </v-expansion-panel>
   </v-expansion-panels>
 
   <v-dialog v-model="isVolunteerRegistrationstatusDialogOpen" max-width="600px">
@@ -177,7 +212,13 @@ import {
   ORGA_WEEK_DATE_KEY,
   REGISTRATION_FORM_KEY,
   USEFUL_LINKS_KEY,
+  LAST_EDITION_FESTIVAL_EVENT_STATS_KEY,
+  type RegistrationFormConfigValue,
+  type UsefulLinksConfigValue,
+  type FestivalEventStatsConfigValue,
+  type FestivalEventStatConfigValue,
 } from "@overbookd/configuration";
+import { updateItemToList } from "@overbookd/list";
 import {
   defaultVolunteerCommitmentPresentation,
   defaultStaffCommitmentPresentation,
@@ -186,14 +227,10 @@ import {
 useHead({ title: "Config admin" });
 
 const configurationStore = useConfigurationStore();
-
 await configurationStore.fetchAll();
 
-const dateEventStart = ref<Date>(configurationStore.eventStartDate);
-const dateOrgaWeekStart = ref<Date>(
-  configurationStore.orgaWeekStartDate ?? new Date(),
-);
-const usefulLinks = ref(configurationStore.usefulLinks);
+const layoutStore = useLayoutStore();
+const isDesktop = computed<boolean>(() => !layoutStore.isMobile);
 
 const isVolunteerRegistrationOpen = ref<boolean>(
   configurationStore.registrationForm.isVolunteerRegistrationOpen,
@@ -227,18 +264,22 @@ const replaceVolunteerRegistrationDescriptionByTemplate = () => {
   volunteerRegistrationFormDescription.value =
     defaultVolunteerCommitmentPresentation;
 };
-
 const saveRegistrationFormConfig = async () => {
+  const configValue: RegistrationFormConfigValue = {
+    isVolunteerRegistrationOpen: isVolunteerRegistrationOpen.value,
+    staffDescription: staffRegistrationFormDescription.value,
+    volunteerDescription: volunteerRegistrationFormDescription.value,
+  };
   await configurationStore.save({
     key: REGISTRATION_FORM_KEY,
-    value: {
-      isVolunteerRegistrationOpen: isVolunteerRegistrationOpen.value,
-      staffDescription: staffRegistrationFormDescription.value,
-      volunteerDescription: volunteerRegistrationFormDescription.value,
-    },
+    value: configValue,
   });
 };
 
+const dateEventStart = ref<Date>(configurationStore.eventStartDate);
+const dateOrgaWeekStart = ref<Date>(
+  configurationStore.orgaWeekStartDate ?? new Date(),
+);
 const isEventStartDateInvalid = computed<boolean>(
   () => dateOrgaWeekStart.value >= dateEventStart.value,
 );
@@ -257,17 +298,76 @@ const saveEventStartDate = async () => {
   ]);
 };
 
+const usefulLinks = ref<UsefulLinksConfigValue>(configurationStore.usefulLinks);
 const saveUsefulLinks = async () => {
   await configurationStore.save({
     key: USEFUL_LINKS_KEY,
     value: usefulLinks.value,
   });
 };
+
+const lastEditionFestivalEventStats = ref<FestivalEventStatsConfigValue>(
+  configurationStore.lastEditionFestivalEventStats,
+);
+const saveLastEditionFestivalEventStats = async () => {
+  await configurationStore.save({
+    key: LAST_EDITION_FESTIVAL_EVENT_STATS_KEY,
+    value: lastEditionFestivalEventStats.value,
+  });
+};
+const upsertFestivalActivityStat = async (
+  stat: FestivalEventStatConfigValue,
+) => {
+  const existing = lastEditionFestivalEventStats.value.activities.findIndex(
+    (s) => s.code === stat.code,
+  );
+  if (existing === -1) {
+    lastEditionFestivalEventStats.value.activities.push(stat);
+  } else {
+    lastEditionFestivalEventStats.value.activities = updateItemToList(
+      lastEditionFestivalEventStats.value.activities,
+      existing,
+      stat,
+    );
+  }
+  await saveLastEditionFestivalEventStats();
+};
+const upsertFestivalTaskStat = async (stat: FestivalEventStatConfigValue) => {
+  const existing = lastEditionFestivalEventStats.value.tasks.findIndex(
+    (s) => s.code === stat.code,
+  );
+  if (existing === -1) {
+    lastEditionFestivalEventStats.value.tasks.push(stat);
+  } else {
+    lastEditionFestivalEventStats.value.tasks = updateItemToList(
+      lastEditionFestivalEventStats.value.tasks,
+      existing,
+      stat,
+    );
+  }
+  await saveLastEditionFestivalEventStats();
+};
+const removeFestivalActivityStat = async (
+  stat: FestivalEventStatConfigValue,
+) => {
+  lastEditionFestivalEventStats.value.activities =
+    lastEditionFestivalEventStats.value.activities.filter(
+      (s) => s.code !== stat.code,
+    );
+  await saveLastEditionFestivalEventStats();
+};
+const removeFestivalTaskStat = async (stat: FestivalEventStatConfigValue) => {
+  lastEditionFestivalEventStats.value.tasks =
+    lastEditionFestivalEventStats.value.tasks.filter(
+      (s) => s.code !== stat.code,
+    );
+  await saveLastEditionFestivalEventStats();
+};
 </script>
 
 <style lang="scss" scoped>
 h3 {
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .gif {
@@ -292,13 +392,25 @@ h3 {
 }
 
 .event-date,
-.useful-links {
+.useful-links,
+.festival-event-stats {
   display: flex;
   gap: 15px;
 }
 
 .useful-links {
   flex-direction: column;
+}
+
+.festival-event-stats {
+  width: 100%;
+  &__list {
+    flex: 1;
+    min-width: 0;
+  }
+  @media screen and (max-width: $mobile-max-width) {
+    flex-direction: column;
+  }
 }
 
 .error {

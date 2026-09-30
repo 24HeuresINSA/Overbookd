@@ -5,8 +5,15 @@ export {
   INVITE_STAFF_LINK_KEY,
   VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
   USEFUL_LINKS_KEY,
+  LAST_EDITION_FESTIVAL_EVENT_STATS_KEY,
   configurationKeys,
 } from "./keys";
 export type { ConfigurationKey } from "./keys";
-export type { Configuration } from "./types";
+export type {
+  Configuration,
+  FestivalEventStatConfigValue,
+  FestivalEventStatsConfigValue,
+  RegistrationFormConfigValue,
+  UsefulLinksConfigValue,
+} from "./types";
 export { canReadConfiguration, canWriteConfiguration } from "./permissions";

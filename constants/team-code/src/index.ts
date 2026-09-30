@@ -13,6 +13,7 @@ export const INVITE = "invite";
 export const CA = "ca";
 export const ACCUEIL_ARTISTE = "accueil-artiste";
 export const BAR = "bar";
+export const BAR_BOUFFE = "bar-bouffe";
 export const BARRIERES = "barrieres";
 export const BEBOO = "beboo";
 export const CATERING = "catering";
