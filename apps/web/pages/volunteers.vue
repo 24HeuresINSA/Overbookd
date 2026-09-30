@@ -40,6 +40,7 @@
       <VolunteerInformationDialogCard
         v-if="selectedVolunteer"
         :volunteer="selectedVolunteer"
+        show-delete-button
         @updated="closeVolunteerInfoDialog"
         @close="closeVolunteerInfoDialog"
         @delete="isDeleteUserDialogOpen = true"

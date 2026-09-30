@@ -161,7 +161,7 @@
               @click="savePersonalData"
             />
             <v-btn
-              v-if="!isMe && !hideDeleteButton"
+              v-if="!isMe && showDeleteButton"
               text="Supprimer le bénévole"
               color="red"
               size="small"
@@ -228,7 +228,7 @@ const props = defineProps({
     type: Object as PropType<UserPersonalData>,
     required: true,
   },
-  hideDeleteButton: {
+  showDeleteButton: {
     type: Boolean,
     default: false,
   },
