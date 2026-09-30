@@ -35,12 +35,13 @@ export const useTransactionStore = defineStore("transaction", {
       this.allTransactions = res.map(castTransactionWithPayorAndPayeeWithDate);
     },
 
-    async sendTransfer(transferForm: CreateTransferForm) {
+    async sendTransfer(transferForm: CreateTransferForm): Promise<boolean> {
       const res = await TransactionRepository.sendTransfer(transferForm);
-      if (isHttpError(res)) return;
+      if (isHttpError(res)) return false;
       sendSuccessNotification("Le virement a été effectué 💸");
 
       await this._fetchMyInformation();
+      return true;
     },
 
     async createDeposits(deposits: CreateDepositForm[]) {

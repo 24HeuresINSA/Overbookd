@@ -13,6 +13,15 @@ import {
   isCredit,
 } from "@overbookd/personal-account";
 import { nicknameOrName } from "@overbookd/user";
+import {
+  VIREMENT,
+  DEPOT,
+  FUT,
+  PLACARD,
+  INITIALISATION,
+  REPAS_PARTAGE,
+  EVENEMENT,
+} from "./transaction.constants";
 
 export function isDebit(transaction: MyTransaction): boolean {
   return !isCredit(transaction);
@@ -56,4 +65,29 @@ export function getTransferMessage(transaction: MyTransaction): string {
         ? `(de ${nicknameOrName(transaction.from)})`
         : `(vers ${nicknameOrName(transaction.to)})`;
   }
+}
+
+export function getTransactionTypeLabel(type: string): string {
+  switch (type) {
+    case TRANSFER:
+      return VIREMENT;
+    case DEPOSIT:
+      return DEPOT;
+    case BARREL:
+      return FUT;
+    case PROVISIONS:
+      return PLACARD;
+    case SHARED_MEAL:
+      return REPAS_PARTAGE;
+    case INITIALIZATION:
+      return INITIALISATION;
+    case EXTERNAL_EVENT:
+      return EVENEMENT;
+    default:
+      return type;
+  }
+}
+
+export function byMostRecent(a: MyTransaction, b: MyTransaction): number {
+  return b.date.getTime() - a.date.getTime();
 }

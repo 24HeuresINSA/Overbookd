@@ -17,7 +17,7 @@
 
         <template #item.type="{ item }">
           <span :class="{ deleted: item.isDeleted }">
-            {{ displayableType(item.type) }}
+            {{ getTransactionTypeLabel(item.type) }}
           </span>
         </template>
 
@@ -80,7 +80,6 @@ import {
   BARREL,
   DEPOSIT,
   EXTERNAL_EVENT,
-  INITIALIZATION,
   PROVISIONS,
   SHARED_MEAL,
   TRANSFER,
@@ -94,15 +93,7 @@ import {
   matchingSearchItems,
   type Searchable,
 } from "~/utils/search/search.utils";
-import {
-  VIREMENT,
-  DEPOT,
-  FUT,
-  PLACARD,
-  INITIALISATION,
-  REPAS_PARTAGE,
-  EVENEMENT,
-} from "~/utils/transaction/transaction.constants";
+import { getTransactionTypeLabel } from "~/utils/transaction/transaction.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const transactionStore = useTransactionStore();
@@ -171,27 +162,6 @@ const shouldHavePayee = ({
   return [TRANSFER, DEPOSIT, SHARED_MEAL].some(
     (payeeTransaction) => payeeTransaction === type,
   );
-};
-
-const displayableType = (type: string): string => {
-  switch (type) {
-    case TRANSFER:
-      return VIREMENT;
-    case DEPOSIT:
-      return DEPOT;
-    case BARREL:
-      return FUT;
-    case PROVISIONS:
-      return PLACARD;
-    case SHARED_MEAL:
-      return REPAS_PARTAGE;
-    case INITIALIZATION:
-      return INITIALISATION;
-    case EXTERNAL_EVENT:
-      return EVENEMENT;
-    default:
-      return type;
-  }
 };
 
 const deleteTransaction = (transaction: TransactionWithSenderAndReceiver) => {

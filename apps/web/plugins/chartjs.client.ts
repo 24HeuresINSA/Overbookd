@@ -1,5 +1,7 @@
 import {
   Chart,
+  ArcElement,
+  DoughnutController,
   Title,
   Tooltip,
   Legend,
@@ -22,6 +24,8 @@ export default defineNuxtPlugin(() => {
     PointElement,
     LineElement,
     LineController,
+    ArcElement,
+    DoughnutController,
     Title,
     Tooltip,
     Legend,
