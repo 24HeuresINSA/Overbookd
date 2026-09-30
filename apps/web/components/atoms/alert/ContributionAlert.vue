@@ -1,7 +1,7 @@
 <template>
   <v-alert
     icon="mdi-hand-coin"
-    border="left"
+    border="start"
     prominent
     dismissible
     @input="dismiss"

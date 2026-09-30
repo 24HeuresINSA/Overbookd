@@ -2,7 +2,7 @@
   <v-alert
     icon="mdi-nuke"
     color="error"
-    border="left"
+    border="start"
     dark
     prominent
     dismissible
@@ -10,7 +10,8 @@
   >
     <h2 class="summary">{{ alert.summary }}</h2>
     <p class="catch-phrase">
-      Tu es à <strong>{{ balance }}</strong>, c'est déconné !
+      Tu es à <strong>{{ balance }}</strong
+      >, c'est déconné !
     </p>
     <p class="details">
       {{
@@ -31,9 +32,7 @@ const { alert } = defineProps({
   },
 });
 
-const balance = computed<string>(() =>
-  Money.cents(this.alert.balance).toString(),
-);
+const balance = computed<string>(() => Money.cents(alert.balance).toString());
 
 const emit = defineEmits(["dismiss"]);
 const dismiss = () => emit("dismiss");
