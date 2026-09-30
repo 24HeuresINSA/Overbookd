@@ -302,7 +302,9 @@ export class UserService {
     author: RequestHydratedUser,
   ): Promise<UserPersonalData> {
     if (!this.canUpdateUser(author, targetId)) {
-      throw new ForbiddenException("Tu ne peux pas modifier ce bénévole");
+      throw new ForbiddenException(
+        "Tu ne peux pas modifier cet·te utilisateur·rice",
+      );
     }
 
     const [user, charismaPeriods] = await Promise.all([
@@ -314,16 +316,18 @@ export class UserService {
       this.selectCharismaPeriods(),
     ]);
 
-    await this.zitadelService.updateZitadelUser(user.zitadelId, {
-      profile: {
-        givenName: userData.firstName,
-        familyName: userData.lastName,
-        nickName: userData.nickname,
-      },
-      email: user.email,
-      phoneNumber: userData.phoneNumber,
-      dateOfBirth: userData.birthDate,
-    });
+    if (user.zitadelId) {
+      await this.zitadelService.updateZitadelUser(user.zitadelId, {
+        profile: {
+          givenName: userData.firstName,
+          familyName: userData.lastName,
+          nickName: userData.nickname,
+        },
+        email: user.email,
+        phoneNumber: userData.phoneNumber,
+        dateOfBirth: userData.birthDate,
+      });
+    }
 
     return UserService.formatToPersonalData(user, charismaPeriods);
   }
