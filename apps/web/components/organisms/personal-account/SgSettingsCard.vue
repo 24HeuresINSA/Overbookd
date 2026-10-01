@@ -1,17 +1,14 @@
 <template>
   <v-card class="settings">
     <v-card-text>
-      <div class="settings__mode-choice">
-        <v-select
-          v-model="mode"
-          :items="modeOptions"
-          item-title="text"
-          item-value="value"
-          label="Mode"
-          density="comfortable"
-          hide-details
-        />
-      </div>
+      <v-select
+        v-model="mode"
+        :items="modeOptions"
+        item-title="text"
+        item-value="value"
+        label="Mode"
+        hide-details
+      />
 
       <div v-if="hasErrors" class="errors">
         <span v-for="(reason, key) in errors" :key="key" class="errors__text">
@@ -89,7 +86,6 @@
           v-model="selectedBarrel"
           prepend-icon="mdi-beer"
           label="Fût"
-          variant="outlined"
           :items="barrels"
           item-title="drink"
           class="settings__field"
@@ -109,6 +105,7 @@
       </div>
 
       <v-divider class="divider" />
+
       <v-btn
         text="Mail aux CP négatifs"
         class="settings__button"
@@ -223,17 +220,6 @@ const negativeBalanceMailLink = computed<string>(() => {
   padding: 0 5px;
   height: fit-content;
 
-  &__mode-choice {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-    justify-content: space-between;
-    h2 {
-      font-size: 1.3rem;
-      font-weight: 500;
-    }
-  }
-
   &__field {
     margin-top: 15px;
   }
@@ -264,5 +250,9 @@ const negativeBalanceMailLink = computed<string>(() => {
   font-size: 0.9rem;
   opacity: 0.8;
   margin: 4px 0;
+}
+
+.divider {
+  margin: 5px 0;
 }
 </style>
