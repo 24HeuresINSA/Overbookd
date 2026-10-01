@@ -80,7 +80,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Period, formatDate } from "@overbookd/time";
+import { ONE_HOUR_IN_MS, Period, formatDate } from "@overbookd/time";
 import type { TeamMobilization } from "@overbookd/festival-event";
 import type { AddMobilizationForm } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
@@ -94,7 +94,9 @@ const configurationStore = useConfigurationStore();
 const eventStartDate = computed<Date>(() => configurationStore.eventStartDate);
 
 const start = ref<Date>(eventStartDate.value);
-const end = ref<Date>(eventStartDate.value);
+const end = ref<Date>(
+  new Date(eventStartDate.value.getTime() + ONE_HOUR_IN_MS),
+);
 const durationSplitInHour = ref<number | null>(null);
 const teams = ref<TeamMobilization[]>([]);
 const volunteers = ref<User[]>([]);
@@ -142,7 +144,7 @@ const removeVolunteer = (volunteerId: User["id"]) => {
 
 const cleanData = () => {
   start.value = eventStartDate.value;
-  end.value = eventStartDate.value;
+  end.value = new Date(eventStartDate.value.getTime() + ONE_HOUR_IN_MS);
   durationSplitInHour.value = null;
   teams.value = [];
   volunteers.value = [];
