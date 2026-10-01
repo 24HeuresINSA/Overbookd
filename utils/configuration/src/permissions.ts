@@ -4,14 +4,12 @@ import {
   EVENT_DATE_KEY,
   ORGA_WEEK_DATE_KEY,
   INVITE_STAFF_LINK_KEY,
-  VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
   USEFUL_LINKS_KEY,
   LAST_EDITION_FESTIVAL_EVENT_STATS_KEY,
 } from "./keys";
 import {
   type Permission,
   ENTER_EXTENDED_AVAILABILITITES,
-  ENROLL_SOFT,
   MANAGE_CONFIG,
   VIEW_USEFUL_LINKS,
   ENROLL_HARD,
@@ -58,13 +56,6 @@ const configurationsWithPermissions: ConfigurationWithPermissions[] = [
     permissions: {
       read: ENROLL_HARD,
       write: ENROLL_HARD,
-    },
-  },
-  {
-    key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
-    permissions: {
-      read: ENROLL_SOFT,
-      write: ENROLL_SOFT,
     },
   },
   {

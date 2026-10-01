@@ -2,8 +2,6 @@ import { Module } from "@nestjs/common";
 import { PrismaService } from "../prisma.service";
 import { VolunteerAvailabilityController } from "./volunteer-availability.controller";
 import { VolunteerAvailabilityService } from "./volunteer-availability.service";
-import { DomainEventService } from "../domain-event/domain-event.service";
-import { DomainEventModule } from "../domain-event/domain-event.module";
 import { PrismaModule } from "../prisma.module";
 
 @Module({
@@ -11,12 +9,12 @@ import { PrismaModule } from "../prisma.module";
   providers: [
     {
       provide: VolunteerAvailabilityService,
-      useFactory: (eventStore: DomainEventService, prisma: PrismaService) =>
-        new VolunteerAvailabilityService(eventStore, prisma),
-      inject: [DomainEventService, PrismaService],
+      useFactory: (prisma: PrismaService) =>
+        new VolunteerAvailabilityService(prisma),
+      inject: [PrismaService],
     },
   ],
-  imports: [PrismaModule, DomainEventModule],
+  imports: [PrismaModule],
   exports: [VolunteerAvailabilityService],
 })
 export class VolunteerAvailabilityModule {}

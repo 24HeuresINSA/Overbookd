@@ -1,169 +1,146 @@
 <template>
   <DesktopPageTitle />
 
-  <div class="registrations">
-    <v-card>
-      <v-card-title>Briefing bénévole</v-card-title>
-      <v-card-text>
-        <p>
-          Ajouter le créneau du briefing bénévole permet d'ajouter
-          automatiquement la disponibilité aux bénévoles enrôlé·e·s.
-        </p>
-        <p class="important">
-          {{ readableBriefingTimeWindow }}
-        </p>
-        <v-btn
-          text="Enregistrer le créneau"
-          color="primary"
-          class="mt-2"
-          :loading="briefingLoading"
-          size="small"
-          @click="openBriefingTimeWindowDialog"
-        />
-      </v-card-text>
-    </v-card>
+  <v-card>
+    <v-card-title class="title">
+      <span>Candidat·e·s bénévoles</span>
+      <v-btn
+        icon="mdi-export"
+        aria-label="Exporter les candidat·e·s"
+        title="Exporter les candidat·e·s"
+        color="secondary"
+        rounded="pill"
+        density="comfortable"
+        @click="exportCSV"
+      />
+    </v-card-title>
+    <v-card-text>
+      <v-data-table
+        v-model="candidatesToEnroll"
+        :headers="headers"
+        :items="filteredCandidates"
+        :loading="loading"
+        loading-text="Chargement des candidat·e·s..."
+        :no-data-text="`Aucun·e candidat·e${displayRejectedCandidates ? ' rejeté·e' : ''}`"
+        :mobile="isMobile"
+        return-object
+        @click:row="openCandidateInfoDialog"
+      >
+        <template #top>
+          <div class="filters">
+            <v-tooltip
+              v-model="showTooltip"
+              location="top"
+              open-delay="200"
+              text="Recherchez par nom, prénom, surnom, email ou numéro de téléphone"
+            >
+              <template #activator="{ props }">
+                <v-text-field
+                  v-model="filters.search"
+                  v-bind="props"
+                  label="Rechercher un·e candidat·e"
+                  class="search-filter"
+                  density="compact"
+                  clearable
+                  hide-details
+                  @mouseenter="handleMouseEnter"
+                  @click:clear="filters.search = ''"
+                />
+              </template>
+            </v-tooltip>
+            <SearchTeams
+              :model-value="filters.teams ?? []"
+              label="Equipe(s)"
+              density="compact"
+              bg-color="surface"
+              class="filters__field"
+              closable-chips
+              hide-details
+              @update:model-value="updateTeamsParam"
+            />
+            <v-btn
+              text="Candidat·e·s rejeté·e·s"
+              color="secondary"
+              :variant="displayRejectedCandidates ? 'elevated' : 'outlined'"
+              @click="toggleRejectedCandidates"
+            />
+          </div>
+        </template>
 
-    <v-card>
-      <v-card-title class="registrations__title">
-        <span>Candidat·e·s bénévoles</span>
-        <v-btn
-          icon="mdi-export"
-          aria-label="Exporter les candidat·e·s"
-          title="Exporter les candidat·e·s"
-          color="secondary"
-          rounded="pill"
-          density="comfortable"
-          @click="exportCSV"
-        />
-      </v-card-title>
-      <v-card-text>
-        <v-data-table
-          v-model="candidatesToEnroll"
-          :headers="headers"
-          :items="filteredCandidates"
-          :loading="loading"
-          loading-text="Chargement des candidat·e·s..."
-          :no-data-text="`Aucun·e candidat·e${displayRejectedCandidates ? ' rejeté·e' : ''}`"
-          :mobile="isMobile"
-          return-object
-          @click:row="openCandidateInfoDialog"
-        >
-          <template #top>
-            <div class="filters">
-              <v-tooltip
-                v-model="showTooltip"
-                location="top"
-                open-delay="200"
-                text="Recherchez par nom, prénom, surnom, email ou numéro de téléphone"
-              >
-                <template #activator="{ props }">
-                  <v-text-field
-                    v-model="filters.search"
-                    v-bind="props"
-                    label="Rechercher un·e candidat·e"
-                    class="search-filter"
-                    density="compact"
-                    clearable
-                    hide-details
-                    @mouseenter="handleMouseEnter"
-                    @click:clear="filters.search = ''"
-                  />
-                </template>
-              </v-tooltip>
-              <SearchTeams
-                :model-value="filters.teams ?? []"
-                label="Equipe(s)"
-                density="compact"
-                bg-color="surface"
-                class="filters__field"
-                closable-chips
-                hide-details
-                @update:model-value="updateTeamsParam"
-              />
-              <v-btn
-                text="Candidat·e·s rejeté·e·s"
-                color="secondary"
-                :variant="displayRejectedCandidates ? 'elevated' : 'outlined'"
-                @click="toggleRejectedCandidates"
-              />
-            </div>
-          </template>
+        <template #item.candidatedAt="{ item }">
+          {{ formatDate(item.candidatedAt) }}
+        </template>
 
-          <template #item.candidatedAt="{ item }">
-            {{ formatDate(item.candidatedAt) }}
-          </template>
+        <template #item.name="{ item }">
+          <span class="candidate-name">
+            {{ buildUserNameWithNickname(item) }}
+            <v-icon
+              v-if="willBeMinorAtEvent(item)"
+              v-tooltip:top="'Sera mineur·e à la manif'"
+              icon="mdi-teddy-bear"
+              color="error"
+              size="large"
+            />
+          </span>
+        </template>
 
-          <template #item.name="{ item }">
-            <span class="candidate-name">
-              {{ buildUserNameWithNickname(item) }}
-              <v-icon
-                v-if="willBeMinorAtEvent(item)"
-                v-tooltip:top="'Sera mineur·e à la manif'"
-                icon="mdi-teddy-bear"
-                color="error"
-                size="large"
-              />
-            </span>
-          </template>
+        <template #item.teams="{ item }">
+          <TeamChip v-for="team of item.teams" :key="team" :team="team" />
+        </template>
 
-          <template #item.teams="{ item }">
-            <TeamChip v-for="team of item.teams" :key="team" :team="team" />
-          </template>
+        <template #item.mobilePhone="{ item }">
+          {{ formatPhoneNumber(item.mobilePhone) }}
+        </template>
 
-          <template #item.mobilePhone="{ item }">
-            {{ formatPhoneNumber(item.mobilePhone) }}
-          </template>
-
-          <template #item.actions="{ item }">
-            <div class="actions">
-              <v-btn
-                v-if="!displayRejectedCandidates"
-                icon="mdi-check"
-                aria-label="Enrôler le·a candidat·e"
-                title="Enrôler le·a candidat·e"
-                color="success"
-                rounded="pill"
-                density="comfortable"
-                @click.stop="enrollCandidate(item)"
-              />
-              <v-btn
-                v-if="!displayRejectedCandidates"
-                icon="mdi-cancel"
-                aria-label="Rejeter la candidature"
-                title="Rejeter la candidature"
-                color="error"
-                rounded="pill"
-                density="comfortable"
-                @click.stop="rejectCandidate(item.id)"
-              />
-              <v-btn
-                v-else
-                icon="mdi-undo"
-                aria-label="Restaurer la candidature"
-                title="Restaurer la candidature"
-                size="large"
-                color="warning"
-                rounded="pill"
-                density="compact"
-                @click.stop="cancelCandidateRejection(item.id)"
-              />
-              <v-btn
-                v-if="canEnrollStaff"
-                icon="mdi-account-hard-hat"
-                aria-label="Passer en admission orga"
-                title="Passer en admission orga"
-                size="large"
-                color="secondary"
-                rounded="pill"
-                density="compact"
-                @click.stop="switchToStaffApplication(item.id)"
-              />
-            </div>
-          </template>
-        </v-data-table>
-      </v-card-text>
-    </v-card>
-  </div>
+        <template #item.actions="{ item }">
+          <div class="actions">
+            <v-btn
+              v-if="!displayRejectedCandidates"
+              icon="mdi-check"
+              aria-label="Enrôler le·a candidat·e"
+              title="Enrôler le·a candidat·e"
+              color="success"
+              rounded="pill"
+              density="comfortable"
+              @click.stop="enrollCandidate(item)"
+            />
+            <v-btn
+              v-if="!displayRejectedCandidates"
+              icon="mdi-cancel"
+              aria-label="Rejeter la candidature"
+              title="Rejeter la candidature"
+              color="error"
+              rounded="pill"
+              density="comfortable"
+              @click.stop="rejectCandidate(item.id)"
+            />
+            <v-btn
+              v-else
+              icon="mdi-undo"
+              aria-label="Restaurer la candidature"
+              title="Restaurer la candidature"
+              size="large"
+              color="warning"
+              rounded="pill"
+              density="compact"
+              @click.stop="cancelCandidateRejection(item.id)"
+            />
+            <v-btn
+              v-if="canEnrollStaff"
+              icon="mdi-account-hard-hat"
+              aria-label="Passer en admission orga"
+              title="Passer en admission orga"
+              size="large"
+              color="secondary"
+              rounded="pill"
+              density="compact"
+              @click.stop="switchToStaffApplication(item.id)"
+            />
+          </div>
+        </template>
+      </v-data-table>
+    </v-card-text>
+  </v-card>
 
   <v-dialog v-model="isCandidateInfoDialogOpen" max-width="1400px">
     <VolunteerInformationDialogCard
@@ -208,25 +185,11 @@
       </template>
     </VolunteerInformationDialogCard>
   </v-dialog>
-
-  <v-dialog v-model="isBriefingTimeWindowDialogOpen" max-width="600px">
-    <UpsertPeriodDialogCard
-      :existing-period="briefingTimeWindow"
-      @add="saveBriefingTimeWindow"
-      @update="saveBriefingTimeWindow"
-      @close="closeBriefingTimeWindowDialog"
-    />
-  </v-dialog>
 </template>
 
 <script lang="ts" setup>
 import type { VolunteerCandidate } from "@overbookd/http";
-import { VOLUNTEER_BRIEFING_TIME_WINDOW_KEY } from "@overbookd/configuration";
-import {
-  formatDate,
-  formatDateWithMinutes,
-  type IProvidePeriod,
-} from "@overbookd/time";
+import { formatDate } from "@overbookd/time";
 import type { Team } from "@overbookd/team";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import {
@@ -427,33 +390,6 @@ const updateTeamsParam = (teams: Team[]) => {
   updateQueryParams("teams", teamsCode);
 };
 
-const briefingLoading = ref<boolean>(true);
-configurationStore.fetch(VOLUNTEER_BRIEFING_TIME_WINDOW_KEY).then(() => {
-  briefingLoading.value = false;
-});
-const briefingTimeWindow = computed<IProvidePeriod | null>(() => {
-  const timeWindow = configurationStore.get(VOLUNTEER_BRIEFING_TIME_WINDOW_KEY);
-  if (briefingLoading.value || !timeWindow) return null;
-  const { start, end } = timeWindow as IProvidePeriod;
-  return { start: new Date(start), end: new Date(end) };
-});
-const readableBriefingTimeWindow = computed<string>(() => {
-  if (briefingLoading.value) return "";
-  return briefingTimeWindow.value
-    ? `Créneau du briefing bénévole : ${formatDateWithMinutes(briefingTimeWindow.value.start)} - ${formatDateWithMinutes(briefingTimeWindow.value.end)}`
-    : "Le créneau du briefing bénévole n'est pas défini. Les disponibilités ne pourront donc pas être ajoutées.";
-});
-const isBriefingTimeWindowDialogOpen = ref<boolean>(false);
-const openBriefingTimeWindowDialog = () => {
-  isBriefingTimeWindowDialogOpen.value = true;
-};
-const closeBriefingTimeWindowDialog = () => {
-  isBriefingTimeWindowDialogOpen.value = false;
-};
-const saveBriefingTimeWindow = async (period: IProvidePeriod) => {
-  await configurationStore.saveBriefingTimeWindow(period);
-};
-
 const handleMouseEnter = () => {
   showTooltip.value = true;
   setTimeout(() => (showTooltip.value = false), 2000);
@@ -461,16 +397,10 @@ const handleMouseEnter = () => {
 </script>
 
 <style lang="scss" scoped>
-.registrations {
+.title {
   display: flex;
-  flex-direction: column;
-  gap: $card-gap;
-
-  &__title {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
+  gap: 10px;
+  align-items: center;
 }
 
 .filters {

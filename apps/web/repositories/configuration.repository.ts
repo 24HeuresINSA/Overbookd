@@ -1,8 +1,4 @@
-import {
-  VOLUNTEER_BRIEFING_TIME_WINDOW_KEY,
-  type Configuration,
-} from "@overbookd/configuration";
-import type { IProvidePeriod } from "@overbookd/time";
+import type { Configuration } from "@overbookd/configuration";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class ConfigurationRepository {
@@ -26,12 +22,5 @@ export class ConfigurationRepository {
     return HttpClient.post<Configuration>(`${this.basePath}/${config.key}`, {
       value: config.value,
     });
-  }
-
-  static saveBriefingTimeWindow(period: IProvidePeriod) {
-    return HttpClient.post<Configuration>(
-      `${this.basePath}/${VOLUNTEER_BRIEFING_TIME_WINDOW_KEY}`,
-      period,
-    );
   }
 }
