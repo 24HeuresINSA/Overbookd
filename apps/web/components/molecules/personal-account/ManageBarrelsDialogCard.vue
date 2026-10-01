@@ -7,7 +7,7 @@
           :model-value="barrel.drink"
           label="Fût"
           readonly
-          style="pointer-events: none"
+          class="pointer-events-none"
         />
         <DateField
           v-model="barrel.openedOn"

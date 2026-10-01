@@ -7,7 +7,7 @@
     :readonly="readonly"
     :hide-details="hideDetails"
     :density="density"
-    :class="{ readonly }"
+    :class="{ 'pointer-events-none': readonly }"
     @update:model-value="propagateValue"
     @update:error="propagateError"
   />
@@ -88,9 +88,3 @@ const propagateValue = async (euros: string) => {
 };
 const propagateError = (isError: boolean) => emit("error", isError);
 </script>
-
-<style scoped>
-.readonly {
-  pointer-events: none;
-}
-</style>
