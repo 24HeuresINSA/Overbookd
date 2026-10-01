@@ -15,7 +15,11 @@
             label="Nom de la pause"
             @keydown.enter.prevent="createBreakPeriod"
           />
-          <DateTimeField :model-value="start" class="pointer-events-none" readonly />
+          <DateTimeField
+            :model-value="start"
+            class="pointer-events-none"
+            readonly
+          />
         </div>
         <div class="duration-form">
           <strong>Durée de la pause :</strong>
