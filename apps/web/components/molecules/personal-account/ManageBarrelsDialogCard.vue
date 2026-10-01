@@ -3,7 +3,12 @@
     <template #title>Gestion des fûts</template>
     <template #content>
       <div v-for="barrel in barrels" :key="barrel.slug" class="barrel">
-        <v-text-field :model-value="barrel.drink" label="Fût" readonly />
+        <v-text-field
+          :model-value="barrel.drink"
+          label="Fût"
+          readonly
+          class="pointer-events-none"
+        />
         <DateField
           v-model="barrel.openedOn"
           label="Date d'ouverture"
@@ -98,6 +103,9 @@ const close = () => emit("close");
   flex-direction: row;
   gap: 10px;
   align-items: center;
+  > .v-input {
+    flex: 1 1 0;
+  }
   &__action {
     margin-bottom: 22px;
   }

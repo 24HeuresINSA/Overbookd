@@ -7,6 +7,7 @@
     :readonly="readonly"
     :hide-details="hideDetails"
     :density="density"
+    :class="{ 'pointer-events-none': readonly }"
     @update:model-value="propagateValue"
     @update:error="propagateError"
   />

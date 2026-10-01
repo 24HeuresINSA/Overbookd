@@ -21,8 +21,8 @@
               tile
               multiple
             >
-              <v-btn :value="HARD"> Hard</v-btn>
-              <v-btn :value="VIEUX"> Vieux </v-btn>
+              <v-btn :value="HARD" text="Orgas" />
+              <v-btn :value="VIEUX" text="Vieux·eilles" />
             </v-btn-toggle>
             <v-text-field
               v-model="searchConsumer"
@@ -63,6 +63,7 @@
               :rules="[min(0), isInteger]"
               density="compact"
               type="number"
+              min="0"
               hide-details
               @update:model-value="updateAmount(item, $event)"
             />
@@ -173,9 +174,9 @@ const isExpenseMode = computed<boolean>(
   () => isMode(CASK_MODE) || isMode(CLOSET_MODE),
 );
 
-const existsOnlyOneConsumer = computed<boolean>(() => {
-  return consumers.value.filter((c) => c.amount > 0).length === 1;
-});
+const existsOnlyOneConsumer = computed<boolean>(
+  () => consumers.value.filter((c) => c.amount > 0).length === 1,
+);
 const calculateSpentAmount = (consumption: number) => {
   if (isMode(CASK_MODE)) {
     const hasConsumption = consumption > 0;
