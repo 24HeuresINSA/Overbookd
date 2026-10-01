@@ -49,13 +49,9 @@ function calculateBalanceForEachTransaction(
   }, []);
 }
 
-export function calculateBalanceByDates(
-  transactions: MyTransaction[],
+function calculateBalanceFromStart(
+  sortedTransactions: MyTransaction[],
 ): BalanceByDate[] {
-  const sortedTransactions = transactions.sort(
-    (a, b) => a.date.getTime() - b.date.getTime(),
-  );
-
   if (sortedTransactions.length <= MAX_POINTS) {
     return calculateBalanceForEachTransaction(sortedTransactions);
   }
@@ -65,4 +61,26 @@ export function calculateBalanceByDates(
     findTransactionsOn(period, sortedTransactions),
   );
   return calculateBalanceByPeriods(transactionsByPeriods);
+}
+
+export function calculateBalanceByDates(
+  transactions: MyTransaction[],
+  from?: Date,
+): BalanceByDate[] {
+  const sortedTransactions = transactions.toSorted(
+    (a, b) => a.date.getTime() - b.date.getTime(),
+  );
+  if (!from) return calculateBalanceFromStart(sortedTransactions);
+
+  const before = sortedTransactions.filter(({ date }) => date < from);
+  const after = sortedTransactions.filter(({ date }) => date >= from);
+  const initialBalance = before.reduce(
+    (sum, transaction) =>
+      sum + (isCredit(transaction) ? transaction.amount : -transaction.amount),
+    0,
+  );
+  const balances = calculateBalanceFromStart(after).map(
+    ({ date, balance }) => ({ date, balance: balance + initialBalance }),
+  );
+  return [{ date: from, balance: initialBalance }, ...balances];
 }
