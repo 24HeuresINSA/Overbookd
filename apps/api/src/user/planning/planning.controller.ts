@@ -334,9 +334,9 @@ export class PlanningController {
   })
   async addVolunteerBreakPeriods(
     @Param("volunteerId", ParseIntPipe) volunteer: number,
-    @Body() { name, start, durationInHours }: CreateBreakPeriodRequestDto,
+    @Body() { name, start, durationInMinutes }: CreateBreakPeriodRequestDto,
   ): Promise<BreakPeriodResponseDto[]> {
-    const duration = Duration.hours(durationInHours);
+    const duration = Duration.minutes(durationInMinutes);
     return this.planning.addBreakPeriod({
       volunteer,
       name,

@@ -218,7 +218,7 @@ export const usePlanningStore = defineStore("planning", {
       name,
       during: { start, duration },
     }: BreakDefinition) {
-      const during = { start, durationInHours: duration.inHours };
+      const during = { start, durationInMinutes: duration.inMinutes };
       const newBreak = { name, ...during };
       const res = await PlanningRepository.addBreakPeriod(volunteer, newBreak);
       if (isHttpError(res)) return;

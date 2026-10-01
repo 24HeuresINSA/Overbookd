@@ -9,22 +9,34 @@
 
     <template #content>
       <form>
-        <v-text-field
-          v-model="name"
-          label="Nom de la pause"
-          @keydown.enter.prevent="createBreakPeriod"
-        />
-        <div class="duration-form">
-          <DateTimeField :model-value="start" disabled />
+        <div class="break-data">
           <v-text-field
-            :model-value="duration.inHours"
-            type="number"
-            label="Durée en heures"
-            suffix="h"
-            :rules="[isNumber, min(1)]"
-            @update:model-value="castInDuration"
+            v-model="name"
+            label="Nom de la pause"
             @keydown.enter.prevent="createBreakPeriod"
           />
+          <DateTimeField :model-value="start" readonly />
+        </div>
+        <div class="duration-form">
+          <strong>Durée de la pause :</strong>
+          <div class="duration-inputs">
+            <v-text-field
+              v-model="durationHours"
+              type="number"
+              label="Heures"
+              suffix="h"
+              :rules="[isNumber, min(0)]"
+              @keydown.enter.prevent="createBreakPeriod"
+            />
+            <v-text-field
+              v-model="durationMinutes"
+              type="number"
+              label="Minutes"
+              suffix="min"
+              :rules="[isNumber, isSpecificNumbers([0, 30])]"
+              @keydown.enter.prevent="createBreakPeriod"
+            />
+          </div>
         </div>
       </form>
     </template>
@@ -44,7 +56,7 @@
 
 <script lang="ts" setup>
 import { Duration } from "@overbookd/time";
-import { isNumber, min } from "~/utils/rules/input.rules";
+import { isNumber, min, isSpecificNumbers } from "~/utils/rules/input.rules";
 
 const props = defineProps({
   start: {
@@ -55,15 +67,37 @@ const props = defineProps({
 
 const name = ref<string>("Pause");
 const duration = ref<Duration>(Duration.hours(2));
-const castInDuration = (hours: string) => {
-  duration.value = Duration.hours(+hours);
+const durationHours = computed({
+  get() {
+    return Math.floor(duration.value.inMinutes / 60);
+  },
+  set(hours: string) {
+    castInDuration(+hours, durationMinutes.value);
+  },
+});
+const durationMinutes = computed({
+  get() {
+    return duration.value.inMinutes % 60;
+  },
+  set(minutes: string) {
+    castInDuration(durationHours.value, +minutes);
+  },
+});
+
+const castInDuration = (hours: number, minutes: number) => {
+  const totalMinutes = hours * 60 + minutes;
+  duration.value = Duration.minutes(totalMinutes);
 };
 
 const emit = defineEmits(["close", "create"]);
 const close = () => emit("close");
 
 const canCreateBreakPeriod = computed<boolean>(
-  () => duration.value.inHours >= 1 && name.value.trim() !== "",
+  () =>
+    name.value.trim() !== "" &&
+    durationHours.value >= 0 &&
+    durationMinutes.value % 30 === 0 &&
+    duration.value.inMinutes >= 30,
 );
 const createBreakPeriod = () => {
   if (!canCreateBreakPeriod.value) return;
@@ -83,12 +117,18 @@ const createBreakPeriod = () => {
 form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
 .duration-form {
   display: flex;
+  flex-direction: column;
+}
+
+.break-data,
+.duration-inputs {
+  display: flex;
   gap: 10px;
+  margin-top: 10px;
   @media screen and (max-width: $mobile-max-width) {
     flex-direction: column;
   }

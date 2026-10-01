@@ -30,6 +30,15 @@ export function max(maxValue: number) {
   };
 }
 
+export function isSpecificNumbers(numbers: number[]) {
+  const message = `La valeur doit être l'un des suivants : ${numbers.join(", ")}`;
+  return function (value: string | null) {
+    return (
+      (value != undefined && numbers.includes(parseInt(value, 10))) || message
+    );
+  };
+}
+
 export function minLength(minLength: number) {
   return function (value: string | null) {
     const message = `Taper au moins ${minLength} caracteres`;
