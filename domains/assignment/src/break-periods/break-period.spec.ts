@@ -4,6 +4,7 @@ import { BreakPeriod, BreakPeriods } from "./break-periods.js";
 import { InMemoryBreakRepository } from "./break-repository.inmemory.js";
 
 const saturday02h = new Date("2024-05-18T02:00+02:00");
+const saturday02h30 = new Date("2024-05-18T02:30+02:00");
 const saturday04h = new Date("2024-05-18T04:00+02:00");
 const saturday06h = new Date("2024-05-18T06:00+02:00");
 const saturday10h = new Date("2024-05-18T10:00+02:00");
@@ -39,11 +40,12 @@ describe("Add break period to volunteer", () => {
     breakPeriods = new BreakPeriods(breaks);
   });
   describe.each`
-    volunteer | name          | start          | duration               | expectedBreaks
-    ${noel}   | ${"Pause"}    | ${saturday04h} | ${sixHours}            | ${[{ name: "Pause", start: saturday04h, end: saturday10h }]}
-    ${noel}   | ${"Dejeuner"} | ${saturday02h} | ${Duration.hours(2)}   | ${[{ name: "Dejeuner", start: saturday02h, end: saturday04h }]}
-    ${noel}   | ${"Dodo"}     | ${saturday06h} | ${Duration.hours(8)}   | ${[{ name: "Dodo", start: saturday06h, end: saturday14h }]}
-    ${noel}   | ${"Pause"}    | ${saturday06h} | ${Duration.hours(5.5)} | ${[{ name: "Pause", start: saturday06h, end: saturday11h30 }]}
+    volunteer | name          | start          | duration                | expectedBreaks
+    ${noel}   | ${"Pause"}    | ${saturday04h} | ${sixHours}             | ${[{ name: "Pause", start: saturday04h, end: saturday10h }]}
+    ${noel}   | ${"Dejeuner"} | ${saturday02h} | ${Duration.hours(2)}    | ${[{ name: "Dejeuner", start: saturday02h, end: saturday04h }]}
+    ${noel}   | ${"Dodo"}     | ${saturday06h} | ${Duration.hours(8)}    | ${[{ name: "Dodo", start: saturday06h, end: saturday14h }]}
+    ${noel}   | ${"Pause"}    | ${saturday06h} | ${Duration.hours(5.5)}  | ${[{ name: "Pause", start: saturday06h, end: saturday11h30 }]}
+    ${noel}   | ${"Pause"}    | ${saturday02h} | ${Duration.minutes(30)} | ${[{ name: "Pause", start: saturday02h, end: saturday02h30 }]}
   `(
     "when add a break from $start during $duration",
     ({ volunteer, name, start, duration, expectedBreaks }) => {

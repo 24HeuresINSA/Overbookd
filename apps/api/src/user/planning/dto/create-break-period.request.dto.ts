@@ -20,8 +20,8 @@ export class CreateBreakPeriodRequestDto implements CreateBreakPeriodForm {
   @ValidateNested()
   start: Date;
 
-  @ApiProperty({ type: Number, description: "Duration in hours" })
+  @ApiProperty({ type: Number, description: "Duration in minutes" })
   @IsNumber()
   @IsPositive()
-  durationInHours: number;
+  durationInMinutes: number;
 }

@@ -30,6 +30,10 @@ export class Duration {
     return new Duration(hours * ONE_HOUR_IN_MS);
   }
 
+  static minutes(minutes: number): Duration {
+    return new Duration(minutes * ONE_MINUTE_IN_MS);
+  }
+
   get inSeconds(): number {
     return Math.ceil(this.milliseconds / ONE_SECOND_IN_MS);
   }
