@@ -60,6 +60,7 @@ const route = useRoute();
 const myStore = useMyStore();
 const teamStore = useTeamStore();
 const userStore = useUserStore();
+userStore.fetchVolunteers();
 
 const filters = defineModel<TaskFilters>({ required: true });
 const updateFilters = () => {

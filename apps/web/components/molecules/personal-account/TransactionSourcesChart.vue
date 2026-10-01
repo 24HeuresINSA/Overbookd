@@ -40,7 +40,6 @@
 <script lang="ts" setup>
 import type { ChartData, ChartOptions } from "chart.js";
 import { Doughnut } from "vue-chartjs";
-import { useTheme } from "vuetify";
 import {
   type MyTransaction,
   type TransactionType,
@@ -100,7 +99,7 @@ const { transactions } = defineProps({
   },
 });
 
-const theme = useTheme();
+const layoutStore = useLayoutStore();
 
 const sumByType = (list: MyTransaction[]): Slice[] =>
   TYPE_ORDER.map((type) => ({
@@ -136,9 +135,9 @@ const sources = computed<Source[]>(() => {
   ];
 });
 
-const isDark = computed<boolean>(() => theme.global.current.value.dark);
+const isDarkTheme = computed<boolean>(() => layoutStore.isDarkTheme);
 const colorOf = (type: TransactionType): string => {
-  const colors = isDark.value ? DARK_COLORS : LIGHT_COLORS;
+  const colors = isDarkTheme.value ? DARK_COLORS : LIGHT_COLORS;
   return colors[TYPE_ORDER.indexOf(type)] ?? colors[0];
 };
 const sortByAmount = (slices: Slice[]): Slice[] =>
@@ -150,8 +149,8 @@ const toDoughnutData = (slices: Slice[]): ChartData<"doughnut"> => ({
     {
       data: slices.map(({ amount }) => Money.cents(amount).inEuros),
       backgroundColor: slices.map(({ type }) => colorOf(type)),
-      borderColor: theme.global.current.value.colors.surface,
-      borderWidth: 2,
+      borderWidth: 0,
+      spacing: 2,
       borderRadius: 4,
     },
   ],

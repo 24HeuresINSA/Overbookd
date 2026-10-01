@@ -13,17 +13,40 @@
     hide-selected
     :custom-filter="slugifiedFilter"
     no-data-text="Aucun utilisateur correspondant"
-  />
+  >
+    <template v-if="withAvatar" #item="{ props: itemProps, item }">
+      <v-list-item v-bind="itemProps">
+        <template #prepend>
+          <UserAvatar
+            :picture="item.raw.profilePicture ?? undefined"
+            class="mr-3"
+          />
+        </template>
+      </v-list-item>
+    </template>
+    <template v-if="withAvatar" #chip="{ props: chipProps, item }">
+      <v-chip v-bind="chipProps">
+        <template #prepend>
+          <UserAvatar
+            :picture="item.raw.profilePicture ?? undefined"
+            :size="20"
+            class="mr-2"
+          />
+        </template>
+      </v-chip>
+    </template>
+  </v-autocomplete>
 </template>
 
 <script lang="ts" setup>
 import { type User, buildUserNameWithNickname } from "@overbookd/user";
 import { slugifiedFilter } from "~/utils/search/search.utils";
 
-const userStore = useUserStore();
-userStore.fetchVolunteers();
+type SearchableUser = User & { profilePicture?: string | null };
 
-const user = defineModel<User>({ required: false });
+const userStore = useUserStore();
+
+const user = defineModel<SearchableUser>({ required: false });
 
 const props = defineProps({
   label: {
@@ -43,10 +66,18 @@ const props = defineProps({
     default: false,
   },
   list: {
-    type: Array as PropType<User[] | null>,
+    type: Array as PropType<SearchableUser[] | null>,
     default: () => null,
+  },
+  withAvatar: {
+    type: Boolean,
+    default: false,
   },
 });
 
-const userList = computed<User[]>(() => props.list ?? userStore.volunteers);
+if (!props.list) userStore.fetchVolunteers();
+
+const userList = computed<SearchableUser[]>(
+  () => props.list ?? userStore.volunteers,
+);
 </script>

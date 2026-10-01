@@ -18,38 +18,14 @@
 
     <v-card-text class="transfer__content">
       <section class="who">
-        <v-autocomplete
+        <SearchUser
           v-model="payee"
-          :items="adherents"
-          :item-title="buildUserNameWithNickname"
-          item-value="id"
-          :custom-filter="slugifiedFilter"
+          :list="adherents"
           label="Bénéficiaire"
           prepend-inner-icon="mdi-account-search"
-          no-data-text="Aucun utilisateur correspondant"
-          return-object
           hide-details
-        >
-          <template #item="{ props: itemProps, item }">
-            <v-list-item v-bind="itemProps">
-              <template #prepend>
-                <UserAvatar
-                  :picture="item.raw.profilePicture ?? undefined"
-                  class="mr-3"
-                />
-              </template>
-            </v-list-item>
-          </template>
-          <template #selection="{ item }">
-            <span class="selected-payee">
-              <UserAvatar
-                :picture="item.raw.profilePicture ?? undefined"
-                :size="28"
-              />
-              {{ buildUserNameWithNickname(item.raw) }}
-            </span>
-          </template>
-        </v-autocomplete>
+          with-avatar
+        />
 
         <div v-if="recentPayees.length > 0" class="payees">
           <button
@@ -114,8 +90,11 @@ import {
   ONE_EURO_IN_CENTS,
   TRANSFER,
 } from "@overbookd/personal-account";
-import { buildUserNameWithNickname } from "@overbookd/user";
-import { slugifiedFilter } from "~/utils/search/search.utils";
+import {
+  type User,
+  buildUserNameWithNickname,
+  nicknameOrFirstName,
+} from "@overbookd/user";
 import { byMostRecent } from "~/utils/transaction/transaction.utils";
 
 const MAX_RECENT_PAYEES = 6;
@@ -126,7 +105,7 @@ const transactionStore = useTransactionStore();
 userStore.fetchPersonalAccountConsumers();
 
 const amount = ref<number>(ONE_EURO_IN_CENTS);
-const payee = ref<Consumer | undefined>(undefined);
+const payee = ref<User | undefined>(undefined);
 const context = ref<string>("");
 const isSending = ref<boolean>(false);
 
@@ -169,9 +148,6 @@ const recentPayees = computed<Consumer[]>(() => {
     .slice(0, MAX_RECENT_PAYEES);
 });
 
-const nicknameOrFirstName = ({ nickname, firstName }: Consumer): string =>
-  nickname || firstName;
-
 const sendTransfer = async () => {
   if (!isTransferValid.value || !payee.value) return;
 
@@ -209,12 +185,6 @@ const close = () => emit("close");
 .who {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-}
-
-.selected-payee {
-  display: flex;
-  align-items: center;
   gap: 8px;
 }
 
