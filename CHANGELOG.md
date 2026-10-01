@@ -1,3 +1,29 @@
+## [4.1.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.0.3...v4.1.0) (2026-10-01)
+
+### Features
+
+* **festival-event:** add last edition stats in config [#2804](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2804) ([42a86a3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/42a86a3db2df563579d995c6ced915d79533e360))
+* **user:** add check when deleting a user and implement user anonymization [#2771](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2771) ([86454dd](https://gitlab.com/24-heures-insa/overbookd-mono/commit/86454ddeafd53b3388d8ca80abc105453e859bff)), closes [#2549](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2549)
+* **web:** add google maps redirection icon on task details [#2761](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2761) ([26fd018](https://gitlab.com/24-heures-insa/overbookd-mono/commit/26fd01804607d8e1ad4c44227728f2cf2e43cda5))
+* **web:** improve edit profile dialog layout ([78ff64f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/78ff64fdb276464554b0570d54ec80dc1c003a5a))
+* **web:** improve friends home card ui ([0e4a0d0](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0e4a0d012375a763620ca084a012bf25dc7a883b))
+* **web:** rework availabilities page UI/UX [#2798](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2798) ([9f9d329](https://gitlab.com/24-heures-insa/overbookd-mono/commit/9f9d329b5bace2f17318c7053a12e70e46c85802))
+* **web:** rework compte perso page UI/UX [#2805](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2805) ([468450c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/468450c4e4e642e3673578a35d2cf55ba6536556))
+* **web:** rework profile home card UX [#2799](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2799) ([c4e68b5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c4e68b534e96bd00de2fe303816f65d345941808))
+* **web:** rework shared meals UI/UX [#2802](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2802) ([052fbf4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/052fbf4a9bbc084d03cc772df179d64ab1ca90fa))
+
+### Bug Fixes
+
+* **api:** don't update zitadel profile if they don't have one [#2801](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2801) ([0174ea7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0174ea78aa69e4c0a5cb5f933f4fb11df97f3381))
+* **colunteer-list:** display firstName, lastName and nickname in 3 different columns [#2803](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2803) ([f905e9d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f905e9d93d1b4257418224833f31c9bc9919ba9c))
+* **web:** improve SG page UX [#2807](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2807) ([5e42920](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5e42920c2944df8582a6bca798e95aea3903a587))
+* **web:** inclusive wording on admission pages [#2796](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2796) ([1ab77ad](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1ab77ad46c5b183e94b030a0029dc43b5ed17787))
+* **web:** user can log out from registration form [#2800](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2800) ([72b2d7e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/72b2d7e8dd63482a4e55b5983824366b56b835c8))
+
+### Documentation
+
+* **api:** remove prisma schema generation [#2806](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2806) ([2dffb07](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2dffb070037dda5a1fd799b96cd1e216c9720222))
+
 ## [4.0.3](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.0.2...v4.0.3) (2026-09-28)
 
 ### Bug Fixes
