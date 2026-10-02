@@ -150,7 +150,7 @@ services:
 
   adminer:
     container_name: overbookd-adminer
-    image: adminer:6.0.1
+    image: adminer:6.1.1
     restart: unless-stopped
     networks:
       - overbookd_net-api
