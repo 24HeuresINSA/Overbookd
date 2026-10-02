@@ -1,45 +1,25 @@
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
-import { CategoryNotFoundException } from "./category.service";
+import { ForbiddenException, Injectable } from "@nestjs/common";
+import { SlugifyService } from "@overbookd/slugify";
 import {
   CategoryRepository,
   GearRepository,
-} from "./repositories/catalog-repositories";
-import { SlugifyService } from "@overbookd/slugify";
-import {
   CatalogCategory,
   CatalogGear,
   CatalogGearForm,
   GearSearchOptions,
-} from "@overbookd/http";
+  CategoryNotFoundException,
+  GearNotFoundException,
+} from "@overbookd/logistic";
 
 type GearUpdateForm = CatalogGearForm & {
   id: number;
 };
 
-export type GearLinkedItems = {
-  tasks: number[];
-  actitivities: number[];
-  borrows: number[];
-};
-
-export class GearNotFoundException extends NotFoundException {
-  constructor(id: number) {
-    super(`Gear #${id} doesn't exist`);
-  }
-}
-
 @Injectable()
 export class CatalogService {
   constructor(
-    @Inject("CATEGORY_REPOSITORY")
-    private readonly categoryRepository: CategoryRepository,
-    @Inject("GEAR_REPOSITORY")
-    private readonly gearRepository: GearRepository,
+    private readonly gear: GearRepository,
+    private readonly category: CategoryRepository,
   ) {}
 
   async add({
@@ -52,7 +32,7 @@ export class CatalogService {
       name,
       categoryId,
     );
-    return this.gearRepository.addGear({
+    return this.gear.addGear({
       name,
       category,
       owner,
@@ -63,7 +43,7 @@ export class CatalogService {
   }
 
   async find(id: number): Promise<CatalogGear | undefined> {
-    return this.gearRepository.getGear(id);
+    return this.gear.getGear(id);
   }
 
   async update(gear: GearUpdateForm): Promise<CatalogGear> {
@@ -71,7 +51,7 @@ export class CatalogService {
       gear.name,
       gear.category,
     );
-    const updatedGear = await this.gearRepository.updateGear({
+    const updatedGear = await this.gear.updateGear({
       ...gear,
       slug,
       category,
@@ -81,7 +61,7 @@ export class CatalogService {
   }
 
   async remove(id: number): Promise<void> {
-    const linked = await this.gearRepository.getLinkedItems(id);
+    const linked = await this.gear.getLinkedItems(id);
     const hasLinkedItems =
       linked?.actitivities.length ||
       linked?.tasks.length ||
@@ -96,11 +76,11 @@ export class CatalogService {
       throw new ForbiddenException(errorMessage);
     }
 
-    return this.gearRepository.removeGear(id);
+    return this.gear.removeGear(id);
   }
 
   async search(searchOptions: GearSearchOptions): Promise<CatalogGear[]> {
-    return this.gearRepository.searchGear(searchOptions);
+    return this.gear.searchGear(searchOptions);
   }
 
   private async generateComputedProperties(name: string, categoryId: number) {
@@ -117,8 +97,7 @@ export class CatalogService {
     categoryId?: number,
   ): Promise<CatalogCategory | undefined> {
     if (!categoryId) return undefined;
-    const storedCategory =
-      await this.categoryRepository.getCategory(categoryId);
+    const storedCategory = await this.category.getCategory(categoryId);
 
     const isCategorySpecifiedButNotFound = categoryId && !storedCategory;
     if (isCategorySpecifiedButNotFound) {

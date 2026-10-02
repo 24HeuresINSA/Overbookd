@@ -1,16 +1,14 @@
 import {
   CatalogCategory,
   CatalogCategoryTree,
-  CatalogGear,
-  CategoryOwner,
   CategorySearchOptions,
-  GearSearchOptions,
-} from "@overbookd/http";
-import { GearLinkedItems } from "../catalog.service";
+  CategoryOwner,
+} from "../category.js";
+import { CatalogGear, GearLinkedItems, GearSearchOptions } from "../gear.js";
 
 export type GearRepository = {
-  getGear(id: number): Promise<CatalogGear>;
-  addGear(gear: Omit<CatalogGear, "id">): Promise<CatalogGear | undefined>;
+  getGear(id: number): Promise<CatalogGear | undefined>;
+  addGear(gear: Omit<CatalogGear, "id">): Promise<CatalogGear>;
   updateGear(
     gear: Omit<CatalogGear, "owner">,
   ): Promise<CatalogGear | undefined>;

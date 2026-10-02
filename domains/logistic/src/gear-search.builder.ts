@@ -1,20 +1,17 @@
-import { CatalogGear } from "@overbookd/http";
 import { SlugifyService } from "@overbookd/slugify";
+import { CatalogGear } from "./catalog/gear.js";
 
 export class GearSearchBuilder {
   private ownerCondition = true;
   private slugCondition = true;
-  private categoryContion = true;
-  private ponctualUsageContion = true;
-  private gear: CatalogGear;
+  private categoryCondition = true;
+  private ponctualUsageCondition = true;
 
-  constructor(gear: CatalogGear) {
-    this.gear = gear;
-  }
+  constructor(private gear: CatalogGear) {}
 
   addOwnerCondition(ownerSearch?: string) {
     this.ownerCondition = ownerSearch
-      ? this.gear.owner?.code?.includes(ownerSearch)
+      ? (this.gear.owner?.code?.includes(ownerSearch) ?? false)
       : true;
     return this;
   }
@@ -29,14 +26,14 @@ export class GearSearchBuilder {
   }
 
   addCategoryCondition(categorySearch?: string) {
-    this.categoryContion = categorySearch
-      ? this.gear.category?.path?.includes(categorySearch)
+    this.categoryCondition = categorySearch
+      ? (this.gear.category?.path?.includes(categorySearch) ?? false)
       : true;
     return this;
   }
 
   addPonctualUsageCondition(ponctualUsage?: boolean) {
-    this.ponctualUsageContion = ponctualUsage
+    this.ponctualUsageCondition = ponctualUsage
       ? this.gear.isPonctualUsage === ponctualUsage
       : true;
     return this;
@@ -46,8 +43,8 @@ export class GearSearchBuilder {
     return (
       this.ownerCondition &&
       this.slugCondition &&
-      this.categoryContion &&
-      this.ponctualUsageContion
+      this.categoryCondition &&
+      this.ponctualUsageCondition
     );
   }
 }

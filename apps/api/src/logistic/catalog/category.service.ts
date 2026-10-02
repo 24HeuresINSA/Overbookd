@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import {
   CategoryRepository,
   TeamRepository,
-} from "./repositories/catalog-repositories";
+} from "../../../../../domains/logistic/src/catalog/repositories/catalog-repositories";
 import { SlugifyService } from "@overbookd/slugify";
 import {
   CatalogCategory,
@@ -11,12 +11,6 @@ import {
   CategoryOwner,
   CategorySearchOptions,
 } from "@overbookd/http";
-
-export class CategoryNotFoundException extends NotFoundException {
-  constructor(id: number) {
-    super(`Category #${id} doesn't exist`);
-  }
-}
 
 type UpdateCategoryForm = CategoryForm & { id: number };
 

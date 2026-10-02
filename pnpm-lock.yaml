@@ -557,6 +557,9 @@ importers:
       '@overbookd/list':
         specifier: workspace:*
         version: link:../../libraries/list
+      '@overbookd/slugify':
+        specifier: workspace:*
+        version: link:../../libraries/slugify
       '@overbookd/time':
         specifier: workspace:*
         version: link:../../libraries/time

@@ -1,12 +1,14 @@
-import { Injectable } from "@nestjs/common";
 import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
-import { CategoryRepository } from "../catalog-repositories";
-import { CategoryAlreadyExists } from "../../catalog.error";
+import { CategoryRepository } from "./catalog-repositories.js";
+import {
+  CategoryAlreadyExists,
+  CategoryNotFoundException,
+} from "../catalog.error.js";
 import {
   CatalogCategory,
   CatalogCategoryTree,
   CategorySearchOptions,
-} from "@overbookd/http";
+} from "../category.js";
 
 class CategorySearchBuilder {
   private ownerCondition = true;
@@ -19,7 +21,7 @@ class CategorySearchBuilder {
 
   addOwnerCondition(ownerSearch?: string) {
     this.ownerCondition = ownerSearch
-      ? this.category.owner?.code?.includes(ownerSearch)
+      ? (this.category.owner?.code?.includes(ownerSearch) ?? false)
       : true;
     return this;
   }
@@ -36,9 +38,8 @@ class CategorySearchBuilder {
   }
 }
 
-@Injectable()
 export class InMemoryCategoryRepository implements CategoryRepository {
-  categories: CatalogCategory[] = [];
+  constructor(private categories: CatalogCategory[]) {}
 
   getCategory(id: number): Promise<CatalogCategory | undefined> {
     return Promise.resolve(
@@ -58,7 +59,8 @@ export class InMemoryCategoryRepository implements CategoryRepository {
     const existingCategory = this.categories.find(
       (categ) => categ.path === category.path,
     );
-    if (existingCategory) throw new CategoryAlreadyExists(existingCategory);
+    if (existingCategory)
+      throw new CategoryAlreadyExists(existingCategory.name);
     const id = this.categories.length + 1;
     const createdCategory = {
       ...category,
@@ -88,7 +90,7 @@ export class InMemoryCategoryRepository implements CategoryRepository {
     const categoryIndex = this.categories.findIndex(
       (categ) => categ.id === category.id,
     );
-    if (categoryIndex === -1) return Promise.resolve(undefined);
+    if (categoryIndex === -1) throw new CategoryNotFoundException(category.id);
     this.categories = updateItemToList(
       this.categories,
       categoryIndex,

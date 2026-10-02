@@ -1,13 +1,10 @@
-import { CatalogCategory, CatalogGear } from "@overbookd/http";
-import { CatalogService } from "./catalog.service";
-import {
-  InMemoryCategoryRepository,
-  InMemoryGearRepository,
-} from "./repositories/in-memory";
+import { CatalogCategory } from "./category.js";
+import { InMemoryCategoryRepository } from "./repositories/category.repository.inmemory.js";
 import {
   CatalogGearWithLinkedItems,
   EMPTY_GEAR_LINKED_ITEMS,
-} from "./repositories/in-memory/gear.repository.inmemory";
+  InMemoryGearRepository,
+} from "./repositories/gear.repository.inmemory";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
 const teamMatos = { name: "Orga Logistique Matos", code: "matos" };
@@ -145,13 +142,9 @@ const SIMILAR_GEARS: CatalogGearWithLinkedItems[] = [
 ];
 
 describe("Catalog", () => {
-  const categoryRepository = new InMemoryCategoryRepository();
-  const gearRepository = new InMemoryGearRepository();
+  const categoryRepository = new InMemoryCategoryRepository(CATEGORIES);
+  const gearRepository = new InMemoryGearRepository(GEARS);
   const catalog = new CatalogService(categoryRepository, gearRepository);
-  beforeAll(() => {
-    categoryRepository.categories = CATEGORIES;
-    gearRepository.gears = GEARS;
-  });
 
   describe("Get gear", () => {
     describe.each`

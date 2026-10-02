@@ -6,3 +6,9 @@ export class NotEnoughQuantity extends LogisticError {
     super(message);
   }
 }
+
+export class GearNotFoundException extends LogisticError {
+  constructor(id: number) {
+    super(`Le matos #${id} n'existe pas`);
+  }
+}
