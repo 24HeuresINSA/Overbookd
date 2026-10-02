@@ -48,6 +48,17 @@
       </div>
       <div class="team-form">
         <v-text-field
+          v-if="isAllUsersFromTeamToggled"
+          model-value="Tous"
+          label="Nombre de bénévoles"
+          class="team-form__field"
+          clearable
+          hide-details
+          readonly
+          @click:clear="toggleAllUsersFromTeam"
+        />
+        <v-text-field
+          v-else
           v-model="teamQuantity"
           type="number"
           label="Nombre de bénévoles"
@@ -64,6 +75,15 @@
           @update:team="addTeam"
         />
       </div>
+      <v-btn
+        v-if="canAddAllUsersFromTeam"
+        text="Ajouter tous les bénévoles d'une équipe"
+        variant="outlined"
+        color="secondary"
+        density="compact"
+        size="small"
+        @click="toggleAllUsersFromTeam"
+      />
     </template>
 
     <template #actions>
@@ -86,7 +106,9 @@ import type { AddMobilizationForm } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
 import { isNumber, min } from "~/utils/rules/input.rules";
 import { type User, buildUserNameWithNickname } from "@overbookd/user";
+import { AFFECT_TEAM } from "@overbookd/permission";
 
+const myStore = useMyStore();
 const userStore = useUserStore();
 const teamStore = useTeamStore();
 const configurationStore = useConfigurationStore();
@@ -111,21 +133,6 @@ const displayedManifDate = computed<string>(
 const emit = defineEmits(["add", "close"]);
 const close = () => emit("close");
 
-const mobilizableTeams = computed<Team[]>(() => teamStore.mobilizableTeams);
-const addTeam = (team?: Team) => {
-  if (!team) return;
-  const count = +teamQuantity.value;
-  teams.value = [...teams.value, { team: team.code, count }];
-
-  teamQuantity.value = 1;
-  teamToAdd.value = undefined;
-};
-const removeTeam = (toRemove: TeamMobilization) => {
-  teams.value = teams.value.filter(
-    ({ team }: TeamMobilization) => team !== toRemove.team,
-  );
-};
-
 userStore.fetchVolunteers();
 const addableVolunteers = computed<User[]>(() =>
   userStore.volunteers.filter(
@@ -142,6 +149,39 @@ const removeVolunteer = (volunteerId: User["id"]) => {
   volunteers.value = volunteers.value.filter((v: User) => v.id !== volunteerId);
 };
 
+const canAddAllUsersFromTeam = computed<boolean>(() =>
+  myStore.can(AFFECT_TEAM),
+);
+const isAllUsersFromTeamToggled = ref<boolean>(false);
+const toggleAllUsersFromTeam = () =>
+  (isAllUsersFromTeamToggled.value = !isAllUsersFromTeamToggled.value);
+
+const mobilizableTeams = computed<Team[]>(() => teamStore.mobilizableTeams);
+const addTeam = (team?: Team) => {
+  if (!team) return;
+
+  if (isAllUsersFromTeamToggled.value) {
+    const volunteersFromTeam = userStore.volunteers.filter(
+      (volunteer) =>
+        volunteer.teams.includes(team.code) &&
+        !volunteers.value.some(
+          (selectedVolunteer) => selectedVolunteer.id === volunteer.id,
+        ),
+    );
+    volunteers.value = [...volunteers.value, ...volunteersFromTeam];
+    cleanTeamFormData();
+    return;
+  }
+  const count = +teamQuantity.value;
+  teams.value = [...teams.value, { team: team.code, count }];
+  cleanTeamFormData();
+};
+const removeTeam = (toRemove: TeamMobilization) => {
+  teams.value = teams.value.filter(
+    ({ team }: TeamMobilization) => team !== toRemove.team,
+  );
+};
+
 const cleanData = () => {
   start.value = eventStartDate.value;
   end.value = new Date(eventStartDate.value.getTime() + ONE_HOUR_IN_MS);
@@ -149,8 +189,12 @@ const cleanData = () => {
   teams.value = [];
   volunteers.value = [];
   volunteerToAdd.value = undefined;
+  cleanTeamFormData();
+};
+const cleanTeamFormData = () => {
   teamToAdd.value = undefined;
   teamQuantity.value = 1;
+  isAllUsersFromTeamToggled.value = false;
 };
 
 const canAddMobilization = computed<boolean>(() => {
@@ -195,6 +239,8 @@ const addMobilization = () => {
 .chip-group {
   margin-bottom: 5px;
   margin-top: 2px;
+  max-height: 60px;
+  overflow-y: auto;
 }
 
 h3 {
