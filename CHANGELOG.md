@@ -15,7 +15,7 @@
 ### Bug Fixes
 
 * **api:** don't update zitadel profile if they don't have one [#2801](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2801) ([0174ea7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0174ea78aa69e4c0a5cb5f933f4fb11df97f3381))
-* **colunteer-list:** display firstName, lastName and nickname in 3 different columns [#2803](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2803) ([f905e9d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f905e9d93d1b4257418224833f31c9bc9919ba9c))
+* **volunteer-list:** display firstName, lastName and nickname in 3 different columns [#2803](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2803) ([f905e9d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f905e9d93d1b4257418224833f31c9bc9919ba9c))
 * **web:** improve SG page UX [#2807](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2807) ([5e42920](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5e42920c2944df8582a6bca798e95aea3903a587))
 * **web:** inclusive wording on admission pages [#2796](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2796) ([1ab77ad](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1ab77ad46c5b183e94b030a0029dc43b5ed17787))
 * **web:** user can log out from registration form [#2800](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2800) ([72b2d7e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/72b2d7e8dd63482a4e55b5983824366b56b835c8))
@@ -47,7 +47,7 @@
 
 ### ⚠ BREAKING CHANGES
 
-* **registration:** passage à la 52ème édition 
+* **registration:** passage à la 52ème édition
 * **registration:** * Utilisation du SSO
 * Introduction du role guest (Read only), notamment pour ctma
 
