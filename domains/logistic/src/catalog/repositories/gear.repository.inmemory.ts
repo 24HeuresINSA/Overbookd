@@ -1,12 +1,11 @@
-import { Injectable } from "@nestjs/common";
 import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
-import { GearReferenceCodeService } from "../../gear-reference-code.service";
-import { GearLinkedItems, GearNotFoundException } from "../../catalog.service";
-import { GearRepository } from "../catalog-repositories";
-import { GearAlreadyExists } from "../../catalog.error";
-import { CatalogGear, GearSearchOptions } from "@overbookd/http";
 import { SlugifyService } from "@overbookd/slugify";
-import { GearSearchBuilder } from "../../../common/gear-search.builder";
+import { CatalogGear, GearLinkedItems, GearSearchOptions } from "../gear.js";
+import { GearRepository } from "./catalog-repositories.js";
+import { GearNotFoundException } from "../../logistic.error.js";
+import { GearAlreadyExists } from "../catalog.error.js";
+import { GearSearchBuilder } from "../../gear-search.builder.js";
+import { GearReferenceCodeService } from "../gear-reference-code.service.js";
 
 export type CatalogGearWithLinkedItems = CatalogGear & GearLinkedItems;
 
@@ -16,9 +15,8 @@ export const EMPTY_GEAR_LINKED_ITEMS = {
   borrows: [],
 };
 
-@Injectable()
 export class InMemoryGearRepository implements GearRepository {
-  gears: CatalogGearWithLinkedItems[] = [];
+  constructor(private gears: CatalogGearWithLinkedItems[] = []) {}
 
   getGear(id: number): Promise<CatalogGear | undefined> {
     const gear = this.gears.find((gear) => gear.id === id);
@@ -28,7 +26,7 @@ export class InMemoryGearRepository implements GearRepository {
 
   addGear(gear: Omit<CatalogGear, "id">): Promise<CatalogGear> {
     const existingGear = this.gears.find((g) => g.slug === gear.slug);
-    if (existingGear) throw new GearAlreadyExists(existingGear);
+    if (existingGear) throw new GearAlreadyExists(existingGear.name);
     const id = this.gears.length + 1;
     const code = gear.category
       ? GearReferenceCodeService.computeGearCode(gear.category, id)

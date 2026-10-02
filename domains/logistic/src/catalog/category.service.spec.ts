@@ -1,10 +1,7 @@
-import {
-  InMemoryCategoryRepository,
-  InMemoryTeamRepository,
-} from "./repositories/in-memory";
-import { CategoryService } from "./category.service";
-import { CatalogCategory, CategoryOwner } from "@overbookd/http";
 import { beforeEach, describe, expect, it } from "vitest";
+import { CategoryOwner, CatalogCategory } from "./category.js";
+import { InMemoryCategoryRepository } from "./repositories/category.repository.inmemory.js";
+import { InMemoryTeamRepository } from "./repositories/team.repository.inmemory.js";
 
 const teamMatos = { name: "Orga Logistique Matos", code: "matos" };
 const teamSigna = { name: "Orga Signaletique", code: "signa" };
@@ -42,12 +39,13 @@ const CATEGORIES: CatalogCategory[] = [
 ];
 
 describe("Category", () => {
-  const categoryRepository = new InMemoryCategoryRepository();
-  const teamRepository = new InMemoryTeamRepository();
-  const categService = new CategoryService(categoryRepository, teamRepository);
+  let categoryRepository: InMemoryCategoryRepository;
+  let teamRepository: InMemoryTeamRepository;
+  let categoryService: CategoryService;
   beforeEach(() => {
-    categoryRepository.categories = [...CATEGORIES];
-    teamRepository.teams = [...TEAMS];
+    categoryRepository = new InMemoryCategoryRepository([...CATEGORIES]);
+    teamRepository = new InMemoryTeamRepository([...TEAMS]);
+    categoryService = new CategoryService(categoryRepository, teamRepository);
   });
   describe("get category", () => {
     describe.each`
@@ -59,7 +57,7 @@ describe("Category", () => {
       "when category #$categoryId exists",
       ({ categoryId, expectedCategory }) => {
         it(`should retreive category #${categoryId} information`, async () => {
-          const category = await categService.find(categoryId);
+          const category = await categoryService.find(categoryId);
           expect(category).toMatchObject(expectedCategory);
         });
       },
@@ -68,7 +66,7 @@ describe("Category", () => {
       const inexistantCategory = 5;
       it("should inform that category doesn't exist", async () => {
         await expect(
-          async () => await categService.find(inexistantCategory),
+          async () => await categoryService.find(inexistantCategory),
         ).rejects.toThrow(`Category #${inexistantCategory} doesn't exist`);
       });
     });
@@ -83,7 +81,7 @@ describe("Category", () => {
       "$name main category without responsible team",
       ({ name, expectedPath }) => {
         it(`should be created with generated id and "${expectedPath}" as path`, async () => {
-          const createdCategory = await categService.create({ name });
+          const createdCategory = await categoryService.create({ name });
           expect(createdCategory).toHaveProperty("id");
           expect(createdCategory.id).toEqual(expect.any(Number));
           expect(createdCategory).toHaveProperty("name");
@@ -92,8 +90,10 @@ describe("Category", () => {
           expect(createdCategory.path).toBe(expectedPath);
         });
         it("should be accessible after", async () => {
-          const createdCategory = await categService.create({ name });
-          const fetchedCategory = await categService.find(createdCategory.id);
+          const createdCategory = await categoryService.create({ name });
+          const fetchedCategory = await categoryService.find(
+            createdCategory.id,
+          );
           expect(createdCategory).toMatchObject(fetchedCategory);
         });
       },
@@ -107,7 +107,7 @@ describe("Category", () => {
       "$name main category with #$owner owner team",
       ({ name, owner, expectedOwner }) => {
         it(`should associate ${name} category to ${expectedOwner.name} team`, async () => {
-          const createdCategory = await categService.create({ name, owner });
+          const createdCategory = await categoryService.create({ name, owner });
           expect(createdCategory.owner).toMatchObject(expectedOwner);
         });
       },
@@ -121,7 +121,7 @@ describe("Category", () => {
       "$name sub category of #$parentCategory category",
       ({ name, owner, parentCategory, expectedPath, expectedOwner }) => {
         it(`should generate composed ${expectedPath} path`, async () => {
-          const createdCategory = await categService.create({
+          const createdCategory = await categoryService.create({
             name,
             parent: parentCategory,
             owner,
@@ -129,7 +129,7 @@ describe("Category", () => {
           expect(createdCategory.path).toBe(expectedPath);
         });
         it(`should be associated to #${parentCategory} category `, async () => {
-          const createdCategory = await categService.create({
+          const createdCategory = await categoryService.create({
             name,
             parent: parentCategory,
             owner,
@@ -137,7 +137,7 @@ describe("Category", () => {
           expect(createdCategory.parent).toBe(parentCategory);
         });
         it(`should be associated to parent category ${expectedOwner.name} team`, async () => {
-          const createdCategory = await categService.create({
+          const createdCategory = await categoryService.create({
             name,
             parent: parentCategory,
             owner,
@@ -152,7 +152,7 @@ describe("Category", () => {
       it("should inform the user parent category doesn't exist", async () => {
         await expect(
           async () =>
-            await categService.create({
+            await categoryService.create({
               name: categoryName,
               parent: inexistantParentCategory,
             }),
@@ -166,7 +166,7 @@ describe("Category", () => {
         const name = CATEGORIES[0].name.toUpperCase();
         await expect(
           async () =>
-            await categService.create({
+            await categoryService.create({
               name,
             }),
         ).rejects.toThrow(`"${CATEGORIES[0].name}" category already exist`);
@@ -187,28 +187,28 @@ describe("Category", () => {
         with grandchild category $grandChildrenCategory`,
       ({ toDeleteCategory, childrenCategory, grandChildrenCategory }) => {
         it(`should not be possible to find #${toDeleteCategory.id} category after`, async () => {
-          await categService.remove(toDeleteCategory.id);
+          await categoryService.remove(toDeleteCategory.id);
           await expect(async () => {
-            await categService.find(toDeleteCategory.id);
+            await categoryService.find(toDeleteCategory.id);
           }).rejects.toThrow(`Category #${toDeleteCategory.id} doesn't exist`);
         });
         if (childrenCategory) {
           it(`should link #${childrenCategory.id} child category to #${toDeleteCategory.parent} category`, async () => {
-            await categService.remove(toDeleteCategory.id);
-            const child = await categService.find(childrenCategory.id);
+            await categoryService.remove(toDeleteCategory.id);
+            const child = await categoryService.find(childrenCategory.id);
             expect(child.parent).not.toBe(toDeleteCategory.id);
             expect(child.parent).toBe(toDeleteCategory.parent);
           });
           it(`should change #${childrenCategory.id} child category path to ${childrenCategory.expectedPath}`, async () => {
-            await categService.remove(toDeleteCategory.id);
-            const child = await categService.find(childrenCategory.id);
+            await categoryService.remove(toDeleteCategory.id);
+            const child = await categoryService.find(childrenCategory.id);
             expect(child.path).toBe(childrenCategory.expectedPath);
           });
         }
         if (grandChildrenCategory) {
           it(`should change #${grandChildrenCategory.id} grandchild category path to ${grandChildrenCategory.expectedPath}`, async () => {
-            await categService.remove(toDeleteCategory.id);
-            const grandChild = await categService.find(
+            await categoryService.remove(toDeleteCategory.id);
+            const grandChild = await categoryService.find(
               grandChildrenCategory.id,
             );
             expect(grandChild.path).toBe(grandChildrenCategory.expectedPath);
@@ -237,21 +237,22 @@ describe("Category", () => {
           grandChildCategory,
         }) => {
           it(`should update category path to "${expectedPath}"`, async () => {
-            const updatedCategory = await categService.update(toUpdateCategory);
+            const updatedCategory =
+              await categoryService.update(toUpdateCategory);
             expect(updatedCategory.name).toBe(toUpdateCategory.name);
             expect(updatedCategory.path).toBe(expectedPath);
           });
           if (childCategory) {
             it(`should update #${childCategory.id} child category path to ${childCategory.expectedPath}`, async () => {
-              await categService.update(toUpdateCategory);
-              const child = await categService.find(childCategory.id);
+              await categoryService.update(toUpdateCategory);
+              const child = await categoryService.find(childCategory.id);
               expect(child.path).toBe(childCategory.expectedPath);
             });
           }
           if (grandChildCategory) {
             it(`should update #${grandChildCategory.id} grandchild category path to ${grandChildCategory.expectedPath}`, async () => {
-              await categService.update(toUpdateCategory);
-              const child = await categService.find(grandChildCategory.id);
+              await categoryService.update(toUpdateCategory);
+              const child = await categoryService.find(grandChildCategory.id);
               expect(child.path).toBe(grandChildCategory.expectedPath);
             });
           }
@@ -276,20 +277,21 @@ describe("Category", () => {
           grandChildCategory,
         }) => {
           it(`should set category owner to "${expectedOwner.name}"`, async () => {
-            const updatedCategory = await categService.update(toUpdateCategory);
+            const updatedCategory =
+              await categoryService.update(toUpdateCategory);
             expect(updatedCategory.owner).toMatchObject(expectedOwner);
           });
           if (childCategory) {
             it(`should set #${childCategory.id} child category owner to "${expectedOwner.name}"`, async () => {
-              await categService.update(toUpdateCategory);
-              const child = await categService.find(childCategory.id);
+              await categoryService.update(toUpdateCategory);
+              const child = await categoryService.find(childCategory.id);
               expect(child.owner).toMatchObject(expectedOwner);
             });
           }
           if (grandChildCategory) {
             it(`should set #${grandChildCategory.id} grandchild category owner to "${expectedOwner.name}"`, async () => {
-              await categService.update(toUpdateCategory);
-              const child = await categService.find(grandChildCategory.id);
+              await categoryService.update(toUpdateCategory);
+              const child = await categoryService.find(grandChildCategory.id);
               expect(child.owner).toMatchObject(expectedOwner);
             });
           }
@@ -317,35 +319,37 @@ describe("Category", () => {
           grandChildCategory,
         }) => {
           it(`should set category owner to "${expectedOwner.name}" team`, async () => {
-            const updatedCategory = await categService.update(toUpdateCategory);
+            const updatedCategory =
+              await categoryService.update(toUpdateCategory);
             expect(updatedCategory.owner).toMatchObject(expectedOwner);
           });
           it(`should update category path to "${expectedPath}"`, async () => {
-            const updatedCategory = await categService.update(toUpdateCategory);
+            const updatedCategory =
+              await categoryService.update(toUpdateCategory);
             expect(updatedCategory.name).toBe(toUpdateCategory.name);
             expect(updatedCategory.path).toBe(expectedPath);
           });
           if (childCategory) {
             it(`should set #${childCategory.id} child category owner to "${expectedOwner.name}"`, async () => {
-              await categService.update(toUpdateCategory);
-              const child = await categService.find(childCategory.id);
+              await categoryService.update(toUpdateCategory);
+              const child = await categoryService.find(childCategory.id);
               expect(child.owner).toMatchObject(expectedOwner);
             });
             it(`should update #${childCategory.id} child category path to ${childCategory.expectedPath}`, async () => {
-              await categService.update(toUpdateCategory);
-              const child = await categService.find(childCategory.id);
+              await categoryService.update(toUpdateCategory);
+              const child = await categoryService.find(childCategory.id);
               expect(child.path).toBe(childCategory.expectedPath);
             });
           }
           if (grandChildCategory) {
             it(`should set #${grandChildCategory.id} grandchild category owner to "${expectedOwner.name}"`, async () => {
-              await categService.update(toUpdateCategory);
-              const child = await categService.find(grandChildCategory.id);
+              await categoryService.update(toUpdateCategory);
+              const child = await categoryService.find(grandChildCategory.id);
               expect(child.owner).toMatchObject(expectedOwner);
             });
             it(`should update #${grandChildCategory.id} grandchild category path to ${grandChildCategory.expectedPath}`, async () => {
-              await categService.update(toUpdateCategory);
-              const child = await categService.find(grandChildCategory.id);
+              await categoryService.update(toUpdateCategory);
+              const child = await categoryService.find(grandChildCategory.id);
               expect(child.path).toBe(grandChildCategory.expectedPath);
             });
           }
@@ -361,7 +365,7 @@ describe("Category", () => {
           parent: 2,
         };
         await expect(
-          async () => await categService.update(toUpdateCategory),
+          async () => await categoryService.update(toUpdateCategory),
         ).rejects.toThrow(`Category #${toUpdateCategory.id} doesn't exist`);
       });
     });
@@ -373,7 +377,7 @@ describe("Category", () => {
         - Cable
           - Grosse Tension
     `, async () => {
-      const categories = await categService.getAll();
+      const categories = await categoryService.getAll();
       expect(categories).toHaveLength(2);
       expect(categories).toContainEqual({
         id: 1,
@@ -425,7 +429,7 @@ describe("Category", () => {
             - Plastique
             - Moquette
       `, async () => {
-        const categories = await categService.getAll();
+        const categories = await categoryService.getAll();
         expect(categories).toHaveLength(1);
         expect(categories).toContainEqual({
           id: 1,
@@ -533,7 +537,7 @@ describe("Category", () => {
       'When looking for "$searchName" with "$searchOwner" owner',
       ({ searchName, searchOwner, expectedCategories }) => {
         it(`should retrieve ${expectedCategories.length} categories`, async () => {
-          const categories = await categService.search({
+          const categories = await categoryService.search({
             name: searchName,
             owner: searchOwner,
           });

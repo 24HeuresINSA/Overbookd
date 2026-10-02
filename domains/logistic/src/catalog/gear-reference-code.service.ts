@@ -1,4 +1,4 @@
-import { CatalogCategoryIdentifier } from "@overbookd/http";
+import { CatalogCategoryIdentifier } from "./category.js";
 
 export class GearReferenceCodeService {
   static computeGearCode(

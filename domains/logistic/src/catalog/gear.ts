@@ -1,4 +1,4 @@
-import { CatalogCategoryIdentifier, CategoryOwner } from "./catalog";
+import { CatalogCategoryIdentifier, CategoryOwner } from "./category";
 
 export type GearSearchOptions = {
   search?: string;
@@ -23,4 +23,10 @@ export type CatalogGearForm = {
   category?: number;
   isPonctualUsage: boolean;
   isConsumable: boolean;
+};
+
+export type GearLinkedItems = {
+  tasks: number[];
+  actitivities: number[];
+  borrows: number[];
 };

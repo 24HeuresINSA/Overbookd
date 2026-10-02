@@ -55,6 +55,7 @@
   },
   "dependencies": {
     "@overbookd/list": "workspace:*",
+    "@overbookd/slugify": "workspace:*",
     "@overbookd/time": "workspace:*"
   }
 }
