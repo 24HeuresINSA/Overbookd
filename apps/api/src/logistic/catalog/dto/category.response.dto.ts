@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CatalogCategory, CategoryOwner } from "@overbookd/http";
+import { CatalogCategory, CategoryOwner } from "@overbookd/logistic";
 import { CategoryOwnerResponseDto } from "./category-owner.response.dto";
 
 export class CategoryResponseDto implements CatalogCategory {

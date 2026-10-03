@@ -24,7 +24,7 @@ import { CategoryTreeResponseDto } from "./dto/category-tree.response.dto";
 import { CategorySearchRequestDto } from "./dto/category-search.request.dto";
 import { Permissions } from "../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
-import { CatalogCategory, CatalogCategoryTree } from "@overbookd/http";
+import { CatalogCategory, CatalogCategoryTree } from "@overbookd/logistic";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
 @Controller("logistic/categories")

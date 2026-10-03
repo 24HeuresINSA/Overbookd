@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { CategoryForm, CatalogCategoryTree } from "@overbookd/http";
+import type { CategoryForm, CatalogCategoryTree } from "@overbookd/logistic";
 import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
 
 const catalogStore = useCatalogStore();

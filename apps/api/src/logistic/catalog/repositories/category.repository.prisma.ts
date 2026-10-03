@@ -52,7 +52,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
       });
     } catch (e) {
       if (this.prismaService.isUniqueConstraintViolation(e)) {
-        throw new CategoryAlreadyExists(category);
+        throw new CategoryAlreadyExists(category.name);
       }
       throw e;
     }

@@ -1,10 +1,10 @@
 import type {
   GearDetails,
   GearPreview,
-  GearSearchOptions,
   GearWithDetails,
   HttpStringified,
 } from "@overbookd/http";
+import type { GearSearchOptions } from "@overbookd/logistic";
 import { LogisticDashboardRepository } from "~/repositories/logistic/logistic-dashboard.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";

@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CatalogGear, InventoryRecord } from "@overbookd/http";
+import { InventoryRecord } from "@overbookd/http";
+import { CatalogGear } from "@overbookd/logistic";
 import { CatalogGearResponseDto } from "../../common/dto/catalog-gear.response.dto";
 
 export class InventoryRecordDto implements InventoryRecord {

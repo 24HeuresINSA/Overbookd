@@ -51,7 +51,7 @@ import type {
   CatalogCategory,
   CatalogGear,
   CatalogGearForm,
-} from "@overbookd/http";
+} from "@overbookd/logistic";
 
 const catalogGearStore = useCatalogGearStore();
 

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CategoryForm } from "@overbookd/http";
+import { CategoryForm } from "@overbookd/logistic";
 import {
   IsDefined,
   IsInt,

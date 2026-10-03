@@ -1,8 +1,8 @@
 import type {
-  CatalogGear,
   LiteInventoryRecord,
   InventoryRecord as Record,
 } from "@overbookd/http";
+import type { CatalogGear } from "@overbookd/logistic";
 import { updateItemToList } from "@overbookd/list";
 
 export class InventoryRecord implements Record {

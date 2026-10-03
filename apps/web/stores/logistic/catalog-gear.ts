@@ -4,7 +4,7 @@ import type {
   CatalogGear,
   CatalogGearForm,
   GearSearchOptions,
-} from "@overbookd/http";
+} from "@overbookd/logistic";
 import { GearsRepository } from "~/repositories/logistic/catalog.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
 

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { GearSearchOptions } from "@overbookd/http";
+import { GearSearchOptions } from "@overbookd/logistic";
 import { Transform } from "class-transformer";
 import { IsBoolean, IsOptional, IsString, MinLength } from "class-validator";
 

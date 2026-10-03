@@ -9,6 +9,9 @@ export type { BorrowsForCancel } from "./borrow/cancel/cancel.js";
 export type {
   CatalogCategory,
   CatalogCategoryTree,
+  CategoryForm,
+  CatalogCategoryIdentifier,
+  CategoryOwner,
   CategorySearchOptions,
 } from "./catalog/category.js";
 export type {
@@ -22,7 +25,7 @@ export type {
   GearRepository,
   TeamRepository,
 } from "./catalog/repositories/catalog-repositories.js";
-export type {
+export {
   CategoryAlreadyExists,
   GearAlreadyExists,
   CategoryNotFoundException,

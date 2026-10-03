@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { CatalogGear, GearSearchOptions } from "@overbookd/http";
+import type { CatalogGear, GearSearchOptions } from "@overbookd/logistic";
 import { slugifiedFilter } from "~/utils/search/search.utils";
 
 const catalogGearStore = useCatalogGearStore();

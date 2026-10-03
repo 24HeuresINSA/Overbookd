@@ -1,15 +1,18 @@
 import { Injectable } from "@nestjs/common";
-import { GearReferenceCodeService } from "../../../../../../domains/logistic/src/catalog/gear-reference-code.service";
+import {
+  GearReferenceCodeService,
+  GearLinkedItems,
+  GearRepository,
+  GearAlreadyExists,
+  CatalogGear,
+  GearSearchOptions,
+} from "@overbookd/logistic";
 import { PrismaService } from "../../../prisma.service";
-import { GearRepository } from "../../../../../../domains/logistic/src/catalog/repositories/catalog-repositories";
-import { GearAlreadyExists } from "../../../../../../domains/logistic/src/catalog/catalog.error";
-import { CatalogGear, GearSearchOptions } from "@overbookd/http";
 import { GearFilter } from "../../common/gear.filter";
 import {
   DatabaseGear,
   SELECT_GEAR,
 } from "../../common/repositories/gear.query";
-import { GearLinkedItems } from "../catalog.service";
 
 export function convertGearToApiContract(gear: DatabaseGear) {
   const baseGear = {
@@ -57,7 +60,7 @@ export class PrismaGearRepository implements GearRepository {
       return convertGearToApiContract(newGear);
     } catch (e) {
       if (this.prismaService.isUniqueConstraintViolation(e)) {
-        throw new GearAlreadyExists(gear);
+        throw new GearAlreadyExists(gear.name);
       }
       throw e;
     }

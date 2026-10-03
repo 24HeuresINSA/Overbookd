@@ -22,7 +22,7 @@
 
 <script lang="ts" setup>
 import { useDebounceFn } from "@vueuse/core";
-import type { CatalogCategory, GearSearchOptions } from "@overbookd/http";
+import type { CatalogCategory, GearSearchOptions } from "@overbookd/logistic";
 import type { Team } from "@overbookd/team";
 
 const emit = defineEmits(["update:search", "update:options"]);
