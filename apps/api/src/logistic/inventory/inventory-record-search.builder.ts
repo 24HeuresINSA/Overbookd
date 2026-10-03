@@ -1,6 +1,6 @@
 import { SlugifyService } from "@overbookd/slugify";
 import { InventoryRecord } from "@overbookd/http";
-import { GearSearchBuilder } from "@overbookd/logistic";
+import { GearSearchBuilder } from "../common/gear-search.builder";
 
 export class InventoryRecordSearchBuilder {
   private storageCondition = true;

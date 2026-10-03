@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { InitBorrow } from "./init.js";
 import { InMemoryBorrows } from "./borrow.inmemory.js";
-import { friday17At12, sunday20At10 } from "../../logistic.test-utils.js";
+import { friday17At12, sunday20At10 } from "../borrow.test-utils.js";
 import { NoDuration } from "../borrow.error.js";
 
 describe("Init borrow", () => {

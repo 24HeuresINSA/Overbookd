@@ -5,6 +5,7 @@ export { PlanBorrow } from "./borrow/plan/plan.js";
 export type { BorrowsForPlan, PlanBorrowForm } from "./borrow/plan/plan.js";
 export { CancelBorrow } from "./borrow/cancel/cancel.js";
 export type { BorrowsForCancel } from "./borrow/cancel/cancel.js";
+export type { Gear, GearRequest } from "./borrow/gear-request.js";
 
 export type {
   CatalogCategory,
@@ -34,6 +35,4 @@ export { GearReferenceCodeGenerator } from "./catalog/gear/gear-reference-code.j
 export { CatalogGearManager } from "./catalog/gear/gear-manager.js";
 export type { CatalogGears } from "./catalog/gear/gear-manager.js";
 
-export type { Gear, GearRequest } from "./gear-request.js";
 export { LogisticError, GearNotFound } from "./logistic.error.js";
-export { GearSearchBuilder } from "./gear-search.builder.js";
