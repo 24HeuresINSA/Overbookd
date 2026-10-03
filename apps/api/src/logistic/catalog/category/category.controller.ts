@@ -10,7 +10,7 @@ import {
   ParseIntPipe,
   Query,
 } from "@nestjs/common";
-import { CategoryService } from "./category.service";
+import { CatalogCategoryService } from "./category.service";
 import {
   ApiBearerAuth,
   ApiParam,
@@ -22,17 +22,17 @@ import { CategoryFormRequestDto } from "./dto/category-form.request.dto";
 import { CategoryResponseDto } from "./dto/category.response.dto";
 import { CategoryTreeResponseDto } from "./dto/category-tree.response.dto";
 import { CategorySearchRequestDto } from "./dto/category-search.request.dto";
-import { Permissions } from "../../authentication-zitadel/decorators/permissions-auth.decorator";
+import { Permissions } from "../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
 import { CatalogCategory, CatalogCategoryTree } from "@overbookd/logistic";
-import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
+import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
-@Controller("logistic/categories")
-@ApiTags("logistic/catalog")
+@Controller("logistic/catalog/categories")
+@ApiTags("logistic/catalog/categories")
 @ApiBearerAuth()
 @ApiSwaggerResponse()
 export class CategoryController {
-  constructor(private readonly categoryService: CategoryService) {}
+  constructor(private readonly categoryService: CatalogCategoryService) {}
 
   @Get()
   @Permissions(READ_GEAR_CATALOG)

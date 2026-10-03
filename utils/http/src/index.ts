@@ -44,6 +44,7 @@ export type {
 
 // LOGISTIC
 export type { AddGearRequestForm } from "./logistic/borrow";
+export type { CatalogGearForm } from "./logistic/catalog";
 export type {
   Inquiry,
   BaseGearDetails,

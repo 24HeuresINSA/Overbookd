@@ -6,13 +6,21 @@ export class GearAlreadyExists extends LogisticError {
   }
 }
 
+export class GearHasLinkedItems extends LogisticError {
+  constructor(linkedItems: string[]) {
+    super(
+      `Impossible de supprimer le matériel, il est lié à : ${linkedItems.join(", ")}`,
+    );
+  }
+}
+
 export class CategoryAlreadyExists extends LogisticError {
   constructor(categoryName: string) {
     super(`La catégorie "${categoryName}" existe déjà`);
   }
 }
 
-export class CategoryNotFoundException extends LogisticError {
+export class CategoryNotFound extends LogisticError {
   constructor(id: number) {
     super(`La catégorie #${id} n'existe pas`);
   }

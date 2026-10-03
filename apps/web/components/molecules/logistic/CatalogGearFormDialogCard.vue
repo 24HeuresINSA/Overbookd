@@ -47,11 +47,8 @@
 
 <script lang="ts" setup>
 import { minLength } from "~/utils/rules/input.rules";
-import type {
-  CatalogCategory,
-  CatalogGear,
-  CatalogGearForm,
-} from "@overbookd/logistic";
+import type { CatalogCategory, CatalogGear } from "@overbookd/logistic";
+import type { CatalogGearForm } from "@overbookd/http";
 
 const catalogGearStore = useCatalogGearStore();
 

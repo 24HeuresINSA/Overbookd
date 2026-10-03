@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { PrismaService } from "../../../prisma.service";
+import { PrismaService } from "../../../../prisma.service";
 import {
   CatalogCategory,
   CatalogCategoryTree,
@@ -7,34 +7,22 @@ import {
   CategoryRepository,
   CategoryAlreadyExists,
 } from "@overbookd/logistic";
+import { SELECT_CATALOG_CATEGORY } from "./category.query";
 
 @Injectable()
 export class PrismaCategoryRepository implements CategoryRepository {
-  private readonly SELECT_CATEGORY = {
-    id: true,
-    name: true,
-    path: true,
-    parent: true,
-    owner: {
-      select: {
-        name: true,
-        code: true,
-      },
-    },
-  };
-
   constructor(private readonly prismaService: PrismaService) {}
 
   getCategory(id: number): Promise<CatalogCategory> {
     return this.prismaService.catalogCategory.findUnique({
-      select: this.SELECT_CATEGORY,
+      select: SELECT_CATALOG_CATEGORY,
       where: { id },
     });
   }
 
   getSubCategories(parentId: number): Promise<CatalogCategory[]> {
     return this.prismaService.catalogCategory.findMany({
-      select: this.SELECT_CATEGORY,
+      select: SELECT_CATALOG_CATEGORY,
       where: {
         parent: parentId,
       },
@@ -47,7 +35,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
     try {
       const data = this.buildUpsertData(category);
       return await this.prismaService.catalogCategory.create({
-        select: this.SELECT_CATEGORY,
+        select: SELECT_CATALOG_CATEGORY,
         data,
       });
     } catch (e) {
@@ -72,7 +60,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
     const { id, ...baseCategory } = category;
     const data = this.buildUpsertData(baseCategory);
     return this.prismaService.catalogCategory.update({
-      select: this.SELECT_CATEGORY,
+      select: SELECT_CATALOG_CATEGORY,
       data,
       where: { id },
     });
@@ -81,16 +69,16 @@ export class PrismaCategoryRepository implements CategoryRepository {
   getCategoryTrees(): Promise<CatalogCategoryTree[]> {
     return this.prismaService.catalogCategory.findMany({
       select: {
-        ...this.SELECT_CATEGORY,
+        ...SELECT_CATALOG_CATEGORY,
         subCategories: {
           select: {
-            ...this.SELECT_CATEGORY,
+            ...SELECT_CATALOG_CATEGORY,
             subCategories: {
               select: {
-                ...this.SELECT_CATEGORY,
+                ...SELECT_CATALOG_CATEGORY,
                 subCategories: {
                   select: {
-                    ...this.SELECT_CATEGORY,
+                    ...SELECT_CATALOG_CATEGORY,
                   },
                 },
               },
@@ -105,7 +93,7 @@ export class PrismaCategoryRepository implements CategoryRepository {
   searchCategory(search: CategorySearchOptions): Promise<CatalogCategory[]> {
     const where = this.buildSearchConditions(search);
     return this.prismaService.catalogCategory.findMany({
-      select: this.SELECT_CATEGORY,
+      select: SELECT_CATALOG_CATEGORY,
       where,
     });
   }

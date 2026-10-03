@@ -4,17 +4,20 @@ import {
   CategorySearchOptions,
   CategoryOwner,
 } from "../category.js";
-import { CatalogGear, GearLinkedItems, GearSearchOptions } from "../gear.js";
+import {
+  GearLinkedItems,
+  GearSearchOptions,
+  SavedCatalogGear,
+} from "../gear.js";
 
-export type GearRepository = {
-  getGear(id: number): Promise<CatalogGear | undefined>;
-  addGear(gear: Omit<CatalogGear, "id">): Promise<CatalogGear>;
-  updateGear(
-    gear: Omit<CatalogGear, "owner">,
-  ): Promise<CatalogGear | undefined>;
+export type CatalogGears = {
+  findBySlug(slug: string): Promise<SavedCatalogGear | undefined>;
+  getLastId(): Promise<number>;
+  addGear(gear: Omit<SavedCatalogGear, "id">): Promise<SavedCatalogGear>;
+  updateGear(gear: SavedCatalogGear): Promise<SavedCatalogGear | undefined>;
   removeGear(id: number): Promise<void>;
-  searchGear(searchedGear: GearSearchOptions): Promise<CatalogGear[]>;
-  getLinkedItems(id: number): Promise<GearLinkedItems | undefined>;
+  searchGear(searchedGear: GearSearchOptions): Promise<SavedCatalogGear[]>;
+  getLinkedItems(id: number): Promise<Partial<GearLinkedItems>>;
 };
 
 export type CategoryRepository = {

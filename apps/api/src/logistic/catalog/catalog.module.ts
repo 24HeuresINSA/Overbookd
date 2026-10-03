@@ -1,18 +1,20 @@
 import { Module } from "@nestjs/common";
-import { CatalogService } from "./catalog.service";
-import { CategoryService } from "./category.service";
-import { CategoryController } from "./category.controller";
-import { GearController } from "./gear.controller";
+import { CatalogGearService } from "./gear/gear.service";
+import { CatalogCategoryService } from "./category/category.service";
+import { CategoryController } from "./category/category.controller";
+import { CatalogGearController } from "./gear/gear.controller";
 import { PrismaService } from "../../prisma.service";
-import { PrismaGearRepository } from "./repositories/gear.repository.prisma";
-import { PrismaCategoryRepository } from "./repositories/category.repository.prisma";
-import { PrismaTeamRepository } from "./repositories/team.repository.prisma";
+import { PrismaCatalogGears } from "./gear/repositories/catalog-gears.prisma";
+import { PrismaCategoryRepository } from "./category/repositories/category.repository.prisma";
+import { PrismaTeamRepository } from "./category/repositories/team.repository.prisma";
+import { CatalogGearManager } from "@overbookd/logistic";
+import { PrismaFindCatalogCategories } from "./gear/repositories/find-catalog-categories.prisma";
 
 @Module({
   providers: [
     {
-      provide: PrismaGearRepository,
-      useFactory: (prisma: PrismaService) => new PrismaGearRepository(prisma),
+      provide: PrismaCatalogGears,
+      useFactory: (prisma: PrismaService) => new PrismaCatalogGears(prisma),
       inject: [PrismaService],
     },
     {
@@ -27,15 +29,34 @@ import { PrismaTeamRepository } from "./repositories/team.repository.prisma";
       inject: [PrismaService],
     },
     {
-      provide: CatalogService,
+      provide: PrismaFindCatalogCategories,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaFindCatalogCategories(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: CatalogGearManager,
+      useFactory: (gears: PrismaCatalogGears) => new CatalogGearManager(gears),
+      inject: [PrismaCatalogGears],
+    },
+    {
+      provide: CatalogGearService,
       useFactory: (
-        gear: PrismaGearRepository,
+        gears: CatalogGearManager,
+        categories: PrismaFindCatalogCategories,
+      ) => new CatalogGearService(gears, categories),
+      inject: [CatalogGearManager, PrismaFindCatalogCategories],
+    },
+    {
+      provide: CatalogCategoryService,
+      useFactory: (
         category: PrismaCategoryRepository,
-      ) => new CatalogService(gear, category),
-      inject: [PrismaGearRepository, PrismaCategoryRepository],
+        team: PrismaTeamRepository,
+      ) => new CatalogCategoryService(category, team),
+      inject: [PrismaCategoryRepository, PrismaTeamRepository],
     },
   ],
-  controllers: [CategoryController, GearController],
-  exports: [CatalogService, CategoryService],
+  controllers: [CategoryController, CatalogGearController],
+  exports: [CatalogGearService, CatalogCategoryService],
 })
 export class CatalogModule {}

@@ -2,7 +2,7 @@ import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
 import { CategoryRepository } from "./catalog-repositories.js";
 import {
   CategoryAlreadyExists,
-  CategoryNotFoundException,
+  CategoryNotFound,
 } from "../catalog.error.js";
 import {
   CatalogCategory,
@@ -90,7 +90,7 @@ export class InMemoryCategoryRepository implements CategoryRepository {
     const categoryIndex = this.categories.findIndex(
       (categ) => categ.id === category.id,
     );
-    if (categoryIndex === -1) throw new CategoryNotFoundException(category.id);
+    if (categoryIndex === -1) throw new CategoryNotFound(category.id);
     this.categories = updateItemToList(
       this.categories,
       categoryIndex,

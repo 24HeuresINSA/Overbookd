@@ -1,20 +1,19 @@
 import { Injectable } from "@nestjs/common";
 import {
-  GearReferenceCodeService,
   GearLinkedItems,
-  GearRepository,
-  GearAlreadyExists,
+  CatalogGears,
   CatalogGear,
   GearSearchOptions,
+  SavedCatalogGear,
 } from "@overbookd/logistic";
-import { PrismaService } from "../../../prisma.service";
-import { GearFilter } from "../../common/gear.filter";
+import { PrismaService } from "../../../../prisma.service";
+import { GearFilter } from "../../../common/gear.filter";
 import {
   DatabaseGear,
   SELECT_GEAR,
-} from "../../common/repositories/gear.query";
+} from "../../../common/repositories/gear.query";
 
-export function convertGearToApiContract(gear: DatabaseGear) {
+export function convertGearToApiContract(gear: DatabaseGear): SavedCatalogGear {
   const baseGear = {
     name: gear.name,
     slug: gear.slug,
@@ -32,41 +31,30 @@ export function convertGearToApiContract(gear: DatabaseGear) {
   const owner = gear.category?.owner
     ? { name: gear.category.owner.name, code: gear.category.owner.code }
     : undefined;
-  const code = category
-    ? GearReferenceCodeService.computeGearCode(category, gear.id)
-    : undefined;
-  return { ...baseGear, category, owner, code };
+  return { ...baseGear, category, owner };
 }
 
 @Injectable()
-export class PrismaGearRepository implements GearRepository {
+export class PrismaCatalogGears implements CatalogGears {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async getGear(id: number): Promise<CatalogGear | undefined> {
+  async findBySlug(slug: string): Promise<SavedCatalogGear | undefined> {
     const gear = await this.prismaService.catalogGear.findUnique({
+      where: { slug },
       select: SELECT_GEAR,
-      where: { id },
     });
     return gear ? convertGearToApiContract(gear) : undefined;
   }
 
-  async addGear(gear: Omit<CatalogGear, "id">): Promise<CatalogGear> {
-    try {
-      const data = this.buildUpsertData(gear);
-      const newGear = await this.prismaService.catalogGear.create({
-        data,
-        select: SELECT_GEAR,
-      });
-      return convertGearToApiContract(newGear);
-    } catch (e) {
-      if (this.prismaService.isUniqueConstraintViolation(e)) {
-        throw new GearAlreadyExists(gear.name);
-      }
-      throw e;
-    }
+  async addGear(gear: Omit<SavedCatalogGear, "id">): Promise<SavedCatalogGear> {
+    const newGear = await this.prismaService.catalogGear.create({
+      data: this.buildUpsertData(gear),
+      select: SELECT_GEAR,
+    });
+    return convertGearToApiContract(newGear);
   }
 
-  private buildUpsertData(gear: Omit<CatalogGear, "id">) {
+  private buildUpsertData(gear: Omit<SavedCatalogGear, "id">) {
     const { category, owner: _, ...baseGear } = gear;
     const categoryLink = category
       ? { category: { connect: { id: category.id } } }
@@ -75,8 +63,8 @@ export class PrismaGearRepository implements GearRepository {
     return { ...baseGear, ...categoryLink };
   }
 
-  async updateGear(gear: Omit<CatalogGear, "owner">): Promise<CatalogGear> {
-    const { id, category, ...data } = gear;
+  async updateGear(gear: SavedCatalogGear): Promise<SavedCatalogGear> {
+    const { id, category, owner: _, ...data } = gear;
     const updatedGear = await this.prismaService.catalogGear.update({
       data: { ...data, category: { connect: { id: category.id } } },
       select: SELECT_GEAR,
@@ -99,10 +87,18 @@ export class PrismaGearRepository implements GearRepository {
       },
     });
     return {
-      actitivities: gear.festivalActivityInquiries.map(({ faId }) => faId),
+      activities: gear.festivalActivityInquiries.map(({ faId }) => faId),
       tasks: gear.festivalTaskInquiries.map(({ ftId }) => ftId),
       borrows: gear.borrows.map(({ borrowId }) => borrowId),
     };
+  }
+
+  async getLastId(): Promise<number> {
+    const lastGear = await this.prismaService.catalogGear.findFirst({
+      orderBy: { id: "desc" },
+      select: { id: true },
+    });
+    return lastGear?.id ?? 0;
   }
 
   async searchGear(options: GearSearchOptions): Promise<CatalogGear[]> {

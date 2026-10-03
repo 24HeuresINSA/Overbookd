@@ -4,7 +4,7 @@ import {
   CatalogGear,
   CategoryOwner,
 } from "@overbookd/logistic";
-import { CategoryOwnerResponseDto } from "../../catalog/dto/category-owner.response.dto";
+import { CategoryOwnerResponseDto } from "../../catalog/category/dto/category-owner.response.dto";
 import { CatalogCategoryIdentifierResponseDto } from "./catalog-category-identifier.dto";
 
 export class CatalogGearResponseDto implements CatalogGear {

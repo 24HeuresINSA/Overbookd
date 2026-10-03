@@ -1,0 +1,88 @@
+import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
+import { SlugifyService } from "@overbookd/slugify";
+import {
+  GearLinkedItems,
+  GearSearchOptions,
+  SavedCatalogGear,
+} from "../gear.js";
+import { CatalogGears } from "./catalog-repositories.js";
+import { GearSearchBuilder } from "../../gear-search.builder.js";
+
+export const EMPTY_GEAR_LINKED_ITEMS = {
+  tasks: [],
+  activities: [],
+  borrows: [],
+};
+
+export class InMemoryGearRepository implements CatalogGears {
+  constructor(
+    private gears: SavedCatalogGear[] = [],
+    private linkedItems: Record<number, GearLinkedItems> = {},
+  ) {}
+
+  findBySlug(slug: string): Promise<SavedCatalogGear | undefined> {
+    const gear = this.gears.find((gear) => gear.slug === slug);
+    if (!gear) return Promise.resolve(undefined);
+    return Promise.resolve(gear);
+  }
+
+  getLastId(): Promise<number> {
+    const lastGearId = this.gears.reduce(
+      (max, gear) => (gear.id > max ? gear.id : max),
+      0,
+    );
+    return Promise.resolve(lastGearId ?? 0);
+  }
+
+  async addGear(gear: Omit<SavedCatalogGear, "id">): Promise<SavedCatalogGear> {
+    const id = (await this.getLastId()) + 1;
+    const createdGear = { ...gear, id };
+    this.gears = [...this.gears, createdGear];
+    return Promise.resolve(createdGear);
+  }
+
+  updateGear(gear: SavedCatalogGear): Promise<SavedCatalogGear | undefined> {
+    const gearIndex = this.gears.findIndex((g) => g.id === gear.id);
+    if (gearIndex === -1) return Promise.resolve(undefined);
+    const toUpdate = { ...this.gears[gearIndex], ...gear };
+    this.gears = updateItemToList(this.gears, gearIndex, toUpdate);
+    return Promise.resolve(toUpdate);
+  }
+
+  removeGear(id: number): Promise<void> {
+    const gearIndex = this.gears.findIndex((gear) => gear.id === id);
+    if (gearIndex === -1) return Promise.resolve();
+    this.gears = removeItemAtIndex(this.gears, gearIndex);
+    return Promise.resolve();
+  }
+
+  getLinkedItems(id: number): Promise<Partial<GearLinkedItems>> {
+    return Promise.resolve({ ...this.linkedItems[id] });
+  }
+
+  searchGear(options: GearSearchOptions): Promise<SavedCatalogGear[]> {
+    return Promise.resolve(
+      this.gears.filter((gear) => this.isMatchingSearch(options, gear)),
+    );
+  }
+
+  private isMatchingSearch(
+    { category, search, owner, ponctualUsage }: GearSearchOptions,
+    gear: SavedCatalogGear,
+  ): boolean {
+    const slug = SlugifyService.applyOnOptional(search);
+    const categorySlug = SlugifyService.applyOnOptional(category);
+    const ownerSlug = SlugifyService.applyOnOptional(owner);
+
+    const gearSearch = new GearSearchBuilder(gear)
+      .addCategoryCondition(categorySlug)
+      .addSlugCondition(slug)
+      .addOwnerCondition(ownerSlug)
+      .addPonctualUsageCondition(ponctualUsage);
+    return gearSearch.match;
+  }
+
+  get savedGears() {
+    return this.gears;
+  }
+}

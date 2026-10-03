@@ -1,10 +1,7 @@
 import { CatalogCategoryIdentifier } from "./category.js";
 
-export class GearReferenceCodeService {
-  static computeGearCode(
-    category: CatalogCategoryIdentifier,
-    id: number,
-  ): string {
+export class GearReferenceCodeGenerator {
+  static generate(category: CatalogCategoryIdentifier, id: number): string {
     const pathCode = this.computeCategoryPathCode(category);
     const idCode = this.toThreeDigitFormat(id);
     return `${pathCode}_${idCode}`;
