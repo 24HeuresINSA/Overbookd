@@ -67,6 +67,7 @@ import {
 } from "../festival-task.error.js";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
+import { InMemoryVolunteersForEnableAssignment } from "./volunteers-for-enable-assignment.inmemory.js";
 
 const expectedGuardPsAssignments = [
   { ...friday18hfriday20h, assignees: [] },
@@ -115,7 +116,7 @@ const expectedBarCashierAssignmentsSaturdayNigth = [
 ];
 
 const expectedPreparePressConferenceAssignments = [
-  { ...sunday11hsunday12h, assignees: [valery] },
+  { ...sunday11hsunday12h, assignees: [valery, gab] },
 ];
 
 const expectedCleanPressConferenceAssignments = [
@@ -161,7 +162,13 @@ describe("Enable assignment", () => {
       volunteers,
     );
     const translator = new FestivalTaskTranslator(volunteerConflicts);
-    enableAssignment = new EnableAssignment(festivalTasks, translator);
+    const volunteersForEnableAssignment =
+      new InMemoryVolunteersForEnableAssignment(volunteers);
+    enableAssignment = new EnableAssignment(
+      festivalTasks,
+      translator,
+      volunteersForEnableAssignment,
+    );
   });
   describe.each`
     task                      | instigator | categorize                                      | expectedMobilizations

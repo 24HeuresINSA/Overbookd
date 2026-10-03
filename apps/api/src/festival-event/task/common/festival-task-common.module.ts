@@ -23,7 +23,8 @@ import { PrismaAskForReview } from "./repository/ask-for-review.prisma";
 import { PrismaReviewers } from "./repository/reviewers.prisma";
 import { PrismaLocations } from "../../common/repository/locations.prisma";
 import { PrismaFestivalTasksForReview } from "./repository/review-festival-tasks.prisma";
-import { PrimsaEnableAssignmentFestivalTasks } from "./repository/enable-assignment-festival-tasks.prisma";
+import { PrismaEnableAssignmentFestivalTasks } from "./repository/enable-assignment-festival-tasks.prisma";
+import { PrismaEnableAssignmentVolunteers } from "./repository/enable-assignment-volunteers.prisma";
 
 @Module({
   providers: [
@@ -158,18 +159,29 @@ import { PrimsaEnableAssignmentFestivalTasks } from "./repository/enable-assignm
       inject: [PrismaFestivalTasksForReview, FestivalTaskTranslator],
     },
     {
-      provide: PrimsaEnableAssignmentFestivalTasks,
+      provide: PrismaEnableAssignmentFestivalTasks,
       useFactory: (prisma: PrismaService) =>
-        new PrimsaEnableAssignmentFestivalTasks(prisma),
+        new PrismaEnableAssignmentFestivalTasks(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaEnableAssignmentVolunteers,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaEnableAssignmentVolunteers(prisma),
       inject: [PrismaService],
     },
     {
       provide: EnableAssignment,
       useFactory: (
-        festivalTasks: PrimsaEnableAssignmentFestivalTasks,
+        festivalTasks: PrismaEnableAssignmentFestivalTasks,
         translator: FestivalTaskTranslator,
-      ) => new EnableAssignment(festivalTasks, translator),
-      inject: [PrimsaEnableAssignmentFestivalTasks, FestivalTaskTranslator],
+        volunteers: PrismaEnableAssignmentVolunteers,
+      ) => new EnableAssignment(festivalTasks, translator, volunteers),
+      inject: [
+        PrismaEnableAssignmentFestivalTasks,
+        FestivalTaskTranslator,
+        PrismaEnableAssignmentVolunteers,
+      ],
     },
   ],
   imports: [PrismaModule],

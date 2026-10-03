@@ -23,22 +23,28 @@ import {
 import { isValidated } from "../../festival-event.js";
 import { ValidatedWithConflicts } from "../festival-task.factory.js";
 import {
+  ALL_TEAM_MEMBERS,
   Assignment,
   ReviewableMobilization,
-  VolunteerWithConflicts,
 } from "../sections/mobilizations.js";
 import { Item } from "@overbookd/list";
 import { Period, Duration } from "@overbookd/time";
+import { Volunteer } from "../sections/instructions.js";
 
 export type FestivalTasksForEnableAssignment = {
   findById(id: FestivalTask["id"]): Promise<WithoutConflicts | null>;
   save(task: ReadyToAssign): Promise<ReadyToAssignWithoutConflicts>;
 };
 
+export type VolunteersForEnableAssignment = {
+  findByTeams(teams: string[]): Promise<Volunteer[]>;
+};
+
 export class EnableAssignment {
   constructor(
     private readonly festivalTasks: FestivalTasksForEnableAssignment,
     private readonly festivalTaskTranslator: FestivalTaskTranslator,
+    private readonly volunteers: VolunteersForEnableAssignment,
   ) {}
 
   async for(
@@ -55,7 +61,10 @@ export class EnableAssignment {
     }
     if (!isValidated(task)) throw new FestivalTaskNotValidated(ftId);
 
-    const readyToAssign = ReadyToAssignFestivalTask.fromValidated(
+    const readyToAssignFestivalTask = new ReadyToAssignFestivalTask(
+      this.volunteers,
+    );
+    const readyToAssign = await readyToAssignFestivalTask.fromValidated(
       await this.festivalTaskTranslator.translate(task),
       instigator,
       categorize,
@@ -67,11 +76,13 @@ export class EnableAssignment {
 }
 
 class ReadyToAssignFestivalTask {
-  static fromValidated(
+  constructor(private readonly volunteers: VolunteersForEnableAssignment) {}
+
+  async fromValidated(
     task: ValidatedWithConflicts,
     instigator: Adherent,
     categorize: Categorize,
-  ): ReadyToAssign {
+  ): Promise<ReadyToAssign> {
     if (ReadyToAssignFestivalTask.hasUnavailableVolunteerRequired(task)) {
       throw new ReadyToAssignError();
     }
@@ -85,12 +96,19 @@ class ReadyToAssignFestivalTask {
       Assignments.generate(mobilization),
     );
 
+    const teamAssignments = new TeamAssignments(this.volunteers);
+    const mobilizationsWithTeamAssignments = await Promise.all(
+      mobilizations.map((mobilization) =>
+        teamAssignments.generate(mobilization),
+      ),
+    );
+
     return {
       ...task,
       ...categorize,
       status: READY_TO_ASSIGN,
       history,
-      mobilizations,
+      mobilizations: mobilizationsWithTeamAssignments,
     };
   }
 
@@ -112,7 +130,7 @@ export class Assignments {
     const assignmentPeriods = Assignments.generatePeriods(mobilization);
 
     const assignments: Assignment[] = assignmentPeriods.map((period) =>
-      extractAssignment(mobilization, period),
+      Assignments.extractAssignment(mobilization, period),
     );
     return { ...mobilization, assignments };
   }
@@ -129,25 +147,54 @@ export class Assignments {
       Duration.hours(mobilization.durationSplitInHour),
     );
   }
+
+  private static extractAssignment(
+    mobilization: Item<ValidatedWithConflicts["mobilizations"]>,
+    period: Period,
+  ): Assignment {
+    return {
+      start: period.start,
+      end: period.end,
+      id: period.id,
+      assignees: mobilization.volunteers.map(extractVolunteerData),
+    };
+  }
 }
 
-function extractAssignment(
-  mobilization: Item<ValidatedWithConflicts["mobilizations"]>,
-  period: Period,
-): Assignment {
-  return {
-    start: period.start,
-    end: period.end,
-    id: period.id,
-    assignees: mobilization.volunteers.map(extractVolunteerData),
-  };
-}
-
-function extractVolunteerData(volunteer: VolunteerWithConflicts) {
+export function extractVolunteerData(volunteer: Volunteer) {
   return {
     id: volunteer.id,
     lastName: volunteer.lastName,
     firstName: volunteer.firstName,
     nickname: volunteer.nickname,
   };
+}
+
+class TeamAssignments {
+  constructor(private readonly volunteers: VolunteersForEnableAssignment) {}
+
+  async generate(
+    mobilization: Item<ReadyToAssignWithConflicts["mobilizations"]>,
+  ): Promise<Item<ReadyToAssignWithConflicts["mobilizations"]>> {
+    const teams = mobilization.teams
+      .filter(({ count }) => count === ALL_TEAM_MEMBERS)
+      .map(({ team }) => team);
+    const teamAssignees = await this.volunteers.findByTeams(teams);
+    const assignments = mobilization.assignments.map((assignment) => ({
+      ...assignment,
+      assignees: this.mergeAssignees(assignment.assignees, teamAssignees),
+    }));
+    return { ...mobilization, assignments };
+  }
+
+  private mergeAssignees(
+    baseAssignees: Volunteer[],
+    teamAssignees: Volunteer[],
+  ): Volunteer[] {
+    const allAssignees = [...baseAssignees, ...teamAssignees];
+    const uniqueAssignees = new Map(
+      allAssignees.map((volunteer) => [volunteer.id, volunteer]),
+    );
+    return [...uniqueAssignees.values()];
+  }
 }

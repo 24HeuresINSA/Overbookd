@@ -701,6 +701,7 @@ export const preparePressConference = factory
           conflicts: { tasks: [], availability: false, assignments: [] },
         },
       ],
+      teams: [{ team: PERSONNE, count: ALL_TEAM_MEMBERS }],
     }).mobilization,
   ])
   .build();
@@ -779,8 +780,8 @@ export const parcoursCollageTrajetA = factory
   })
   .build();
 
-export const briefVieux = factory
-  .validated("Brief vieux·eilles")
+export const vieuxBriefing = factory
+  .validated("Vieux·eilles briefing")
   .withMobilizations([
     MobilizationBuilder.init<ValidatedWithConflicts>({
       start: sunday12h,

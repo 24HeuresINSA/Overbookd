@@ -44,7 +44,7 @@ import {
   noelWithTeams,
 } from "../festival-task.test-util.js";
 import {
-  briefVieux,
+  vieuxBriefing,
   gabIsAssignedTo,
   installEscapeGame,
   uninstallEscapeGame,
@@ -102,7 +102,7 @@ describe("Prepare festival task mobilizations list", () => {
       approvedByElecRejectedByMatos,
       approvedByMatosRejectedByHumainAndElec,
       gabIsAssignedTo,
-      briefVieux,
+      vieuxBriefing,
     ];
     const availabilities = [noelAvailabilities, leaAvailabilities];
     const volunteers = [noelWithTeams, leaWithTeams];
@@ -179,9 +179,9 @@ describe("Prepare festival task mobilizations list", () => {
         ${"personnaly"} | ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday07h} | ${saturday10h} | ${guardEscapeGame}
         ${"personnaly"} | ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday07h} | ${saturday09h} | ${guardEscapeGame}
         ${"personnaly"} | ${"overlapping period on end"}   | ${presentEscapeGame} | ${saturday10h} | ${saturday12h} | ${guardEscapeGame}
-        ${"by team"}    | ${"period with same boundaries"} | ${presentEscapeGame} | ${sunday12h}   | ${sunday18h}   | ${briefVieux}
-        ${"by team"}    | ${"smaller period"}              | ${presentEscapeGame} | ${sunday14h}   | ${sunday18h}   | ${briefVieux}
-        ${"by team"}    | ${"overlapping period on end"}   | ${presentEscapeGame} | ${sunday11h}   | ${sunday14h}   | ${briefVieux}
+        ${"by team"}    | ${"period with same boundaries"} | ${presentEscapeGame} | ${sunday12h}   | ${sunday18h}   | ${vieuxBriefing}
+        ${"by team"}    | ${"smaller period"}              | ${presentEscapeGame} | ${sunday14h}   | ${sunday18h}   | ${vieuxBriefing}
+        ${"by team"}    | ${"overlapping period on end"}   | ${presentEscapeGame} | ${sunday11h}   | ${sunday14h}   | ${vieuxBriefing}
       `(
         "when volunteer is requested $by on $indication on any mobilization",
         ({ task, start, end, requestedBy }) => {

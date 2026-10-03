@@ -188,7 +188,7 @@ export const valery = {
   firstName: "Valery",
 };
 
-export const valeryWithTeams = { ...lea, teams: [PERSONNE, SOFT] };
+export const valeryWithTeams = { ...valery, teams: [PERSONNE, SOFT] };
 
 export const gab = {
   id: 7,

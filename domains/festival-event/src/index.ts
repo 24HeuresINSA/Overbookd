@@ -201,7 +201,10 @@ export {
 export type { FestivalTasksForView } from "./festival-task/view/view.js";
 export { ViewFestivalTask } from "./festival-task/view/view.js";
 export { EnableAssignment } from "./festival-task/enable-assignment/enable-assignment.js";
-export type { FestivalTasksForEnableAssignment } from "./festival-task/enable-assignment/enable-assignment.js";
+export type {
+  FestivalTasksForEnableAssignment,
+  VolunteersForEnableAssignment,
+} from "./festival-task/enable-assignment/enable-assignment.js";
 export type {
   FestivalTask,
   Draft as FestivalTaskDraft,
