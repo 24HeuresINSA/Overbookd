@@ -117,7 +117,7 @@ describe("Approve festival task", () => {
       withMatosAndElecIgnore,
     ];
     const festivalTasks = new InMemoryFestivalTasksForReview(tasks);
-    const conflicts = new InMemoryVolunteerConflicts(tasks, []);
+    const conflicts = new InMemoryVolunteerConflicts(tasks, [], []);
     const translator = new FestivalTaskTranslator(conflicts);
     review = new Review(festivalTasks, translator);
   });
@@ -223,7 +223,7 @@ describe("Reject festival task", () => {
       uninstallPreventionVillage,
     ];
     const festivalTasks = new InMemoryFestivalTasksForReview(tasks);
-    const conflicts = new InMemoryVolunteerConflicts(tasks, []);
+    const conflicts = new InMemoryVolunteerConflicts(tasks, [], []);
     const translator = new FestivalTaskTranslator(conflicts);
     review = new Review(festivalTasks, translator);
   });
@@ -309,7 +309,7 @@ describe("Ignore festival task", () => {
       ignoredByMatos,
     ];
     const festivalTasks = new InMemoryFestivalTasksForReview(tasks);
-    const conflicts = new InMemoryVolunteerConflicts(tasks, []);
+    const conflicts = new InMemoryVolunteerConflicts(tasks, [], []);
     const translator = new FestivalTaskTranslator(conflicts);
     review = new Review(festivalTasks, translator);
     prepare = new PrepareFestivalTask(festivalTasks, translator);
@@ -388,7 +388,7 @@ describe("Ignore festival task", () => {
       withMatosRejectionAndElecIgnore,
     ];
     const festivalTasks = new InMemoryFestivalTasksForReview(tasks);
-    const conflicts = new InMemoryVolunteerConflicts(tasks, []);
+    const conflicts = new InMemoryVolunteerConflicts(tasks, [], []);
     const translator = new FestivalTaskTranslator(conflicts);
     review = new Review(festivalTasks, translator);
   });

@@ -4,6 +4,7 @@ import {
   Volunteer,
   FestivalTaskLink,
   Conflicts,
+  ALL_TEAM_MEMBERS,
 } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/time";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
@@ -29,12 +30,27 @@ export class PrismaVolunteerConflicts implements VolunteerConflicts {
     { start, end }: IProvidePeriod,
     volunteerId: Volunteer["id"],
   ): Promise<FestivalTaskLink[]> {
+    const teams = await this.prisma.userTeam.findMany({
+      where: { userId: volunteerId },
+    });
+    const teamCodes = teams.map(({ teamCode }) => teamCode);
+
     const conflicts = await this.prisma.festivalTaskMobilization.findMany({
       where: {
         ft: IS_NOT_DELETED,
         start: { lt: end },
         end: { gt: start },
-        volunteers: { some: { volunteerId } },
+        OR: [
+          { volunteers: { some: { volunteerId } } },
+          {
+            teams: {
+              some: {
+                count: ALL_TEAM_MEMBERS,
+                team: { code: { in: teamCodes } },
+              },
+            },
+          },
+        ],
         NOT: [
           { ft: { id: taskId }, start, end },
           { ft: { status: READY_TO_ASSIGN } },

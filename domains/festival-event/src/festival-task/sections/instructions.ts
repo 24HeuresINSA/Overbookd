@@ -7,6 +7,7 @@ export type Contact = Adherent & {
 };
 
 export type Volunteer = Adherent;
+export type VolunteerWithTeams = Volunteer & { teams: string[] };
 
 export type WithoutInChargeInstructions = {
   instruction: null;

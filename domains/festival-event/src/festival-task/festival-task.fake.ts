@@ -60,6 +60,7 @@ import {
   WILL_NOT_REVIEW,
 } from "@overbookd/festival-event-constants";
 import { CONFIANCE, HARD, PERSONNE, VIEUX } from "@overbookd/team-code";
+import { ALL_TEAM_MEMBERS } from "./sections/mobilizations.js";
 
 const factory = getFactory();
 
@@ -776,4 +777,15 @@ export const parcoursCollageTrajetA = factory
   .withInstructions({
     inCharge: { volunteers: [valery, george], instruction: "Let's go" },
   })
+  .build();
+
+export const briefVieux = factory
+  .validated("Brief vieux·eilles")
+  .withMobilizations([
+    MobilizationBuilder.init<ValidatedWithConflicts>({
+      start: sunday12h,
+      end: sunday18h,
+      teams: [{ count: ALL_TEAM_MEMBERS, team: VIEUX }],
+    }).mobilization,
+  ])
   .build();

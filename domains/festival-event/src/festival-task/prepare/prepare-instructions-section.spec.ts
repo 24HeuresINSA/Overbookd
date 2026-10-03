@@ -37,7 +37,6 @@ import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
 import { AlreadyApprovedBy } from "../../common/review.error.js";
 import { isDraft } from "../../festival-event.js";
-import { elec, humain, matos } from "../../common/review.js";
 import {
   APPROVED,
   FORCED_UPDATE,
@@ -46,6 +45,7 @@ import {
   RESET_REVIEW,
   REVIEWING,
 } from "@overbookd/festival-event-constants";
+import { HUMAIN, LOG_ELEC, LOG_MATOS } from "@overbookd/team-code";
 
 describe("Prepare festival task instructions section", () => {
   let prepare: PrepareFestivalTask;
@@ -68,7 +68,7 @@ describe("Prepare festival task instructions section", () => {
       parcoursCollageTrajetA,
     ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
-    const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
+    const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, [], []);
     const translator = new FestivalTaskTranslator(volunteerConflicts);
     prepare = new PrepareFestivalTask(festivalTasks, translator);
   });
@@ -253,7 +253,7 @@ describe("Prepare festival task instructions section", () => {
       it("should indicate instructions are also required", async () => {
         expect(
           async () =>
-            await prepare.addInChargeVolunteer(guardJustDance.id, noelContact),
+            await prepare.addInChargeVolunteer(guardJustDance.id, noel),
         ).rejects.toThrow(
           "Des instructions spécifiques sont nécessaires pour les responsables",
         );
@@ -329,13 +329,13 @@ describe("Prepare festival task instructions section", () => {
 
   describe("Update after approvals", () => {
     describe.each`
-      approvers         | rejectors         | humain       | matos        | elec                    | taskName                                               | task
-      ${[humain]}       | ${[]}             | ${APPROVED}  | ${REVIEWING} | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByHumain.general.name}                   | ${onlyApprovedByHumain}
-      ${[matos]}        | ${[]}             | ${REVIEWING} | ${APPROVED}  | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByMatos.general.name}                    | ${onlyApprovedByMatos}
-      ${[humain]}       | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${NOT_ASKING_TO_REVIEW} | ${approvedByHumainRejectedByMatos.general.name}        | ${approvedByHumainRejectedByMatos}
-      ${[humain, elec]} | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos}
-      ${[elec]}         | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByElecRejectedByMatos.general.name}          | ${approvedByElecRejectedByMatos}
-      ${[matos]}        | ${[humain, elec]} | ${REJECTED}  | ${REVIEWING} | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name} | ${approvedByMatosRejectedByHumainAndElec}
+      approvers             | rejectors             | humain       | matos        | elec                    | taskName                                               | task
+      ${[HUMAIN]}           | ${[]}                 | ${APPROVED}  | ${REVIEWING} | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByHumain.general.name}                   | ${onlyApprovedByHumain}
+      ${[LOG_MATOS]}        | ${[]}                 | ${REVIEWING} | ${APPROVED}  | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByMatos.general.name}                    | ${onlyApprovedByMatos}
+      ${[HUMAIN]}           | ${[LOG_MATOS]}        | ${REVIEWING} | ${REJECTED}  | ${NOT_ASKING_TO_REVIEW} | ${approvedByHumainRejectedByMatos.general.name}        | ${approvedByHumainRejectedByMatos}
+      ${[HUMAIN, LOG_ELEC]} | ${[LOG_MATOS]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos}
+      ${[LOG_ELEC]}         | ${[LOG_MATOS]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByElecRejectedByMatos.general.name}          | ${approvedByElecRejectedByMatos}
+      ${[LOG_MATOS]}        | ${[HUMAIN, LOG_ELEC]} | ${REJECTED}  | ${REVIEWING} | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name} | ${approvedByMatosRejectedByHumainAndElec}
     `(
       "when $approvers approved the task $taskName",
       ({ approvers, task, rejectors, humain, matos, elec }) => {
@@ -621,8 +621,8 @@ describe("Prepare festival task instructions section", () => {
     describe("when updating IN REVIEW task with some approvals", () => {
       it.each`
         task                    | approver
-        ${onlyApprovedByHumain} | ${humain}
-        ${onlyApprovedByMatos}  | ${matos}
+        ${onlyApprovedByHumain} | ${HUMAIN}
+        ${onlyApprovedByMatos}  | ${LOG_MATOS}
       `(
         "should indicate task is already approved by $approver",
         async ({ task }) => {
@@ -707,7 +707,7 @@ describe("Prepare festival task instructions section", () => {
   describe("Force instructions update", () => {
     describe.each`
       fields                   | instructions                                        | approvers   | taskName                               | task
-      ${"global"}              | ${{ global: "C'est push" }}                         | ${[humain]} | ${parcoursCollageTrajetA.general.name} | ${parcoursCollageTrajetA}
+      ${"global"}              | ${{ global: "C'est push" }}                         | ${[HUMAIN]} | ${parcoursCollageTrajetA.general.name} | ${parcoursCollageTrajetA}
       ${"inCharge"}            | ${{ inCharge: "C'est push" }}                       | ${[noel]}   | ${parcoursCollageTrajetA.general.name} | ${parcoursCollageTrajetA}
       ${"global and inCharge"} | ${{ inCharge: "C'est push", global: "Avec force" }} | ${[noel]}   | ${parcoursCollageTrajetA.general.name} | ${parcoursCollageTrajetA}
     `(

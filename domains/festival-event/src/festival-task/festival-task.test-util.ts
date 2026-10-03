@@ -14,7 +14,7 @@ import { Location } from "../common/location.js";
 import { TimeWindow } from "../common/time-window.js";
 import { ValidatedWithConflicts } from "./festival-task.factory.js";
 import { Assignments } from "./enable-assignment/enable-assignment.js";
-import { PERSONNE, HARD } from "@overbookd/team-code";
+import { PERSONNE, HARD, VIEUX, SOFT } from "@overbookd/team-code";
 
 type BuildTimeWindow = {
   date: Date;
@@ -131,6 +131,8 @@ export const noel = {
 
 export const noelContact: Contact = { ...noel, phoneNumber: "0601020304" };
 
+export const noelWithTeams = { ...noel, teams: [PERSONNE, VIEUX, HARD] };
+
 export const lea = {
   id: 2,
   lastName: "Mouyno",
@@ -138,6 +140,8 @@ export const lea = {
 };
 
 export const leaContact: Contact = { ...lea, phoneNumber: "0602030405" };
+
+export const leaWithTeams = { ...lea, teams: [PERSONNE, VIEUX] };
 
 export const justDanceInstaller = {
   id: 3,
@@ -184,11 +188,15 @@ export const valery = {
   firstName: "Valery",
 };
 
+export const valeryWithTeams = { ...lea, teams: [PERSONNE, SOFT] };
+
 export const gab = {
   id: 7,
   lastName: "Riel",
   firstName: "Gab",
 };
+
+export const gabWithTeams = { ...gab, teams: [PERSONNE, HARD] };
 
 export const friday9h: BuildTimeWindow = {
   date: new Date("2024-05-17T09:00+02:00"),

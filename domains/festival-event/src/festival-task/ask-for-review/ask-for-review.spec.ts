@@ -60,7 +60,7 @@ describe("Festival Task - ask for review", () => {
       { adherent: noel, count: 0 },
       { adherent: george, count: 1 },
     ]);
-    const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
+    const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, [], []);
     translator = new FestivalTaskTranslator(volunteerConflicts);
     askForReview = new AskForReview(
       { reviewers, tasks: festivalTasks },

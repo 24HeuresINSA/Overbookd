@@ -36,8 +36,15 @@ import {
   saturday14h,
   friday11hfriday17hMobilization,
   friday17hfriday18hMobilization,
+  sunday11h,
+  sunday14h,
+  sunday12h,
+  sunday18h,
+  leaWithTeams,
+  noelWithTeams,
 } from "../festival-task.test-util.js";
 import {
+  briefVieux,
   gabIsAssignedTo,
   installEscapeGame,
   uninstallEscapeGame,
@@ -95,12 +102,15 @@ describe("Prepare festival task mobilizations list", () => {
       approvedByElecRejectedByMatos,
       approvedByMatosRejectedByHumainAndElec,
       gabIsAssignedTo,
+      briefVieux,
     ];
     const availabilities = [noelAvailabilities, leaAvailabilities];
+    const volunteers = [noelWithTeams, leaWithTeams];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(
       tasks,
       availabilities,
+      volunteers,
     );
     const translator = new FestivalTaskTranslator(volunteerConflicts);
     prepare = new PrepareFestivalTask(festivalTasks, translator);
@@ -162,16 +172,19 @@ describe("Prepare festival task mobilizations list", () => {
         },
       );
       describe.each`
-        indication                       | task                 | start          | end
-        ${"period with same boundaries"} | ${presentEscapeGame} | ${saturday08h} | ${saturday11h}
-        ${"larger period"}               | ${presentEscapeGame} | ${saturday07h} | ${saturday12h}
-        ${"smaller period"}              | ${presentEscapeGame} | ${saturday09h} | ${saturday10h}
-        ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday07h} | ${saturday10h}
-        ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday07h} | ${saturday09h}
-        ${"overlapping period on end"}   | ${presentEscapeGame} | ${saturday10h} | ${saturday12h}
+        by              | indication                       | task                 | start          | end            | requestedBy
+        ${"personnaly"} | ${"period with same boundaries"} | ${presentEscapeGame} | ${saturday08h} | ${saturday11h} | ${guardEscapeGame}
+        ${"personnaly"} | ${"larger period"}               | ${presentEscapeGame} | ${saturday07h} | ${saturday12h} | ${guardEscapeGame}
+        ${"personnaly"} | ${"smaller period"}              | ${presentEscapeGame} | ${saturday09h} | ${saturday10h} | ${guardEscapeGame}
+        ${"personnaly"} | ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday07h} | ${saturday10h} | ${guardEscapeGame}
+        ${"personnaly"} | ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday07h} | ${saturday09h} | ${guardEscapeGame}
+        ${"personnaly"} | ${"overlapping period on end"}   | ${presentEscapeGame} | ${saturday10h} | ${saturday12h} | ${guardEscapeGame}
+        ${"by team"}    | ${"period with same boundaries"} | ${presentEscapeGame} | ${sunday12h}   | ${sunday18h}   | ${briefVieux}
+        ${"by team"}    | ${"smaller period"}              | ${presentEscapeGame} | ${sunday14h}   | ${sunday18h}   | ${briefVieux}
+        ${"by team"}    | ${"overlapping period on end"}   | ${presentEscapeGame} | ${sunday11h}   | ${sunday14h}   | ${briefVieux}
       `(
-        "when volunteer is requested on $indication on any mobilization",
-        ({ task, start, end }) => {
+        "when volunteer is requested $by on $indication on any mobilization",
+        ({ task, start, end, requestedBy }) => {
           it("should list tasks that are requesting the same volunteer at the same time", async () => {
             const helper = saturday08hsaturday11hMobilization
               .withStart(start)
@@ -189,8 +202,8 @@ describe("Prepare festival task mobilizations list", () => {
             );
             const expectedRequestedBy = [
               {
-                id: guardEscapeGame.id,
-                name: guardEscapeGame.general.name,
+                id: requestedBy.id,
+                name: requestedBy.general.name,
               },
             ];
             expect(volunteer?.conflicts.tasks).toEqual(expectedRequestedBy);
