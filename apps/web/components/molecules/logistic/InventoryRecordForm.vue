@@ -31,7 +31,7 @@
 
 <script lang="ts" setup>
 import { DisplayableManualInventoryRecordError } from "~/domain/inventory/manual-inventory-record";
-import type { CatalogGear } from "@overbookd/http";
+import type { CatalogGear } from "@overbookd/logistic";
 
 const props = defineProps({
   inventoryError: {

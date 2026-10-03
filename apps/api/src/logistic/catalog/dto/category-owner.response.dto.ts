@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CategoryOwner } from "@overbookd/http";
+import { CategoryOwner } from "@overbookd/logistic";
 
 export class CategoryOwnerResponseDto implements CategoryOwner {
   @ApiProperty()

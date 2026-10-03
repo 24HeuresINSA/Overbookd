@@ -43,8 +43,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { CatalogGear } from "@overbookd/http";
-import type { GearRequest } from "@overbookd/logistic";
+import type { CatalogGear, GearRequest } from "@overbookd/logistic";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 
 const layoutStore = useLayoutStore();

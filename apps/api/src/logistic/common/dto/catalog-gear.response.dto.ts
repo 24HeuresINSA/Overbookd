@@ -3,7 +3,7 @@ import {
   CatalogCategoryIdentifier,
   CatalogGear,
   CategoryOwner,
-} from "@overbookd/http";
+} from "@overbookd/logistic";
 import { CategoryOwnerResponseDto } from "../../catalog/dto/category-owner.response.dto";
 import { CatalogCategoryIdentifierResponseDto } from "./catalog-category-identifier.dto";
 

@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { CatalogCategory } from "@overbookd/http";
+import type { CatalogCategory } from "@overbookd/logistic";
 
 const catalogStore = useCatalogStore();
 

@@ -6,7 +6,7 @@ import type {
   CatalogCategory,
   CatalogCategoryTree,
   CatalogGearForm,
-} from "@overbookd/http";
+} from "@overbookd/logistic";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class GearsRepository {

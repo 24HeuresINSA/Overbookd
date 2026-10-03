@@ -1,8 +1,4 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import {
-  CategoryRepository,
-  TeamRepository,
-} from "../../../../../domains/logistic/src/catalog/repositories/catalog-repositories";
+import { Inject, Injectable } from "@nestjs/common";
 import { SlugifyService } from "@overbookd/slugify";
 import {
   CatalogCategory,
@@ -10,7 +6,10 @@ import {
   CategoryForm,
   CategoryOwner,
   CategorySearchOptions,
-} from "@overbookd/http";
+  CategoryRepository,
+  CategoryNotFoundException,
+  TeamRepository,
+} from "@overbookd/logistic";
 
 type UpdateCategoryForm = CategoryForm & { id: number };
 

@@ -3,11 +3,8 @@ import { DashboardGears, GearRequirementForCsv } from "../dashboard.service";
 import { SELECT_DASHBOARD_GEAR } from "./dashboard.query";
 import { DashboardGear } from "../domain/dashboard-gear";
 import { Period } from "@overbookd/time";
-import {
-  GearPreview,
-  GearSearchOptions,
-  GearWithDetails,
-} from "@overbookd/http";
+import { GearPreview, GearWithDetails } from "@overbookd/http";
+import { GearSearchOptions } from "@overbookd/logistic";
 import { GearFilter } from "../../common/gear.filter";
 
 export class PrismaDashboardGears implements DashboardGears {
