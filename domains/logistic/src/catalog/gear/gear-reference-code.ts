@@ -1,4 +1,4 @@
-import { CatalogCategoryIdentifier } from "./category.js";
+import { CatalogCategoryIdentifier } from "../category/category.js";
 
 export class GearReferenceCodeGenerator {
   static generate(category: CatalogCategoryIdentifier, id: number): string {

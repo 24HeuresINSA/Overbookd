@@ -1,14 +1,32 @@
-import { CatalogCategory, CategoryOwner } from "./category";
-import { SavedCatalogGear } from "./gear";
+import { CatalogCategory, CategoryOwner } from "./category/category";
+import { CatalogGear, SavedCatalogGear } from "./gear/gear";
 
 export const MATOS_OWNER: CategoryOwner = {
   name: "Orga Logistique Matos",
   code: "matos",
 };
+
 export const BARRIERES_OWNER: CategoryOwner = {
   name: "Orga Logistique et Securite",
   code: "barrieres",
 };
+
+export const ELEC_OWNER: CategoryOwner = {
+  name: "Orga Logistique Electricite & Eau",
+  code: "elec",
+};
+
+export const SIGNA_OWNER: CategoryOwner = {
+  name: "Orga Logistique Signalisation",
+  code: "signa",
+};
+
+export const OWNERS: CategoryOwner[] = [
+  MATOS_OWNER,
+  ELEC_OWNER,
+  BARRIERES_OWNER,
+  SIGNA_OWNER,
+];
 
 export const BRICOLAGE_CATEGORY: CatalogCategory = {
   id: 1,
@@ -22,7 +40,7 @@ export const OUTILS_CATEGORY: CatalogCategory = {
   name: "Outils",
   path: "bricollage->outils",
   owner: MATOS_OWNER,
-  parent: 1,
+  parent: BRICOLAGE_CATEGORY.id,
 };
 
 export const MOBILIER_CATEGORY: CatalogCategory = {
@@ -52,6 +70,29 @@ export const NETTOYAGE_CATEGORY: CatalogCategory = {
   owner: MATOS_OWNER,
 };
 
+export const ELECTRIQUE_CATEGORY: CatalogCategory = {
+  id: 8,
+  name: "Electrique",
+  path: "electrique",
+  owner: ELEC_OWNER,
+};
+
+export const CABLE_CATEGORY: CatalogCategory = {
+  id: 9,
+  name: "Cable",
+  path: "electrique->cable",
+  owner: ELEC_OWNER,
+  parent: ELECTRIQUE_CATEGORY.id,
+};
+
+export const GROSSE_TENSION_CATEGORY: CatalogCategory = {
+  id: 10,
+  name: "Grosse Tension",
+  path: "electrique->cable->grosse-tension",
+  owner: ELEC_OWNER,
+  parent: CABLE_CATEGORY.id,
+};
+
 export const CATEGORIES: CatalogCategory[] = [
   BRICOLAGE_CATEGORY,
   OUTILS_CATEGORY,
@@ -59,6 +100,9 @@ export const CATEGORIES: CatalogCategory[] = [
   DIVERS_CATEGORY,
   BARRIERES_CATEGORY,
   NETTOYAGE_CATEGORY,
+  ELECTRIQUE_CATEGORY,
+  CABLE_CATEGORY,
+  GROSSE_TENSION_CATEGORY,
 ];
 
 export const PERCEUSE: SavedCatalogGear = {
@@ -74,6 +118,10 @@ export const PERCEUSE: SavedCatalogGear = {
   isPonctualUsage: true,
   isConsumable: false,
 };
+export const PERCEUSE_WITH_CODE: CatalogGear = {
+  ...PERCEUSE,
+  code: "BR_OU_001",
+};
 
 export const CHAISE: SavedCatalogGear = {
   id: 2,
@@ -88,6 +136,10 @@ export const CHAISE: SavedCatalogGear = {
   isPonctualUsage: false,
   isConsumable: false,
 };
+export const CHAISE_WITH_CODE: CatalogGear = {
+  ...CHAISE,
+  code: "MO_002",
+};
 
 export const TIREUSE: SavedCatalogGear = {
   id: 3,
@@ -96,6 +148,7 @@ export const TIREUSE: SavedCatalogGear = {
   isPonctualUsage: false,
   isConsumable: false,
 };
+export const TIREUSE_WITH_CODE: CatalogGear = TIREUSE;
 
 export const TABLIER: SavedCatalogGear = {
   id: 4,

@@ -4,9 +4,9 @@ import {
   GearLinkedItems,
   GearSearchOptions,
   SavedCatalogGear,
-} from "../gear.js";
-import { CatalogGears } from "./catalog-repositories.js";
+} from "./gear.js";
 import { GearSearchBuilder } from "../../gear-search.builder.js";
+import { CatalogGears } from "./gear-manager.js";
 
 export const EMPTY_GEAR_LINKED_ITEMS = {
   tasks: [],
@@ -19,6 +19,11 @@ export class InMemoryGearRepository implements CatalogGears {
     private gears: SavedCatalogGear[] = [],
     private linkedItems: Record<number, GearLinkedItems> = {},
   ) {}
+
+  findById(id: number): Promise<SavedCatalogGear | undefined> {
+    const gear = this.gears.find((gear) => gear.id === id);
+    return Promise.resolve(gear);
+  }
 
   findBySlug(slug: string): Promise<SavedCatalogGear | undefined> {
     const gear = this.gears.find((gear) => gear.slug === slug);

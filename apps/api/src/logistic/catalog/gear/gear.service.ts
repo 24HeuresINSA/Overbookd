@@ -19,6 +19,14 @@ export class CatalogGearService {
     private readonly categories: FindCatalogCategories,
   ) {}
 
+  async find(id: number): Promise<CatalogGear | undefined> {
+    return this.catalog.find(id);
+  }
+
+  async search(searchOptions: GearSearchOptions): Promise<CatalogGear[]> {
+    return this.catalog.search(searchOptions);
+  }
+
   async add({
     name,
     categoryId,
@@ -36,10 +44,6 @@ export class CatalogGearService {
     });
   }
 
-  async find(id: number): Promise<CatalogGear | undefined> {
-    return this.catalog.getGear(id);
-  }
-
   async update(gear: { id: number } & CatalogGearForm): Promise<CatalogGear> {
     const category = await this.categories.findById(gear.categoryId);
     if (!category) throw new CategoryNotFound(gear.categoryId);
@@ -55,9 +59,5 @@ export class CatalogGearService {
 
   async remove(id: number): Promise<void> {
     return this.catalog.remove(id);
-  }
-
-  async search(searchOptions: GearSearchOptions): Promise<CatalogGear[]> {
-    return this.catalog.searchGear(searchOptions);
   }
 }

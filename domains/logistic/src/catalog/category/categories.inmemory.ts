@@ -1,14 +1,11 @@
 import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
-import { CategoryRepository } from "./catalog-repositories.js";
-import {
-  CategoryAlreadyExists,
-  CategoryNotFound,
-} from "../catalog.error.js";
+import { CategoryAlreadyExists, CategoryNotFound } from "../catalog.error.js";
 import {
   CatalogCategory,
   CatalogCategoryTree,
   CategorySearchOptions,
-} from "../category.js";
+} from "./category.js";
+import { CatalogCategories } from "./category-manager.js";
 
 class CategorySearchBuilder {
   private ownerCondition = true;
@@ -38,7 +35,7 @@ class CategorySearchBuilder {
   }
 }
 
-export class InMemoryCategoryRepository implements CategoryRepository {
+export class InMemoryCatalogCategories implements CatalogCategories {
   constructor(private categories: CatalogCategory[]) {}
 
   getCategory(id: number): Promise<CatalogCategory | undefined> {

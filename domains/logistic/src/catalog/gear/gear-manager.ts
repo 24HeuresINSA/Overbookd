@@ -1,9 +1,13 @@
 import { SlugifyService } from "@overbookd/slugify";
-import { CatalogGears } from "./repositories/catalog-repositories";
-import { CatalogGear, GearSearchOptions, SavedCatalogGear } from "./gear";
-import { CatalogCategory } from "./category";
-import { GearNotFoundException } from "../logistic.error";
-import { GearAlreadyExists, GearHasLinkedItems } from "./catalog.error";
+import {
+  CatalogGear,
+  GearLinkedItems,
+  GearSearchOptions,
+  SavedCatalogGear,
+} from "./gear";
+import { CatalogCategory } from "../category/category";
+import { GearNotFound } from "../../logistic.error";
+import { GearAlreadyExists, GearHasLinkedItems } from "../catalog.error";
 import { GearReferenceCodeGenerator } from "./gear-reference-code";
 
 type CatalogGearToAdd = {
@@ -17,8 +21,25 @@ type CatalogGearToUpdate = CatalogGearToAdd & {
   id: number;
 };
 
+export type CatalogGears = {
+  findById(id: number): Promise<SavedCatalogGear | undefined>;
+  findBySlug(slug: string): Promise<SavedCatalogGear | undefined>;
+  getLastId(): Promise<number>;
+  addGear(gear: Omit<SavedCatalogGear, "id">): Promise<SavedCatalogGear>;
+  updateGear(gear: SavedCatalogGear): Promise<SavedCatalogGear | undefined>;
+  removeGear(id: number): Promise<void>;
+  searchGear(searchedGear: GearSearchOptions): Promise<SavedCatalogGear[]>;
+  getLinkedItems(id: number): Promise<Partial<GearLinkedItems>>;
+};
+
 export class CatalogGearManager {
   constructor(private readonly gear: CatalogGears) {}
+
+  async find(id: number): Promise<CatalogGear> {
+    const gear = await this.gear.findById(id);
+    if (!gear) throw new GearNotFound(id);
+    return this.computeGearCode(gear);
+  }
 
   async add({
     name,
@@ -47,7 +68,7 @@ export class CatalogGearManager {
       category: gear.category,
       owner: gear.category?.owner,
     });
-    if (!updatedGear) throw new GearNotFoundException(gear.id);
+    if (!updatedGear) throw new GearNotFound(gear.id);
     return this.computeGearCode(updatedGear);
   }
 

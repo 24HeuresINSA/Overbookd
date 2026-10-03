@@ -38,6 +38,14 @@ export function convertGearToApiContract(gear: DatabaseGear): SavedCatalogGear {
 export class PrismaCatalogGears implements CatalogGears {
   constructor(private readonly prismaService: PrismaService) {}
 
+  async findById(id: number): Promise<SavedCatalogGear | undefined> {
+    const gear = await this.prismaService.catalogGear.findUnique({
+      where: { id },
+      select: SELECT_GEAR,
+    });
+    return gear ? convertGearToApiContract(gear) : undefined;
+  }
+
   async findBySlug(slug: string): Promise<SavedCatalogGear | undefined> {
     const gear = await this.prismaService.catalogGear.findUnique({
       where: { slug },

@@ -1,5 +1,5 @@
 import { SlugifyService } from "@overbookd/slugify";
-import { CatalogGear } from "./catalog/gear.js";
+import { CatalogGear } from "./catalog/gear/gear.js";
 
 export class GearSearchBuilder {
   private ownerCondition = true;
