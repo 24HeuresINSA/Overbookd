@@ -9,11 +9,11 @@ import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 export class PrismaEnableAssignmentVolunteers implements VolunteersForEnableAssignment {
   constructor(private readonly prisma: PrismaService) {}
 
-  findByTeams(teams: string[]): Promise<Volunteer[]> {
+  findByTeam(team: string): Promise<Volunteer[]> {
     return this.prisma.user.findMany({
       where: {
         ...IS_NOT_DELETED,
-        teams: { some: { teamCode: { in: teams } } },
+        teams: { some: { teamCode: team } },
       },
       select: SELECT_VOLUNTEER,
     });

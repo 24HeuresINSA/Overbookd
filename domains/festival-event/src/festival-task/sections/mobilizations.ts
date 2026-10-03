@@ -67,7 +67,8 @@ type BaseMobilization<Options extends MobilizationOptions> = TimeWindow & {
   durationSplitInHour: null | number;
 };
 
-export type Assignment = TimeWindow & { assignees: Volunteer[] };
+export type Assignee = Volunteer & { as?: string };
+export type Assignment = TimeWindow & { assignees: Assignee[] };
 
 export type Mobilization<
   Options extends MobilizationOptions = typeof _defaultMobilizationOptions,

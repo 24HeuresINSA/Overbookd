@@ -24,6 +24,7 @@ import { isValidated } from "../../festival-event.js";
 import { ValidatedWithConflicts } from "../festival-task.factory.js";
 import {
   ALL_TEAM_MEMBERS,
+  Assignee,
   Assignment,
   ReviewableMobilization,
 } from "../sections/mobilizations.js";
@@ -37,7 +38,7 @@ export type FestivalTasksForEnableAssignment = {
 };
 
 export type VolunteersForEnableAssignment = {
-  findByTeams(teams: string[]): Promise<Volunteer[]>;
+  findByTeam(team: string): Promise<Volunteer[]>;
 };
 
 export class EnableAssignment {
@@ -176,10 +177,19 @@ class TeamAssignments {
   async generate(
     mobilization: Item<ReadyToAssignWithConflicts["mobilizations"]>,
   ): Promise<Item<ReadyToAssignWithConflicts["mobilizations"]>> {
-    const teams = mobilization.teams
-      .filter(({ count }) => count === ALL_TEAM_MEMBERS)
-      .map(({ team }) => team);
-    const teamAssignees = await this.volunteers.findByTeams(teams);
+    const teamAssignees = (
+      await Promise.all(
+        mobilization.teams
+          .filter(({ count }) => count === ALL_TEAM_MEMBERS)
+          .map(async ({ team }) => {
+            const volunteers = await this.volunteers.findByTeam(team);
+            return volunteers.map((volunteer): Assignee => ({
+              ...volunteer,
+              as: team,
+            }));
+          }),
+      )
+    ).flat();
     const assignments = mobilization.assignments.map((assignment) => ({
       ...assignment,
       assignees: this.mergeAssignees(assignment.assignees, teamAssignees),
@@ -188,12 +198,16 @@ class TeamAssignments {
   }
 
   private mergeAssignees(
-    baseAssignees: Volunteer[],
-    teamAssignees: Volunteer[],
-  ): Volunteer[] {
+    baseAssignees: Assignee[],
+    teamAssignees: Assignee[],
+  ): Assignee[] {
     const allAssignees = [...baseAssignees, ...teamAssignees];
-    const uniqueAssignees = new Map(
-      allAssignees.map((volunteer) => [volunteer.id, volunteer]),
+    const uniqueAssignees = allAssignees.reduce<Map<number, Assignee>>(
+      (assignees, assignee) => {
+        if (!assignees.has(assignee.id)) assignees.set(assignee.id, assignee);
+        return assignees;
+      },
+      new Map(),
     );
     return [...uniqueAssignees.values()];
   }

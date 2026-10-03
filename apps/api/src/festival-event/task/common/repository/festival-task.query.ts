@@ -144,6 +144,7 @@ export class FestivalTaskQueryBuilder {
               assignees: {
                 create: assignment.assignees.map((assignee) => ({
                   userId: assignee.id,
+                  teamCode: assignee.as,
                 })),
               },
             })),

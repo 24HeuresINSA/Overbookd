@@ -68,6 +68,7 @@ import {
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
 import { InMemoryVolunteersForEnableAssignment } from "./volunteers-for-enable-assignment.inmemory.js";
+import { PERSONNE } from "@overbookd/team-code";
 
 const expectedGuardPsAssignments = [
   { ...friday18hfriday20h, assignees: [] },
@@ -116,7 +117,7 @@ const expectedBarCashierAssignmentsSaturdayNigth = [
 ];
 
 const expectedPreparePressConferenceAssignments = [
-  { ...sunday11hsunday12h, assignees: [valery, gab] },
+  { ...sunday11hsunday12h, assignees: [valery, { ...gab, as: PERSONNE }] },
 ];
 
 const expectedCleanPressConferenceAssignments = [
