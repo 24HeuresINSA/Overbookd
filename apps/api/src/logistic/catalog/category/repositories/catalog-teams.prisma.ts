@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "../../../../prisma.service";
-import { CategoryOwner, TeamRepository } from "@overbookd/logistic";
+import { CatalogTeams, CategoryOwner } from "@overbookd/logistic";
 
 @Injectable()
-export class PrismaTeamRepository implements TeamRepository {
+export class PrismaCatalogTeams implements CatalogTeams {
   constructor(private readonly prismaService: PrismaService) {}
   getTeam(code: string): Promise<CategoryOwner> {
     if (!code) return Promise.resolve(undefined);

@@ -4,13 +4,13 @@ import {
   CatalogCategory,
   CatalogCategoryTree,
   CategorySearchOptions,
-  CategoryRepository,
   CategoryAlreadyExists,
+  CatalogCategories,
 } from "@overbookd/logistic";
-import { SELECT_CATALOG_CATEGORY } from "./category.query";
+import { SELECT_CATALOG_CATEGORY } from "./catalog-categories.query";
 
 @Injectable()
-export class PrismaCategoryRepository implements CategoryRepository {
+export class PrismaCatalogCategories implements CatalogCategories {
   constructor(private readonly prismaService: PrismaService) {}
 
   getCategory(id: number): Promise<CatalogCategory> {

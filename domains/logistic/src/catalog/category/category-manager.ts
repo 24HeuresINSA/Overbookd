@@ -1,4 +1,3 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { SlugifyService } from "@overbookd/slugify";
 import {
   CatalogCategory,
@@ -6,20 +5,34 @@ import {
   CategoryForm,
   CategoryOwner,
   CategorySearchOptions,
-  CategoryRepository,
-  CategoryNotFoundException,
-  TeamRepository,
-} from "@overbookd/logistic";
+} from "./category";
+import { CategoryNotFound } from "../catalog.error";
 
 type UpdateCategoryForm = CategoryForm & { id: number };
 
-@Injectable()
-export class CategoryService {
+export type CatalogCategories = {
+  getCategory(id: number): Promise<CatalogCategory | undefined>;
+  getSubCategories(parentId: number): Promise<CatalogCategory[]>;
+  addCategory(category: Omit<CatalogCategory, "id">): Promise<CatalogCategory>;
+  removeCategory(id: number): Promise<CatalogCategory | undefined>;
+  updateCategories(categories: CatalogCategory[]): Promise<CatalogCategory[]>;
+  updateCategory(
+    category: CatalogCategory,
+  ): Promise<CatalogCategory | undefined>;
+  getCategoryTrees(): Promise<CatalogCategoryTree[]>;
+  searchCategory(
+    searchedCategory: CategorySearchOptions,
+  ): Promise<CatalogCategory[]>;
+};
+
+export type CatalogTeams = {
+  getTeam(code: string): Promise<CategoryOwner | undefined>;
+};
+
+export class CatalogCategoryManager {
   constructor(
-    @Inject("CATEGORY_REPOSITORY")
-    private readonly categoryRepository: CategoryRepository,
-    @Inject("TEAM_REPOSITORY")
-    private readonly teamRepository: TeamRepository,
+    private readonly categories: CatalogCategories,
+    private readonly teams: CatalogTeams,
   ) {}
 
   async create({
@@ -32,7 +45,7 @@ export class CategoryService {
       name,
       owner,
     });
-    return this.categoryRepository.addCategory({
+    return this.categories.addCategory({
       name,
       path,
       parent,
@@ -58,20 +71,20 @@ export class CategoryService {
       name,
       owner,
     });
-    const updatedCategory = await this.categoryRepository.updateCategory({
+    const updatedCategory = await this.categories.updateCategory({
       id,
       name,
       path,
       parent,
       owner: ownerTeam,
     });
-    if (!updatedCategory) throw new CategoryNotFoundException(id);
+    if (!updatedCategory) throw new CategoryNotFound(id);
     await this.updateSubCategories(updatedCategory);
     return updatedCategory;
   }
 
   private async updateSubCategories(updatedCategory: CatalogCategory) {
-    const subCategories = await this.categoryRepository.getSubCategories(
+    const subCategories = await this.categories.getSubCategories(
       updatedCategory.id,
     );
     const categoriesWithNewPath = await this.pathComputeCascading(
@@ -83,30 +96,30 @@ export class CategoryService {
       return { ...category, owner };
     });
 
-    await this.categoryRepository.updateCategories(categoriesWithNewOwner);
+    await this.categories.updateCategories(categoriesWithNewOwner);
   }
 
   async find(id: number): Promise<CatalogCategory> {
-    const category = await this.categoryRepository.getCategory(id);
-    if (!category) throw new CategoryNotFoundException(id);
+    const category = await this.categories.getCategory(id);
+    if (!category) throw new CategoryNotFound(id);
     return category;
   }
 
   async getAll(): Promise<CatalogCategoryTree[]> {
-    return this.categoryRepository.getCategoryTrees();
+    return this.categories.getCategoryTrees();
   }
 
   async remove(id: number): Promise<void> {
-    const toDeleteCategory = await this.categoryRepository.getCategory(id);
+    const toDeleteCategory = await this.categories.getCategory(id);
     if (!toDeleteCategory) return;
     await this.cascadingUpdateSubCategories(toDeleteCategory);
-    await this.categoryRepository.removeCategory(id);
+    await this.categories.removeCategory(id);
   }
 
   search({ name, owner }: CategorySearchOptions): Promise<CatalogCategory[]> {
     const nameSlug = SlugifyService.applyOnOptional(name);
     const ownerSlug = SlugifyService.applyOnOptional(owner);
-    return this.categoryRepository.searchCategory({
+    return this.categories.searchCategory({
       name: nameSlug,
       owner: ownerSlug,
     });
@@ -114,7 +127,7 @@ export class CategoryService {
 
   private async cascadingUpdateSubCategories(currentCategory: CatalogCategory) {
     const newParent = currentCategory.parent
-      ? await this.categoryRepository.getCategory(currentCategory.parent)
+      ? await this.categories.getCategory(currentCategory.parent)
       : undefined;
 
     const subCategories = await this.linkSubCategoriesToNewParent(
@@ -126,7 +139,7 @@ export class CategoryService {
       newParent,
       subCategories,
     );
-    await this.categoryRepository.updateCategories(toUpdateCategories);
+    await this.categories.updateCategories(toUpdateCategories);
     return;
   }
 
@@ -148,7 +161,7 @@ export class CategoryService {
       updatedSubCategories.map(async (subCategory) =>
         this.pathComputeCascading(
           subCategory,
-          await this.categoryRepository.getSubCategories(subCategory.id),
+          await this.categories.getSubCategories(subCategory.id),
           toUpdateCategories,
         ),
       ),
@@ -160,13 +173,13 @@ export class CategoryService {
     id: number,
     newParent: CatalogCategory,
   ) {
-    const categories = await this.categoryRepository.getSubCategories(id);
+    const categories = await this.categories.getSubCategories(id);
 
     const updatedSubCategories = categories.map((subCategory) => ({
       ...subCategory,
       parent: newParent?.id,
     }));
-    return this.categoryRepository.updateCategories(updatedSubCategories);
+    return this.categories.updateCategories(updatedSubCategories);
   }
 
   private async fetchParentCategory(parent?: number) {
@@ -187,6 +200,6 @@ export class CategoryService {
     if (parentCategory) {
       return parentCategory?.owner ?? this.findOwner(owner);
     }
-    return this.teamRepository.getTeam(owner);
+    return owner ? this.teams.getTeam(owner) : undefined;
   }
 }

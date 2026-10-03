@@ -1,22 +1,25 @@
-import { CatalogGearManager } from "./catalog-gear-manager.js";
+import { CatalogGearManager } from "./gear-manager.js";
 import {
   BARRIERES_CATEGORY,
   BARRIERES_OWNER,
   BRICOLAGE_CATEGORY,
   CHAISE,
+  CHAISE_WITH_CODE,
   DIVERS_CATEGORY,
   MATOS_OWNER,
   MOBILIER_CATEGORY,
   NETTOYAGE_CATEGORY,
   OUTILS_CATEGORY,
   PERCEUSE,
+  PERCEUSE_WITH_CODE,
   TIREUSE,
-} from "./catalog.test-utils.js";
+  TIREUSE_WITH_CODE,
+} from "../catalog.test-utils.js";
 import { CatalogGear, GearLinkedItems, SavedCatalogGear } from "./gear.js";
 import {
   EMPTY_GEAR_LINKED_ITEMS,
   InMemoryGearRepository,
-} from "./repositories/gears.inmemory.js";
+} from "./gears.inmemory.js";
 import { beforeEach, describe, expect, it } from "vitest";
 
 const PERCEUSE_LINKED_ITEMS: GearLinkedItems = {
@@ -43,6 +46,27 @@ describe("Catalog Gear Manager", () => {
   beforeEach(() => {
     gearRepository = new InMemoryGearRepository(GEARS, GEARS_LINKED_ITEMS);
     catalog = new CatalogGearManager(gearRepository);
+  });
+
+  describe("Get gear", () => {
+    describe.each`
+      gearId         | expectedGear
+      ${PERCEUSE.id} | ${PERCEUSE_WITH_CODE}
+      ${CHAISE.id}   | ${CHAISE_WITH_CODE}
+      ${TIREUSE.id}  | ${TIREUSE_WITH_CODE}
+    `("When #$gearId gear exists", ({ gearId, expectedGear }) => {
+      it(`should retrieve #${gearId} gear information and compute its code`, async () => {
+        const gear = await catalog.find(gearId);
+        expect(expectedGear).toMatchObject(gear);
+      });
+    });
+    describe("When gear doesn't exist", () => {
+      it("should indicate that the gear doesn't exist", async () => {
+        await expect(async () => catalog.find(123)).rejects.toThrow(
+          "Le matos #123 n'existe pas",
+        );
+      });
+    });
   });
 
   describe("Add gear", () => {

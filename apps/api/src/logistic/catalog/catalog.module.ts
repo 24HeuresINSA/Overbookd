@@ -5,10 +5,13 @@ import { CategoryController } from "./category/category.controller";
 import { CatalogGearController } from "./gear/gear.controller";
 import { PrismaService } from "../../prisma.service";
 import { PrismaCatalogGears } from "./gear/repositories/catalog-gears.prisma";
-import { PrismaCategoryRepository } from "./category/repositories/category.repository.prisma";
-import { PrismaTeamRepository } from "./category/repositories/team.repository.prisma";
-import { CatalogGearManager } from "@overbookd/logistic";
+import { PrismaCatalogTeams } from "./category/repositories/catalog-teams.prisma";
+import {
+  CatalogCategoryManager,
+  CatalogGearManager,
+} from "@overbookd/logistic";
 import { PrismaFindCatalogCategories } from "./gear/repositories/find-catalog-categories.prisma";
+import { PrismaCatalogCategories } from "./category/repositories/catalog-categories.prisma";
 
 @Module({
   providers: [
@@ -18,14 +21,14 @@ import { PrismaFindCatalogCategories } from "./gear/repositories/find-catalog-ca
       inject: [PrismaService],
     },
     {
-      provide: PrismaCategoryRepository,
+      provide: PrismaCatalogCategories,
       useFactory: (prisma: PrismaService) =>
-        new PrismaCategoryRepository(prisma),
+        new PrismaCatalogCategories(prisma),
       inject: [PrismaService],
     },
     {
-      provide: PrismaTeamRepository,
-      useFactory: (prisma: PrismaService) => new PrismaTeamRepository(prisma),
+      provide: PrismaCatalogTeams,
+      useFactory: (prisma: PrismaService) => new PrismaCatalogTeams(prisma),
       inject: [PrismaService],
     },
     {
@@ -40,6 +43,14 @@ import { PrismaFindCatalogCategories } from "./gear/repositories/find-catalog-ca
       inject: [PrismaCatalogGears],
     },
     {
+      provide: CatalogCategoryManager,
+      useFactory: (
+        categories: PrismaCatalogCategories,
+        teams: PrismaCatalogTeams,
+      ) => new CatalogCategoryManager(categories, teams),
+      inject: [PrismaCatalogCategories, PrismaCatalogTeams],
+    },
+    {
       provide: CatalogGearService,
       useFactory: (
         gears: CatalogGearManager,
@@ -49,11 +60,9 @@ import { PrismaFindCatalogCategories } from "./gear/repositories/find-catalog-ca
     },
     {
       provide: CatalogCategoryService,
-      useFactory: (
-        category: PrismaCategoryRepository,
-        team: PrismaTeamRepository,
-      ) => new CatalogCategoryService(category, team),
-      inject: [PrismaCategoryRepository, PrismaTeamRepository],
+      useFactory: (categories: CatalogCategoryManager) =>
+        new CatalogCategoryService(categories),
+      inject: [CatalogCategoryManager],
     },
   ],
   controllers: [CategoryController, CatalogGearController],

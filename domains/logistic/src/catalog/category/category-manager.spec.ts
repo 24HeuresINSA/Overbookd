@@ -1,73 +1,56 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { CategoryOwner, CatalogCategory } from "./category.js";
-import { InMemoryCategoryRepository } from "./repositories/category.repository.inmemory.js";
-import { InMemoryTeamRepository } from "./repositories/team.repository.inmemory.js";
-
-const teamMatos = { name: "Orga Logistique Matos", code: "matos" };
-const teamSigna = { name: "Orga Signaletique", code: "signa" };
-const teamElec = { name: "Orga Logistique Electricite & Eau", code: "elec" };
-
-const TEAMS: CategoryOwner[] = [teamMatos, teamSigna, teamElec];
-
-const CATEGORIES: CatalogCategory[] = [
-  {
-    id: 1,
-    name: "Bricollage",
-    path: "bricollage",
-    owner: teamMatos,
-  },
-  {
-    id: 2,
-    name: "Electrique",
-    path: "electrique",
-    owner: teamElec,
-  },
-  {
-    id: 3,
-    name: "Cable",
-    path: "electrique->cable",
-    owner: teamElec,
-    parent: 2,
-  },
-  {
-    id: 4,
-    name: "Grosse Tension",
-    path: "electrique->cable->grosse-tension",
-    owner: teamElec,
-    parent: 3,
-  },
-];
+import { CatalogCategory } from "./category.js";
+import {
+  BRICOLAGE_CATEGORY,
+  CABLE_CATEGORY,
+  CATEGORIES,
+  DIVERS_CATEGORY,
+  ELEC_OWNER,
+  ELECTRIQUE_CATEGORY,
+  GROSSE_TENSION_CATEGORY,
+  MATOS_OWNER,
+  MOBILIER_CATEGORY,
+  OUTILS_CATEGORY,
+  OWNERS,
+  SIGNA_OWNER,
+} from "../catalog.test-utils.js";
+import { InMemoryCatalogCategories } from "./categories.inmemory.js";
+import { InMemoryCatalogTeams } from "./teams.inmemory.js";
+import { CatalogCategoryManager } from "./category-manager.js";
 
 describe("Category", () => {
-  let categoryRepository: InMemoryCategoryRepository;
-  let teamRepository: InMemoryTeamRepository;
-  let categoryService: CategoryService;
+  let categoryRepository: InMemoryCatalogCategories;
+  let teamRepository: InMemoryCatalogTeams;
+  let categoryManager: CatalogCategoryManager;
   beforeEach(() => {
-    categoryRepository = new InMemoryCategoryRepository([...CATEGORIES]);
-    teamRepository = new InMemoryTeamRepository([...TEAMS]);
-    categoryService = new CategoryService(categoryRepository, teamRepository);
+    categoryRepository = new InMemoryCatalogCategories([...CATEGORIES]);
+    teamRepository = new InMemoryCatalogTeams([...OWNERS]);
+    categoryManager = new CatalogCategoryManager(
+      categoryRepository,
+      teamRepository,
+    );
   });
   describe("get category", () => {
     describe.each`
-      categoryId | expectedCategory
-      ${1}       | ${CATEGORIES[0]}
-      ${2}       | ${CATEGORIES[1]}
-      ${3}       | ${CATEGORIES[2]}
+      categoryId               | expectedCategory
+      ${BRICOLAGE_CATEGORY.id} | ${BRICOLAGE_CATEGORY}
+      ${OUTILS_CATEGORY.id}    | ${OUTILS_CATEGORY}
+      ${MOBILIER_CATEGORY.id}  | ${MOBILIER_CATEGORY}
     `(
       "when category #$categoryId exists",
       ({ categoryId, expectedCategory }) => {
         it(`should retreive category #${categoryId} information`, async () => {
-          const category = await categoryService.find(categoryId);
+          const category = await categoryManager.find(categoryId);
           expect(category).toMatchObject(expectedCategory);
         });
       },
     );
     describe("when category doesn't exist", () => {
-      const inexistantCategory = 5;
+      const inexistantCategory = 999;
       it("should inform that category doesn't exist", async () => {
-        await expect(
-          async () => await categoryService.find(inexistantCategory),
-        ).rejects.toThrow(`Category #${inexistantCategory} doesn't exist`);
+        await expect(async () =>
+          categoryManager.find(inexistantCategory),
+        ).rejects.toThrow(`La catégorie #${inexistantCategory} n'existe pas`);
       });
     });
   });
@@ -81,7 +64,7 @@ describe("Category", () => {
       "$name main category without responsible team",
       ({ name, expectedPath }) => {
         it(`should be created with generated id and "${expectedPath}" as path`, async () => {
-          const createdCategory = await categoryService.create({ name });
+          const createdCategory = await categoryManager.create({ name });
           expect(createdCategory).toHaveProperty("id");
           expect(createdCategory.id).toEqual(expect.any(Number));
           expect(createdCategory).toHaveProperty("name");
@@ -90,8 +73,8 @@ describe("Category", () => {
           expect(createdCategory.path).toBe(expectedPath);
         });
         it("should be accessible after", async () => {
-          const createdCategory = await categoryService.create({ name });
-          const fetchedCategory = await categoryService.find(
+          const createdCategory = await categoryManager.create({ name });
+          const fetchedCategory = await categoryManager.find(
             createdCategory.id,
           );
           expect(createdCategory).toMatchObject(fetchedCategory);
@@ -100,28 +83,28 @@ describe("Category", () => {
     );
     describe.each`
       name                   | owner      | expectedOwner
-      ${"Outils"}            | ${"matos"} | ${teamMatos}
-      ${"Panneaux Lumineux"} | ${"signa"} | ${teamSigna}
-      ${"Cables"}            | ${"elec"}  | ${teamElec}
+      ${"Outils"}            | ${"matos"} | ${MATOS_OWNER}
+      ${"Panneaux Lumineux"} | ${"signa"} | ${SIGNA_OWNER}
+      ${"Cables"}            | ${"elec"}  | ${ELEC_OWNER}
     `(
       "$name main category with #$owner owner team",
       ({ name, owner, expectedOwner }) => {
         it(`should associate ${name} category to ${expectedOwner.name} team`, async () => {
-          const createdCategory = await categoryService.create({ name, owner });
+          const createdCategory = await categoryManager.create({ name, owner });
           expect(createdCategory.owner).toMatchObject(expectedOwner);
         });
       },
     );
     describe.each`
-      name            | owner        | parentCategory | expectedPath                | expectedOwner
-      ${"Outils"}     | ${"matos"}   | ${1}           | ${"bricollage->outils"}     | ${teamMatos}
-      ${"Rangements"} | ${"elec"}    | ${1}           | ${"bricollage->rangements"} | ${teamMatos}
-      ${"Rallonges"}  | ${undefined} | ${2}           | ${"electrique->rallonges"}  | ${teamElec}
+      name            | owner        | parentCategory            | expectedPath                | expectedOwner
+      ${"Outils"}     | ${"matos"}   | ${BRICOLAGE_CATEGORY.id}  | ${"bricollage->outils"}     | ${MATOS_OWNER}
+      ${"Rangements"} | ${"elec"}    | ${BRICOLAGE_CATEGORY.id}  | ${"bricollage->rangements"} | ${ELEC_OWNER}
+      ${"Rallonges"}  | ${undefined} | ${ELECTRIQUE_CATEGORY.id} | ${"electrique->rallonges"}  | ${ELEC_OWNER}
     `(
       "$name sub category of #$parentCategory category",
       ({ name, owner, parentCategory, expectedPath, expectedOwner }) => {
         it(`should generate composed ${expectedPath} path`, async () => {
-          const createdCategory = await categoryService.create({
+          const createdCategory = await categoryManager.create({
             name,
             parent: parentCategory,
             owner,
@@ -129,7 +112,7 @@ describe("Category", () => {
           expect(createdCategory.path).toBe(expectedPath);
         });
         it(`should be associated to #${parentCategory} category `, async () => {
-          const createdCategory = await categoryService.create({
+          const createdCategory = await categoryManager.create({
             name,
             parent: parentCategory,
             owner,
@@ -137,7 +120,7 @@ describe("Category", () => {
           expect(createdCategory.parent).toBe(parentCategory);
         });
         it(`should be associated to parent category ${expectedOwner.name} team`, async () => {
-          const createdCategory = await categoryService.create({
+          const createdCategory = await categoryManager.create({
             name,
             parent: parentCategory,
             owner,
@@ -152,12 +135,12 @@ describe("Category", () => {
       it("should inform the user parent category doesn't exist", async () => {
         await expect(
           async () =>
-            await categoryService.create({
+            await categoryManager.create({
               name: categoryName,
               parent: inexistantParentCategory,
             }),
         ).rejects.toThrow(
-          `Category #${inexistantParentCategory} doesn't exist`,
+          `La catégorie #${inexistantParentCategory} n'existe pas`,
         );
       });
     });
@@ -166,7 +149,7 @@ describe("Category", () => {
         const name = CATEGORIES[0].name.toUpperCase();
         await expect(
           async () =>
-            await categoryService.create({
+            await categoryManager.create({
               name,
             }),
         ).rejects.toThrow(`"${CATEGORIES[0].name}" category already exist`);
@@ -175,40 +158,41 @@ describe("Category", () => {
   });
   describe("delete a category", () => {
     describe.each`
-      toDeleteCategory        | childrenCategory                                         | grandChildrenCategory
-      ${{ id: 1 }}            | ${undefined}                                             | ${undefined}
-      ${{ id: 4 }}            | ${undefined}                                             | ${undefined}
-      ${{ id: 5 }}            | ${undefined}                                             | ${undefined}
-      ${{ parent: 2, id: 3 }} | ${{ id: 4, expectedPath: "electrique->grosse-tension" }} | ${undefined}
-      ${{ id: 2 }}            | ${{ id: 3, expectedPath: "cable" }}                      | ${{ id: 4, expectedPath: "cable->grosse-tension" }}
+      toDeleteCategory       | childrenCategory           | grandChildrenCategory
+      ${BRICOLAGE_CATEGORY}  | ${undefined}               | ${undefined}
+      ${DIVERS_CATEGORY}     | ${undefined}               | ${undefined}
+      ${CABLE_CATEGORY}      | ${GROSSE_TENSION_CATEGORY} | ${undefined}
+      ${ELECTRIQUE_CATEGORY} | ${CABLE_CATEGORY}          | ${GROSSE_TENSION_CATEGORY}
     `(
       `when deleting category $toDeleteCategory
         with child category $childrenCategory
         with grandchild category $grandChildrenCategory`,
       ({ toDeleteCategory, childrenCategory, grandChildrenCategory }) => {
         it(`should not be possible to find #${toDeleteCategory.id} category after`, async () => {
-          await categoryService.remove(toDeleteCategory.id);
+          await categoryManager.remove(toDeleteCategory.id);
           await expect(async () => {
-            await categoryService.find(toDeleteCategory.id);
-          }).rejects.toThrow(`Category #${toDeleteCategory.id} doesn't exist`);
+            await categoryManager.find(toDeleteCategory.id);
+          }).rejects.toThrow(
+            `La catégorie #${toDeleteCategory.id} n'existe pas`,
+          );
         });
         if (childrenCategory) {
           it(`should link #${childrenCategory.id} child category to #${toDeleteCategory.parent} category`, async () => {
-            await categoryService.remove(toDeleteCategory.id);
-            const child = await categoryService.find(childrenCategory.id);
+            await categoryManager.remove(toDeleteCategory.id);
+            const child = await categoryManager.find(childrenCategory.id);
             expect(child.parent).not.toBe(toDeleteCategory.id);
             expect(child.parent).toBe(toDeleteCategory.parent);
           });
           it(`should change #${childrenCategory.id} child category path to ${childrenCategory.expectedPath}`, async () => {
-            await categoryService.remove(toDeleteCategory.id);
-            const child = await categoryService.find(childrenCategory.id);
+            await categoryManager.remove(toDeleteCategory.id);
+            const child = await categoryManager.find(childrenCategory.id);
             expect(child.path).toBe(childrenCategory.expectedPath);
           });
         }
         if (grandChildrenCategory) {
           it(`should change #${grandChildrenCategory.id} grandchild category path to ${grandChildrenCategory.expectedPath}`, async () => {
-            await categoryService.remove(toDeleteCategory.id);
-            const grandChild = await categoryService.find(
+            await categoryManager.remove(toDeleteCategory.id);
+            const grandChild = await categoryManager.find(
               grandChildrenCategory.id,
             );
             expect(grandChild.path).toBe(grandChildrenCategory.expectedPath);
@@ -238,21 +222,21 @@ describe("Category", () => {
         }) => {
           it(`should update category path to "${expectedPath}"`, async () => {
             const updatedCategory =
-              await categoryService.update(toUpdateCategory);
+              await categoryManager.update(toUpdateCategory);
             expect(updatedCategory.name).toBe(toUpdateCategory.name);
             expect(updatedCategory.path).toBe(expectedPath);
           });
           if (childCategory) {
             it(`should update #${childCategory.id} child category path to ${childCategory.expectedPath}`, async () => {
-              await categoryService.update(toUpdateCategory);
-              const child = await categoryService.find(childCategory.id);
+              await categoryManager.update(toUpdateCategory);
+              const child = await categoryManager.find(childCategory.id);
               expect(child.path).toBe(childCategory.expectedPath);
             });
           }
           if (grandChildCategory) {
             it(`should update #${grandChildCategory.id} grandchild category path to ${grandChildCategory.expectedPath}`, async () => {
-              await categoryService.update(toUpdateCategory);
-              const child = await categoryService.find(grandChildCategory.id);
+              await categoryManager.update(toUpdateCategory);
+              const child = await categoryManager.find(grandChildCategory.id);
               expect(child.path).toBe(grandChildCategory.expectedPath);
             });
           }
@@ -264,10 +248,10 @@ describe("Category", () => {
       - Cascade owner updates on sub categories
     `, () => {
       describe.each`
-        toUpdateCategory                                       | expectedOwner | childCategory | grandChildCategory
-        ${{ id: 1, name: "Bricollage", owner: "signa" }}       | ${teamSigna}  | ${undefined}  | ${undefined}
-        ${{ id: 3, name: "Cable", owner: "signa", parent: 2 }} | ${teamElec}   | ${{ id: 3 }}  | ${undefined}
-        ${{ id: 2, name: "Electrique", owner: "signa" }}       | ${teamSigna}  | ${{ id: 3 }}  | ${{ id: 3 }}
+        toUpdateCategory                                       | expectedOwner  | childCategory | grandChildCategory
+        ${{ id: 1, name: "Bricollage", owner: "signa" }}       | ${SIGNA_OWNER} | ${undefined}  | ${undefined}
+        ${{ id: 3, name: "Cable", owner: "signa", parent: 2 }} | ${ELEC_OWNER}  | ${{ id: 3 }}  | ${undefined}
+        ${{ id: 2, name: "Electrique", owner: "signa" }}       | ${SIGNA_OWNER} | ${{ id: 3 }}  | ${{ id: 3 }}
       `(
         "when update category #$toUpdateCategory.id owner to #$toUpdateCategory.owner team",
         ({
@@ -278,20 +262,20 @@ describe("Category", () => {
         }) => {
           it(`should set category owner to "${expectedOwner.name}"`, async () => {
             const updatedCategory =
-              await categoryService.update(toUpdateCategory);
+              await categoryManager.update(toUpdateCategory);
             expect(updatedCategory.owner).toMatchObject(expectedOwner);
           });
           if (childCategory) {
             it(`should set #${childCategory.id} child category owner to "${expectedOwner.name}"`, async () => {
-              await categoryService.update(toUpdateCategory);
-              const child = await categoryService.find(childCategory.id);
+              await categoryManager.update(toUpdateCategory);
+              const child = await categoryManager.find(childCategory.id);
               expect(child.owner).toMatchObject(expectedOwner);
             });
           }
           if (grandChildCategory) {
             it(`should set #${grandChildCategory.id} grandchild category owner to "${expectedOwner.name}"`, async () => {
-              await categoryService.update(toUpdateCategory);
-              const child = await categoryService.find(grandChildCategory.id);
+              await categoryManager.update(toUpdateCategory);
+              const child = await categoryManager.find(grandChildCategory.id);
               expect(child.owner).toMatchObject(expectedOwner);
             });
           }
@@ -305,10 +289,10 @@ describe("Category", () => {
       - Cascade owner changes on sub categories
     `, () => {
       describe.each`
-        toUpdateCategory                                            | expectedOwner | expectedPath                | childCategory                                               | grandChildCategory
-        ${{ id: 1, name: "Bricollage", owner: "matos", parent: 2 }} | ${teamElec}   | ${"electrique->bricollage"} | ${undefined}                                                | ${undefined}
-        ${{ id: 4, name: "Grosse Tension", owner: "elec" }}         | ${teamElec}   | ${"grosse-tension"}         | ${undefined}                                                | ${undefined}
-        ${{ id: 2, name: "Electrique", owner: "elec", parent: 1 }}  | ${teamMatos}  | ${"bricollage->electrique"} | ${{ id: 3, expectedPath: "bricollage->electrique->cable" }} | ${{ id: 4, expectedPath: "bricollage->electrique->cable->grosse-tension" }}
+        toUpdateCategory                                        | expectedOwner  | expectedPath           | childCategory              | grandChildCategory
+        ${{ ...OUTILS_CATEGORY, parent: MOBILIER_CATEGORY.id }} | ${MATOS_OWNER} | ${"mobilier->outils"}  | ${undefined}               | ${undefined}
+        ${{ ...CABLE_CATEGORY, parent: undefined }}             | ${ELEC_OWNER}  | ${"cable"}             | ${GROSSE_TENSION_CATEGORY} | ${undefined}
+        ${{ ...CABLE_CATEGORY, parent: BRICOLAGE_CATEGORY.id }} | ${MATOS_OWNER} | ${"bricollage->cable"}
       `(
         "when update #$toUpdateCategory.id category parent to #$toUpdateCategory.parent category",
         ({
@@ -320,36 +304,36 @@ describe("Category", () => {
         }) => {
           it(`should set category owner to "${expectedOwner.name}" team`, async () => {
             const updatedCategory =
-              await categoryService.update(toUpdateCategory);
+              await categoryManager.update(toUpdateCategory);
             expect(updatedCategory.owner).toMatchObject(expectedOwner);
           });
           it(`should update category path to "${expectedPath}"`, async () => {
             const updatedCategory =
-              await categoryService.update(toUpdateCategory);
+              await categoryManager.update(toUpdateCategory);
             expect(updatedCategory.name).toBe(toUpdateCategory.name);
             expect(updatedCategory.path).toBe(expectedPath);
           });
           if (childCategory) {
             it(`should set #${childCategory.id} child category owner to "${expectedOwner.name}"`, async () => {
-              await categoryService.update(toUpdateCategory);
-              const child = await categoryService.find(childCategory.id);
+              await categoryManager.update(toUpdateCategory);
+              const child = await categoryManager.find(childCategory.id);
               expect(child.owner).toMatchObject(expectedOwner);
             });
             it(`should update #${childCategory.id} child category path to ${childCategory.expectedPath}`, async () => {
-              await categoryService.update(toUpdateCategory);
-              const child = await categoryService.find(childCategory.id);
+              await categoryManager.update(toUpdateCategory);
+              const child = await categoryManager.find(childCategory.id);
               expect(child.path).toBe(childCategory.expectedPath);
             });
           }
           if (grandChildCategory) {
             it(`should set #${grandChildCategory.id} grandchild category owner to "${expectedOwner.name}"`, async () => {
-              await categoryService.update(toUpdateCategory);
-              const child = await categoryService.find(grandChildCategory.id);
+              await categoryManager.update(toUpdateCategory);
+              const child = await categoryManager.find(grandChildCategory.id);
               expect(child.owner).toMatchObject(expectedOwner);
             });
             it(`should update #${grandChildCategory.id} grandchild category path to ${grandChildCategory.expectedPath}`, async () => {
-              await categoryService.update(toUpdateCategory);
-              const child = await categoryService.find(grandChildCategory.id);
+              await categoryManager.update(toUpdateCategory);
+              const child = await categoryManager.find(grandChildCategory.id);
               expect(child.path).toBe(grandChildCategory.expectedPath);
             });
           }
@@ -365,46 +349,59 @@ describe("Category", () => {
           parent: 2,
         };
         await expect(
-          async () => await categoryService.update(toUpdateCategory),
-        ).rejects.toThrow(`Category #${toUpdateCategory.id} doesn't exist`);
+          async () => await categoryManager.update(toUpdateCategory),
+        ).rejects.toThrow(`La catégorie #${toUpdateCategory.id} n'existe pas`);
       });
     });
   });
   describe("get all categories", () => {
+    beforeEach(() => {
+      categoryRepository = new InMemoryCatalogCategories([
+        BRICOLAGE_CATEGORY,
+        ELECTRIQUE_CATEGORY,
+        CABLE_CATEGORY,
+        GROSSE_TENSION_CATEGORY,
+      ]);
+      teamRepository = new InMemoryCatalogTeams(OWNERS);
+      categoryManager = new CatalogCategoryManager(
+        categoryRepository,
+        teamRepository,
+      );
+    });
     it(`should render categories as a parent tree
     - Matos
     - Electrique
         - Cable
           - Grosse Tension
     `, async () => {
-      const categories = await categoryService.getAll();
+      const categories = await categoryManager.getAll();
       expect(categories).toHaveLength(2);
       expect(categories).toContainEqual({
-        id: 1,
-        name: "Bricollage",
-        path: "bricollage",
-        owner: teamMatos,
+        id: BRICOLAGE_CATEGORY.id,
+        name: BRICOLAGE_CATEGORY.name,
+        path: BRICOLAGE_CATEGORY.path,
+        owner: MATOS_OWNER,
         subCategories: [],
       });
       expect(categories).toContainEqual({
-        id: 2,
-        name: "Electrique",
-        path: "electrique",
-        owner: teamElec,
+        id: ELECTRIQUE_CATEGORY.id,
+        name: ELECTRIQUE_CATEGORY.name,
+        path: ELECTRIQUE_CATEGORY.path,
+        owner: ELEC_OWNER,
         subCategories: [
           {
-            id: 3,
-            name: "Cable",
-            path: "electrique->cable",
-            owner: teamElec,
-            parent: 2,
+            id: CABLE_CATEGORY.id,
+            name: CABLE_CATEGORY.name,
+            path: CABLE_CATEGORY.path,
+            owner: ELEC_OWNER,
+            parent: ELECTRIQUE_CATEGORY.id,
             subCategories: [
               {
-                id: 4,
-                name: "Grosse Tension",
-                path: "electrique->cable->grosse-tension",
-                owner: teamElec,
-                parent: 3,
+                id: GROSSE_TENSION_CATEGORY.id,
+                name: GROSSE_TENSION_CATEGORY.name,
+                path: GROSSE_TENSION_CATEGORY.path,
+                owner: ELEC_OWNER,
+                parent: CABLE_CATEGORY.id,
                 subCategories: [],
               },
             ],
@@ -414,7 +411,14 @@ describe("Category", () => {
     });
     describe("when there is more subcategories on a category", () => {
       beforeEach(() => {
-        categoryRepository.categories = getSignaCategories();
+        categoryRepository = new InMemoryCatalogCategories(
+          getSignaCategories(),
+        );
+        teamRepository = new InMemoryCatalogTeams(OWNERS);
+        categoryManager = new CatalogCategoryManager(
+          categoryRepository,
+          teamRepository,
+        );
       });
       it(`should render signaletique category tree
         - Signaletique
@@ -429,26 +433,26 @@ describe("Category", () => {
             - Plastique
             - Moquette
       `, async () => {
-        const categories = await categoryService.getAll();
+        const categories = await categoryManager.getAll();
         expect(categories).toHaveLength(1);
         expect(categories).toContainEqual({
           id: 1,
           name: "Signaletique",
           path: "signaletique",
-          owner: teamSigna,
+          owner: SIGNA_OWNER,
           subCategories: [
             {
               id: 2,
               name: "Lumineuse",
               path: "signaletique->lumineuse",
-              owner: teamSigna,
+              owner: SIGNA_OWNER,
               parent: 1,
               subCategories: [
                 {
                   id: 3,
                   name: "Projection",
                   path: "signaletique->lumineuse->projection",
-                  owner: teamSigna,
+                  owner: SIGNA_OWNER,
                   parent: 2,
                   subCategories: [],
                 },
@@ -456,7 +460,7 @@ describe("Category", () => {
                   id: 10,
                   name: "Panneau",
                   path: "signaletique->lumineuse->panneau",
-                  owner: teamSigna,
+                  owner: SIGNA_OWNER,
                   parent: 2,
                   subCategories: [],
                 },
@@ -466,14 +470,14 @@ describe("Category", () => {
               id: 4,
               name: "Plan",
               path: "signaletique->plan",
-              owner: teamSigna,
+              owner: SIGNA_OWNER,
               parent: 1,
               subCategories: [
                 {
                   id: 5,
                   name: "Grand Format",
                   path: "signaletique->plan->grand-format",
-                  owner: teamSigna,
+                  owner: SIGNA_OWNER,
                   parent: 4,
                   subCategories: [],
                 },
@@ -481,7 +485,7 @@ describe("Category", () => {
                   id: 6,
                   name: "Format Flyer",
                   path: "signaletique->plan->format-flyer",
-                  owner: teamSigna,
+                  owner: SIGNA_OWNER,
                   parent: 4,
                   subCategories: [],
                 },
@@ -491,14 +495,14 @@ describe("Category", () => {
               id: 7,
               name: "Panneau",
               path: "signaletique->panneau",
-              owner: teamSigna,
+              owner: SIGNA_OWNER,
               parent: 1,
               subCategories: [
                 {
                   id: 8,
                   name: "Bois",
                   path: "signaletique->panneau->bois",
-                  owner: teamSigna,
+                  owner: SIGNA_OWNER,
                   parent: 7,
                   subCategories: [],
                 },
@@ -506,7 +510,7 @@ describe("Category", () => {
                   id: 8,
                   name: "Plastique",
                   path: "signaletique->panneau->plastique",
-                  owner: teamSigna,
+                  owner: SIGNA_OWNER,
                   parent: 7,
                   subCategories: [],
                 },
@@ -514,7 +518,7 @@ describe("Category", () => {
                   id: 9,
                   name: "Moquette",
                   path: "signaletique->panneau->moquette",
-                  owner: teamSigna,
+                  owner: SIGNA_OWNER,
                   parent: 7,
                   subCategories: [],
                 },
@@ -537,7 +541,7 @@ describe("Category", () => {
       'When looking for "$searchName" with "$searchOwner" owner',
       ({ searchName, searchOwner, expectedCategories }) => {
         it(`should retrieve ${expectedCategories.length} categories`, async () => {
-          const categories = await categoryService.search({
+          const categories = await categoryManager.search({
             name: searchName,
             owner: searchOwner,
           });
@@ -549,7 +553,7 @@ describe("Category", () => {
 });
 
 function getSignaCategories(): CatalogCategory[] {
-  const owner = teamSigna;
+  const owner = SIGNA_OWNER;
   return [
     { id: 1, name: "Signaletique", path: "signaletique", owner },
     {
