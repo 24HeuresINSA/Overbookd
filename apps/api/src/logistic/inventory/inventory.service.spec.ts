@@ -1,8 +1,5 @@
-import {
-  CatalogCategory,
-  CatalogGear,
-  InventoryGroupedRecord,
-} from "@overbookd/http";
+import { InventoryGroupedRecord } from "@overbookd/http";
+import { CatalogCategory, CatalogGear } from "@overbookd/logistic";
 import { InventoryService, toLiteRecord } from "./inventory.service";
 import { InMemoryInventoryRepository } from "./repositories/inventory.repository.inmemory";
 import { beforeAll, describe, expect, it } from "vitest";

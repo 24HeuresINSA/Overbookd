@@ -23,7 +23,7 @@ import { CatalogGearResponseDto } from "../common/dto/catalog-gear.response.dto"
 import { Permissions } from "../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
 import { GearSearchRequestDto } from "../common/dto/gear-search.request.dto";
-import { CatalogGear } from "@overbookd/http";
+import { CatalogGear } from "@overbookd/logistic";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
 @Controller("logistic/gears")

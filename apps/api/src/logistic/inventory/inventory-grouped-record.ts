@@ -1,9 +1,9 @@
 import {
-  CatalogGear,
   InventoryGroupedRecord,
   InventoryRecord,
   LiteInventoryRecord,
 } from "@overbookd/http";
+import { CatalogGear } from "@overbookd/logistic";
 import { toLiteRecord } from "./inventory.service";
 
 export class GroupInventoryRecord implements InventoryGroupedRecord {
