@@ -1,11 +1,13 @@
 import { Duration, IProvidePeriod, Period } from "@overbookd/time";
 import { Volunteer } from "../../sections/instructions.js";
 import {
+  ALL_TEAM_MEMBERS,
   Mobilization,
   TeamMobilization,
 } from "../../sections/mobilizations.js";
 import {
   MobilizationAlreadyExist,
+  MobilizationInvalidTeamCount,
   MobilizationNotFound,
   SplitDurationIsNotPeriodDivider,
 } from "../../festival-task.error.js";
@@ -51,6 +53,8 @@ export class Mobilizations {
     const mobilization = MobilizationFactory.init(form).json;
 
     if (this.has(mobilization)) throw new MobilizationAlreadyExist();
+    if (mobilization.teams.some((team) => this.hasInvalidTeamCount(team)))
+      throw new MobilizationInvalidTeamCount();
 
     return new Mobilizations([...this.mobilizations, mobilization]);
   }
@@ -81,6 +85,9 @@ export class Mobilizations {
   }
 
   addTeamTo(mobilizationId: Mobilization["id"], team: TeamMobilization) {
+    if (this.hasInvalidTeamCount(team))
+      throw new MobilizationInvalidTeamCount();
+
     const { index, value } = this.retrieveMobilization(mobilizationId);
     if (index === -1 || !value) return this;
 
@@ -157,10 +164,15 @@ export class Mobilizations {
     return this.mobilizations.some(({ id }) => id === mobilization.id);
   }
 
+  private hasInvalidTeamCount({ count }: TeamMobilization): boolean {
+    return count <= 0 && count != ALL_TEAM_MEMBERS;
+  }
+
   get json(): Mobilization<typeof _defaultOptions>[] {
     return [...this.mobilizations];
   }
 }
+
 class MobilizationFactory {
   private constructor(
     private readonly mobilization: Mobilization<typeof _defaultOptions>,

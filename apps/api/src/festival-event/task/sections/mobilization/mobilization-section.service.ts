@@ -1,5 +1,6 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import {
+  ALL_TEAM_MEMBERS,
   FestivalTask,
   Mobilization,
   PrepareFestivalTask,
@@ -10,6 +11,7 @@ import {
 import { Adherents } from "../../common/festival-task-common.model";
 import { AddMobilizationForm } from "@overbookd/http";
 import { RequestHydratedUser } from "../../../../authentication-zitadel/request-hydrated-user";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 
 @Injectable()
 export class MobilizationSectionService {
@@ -23,6 +25,14 @@ export class MobilizationSectionService {
     form: AddMobilizationForm,
     user: RequestHydratedUser,
   ): Promise<FestivalTask> {
+    if (
+      form.teams.some(({ count }) => count === ALL_TEAM_MEMBERS) &&
+      !user.can(AFFECT_VOLUNTEER)
+    )
+      throw new UnauthorizedException(
+        "Tu ne peux pas mobiliser tous les membres d'une équipe.",
+      );
+
     const [instigator, volunteers] = await Promise.all([
       this.adherents.findOne(user.id),
       this.adherents.findMatching(form.volunteers),
@@ -60,7 +70,13 @@ export class MobilizationSectionService {
     ftId: FestivalTask["id"],
     mobilizationId: Mobilization["id"],
     team: TeamMobilization,
+    user: RequestHydratedUser,
   ): Promise<FestivalTask> {
+    if (team.count === ALL_TEAM_MEMBERS && !user.can(AFFECT_VOLUNTEER))
+      throw new UnauthorizedException(
+        "Tu ne peux pas mobiliser tous les membres d'une équipe.",
+      );
+
     return this.prepare.addTeamToMobilization(ftId, mobilizationId, team);
   }
 

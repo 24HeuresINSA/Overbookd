@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { TeamMobilization } from "@overbookd/festival-event";
-import { IsNumber, IsPositive, IsString } from "class-validator";
+import { IsNumber, IsString, Min } from "class-validator";
 
 export class TeamMobilizationRequestDto implements TeamMobilization {
   @ApiProperty({ type: Number })
   @IsNumber()
-  @IsPositive()
+  @Min(-1)
   count: TeamMobilization["count"];
 
   @ApiProperty({ type: String })

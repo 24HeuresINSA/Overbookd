@@ -264,8 +264,9 @@ export class MobilizationSectionController {
     @Param("ftId", ParseIntPipe) ftId: FestivalTask["id"],
     @Param("mobilizationId") mobilizationId: Mobilization["id"],
     @Body() team: TeamMobilizationRequestDto,
+    @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<FestivalTask> {
-    return this.mobilizationService.addTeam(ftId, mobilizationId, team);
+    return this.mobilizationService.addTeam(ftId, mobilizationId, team, user);
   }
 
   @Delete(":ftId/mobilizations/:mobilizationId/teams/:teamCode")

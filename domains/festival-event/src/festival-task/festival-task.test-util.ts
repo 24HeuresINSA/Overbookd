@@ -523,6 +523,16 @@ export const friday10hfriday18hMobilization = MobilizationBuilder.init({
   end: friday18h,
   teams: [{ count: 5, team: HARD }],
 });
+export const friday11hfriday17hMobilization = MobilizationBuilder.init({
+  start: friday11h,
+  end: friday17h,
+  teams: [{ count: 0, team: HARD }],
+});
+export const friday17hfriday18hMobilization = MobilizationBuilder.init({
+  start: friday17h,
+  end: friday18h,
+  teams: [{ count: -3, team: PERSONNE }],
+});
 export const friday18hsaturday10hMobilization = MobilizationBuilder.init({
   start: friday18h,
   end: saturday10h,
