@@ -6,17 +6,18 @@ import { CancelBorrow, InitBorrow, PlanBorrow } from "@overbookd/logistic";
 import { PrismaInitBorrows } from "./repository/init-borrows.prisma";
 import { PrismaPlanBorrows } from "./repository/plan-borrows.prisma";
 import { BorrowService, BorrowsForView } from "./borrow.service";
-import {
-  FindGears,
-  PrismaFindGears,
-} from "../common/repositories/find-gears.prisma";
+import { FindGears, PrismaFindGears } from "./repository/find-gears.prisma";
 import { PrismaViewBorrows } from "./repository/view-borrows.prisma";
 import { PrismaCancelBorrows } from "./repository/cancel-borrows.prisma";
-import { LogisticCommonModule } from "../common/logistic-common.module";
 
 @Module({
   controllers: [BorrowController],
   providers: [
+    {
+      provide: PrismaFindGears,
+      useFactory: (prisma: PrismaService) => new PrismaFindGears(prisma),
+      inject: [PrismaService],
+    },
     {
       provide: PrismaViewBorrows,
       useFactory: (prisma: PrismaService) => new PrismaViewBorrows(prisma),
@@ -75,6 +76,6 @@ import { LogisticCommonModule } from "../common/logistic-common.module";
       ],
     },
   ],
-  imports: [PrismaModule, LogisticCommonModule],
+  imports: [PrismaModule],
 })
 export class BorrowModule {}

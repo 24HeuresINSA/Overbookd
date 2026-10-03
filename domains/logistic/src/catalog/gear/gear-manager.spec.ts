@@ -18,7 +18,7 @@ import {
 import { CatalogGear, GearLinkedItems, SavedCatalogGear } from "./gear.js";
 import {
   EMPTY_GEAR_LINKED_ITEMS,
-  InMemoryGearRepository,
+  InMemoryCatalogGears,
 } from "./gears.inmemory.js";
 import { beforeEach, describe, expect, it } from "vitest";
 
@@ -40,11 +40,11 @@ const GEARS_LINKED_ITEMS = {
 };
 
 describe("Catalog Gear Manager", () => {
-  let gearRepository: InMemoryGearRepository;
+  let gearRepository: InMemoryCatalogGears;
   let catalog: CatalogGearManager;
 
   beforeEach(() => {
-    gearRepository = new InMemoryGearRepository(GEARS, GEARS_LINKED_ITEMS);
+    gearRepository = new InMemoryCatalogGears(GEARS, GEARS_LINKED_ITEMS);
     catalog = new CatalogGearManager(gearRepository);
   });
 
@@ -206,7 +206,7 @@ describe("Catalog Gear Manager", () => {
       ${123}
     `("Delete #$toDeleteGearId gear", ({ toDeleteGearId }) => {
       beforeEach(() => {
-        gearRepository = new InMemoryGearRepository(GEARS);
+        gearRepository = new InMemoryCatalogGears(GEARS);
         catalog = new CatalogGearManager(gearRepository);
       });
       it(`should remove #${toDeleteGearId} gear from persistance`, async () => {
@@ -231,48 +231,4 @@ describe("Catalog Gear Manager", () => {
       },
     );
   });
-
-  //   describe("Search gear", () => {
-  //     beforeAll(() => {
-  //       gearRepository.gears = SIMILAR_GEARS;
-  //     });
-  //     afterAll(() => {
-  //       gearRepository.gears = GEARS;
-  //     });
-  //     describe.each`
-  //       search       | searchCategory  | searchOwner  | searchPonctualUsage | expectedGears
-  //       ${"TAblIer"} | ${undefined}    | ${undefined} | ${undefined}        | ${[TABLIER]}
-  //       ${"TAblI"}   | ${undefined}    | ${undefined} | ${undefined}        | ${[TABLIER]}
-  //       ${"TAbl"}    | ${undefined}    | ${undefined} | ${undefined}        | ${[TABLIER, SIMILAR_GEARS[5]]}
-  //       ${"TAblI"}   | ${"Mobilier"}   | ${undefined} | ${undefined}        | ${[]}
-  //       ${"euse"}    | ${undefined}    | ${undefined} | ${undefined}        | ${[PERCEUSE, SIMILAR_GEARS[2], PONCEUSE]}
-  //       ${"euse"}    | ${"BricolLage"} | ${undefined} | ${undefined}        | ${[PERCEUSE, PONCEUSE]}
-  //       ${undefined} | ${undefined}    | ${"Matos"}   | ${undefined}        | ${[PERCEUSE, SIMILAR_GEARS[1], PONCEUSE, SIMILAR_GEARS[5]]}
-  //       ${undefined} | ${undefined}    | ${"maT"}     | ${undefined}        | ${[PERCEUSE, SIMILAR_GEARS[1], PONCEUSE, SIMILAR_GEARS[5]]}
-  //       ${"tab"}     | ${undefined}    | ${"maT"}     | ${undefined}        | ${[SIMILAR_GEARS[5]]}
-  //       ${"tab"}     | ${"Brico"}      | ${"maT"}     | ${undefined}        | ${[]}
-  //       ${undefined} | ${undefined}    | ${undefined} | ${undefined}        | ${SIMILAR_GEARS}
-  //       ${undefined} | ${undefined}    | ${undefined} | ${true}             | ${[PERCEUSE, TABLIER, PONCEUSE]}
-  //       ${"Br_ou"}   | ${undefined}    | ${undefined} | ${undefined}        | ${[PERCEUSE, PONCEUSE]}
-  //     `(
-  //       'When looking for "$search" in $searchCategory category with $searchOwner owner with ponctual usage: $searchPonctualUsage',
-  //       ({
-  //         search,
-  //         searchCategory,
-  //         searchOwner,
-  //         searchPonctualUsage,
-  //         expectedGears,
-  //       }) => {
-  //         it(`should retrieve ${expectedGears.length} gears`, async () => {
-  //           const gears = await catalog.search({
-  //             search,
-  //             category: searchCategory,
-  //             owner: searchOwner,
-  //             ponctualUsage: searchPonctualUsage,
-  //           });
-  //           expect(gears).toEqual(expectedGears);
-  //         });
-  //       },
-  //     );
-  //   });
 });

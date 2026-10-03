@@ -1,8 +1,8 @@
 import { SlugifyService } from "@overbookd/slugify";
-import { DatabaseGear } from "./repositories/gear.query";
+import { DatabaseGear } from "./gear.query";
 import {
   GearSearchOptions,
-  GearReferenceCodeService,
+  GearReferenceCodeGenerator,
 } from "@overbookd/logistic";
 
 export class GearFilter {
@@ -27,10 +27,7 @@ export class GearFilter {
 
   private static matchReference(gear: DatabaseGear, slug: string): boolean {
     if (!slug) return true;
-    const code = GearReferenceCodeService.computeGearCode(
-      gear.category,
-      gear.id,
-    );
+    const code = GearReferenceCodeGenerator.generate(gear.category, gear.id);
     const slugifiedCode = SlugifyService.apply(code);
     return slugifiedCode.includes(slug);
   }

@@ -1,10 +1,5 @@
 import { SlugifyService } from "@overbookd/slugify";
-import {
-  CatalogGear,
-  GearLinkedItems,
-  GearSearchOptions,
-  SavedCatalogGear,
-} from "./gear";
+import { CatalogGear, GearLinkedItems, SavedCatalogGear } from "./gear";
 import { CatalogCategory } from "../category/category";
 import { GearNotFound } from "../../logistic.error";
 import { GearAlreadyExists, GearHasLinkedItems } from "../catalog.error";
@@ -28,7 +23,6 @@ export type CatalogGears = {
   addGear(gear: Omit<SavedCatalogGear, "id">): Promise<SavedCatalogGear>;
   updateGear(gear: SavedCatalogGear): Promise<SavedCatalogGear | undefined>;
   removeGear(id: number): Promise<void>;
-  searchGear(searchedGear: GearSearchOptions): Promise<SavedCatalogGear[]>;
   getLinkedItems(id: number): Promise<Partial<GearLinkedItems>>;
 };
 
@@ -92,10 +86,6 @@ export class CatalogGearManager {
     }
 
     return this.gear.removeGear(id);
-  }
-
-  async search(searchOptions: GearSearchOptions): Promise<CatalogGear[]> {
-    return this.gear.searchGear(searchOptions);
   }
 
   private computeGearCode(gear: SavedCatalogGear): CatalogGear {

@@ -1,11 +1,5 @@
 import { removeItemAtIndex, updateItemToList } from "@overbookd/list";
-import { SlugifyService } from "@overbookd/slugify";
-import {
-  GearLinkedItems,
-  GearSearchOptions,
-  SavedCatalogGear,
-} from "./gear.js";
-import { GearSearchBuilder } from "../../gear-search.builder.js";
+import { GearLinkedItems, SavedCatalogGear } from "./gear.js";
 import { CatalogGears } from "./gear-manager.js";
 
 export const EMPTY_GEAR_LINKED_ITEMS = {
@@ -14,7 +8,7 @@ export const EMPTY_GEAR_LINKED_ITEMS = {
   borrows: [],
 };
 
-export class InMemoryGearRepository implements CatalogGears {
+export class InMemoryCatalogGears implements CatalogGears {
   constructor(
     private gears: SavedCatalogGear[] = [],
     private linkedItems: Record<number, GearLinkedItems> = {},
@@ -63,28 +57,6 @@ export class InMemoryGearRepository implements CatalogGears {
 
   getLinkedItems(id: number): Promise<Partial<GearLinkedItems>> {
     return Promise.resolve({ ...this.linkedItems[id] });
-  }
-
-  searchGear(options: GearSearchOptions): Promise<SavedCatalogGear[]> {
-    return Promise.resolve(
-      this.gears.filter((gear) => this.isMatchingSearch(options, gear)),
-    );
-  }
-
-  private isMatchingSearch(
-    { category, search, owner, ponctualUsage }: GearSearchOptions,
-    gear: SavedCatalogGear,
-  ): boolean {
-    const slug = SlugifyService.applyOnOptional(search);
-    const categorySlug = SlugifyService.applyOnOptional(category);
-    const ownerSlug = SlugifyService.applyOnOptional(owner);
-
-    const gearSearch = new GearSearchBuilder(gear)
-      .addCategoryCondition(categorySlug)
-      .addSlugCondition(slug)
-      .addOwnerCondition(ownerSlug)
-      .addPonctualUsageCondition(ponctualUsage);
-    return gearSearch.match;
   }
 
   get savedGears() {

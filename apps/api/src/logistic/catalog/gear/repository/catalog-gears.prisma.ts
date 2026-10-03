@@ -2,37 +2,13 @@ import { Injectable } from "@nestjs/common";
 import {
   GearLinkedItems,
   CatalogGears,
-  CatalogGear,
-  GearSearchOptions,
   SavedCatalogGear,
 } from "@overbookd/logistic";
 import { PrismaService } from "../../../../prisma.service";
-import { GearFilter } from "../../../common/gear.filter";
 import {
-  DatabaseGear,
+  convertGearToApiContract,
   SELECT_GEAR,
-} from "../../../common/repositories/gear.query";
-
-export function convertGearToApiContract(gear: DatabaseGear): SavedCatalogGear {
-  const baseGear = {
-    name: gear.name,
-    slug: gear.slug,
-    id: gear.id,
-    isPonctualUsage: gear.isPonctualUsage,
-    isConsumable: gear.isConsumable,
-  };
-  const category = gear.category
-    ? {
-        name: gear.category.name,
-        path: gear.category.path,
-        id: gear.category.id,
-      }
-    : undefined;
-  const owner = gear.category?.owner
-    ? { name: gear.category.owner.name, code: gear.category.owner.code }
-    : undefined;
-  return { ...baseGear, category, owner };
-}
+} from "../../../common/gear.query";
 
 @Injectable()
 export class PrismaCatalogGears implements CatalogGears {
@@ -107,13 +83,5 @@ export class PrismaCatalogGears implements CatalogGears {
       select: { id: true },
     });
     return lastGear?.id ?? 0;
-  }
-
-  async searchGear(options: GearSearchOptions): Promise<CatalogGear[]> {
-    const gears = await this.prismaService.catalogGear.findMany({
-      select: SELECT_GEAR,
-    });
-    const filteredGears = GearFilter.apply(gears, options);
-    return filteredGears.map(convertGearToApiContract);
   }
 }

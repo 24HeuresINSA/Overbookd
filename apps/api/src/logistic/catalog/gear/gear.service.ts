@@ -7,6 +7,7 @@ import {
   CategoryNotFound,
 } from "@overbookd/logistic";
 import { CatalogGearForm } from "@overbookd/http";
+import { SearchGears } from "../../common/search-gears";
 
 export type FindCatalogCategories = {
   findById(categoryId: number): Promise<CatalogCategory | undefined>;
@@ -17,14 +18,15 @@ export class CatalogGearService {
   constructor(
     private readonly catalog: CatalogGearManager,
     private readonly categories: FindCatalogCategories,
+    private readonly search: SearchGears,
   ) {}
 
   async find(id: number): Promise<CatalogGear | undefined> {
     return this.catalog.find(id);
   }
 
-  async search(searchOptions: GearSearchOptions): Promise<CatalogGear[]> {
-    return this.catalog.search(searchOptions);
+  async searchGear(searchOptions: GearSearchOptions): Promise<CatalogGear[]> {
+    return this.search.search(searchOptions);
   }
 
   async add({

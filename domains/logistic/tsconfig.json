@@ -3,7 +3,7 @@
     "../../tsconfig.cross-modules-import.json",
     "../../tsconfig.package.json"
   ],
-  "include": ["src"],
+  "include": ["src", "../../apps/api/src/logistic/gear.filter.ts", "../../apps/api/src/logistic/common/gear-search.builder.ts"],
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "./dist"
