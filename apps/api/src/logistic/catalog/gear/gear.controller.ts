@@ -17,21 +17,21 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
-import { CatalogService } from "./catalog.service";
+import { CatalogGearService } from "./gear.service";
 import { GearFormRequestDto } from "./dto/gear-form.request.dto";
-import { CatalogGearResponseDto } from "../common/dto/catalog-gear.response.dto";
-import { Permissions } from "../../authentication-zitadel/decorators/permissions-auth.decorator";
+import { CatalogGearResponseDto } from "../../common/dto/catalog-gear.response.dto";
+import { Permissions } from "../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { READ_GEAR_CATALOG, WRITE_GEAR_CATALOG } from "@overbookd/permission";
-import { GearSearchRequestDto } from "../common/dto/gear-search.request.dto";
+import { GearSearchRequestDto } from "../../common/dto/gear-search.request.dto";
 import { CatalogGear } from "@overbookd/logistic";
-import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
+import { ApiSwaggerResponse } from "../../../api-swagger-response.decorator";
 
-@Controller("logistic/gears")
-@ApiTags("logistic/catalog")
+@Controller("logistic/catalog/gears")
+@ApiTags("logistic/catalog/gears")
 @ApiBearerAuth()
 @ApiSwaggerResponse()
-export class GearController {
-  constructor(private readonly catalogService: CatalogService) {}
+export class CatalogGearController {
+  constructor(private readonly catalogService: CatalogGearService) {}
 
   @Get()
   @Permissions(READ_GEAR_CATALOG)

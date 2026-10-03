@@ -17,20 +17,21 @@ export type {
 export type {
   CatalogGear,
   GearSearchOptions,
-  CatalogGearForm,
   GearLinkedItems,
+  SavedCatalogGear,
 } from "./catalog/gear.js";
 export type {
   CategoryRepository,
-  GearRepository,
+  CatalogGears,
   TeamRepository,
 } from "./catalog/repositories/catalog-repositories.js";
 export {
   CategoryAlreadyExists,
   GearAlreadyExists,
-  CategoryNotFoundException,
+  CategoryNotFound,
 } from "./catalog/catalog.error.js";
-export { GearReferenceCodeService } from "./catalog/gear-reference-code.service.js";
+export { GearReferenceCodeGenerator } from "./catalog/gear-reference-code.js";
+export { CatalogGearManager } from "./catalog/catalog-gear-manager.js";
 
 export type { Gear, GearRequest } from "./gear-request.js";
 export { LogisticError, GearNotFoundException } from "./logistic.error.js";

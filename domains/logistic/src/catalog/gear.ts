@@ -7,7 +7,7 @@ export type GearSearchOptions = {
   ponctualUsage?: boolean;
 };
 
-export type CatalogGear = {
+export type SavedCatalogGear = {
   id: number;
   name: string;
   isPonctualUsage: boolean;
@@ -15,18 +15,14 @@ export type CatalogGear = {
   slug: string;
   owner?: CategoryOwner;
   category?: CatalogCategoryIdentifier;
-  code?: string;
 };
 
-export type CatalogGearForm = {
-  name: string;
-  category?: number;
-  isPonctualUsage: boolean;
-  isConsumable: boolean;
+export type CatalogGear = SavedCatalogGear & {
+  code?: string;
 };
 
 export type GearLinkedItems = {
   tasks: number[];
-  actitivities: number[];
+  activities: number[];
   borrows: number[];
 };

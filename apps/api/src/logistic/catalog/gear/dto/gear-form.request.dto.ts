@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { CatalogGearForm } from "@overbookd/logistic";
+import { CatalogGearForm } from "@overbookd/http";
 import {
   IsBoolean,
   IsDefined,

@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { convertGearToApiContract } from "../../catalog/repositories/gear.repository.prisma";
+import { convertGearToApiContract } from "../../catalog/gear/repositories/catalog-gears.prisma";
 import { InventoryRepository } from "../inventory.service";
 import { PrismaService } from "../../../prisma.service";
 import {
