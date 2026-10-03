@@ -34,3 +34,4 @@ export { GearReferenceCodeService } from "./catalog/gear-reference-code.service.
 
 export type { Gear, GearRequest } from "./gear-request.js";
 export { LogisticError, GearNotFoundException } from "./logistic.error.js";
+export { GearSearchBuilder } from "./gear-search.builder.js";
