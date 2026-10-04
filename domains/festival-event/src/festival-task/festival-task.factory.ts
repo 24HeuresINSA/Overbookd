@@ -190,6 +190,7 @@ class FestivalTaskBuilder<T extends WithConflicts> {
     return Object.keys(current).reduce<T>((acc: T, key: string) => {
       if (!isKeyOf(current, key)) return acc;
 
+      // eslint-disable-next-line security/detect-object-injection
       const updated = update[key];
       if (updated === undefined) return acc;
 

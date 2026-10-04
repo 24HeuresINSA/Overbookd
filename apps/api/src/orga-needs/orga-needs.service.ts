@@ -15,6 +15,7 @@ import {
 } from "@overbookd/http";
 import { SELECT_PERIOD } from "../common/query/period.query";
 import { IS_NOT_DELETED } from "../common/query/not-deleted.query";
+import { ALL_TEAM_MEMBERS } from "@overbookd/festival-event";
 
 type RequestedVolunteersOverPeriod = IProvidePeriod & {
   requestedVolunteers: number;
@@ -186,7 +187,10 @@ export class OrgaNeedsService {
   }
 
   private teamMemberRequestsSelection(teams: string[]) {
-    const condition = this.teamIsSearchedCondition(teams);
+    const condition = {
+      ...this.teamIsSearchedCondition(teams),
+      count: { not: ALL_TEAM_MEMBERS },
+    };
     return { teams: { select: { count: true }, where: condition } };
   }
 
@@ -383,7 +387,10 @@ export class OrgaNeedsService {
           select: {
             ...SELECT_PERIOD,
             teams: {
-              where: this.teamIsSearchedCondition(teams),
+              where: {
+                ...this.teamIsSearchedCondition(teams),
+                count: { not: ALL_TEAM_MEMBERS },
+              },
               select: { count: true },
             },
           },

@@ -39,7 +39,7 @@
           v-for="team in teams"
           :key="team.team"
           :team="team.team"
-          :prefix="team.count.toString()"
+          :prefix="formatTeamCount(team.count)"
           with-name
           show-hidden
           closable
@@ -47,6 +47,20 @@
         />
       </div>
       <div class="team-form">
+        <v-btn
+          v-if="canAddAllUsersFromTeam"
+          :icon="
+            isAllUsersFromTeamToggled
+              ? 'mdi-account-multiple'
+              : 'mdi-account-multiple-outline'
+          "
+          variant="outlined"
+          color="secondary"
+          :active="isAllUsersFromTeamToggled"
+          aria-label="Ajouter tous les bénévoles de l'équipe"
+          title="Ajouter tous les bénévoles de l'équipe"
+          @click="toggleAllUsersFromTeam"
+        />
         <v-text-field
           v-if="isAllUsersFromTeamToggled"
           model-value="Tous"
@@ -64,6 +78,7 @@
           label="Nombre de bénévoles"
           class="team-form__field"
           :rules="[isNumber, min(1)]"
+          min="1"
           hide-details
         />
         <SearchTeam
@@ -75,15 +90,6 @@
           @update:team="addTeam"
         />
       </div>
-      <v-btn
-        v-if="canAddAllUsersFromTeam"
-        text="Ajouter tous les bénévoles d'une équipe"
-        variant="outlined"
-        color="secondary"
-        density="compact"
-        size="small"
-        @click="toggleAllUsersFromTeam"
-      />
     </template>
 
     <template #actions>
@@ -101,12 +107,16 @@
 
 <script lang="ts" setup>
 import { ONE_HOUR_IN_MS, Period, formatDate } from "@overbookd/time";
-import type { TeamMobilization } from "@overbookd/festival-event";
+import {
+  ALL_TEAM_MEMBERS,
+  type TeamMobilization,
+} from "@overbookd/festival-event";
 import type { AddMobilizationForm } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
 import { isNumber, min } from "~/utils/rules/input.rules";
 import { type User, buildUserNameWithNickname } from "@overbookd/user";
-import { AFFECT_TEAM } from "@overbookd/permission";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
+import { formatTeamCount } from "~/utils/assignment/assignment-team";
 
 const myStore = useMyStore();
 const userStore = useUserStore();
@@ -150,7 +160,7 @@ const removeVolunteer = (volunteerId: User["id"]) => {
 };
 
 const canAddAllUsersFromTeam = computed<boolean>(() =>
-  myStore.can(AFFECT_TEAM),
+  myStore.can(AFFECT_VOLUNTEER),
 );
 const isAllUsersFromTeamToggled = ref<boolean>(false);
 const toggleAllUsersFromTeam = () =>
@@ -159,20 +169,9 @@ const toggleAllUsersFromTeam = () =>
 const mobilizableTeams = computed<Team[]>(() => teamStore.mobilizableTeams);
 const addTeam = (team?: Team) => {
   if (!team) return;
-
-  if (isAllUsersFromTeamToggled.value) {
-    const volunteersFromTeam = userStore.volunteers.filter(
-      (volunteer) =>
-        volunteer.teams.includes(team.code) &&
-        !volunteers.value.some(
-          (selectedVolunteer) => selectedVolunteer.id === volunteer.id,
-        ),
-    );
-    volunteers.value = [...volunteers.value, ...volunteersFromTeam];
-    cleanTeamFormData();
-    return;
-  }
-  const count = +teamQuantity.value;
+  const count = isAllUsersFromTeamToggled.value
+    ? ALL_TEAM_MEMBERS
+    : +teamQuantity.value;
   teams.value = [...teams.value, { team: team.code, count }];
   cleanTeamFormData();
 };
@@ -237,9 +236,12 @@ const addMobilization = () => {
 }
 
 .chip-group {
-  margin-bottom: 5px;
-  margin-top: 2px;
-  max-height: 60px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-bottom: 10px;
+  margin-top: 3px;
+  max-height: 80px;
   overflow-y: auto;
 }
 

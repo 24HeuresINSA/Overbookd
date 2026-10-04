@@ -27,6 +27,8 @@ import {
   hasAssignmentIdentifier,
   type CalendarEventWithIdentifier,
 } from "~/utils/assignment/calendar-event";
+import { formatTeamCount } from "~/utils/assignment/assignment-team";
+import { ALL_TEAM_MEMBERS } from "@overbookd/festival-event";
 
 defineProps({
   canUseCalendarShortcuts: {
@@ -60,7 +62,7 @@ const assignments = computed<CalendarEvent[]>(() =>
 
 const buildEventName = (team: AssignmentTeam): string => {
   const teamName = teamStore.getTeamByCode(team.team)?.name ?? team.team;
-  return `[${team.assigned}/${team.demand}] ${teamName}`;
+  return `[${team.assigned}/${formatTeamCount(team.demand)}] ${teamName}`;
 };
 
 const decimalToHex = (decimal: number): string => {
@@ -69,7 +71,8 @@ const decimalToHex = (decimal: number): string => {
 };
 const defineEventColor = (team: AssignmentTeam): string => {
   const color = teamStore.getTeamByCode(team.team)?.color ?? "#000000";
-  const spread = (180 * team.assigned) / team.demand + 75;
+  const demand = team.demand === ALL_TEAM_MEMBERS ? 1 : team.demand;
+  const spread = (180 * team.assigned) / demand + 75;
   return color + decimalToHex(spread);
 };
 const isSelected = (assignmentId: string) =>

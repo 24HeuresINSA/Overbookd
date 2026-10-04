@@ -49,7 +49,7 @@
             v-for="team in item.teams"
             :key="`${item.id}-${team.team}`"
             :team="team.team"
-            :prefix="team.count.toString()"
+            :prefix="formatTeamCount(team.count)"
             with-name
             show-hidden
             :closable="!disabled"
@@ -147,6 +147,7 @@ import type {
 import { formatDateWithMinutes } from "@overbookd/time";
 import type { AddMobilizationForm } from "@overbookd/http";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
+import { formatTeamCount } from "~/utils/assignment/assignment-team";
 
 const ftStore = useFestivalTaskStore();
 const layoutStore = useLayoutStore();
