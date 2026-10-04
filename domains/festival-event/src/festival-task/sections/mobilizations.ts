@@ -34,8 +34,6 @@ export const requirableTeams = [
 ] as const;
 export const requirableTeamsExtended = [...requirableTeams, SOFT] as const;
 
-export const ALL_TEAM_MEMBERS = -1;
-
 export type MobilizationOptions = {
   withConflicts: boolean;
   withAssignments: boolean;

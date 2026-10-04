@@ -47,14 +47,11 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  ALL_TEAM_MEMBERS,
-  type Mobilization,
-  type TeamMobilization,
-} from "@overbookd/festival-event";
+import type { Mobilization, TeamMobilization } from "@overbookd/festival-event";
 import type { Team } from "@overbookd/team";
 import { isNumber, min } from "~/utils/rules/input.rules";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
+import { ALL_TEAM_MEMBERS } from "@overbookd/festival-event-constants";
 
 const teamStore = useTeamStore();
 const myStore = useMyStore();

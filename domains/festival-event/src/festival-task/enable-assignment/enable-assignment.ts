@@ -1,4 +1,7 @@
-import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
+import {
+  ALL_TEAM_MEMBERS,
+  READY_TO_ASSIGN,
+} from "@overbookd/festival-event-constants";
 import {
   Categorize,
   FestivalTask,
@@ -23,7 +26,6 @@ import {
 import { isValidated } from "../../festival-event.js";
 import { ValidatedWithConflicts } from "../festival-task.factory.js";
 import {
-  ALL_TEAM_MEMBERS,
   Assignee,
   Assignment,
   ReviewableMobilization,

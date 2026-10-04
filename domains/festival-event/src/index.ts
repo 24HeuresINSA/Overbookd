@@ -245,7 +245,6 @@ export type {
 export {
   requirableTeams,
   requirableTeamsExtended,
-  ALL_TEAM_MEMBERS,
 } from "./festival-task/sections/mobilizations.js";
 export type { KeyEvent as FestivalTaskKeyEvent } from "./festival-task/festival-task.event.js";
 export type {

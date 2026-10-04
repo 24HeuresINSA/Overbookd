@@ -28,7 +28,7 @@ import {
   type CalendarEventWithIdentifier,
 } from "~/utils/assignment/calendar-event";
 import { formatTeamCount } from "~/utils/assignment/assignment-team";
-import { ALL_TEAM_MEMBERS } from "@overbookd/festival-event";
+import { ALL_TEAM_MEMBERS } from "@overbookd/festival-event-constants";
 
 defineProps({
   canUseCalendarShortcuts: {

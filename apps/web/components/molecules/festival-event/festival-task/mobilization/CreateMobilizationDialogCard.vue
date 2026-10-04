@@ -107,16 +107,14 @@
 
 <script lang="ts" setup>
 import { ONE_HOUR_IN_MS, Period, formatDate } from "@overbookd/time";
-import {
-  ALL_TEAM_MEMBERS,
-  type TeamMobilization,
-} from "@overbookd/festival-event";
+import type { TeamMobilization } from "@overbookd/festival-event";
 import type { AddMobilizationForm } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
 import { isNumber, min } from "~/utils/rules/input.rules";
 import { type User, buildUserNameWithNickname } from "@overbookd/user";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { formatTeamCount } from "~/utils/assignment/assignment-team";
+import { ALL_TEAM_MEMBERS } from "@overbookd/festival-event-constants";
 
 const myStore = useMyStore();
 const userStore = useUserStore();

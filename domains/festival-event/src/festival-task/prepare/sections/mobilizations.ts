@@ -1,7 +1,6 @@
 import { Duration, IProvidePeriod, Period } from "@overbookd/time";
 import { Volunteer } from "../../sections/instructions.js";
 import {
-  ALL_TEAM_MEMBERS,
   Mobilization,
   TeamMobilization,
 } from "../../sections/mobilizations.js";
@@ -13,6 +12,7 @@ import {
 } from "../../festival-task.error.js";
 import { updateItemToList } from "@overbookd/list";
 import { AddMobilization, UpdateMobilization } from "../prepare.js";
+import { ALL_TEAM_MEMBERS } from "@overbookd/festival-event-constants";
 
 type ListItem<T> = {
   index: number;

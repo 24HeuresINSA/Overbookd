@@ -4,10 +4,12 @@ import {
   Volunteer,
   FestivalTaskLink,
   Conflicts,
-  ALL_TEAM_MEMBERS,
 } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/time";
-import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
+import {
+  ALL_TEAM_MEMBERS,
+  READY_TO_ASSIGN,
+} from "@overbookd/festival-event-constants";
 import { PrismaService } from "../../../../prisma.service";
 import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
 

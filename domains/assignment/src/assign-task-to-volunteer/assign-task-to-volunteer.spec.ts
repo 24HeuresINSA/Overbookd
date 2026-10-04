@@ -8,6 +8,7 @@ import {
   missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask,
   missingTwoVieuxDuring19hto20h,
   fulfillAssignmentThenMissingOneHardTask,
+  missingOneHardAndAllVieuxDemandedTask,
 } from "./test-resources/task.fake.js";
 import { InMemoryTasks } from "./repositories/tasks.inmemory.js";
 import { AssignTaskToVolunteer } from "./assign-task-to-volunteer.js";
@@ -16,6 +17,7 @@ import { InMemoryAssignableVolunteers } from "./repositories/assignable-voluntee
 import {
   fulfilledAssignment,
   leaAsAvailableVolunteer,
+  missingOneHardAndAllVieuxDemandedAssignment,
   missingOneHardAndOneBenevoleAssignment,
   missingOnePlaizirAssignment,
   missingTwoVieuxAssignment,
@@ -32,6 +34,7 @@ describe("Assign task to volunteer", () => {
     missingOneAssigneeThenOneHardAndOneBenevoleTask.value,
     missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask.value,
     fulfillAssignmentThenMissingOneHardTask.value,
+    missingOneHardAndAllVieuxDemandedTask.value,
   ];
   const tasks = new InMemoryTasks(taskList);
   const volunteers = new InMemoryAssignableVolunteers([
@@ -49,6 +52,7 @@ describe("Assign task to volunteer", () => {
       ${missingTwoVieuxTask.value.name}                             | ${missingTwoVieuxTask.value.id}                             | ${[VIEUX]}
       ${missingOneHardAndOneBenevoleTask.value.name}                | ${missingOneHardAndOneBenevoleTask.value.id}                | ${[HARD, PERSONNE]}
       ${missingOneAssigneeThenOneHardAndOneBenevoleTask.value.name} | ${missingOneAssigneeThenOneHardAndOneBenevoleTask.value.id} | ${["plaizir", HARD, PERSONNE]}
+      ${missingOneHardAndAllVieuxDemandedTask.value.name}           | ${missingOneHardAndAllVieuxDemandedTask.value.id}           | ${[HARD]}
       ${fulfillAssignmentThenMissingOneHardTask.value.name}         | ${fulfillAssignmentThenMissingOneHardTask.value.id}         | ${[HARD]}
     `(
       "when listing missing assignment tasks with $taskName",
@@ -84,6 +88,7 @@ describe("Assign task to volunteer", () => {
       ${missingTwoVieuxTask.value.name}                             | ${missingTwoVieuxTask.value.id}                             | ${missingTwoVieuxTask.assignments.map(({ summary }) => summary.assignment)}
       ${missingOneHardAndOneBenevoleTask.value.name}                | ${missingOneHardAndOneBenevoleTask.value.id}                | ${missingOneHardAndOneBenevoleTask.assignments.map(({ summary }) => summary.assignment)}
       ${missingOneAssigneeThenOneHardAndOneBenevoleTask.value.name} | ${missingOneAssigneeThenOneHardAndOneBenevoleTask.value.id} | ${missingOneAssigneeThenOneHardAndOneBenevoleTask.assignments.map(({ summary }) => summary.assignment)}
+      ${missingOneHardAndAllVieuxDemandedTask.value.name}           | ${missingOneHardAndAllVieuxDemandedTask.value.id}           | ${missingOneHardAndAllVieuxDemandedTask.assignments.map(({ summary }) => summary.assignment)}
     `("when selecting task $taskName", ({ taskId, expectedAssignments }) => {
       it("should return the selected task with assignments summary", async () => {
         const selectedTask = await assign.selectTask(taskId);
@@ -94,13 +99,14 @@ describe("Assign task to volunteer", () => {
 
   describe("when selecting a task assignment", () => {
     describe.each`
-      assignmentId                                                      | mobilizationId                                                      | taskId                                                           | teams               | expectedVolunteers
-      ${fulfilledAssignment.assignment.assignmentId}                    | ${fulfilledAssignment.assignment.mobilizationId}                    | ${fullyAssignedTask.task.id}                                     | ${[]}               | ${[]}
-      ${missingOnePlaizirAssignment.assignment.assignmentId}            | ${missingOnePlaizirAssignment.assignment.mobilizationId}            | ${missingOnePlaizirTask.task.id}                                 | ${["plaizir"]}      | ${[noelAsAvailableVolunteer.expected.BAR]}
-      ${missingOneHardAndOneBenevoleAssignment.assignment.assignmentId} | ${missingOneHardAndOneBenevoleAssignment.assignment.mobilizationId} | ${missingOneHardAndOneBenevoleTask.task.id}                      | ${[HARD, PERSONNE]} | ${[noelAsAvailableVolunteer.expected.STATIQUE, leaAsAvailableVolunteer.expected.STATIQUE]}
-      ${missingTwoVieuxAssignment.assignment.assignmentId}              | ${missingTwoVieuxAssignment.assignment.mobilizationId}              | ${missingTwoVieuxTask.task.id}                                   | ${[VIEUX]}          | ${[leaAsAvailableVolunteer.expected.MANUTENTION]}
-      ${missingOnePlaizirAssignment.assignment.assignmentId}            | ${missingOnePlaizirAssignment.assignment.mobilizationId}            | ${missingOneAssigneeThenOneHardAndOneBenevoleTask.task.id}       | ${["plaizir"]}      | ${[noelAsAvailableVolunteer.expected.STATIQUE]}
-      ${missingTwoVieuxDuring19hto20h.assignment.assignmentId}          | ${missingTwoVieuxDuring19hto20h.assignment.mobilizationId}          | ${missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask.task.id} | ${[VIEUX]}          | ${[leaAsAvailableVolunteer.expected.FUN]}
+      assignmentId                                                           | mobilizationId                                                           | taskId                                                           | teams               | expectedVolunteers
+      ${fulfilledAssignment.assignment.assignmentId}                         | ${fulfilledAssignment.assignment.mobilizationId}                         | ${fullyAssignedTask.task.id}                                     | ${[]}               | ${[]}
+      ${missingOnePlaizirAssignment.assignment.assignmentId}                 | ${missingOnePlaizirAssignment.assignment.mobilizationId}                 | ${missingOnePlaizirTask.task.id}                                 | ${["plaizir"]}      | ${[noelAsAvailableVolunteer.expected.BAR]}
+      ${missingOneHardAndOneBenevoleAssignment.assignment.assignmentId}      | ${missingOneHardAndOneBenevoleAssignment.assignment.mobilizationId}      | ${missingOneHardAndOneBenevoleTask.task.id}                      | ${[HARD, PERSONNE]} | ${[noelAsAvailableVolunteer.expected.STATIQUE, leaAsAvailableVolunteer.expected.STATIQUE]}
+      ${missingTwoVieuxAssignment.assignment.assignmentId}                   | ${missingTwoVieuxAssignment.assignment.mobilizationId}                   | ${missingTwoVieuxTask.task.id}                                   | ${[VIEUX]}          | ${[leaAsAvailableVolunteer.expected.MANUTENTION]}
+      ${missingOnePlaizirAssignment.assignment.assignmentId}                 | ${missingOnePlaizirAssignment.assignment.mobilizationId}                 | ${missingOneAssigneeThenOneHardAndOneBenevoleTask.task.id}       | ${["plaizir"]}      | ${[noelAsAvailableVolunteer.expected.STATIQUE]}
+      ${missingTwoVieuxDuring19hto20h.assignment.assignmentId}               | ${missingTwoVieuxDuring19hto20h.assignment.mobilizationId}               | ${missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask.task.id} | ${[VIEUX]}          | ${[leaAsAvailableVolunteer.expected.FUN]}
+      ${missingOneHardAndAllVieuxDemandedAssignment.assignment.assignmentId} | ${missingOneHardAndAllVieuxDemandedAssignment.assignment.mobilizationId} | ${missingOneHardAndAllVieuxDemandedTask.task.id}                 | ${[HARD]}           | ${[noelAsAvailableVolunteer.expected.FUN]}
     `(
       "when looking for assignable $teams volunteers",
       ({ taskId, mobilizationId, assignmentId, expectedVolunteers }) => {

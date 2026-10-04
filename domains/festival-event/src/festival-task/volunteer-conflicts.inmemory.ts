@@ -5,13 +5,10 @@ import {
   WithConflicts,
 } from "./volunteer-conflicts.js";
 import { Volunteer, VolunteerWithTeams } from "./sections/instructions.js";
-import {
-  ALL_TEAM_MEMBERS,
-  Conflicts,
-  FestivalTaskLink,
-} from "./sections/mobilizations.js";
+import { Conflicts, FestivalTaskLink } from "./sections/mobilizations.js";
 import { Mobilization } from "./sections/mobilizations.js";
 import { FestivalTask, isReadyToAssign } from "./festival-task.js";
+import { ALL_TEAM_MEMBERS } from "@overbookd/festival-event-constants";
 
 export class InMemoryVolunteerConflicts implements VolunteerConflicts {
   constructor(

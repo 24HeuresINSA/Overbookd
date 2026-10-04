@@ -1,6 +1,5 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import {
-  ALL_TEAM_MEMBERS,
   FestivalTask,
   Mobilization,
   PrepareFestivalTask,
@@ -12,6 +11,7 @@ import { Adherents } from "../../common/festival-task-common.model";
 import { AddMobilizationForm } from "@overbookd/http";
 import { RequestHydratedUser } from "../../../../authentication-zitadel/request-hydrated-user";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
+import { ALL_TEAM_MEMBERS } from "@overbookd/festival-event-constants";
 
 @Injectable()
 export class MobilizationSectionService {

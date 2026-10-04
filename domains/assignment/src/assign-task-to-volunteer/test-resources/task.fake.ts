@@ -14,6 +14,7 @@ import {
   friday19hto21h,
   friday20hto21h,
   fulfilledAssignment,
+  missingOneHardAndAllVieuxDemandedAssignment,
   missingOneHardAndOneBenevoleAssignment,
   missingOnePlaizirAssignment,
   missingTwoVieuxAssignment,
@@ -82,3 +83,8 @@ export const missingOnePlaizirOrTwoVieuxOnStaggeredAssignmentsTask = factory
       .during(friday20hto21h)
       .withMobilization(friday19hto21h),
   ]);
+
+export const missingOneHardAndAllVieuxDemandedTask = factory
+  .init("Task missing one hard and demanding all vieux")
+  .withCategory(FUN)
+  .withAssignments([missingOneHardAndAllVieuxDemandedAssignment]);
