@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, OnApplicationBootstrap } from "@nestjs/common";
 import {
   Assignment,
   AssignmentIdentifier,
@@ -6,12 +6,14 @@ import {
   Planning,
   PlanningEvent,
   VolunteersForAssignment,
+  WholeTeamAssignments,
 } from "@overbookd/assignment";
 import {
   VolunteerWithAssignmentStats,
   TaskForCalendar,
   AssignmentStats,
 } from "@overbookd/http";
+import { DomainEventService } from "../../domain-event/domain-event.service";
 
 export type AssignmentRepository = Assignments & {
   findOneForCalendar(
@@ -30,12 +32,32 @@ export type AssignmentStatsRepository = {
 };
 
 @Injectable()
-export class AssignmentService {
+export class AssignmentService implements OnApplicationBootstrap {
   constructor(
     private readonly assignments: AssignmentRepository,
     private readonly stats: AssignmentStatsRepository,
     private readonly planning: Planning,
+    private readonly eventStore: DomainEventService,
+    private readonly teamAssignments: WholeTeamAssignments,
   ) {}
+
+  onApplicationBootstrap(): void {
+    this.eventStore.teamsJoined.subscribe(({ data: { member } }) =>
+      this.teamAssignments.addMissingTeamAssignments(member.id),
+    );
+
+    this.eventStore.volunteersEnrolled.subscribe(({ data: { candidate } }) =>
+      this.teamAssignments.addMissingTeamAssignments(candidate.id),
+    );
+
+    this.eventStore.organizerEnrolled.subscribe(({ data: { candidate } }) =>
+      this.teamAssignments.addMissingTeamAssignments(candidate.id),
+    );
+
+    this.eventStore.teamLeft.subscribe(({ data: { member } }) =>
+      this.teamAssignments.removeIrrelevantTeamAssignments(member.id),
+    );
+  }
 
   async findOneForCalendar(
     identifier: AssignmentIdentifier,

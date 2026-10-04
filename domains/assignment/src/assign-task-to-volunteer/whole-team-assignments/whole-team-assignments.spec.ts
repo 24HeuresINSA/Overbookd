@@ -76,7 +76,10 @@ describe("Whole team assignments", () => {
 
     describe("when there are no assignments to add", () => {
       beforeAll(async () => {
-        assignments = [missingTwoVieuxAssignment.assignment];
+        assignments = [
+          missingOneHardAndAllVieuxDemandedWithLeaAssignedAssignment.assignment,
+          missingTwoVieuxAssignment.assignment,
+        ];
         teamAssignments = new InMemoryTeamAssignments(assignments, volunteers);
         wholeTeamAssignments = new WholeTeamAssignments(teamAssignments);
         await wholeTeamAssignments.addMissingTeamAssignments(lea.id);

@@ -151,15 +151,15 @@ export class PrismaAssignments implements AssignmentRepository {
   }
 
   async unassign(
-    assignment: AssignmentIdentifier,
+    { assignmentId, mobilizationId, taskId }: AssignmentIdentifier,
     assigneeId: number,
   ): Promise<void> {
     await this.prisma.assignee.delete({
       where: {
         userId_assignmentId_mobilizationId_festivalTaskId: {
-          assignmentId: assignment.assignmentId,
-          mobilizationId: assignment.mobilizationId,
-          festivalTaskId: assignment.taskId,
+          assignmentId,
+          mobilizationId,
+          festivalTaskId: taskId,
           userId: assigneeId,
         },
       },
