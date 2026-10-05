@@ -57,8 +57,8 @@ describe("Category", () => {
   describe("create a category", () => {
     describe.each`
       name                    | expectedPath
-      ${"mobilier"}           | ${"mobilier"}
-      ${"Mobilier"}           | ${"mobilier"}
+      ${"mobilier extérieur"} | ${"mobilier-exterieur"}
+      ${"Mobilier de bureau"} | ${"mobilier-de-bureau"}
       ${"prise secteur 400V"} | ${"prise-secteur-400v"}
     `(
       "$name main category without responsible team",
@@ -83,7 +83,7 @@ describe("Category", () => {
     );
     describe.each`
       name                   | owner      | expectedOwner
-      ${"Outils"}            | ${"matos"} | ${MATOS_OWNER}
+      ${"Outillage"}         | ${"matos"} | ${MATOS_OWNER}
       ${"Panneaux Lumineux"} | ${"signa"} | ${SIGNA_OWNER}
       ${"Cables"}            | ${"elec"}  | ${ELEC_OWNER}
     `(
@@ -96,10 +96,10 @@ describe("Category", () => {
       },
     );
     describe.each`
-      name            | owner        | parentCategory            | expectedPath                | expectedOwner
-      ${"Outils"}     | ${"matos"}   | ${BRICOLAGE_CATEGORY.id}  | ${"bricollage->outils"}     | ${MATOS_OWNER}
-      ${"Rangements"} | ${"elec"}    | ${BRICOLAGE_CATEGORY.id}  | ${"bricollage->rangements"} | ${ELEC_OWNER}
-      ${"Rallonges"}  | ${undefined} | ${ELECTRIQUE_CATEGORY.id} | ${"electrique->rallonges"}  | ${ELEC_OWNER}
+      name                 | owner        | parentCategory            | expectedPath                     | expectedOwner
+      ${"Petit outillage"} | ${"matos"}   | ${BRICOLAGE_CATEGORY.id}  | ${"bricollage->petit-outillage"} | ${MATOS_OWNER}
+      ${"Rangements"}      | ${"elec"}    | ${BRICOLAGE_CATEGORY.id}  | ${"bricollage->rangements"}      | ${MATOS_OWNER}
+      ${"Rallonges"}       | ${undefined} | ${ELECTRIQUE_CATEGORY.id} | ${"electrique->rallonges"}       | ${ELEC_OWNER}
     `(
       "$name sub category of #$parentCategory category",
       ({ name, owner, parentCategory, expectedPath, expectedOwner }) => {
@@ -159,48 +159,84 @@ describe("Category", () => {
   });
   describe("delete a category", () => {
     describe.each`
-      toDeleteCategory       | childrenCategory           | grandChildrenCategory
-      ${BRICOLAGE_CATEGORY}  | ${undefined}               | ${undefined}
-      ${DIVERS_CATEGORY}     | ${undefined}               | ${undefined}
-      ${CABLE_CATEGORY}      | ${GROSSE_TENSION_CATEGORY} | ${undefined}
-      ${ELECTRIQUE_CATEGORY} | ${CABLE_CATEGORY}          | ${GROSSE_TENSION_CATEGORY}
+      toDeleteCategory       | childCategory              | expectedChildParent       | expectedChildPath               | grandChildCategory         | expectedGrandChildPath
+      ${BRICOLAGE_CATEGORY}  | ${undefined}               | ${undefined}              | ${undefined}                    | ${undefined}               | ${undefined}
+      ${DIVERS_CATEGORY}     | ${undefined}               | ${undefined}              | ${undefined}                    | ${undefined}               | ${undefined}
+      ${CABLE_CATEGORY}      | ${GROSSE_TENSION_CATEGORY} | ${ELECTRIQUE_CATEGORY.id} | ${"electrique->grosse-tension"} | ${undefined}               | ${undefined}
+      ${ELECTRIQUE_CATEGORY} | ${CABLE_CATEGORY}          | ${undefined}              | ${"cable"}                      | ${GROSSE_TENSION_CATEGORY} | ${"cable->grosse-tension"}
     `(
-      `when deleting category $toDeleteCategory
-        with child category $childrenCategory
-        with grandchild category $grandChildrenCategory`,
-      ({ toDeleteCategory, childrenCategory, grandChildrenCategory }) => {
-        it(`should not be possible to find #${toDeleteCategory.id} category after`, async () => {
+      `when deleting category $toDeleteCategory.name`,
+      ({
+        toDeleteCategory,
+        childCategory,
+        expectedChildParent,
+        expectedChildPath,
+        grandChildCategory,
+        expectedGrandChildPath,
+      }) => {
+        it(`should not find category #${toDeleteCategory.id} after deletion`, async () => {
           await categoryManager.remove(toDeleteCategory.id);
-          await expect(async () => {
-            await categoryManager.find(toDeleteCategory.id);
-          }).rejects.toThrow(
+          await expect(
+            categoryManager.find(toDeleteCategory.id),
+          ).rejects.toThrow(
             `La catégorie #${toDeleteCategory.id} n'existe pas`,
           );
         });
-        if (childrenCategory) {
-          it(`should link #${childrenCategory.id} child category to #${toDeleteCategory.parent} category`, async () => {
+        if (childCategory) {
+          it(`should attach child #${childCategory.id} to the deleted category parent`, async () => {
             await categoryManager.remove(toDeleteCategory.id);
-            const child = await categoryManager.find(childrenCategory.id);
-            expect(child.parent).not.toBe(toDeleteCategory.id);
-            expect(child.parent).toBe(toDeleteCategory.parent);
+            const child = await categoryManager.find(childCategory.id);
+            expect(child.parent).toBe(expectedChildParent);
           });
-          it(`should change #${childrenCategory.id} child category path to ${childrenCategory.expectedPath}`, async () => {
+          it(`should update child #${childCategory.id} path to "${expectedChildPath}"`, async () => {
             await categoryManager.remove(toDeleteCategory.id);
-            const child = await categoryManager.find(childrenCategory.id);
-            expect(child.path).toBe(childrenCategory.expectedPath);
+            const child = await categoryManager.find(childCategory.id);
+            expect(child.path).toBe(expectedChildPath);
           });
         }
-        if (grandChildrenCategory) {
-          it(`should change #${grandChildrenCategory.id} grandchild category path to ${grandChildrenCategory.expectedPath}`, async () => {
+        if (grandChildCategory) {
+          it(`should preserve grandchild #${grandChildCategory.id} parent`, async () => {
             await categoryManager.remove(toDeleteCategory.id);
             const grandChild = await categoryManager.find(
-              grandChildrenCategory.id,
+              grandChildCategory.id,
             );
-            expect(grandChild.path).toBe(grandChildrenCategory.expectedPath);
+            expect(grandChild.parent).toBe(childCategory.id);
+          });
+          it(`should update grandchild #${grandChildCategory.id} path to "${expectedGrandChildPath}"`, async () => {
+            await categoryManager.remove(toDeleteCategory.id);
+            const grandChild = await categoryManager.find(
+              grandChildCategory.id,
+            );
+            expect(grandChild.path).toBe(expectedGrandChildPath);
           });
         }
       },
     );
+    it("should inherit the new parent owner after deleting Cable", async () => {
+      await categoryManager.remove(CABLE_CATEGORY.id);
+      const grosseTension = await categoryManager.find(
+        GROSSE_TENSION_CATEGORY.id,
+      );
+      expect(grosseTension.parent).toBe(ELECTRIQUE_CATEGORY.id);
+      expect(grosseTension.path).toBe("electrique->grosse-tension");
+      expect(grosseTension.owner).toEqual(ELEC_OWNER);
+    });
+    it("should keep the child owner when deleting a root category", async () => {
+      await categoryManager.remove(ELECTRIQUE_CATEGORY.id);
+      const cable = await categoryManager.find(CABLE_CATEGORY.id);
+      expect(cable.parent).toBeUndefined();
+      expect(cable.path).toBe("cable");
+      expect(cable.owner).toEqual(ELEC_OWNER);
+    });
+    it("should update descendant paths after deleting a root category", async () => {
+      await categoryManager.remove(ELECTRIQUE_CATEGORY.id);
+      const grosseTension = await categoryManager.find(
+        GROSSE_TENSION_CATEGORY.id,
+      );
+      expect(grosseTension.parent).toBe(CABLE_CATEGORY.id);
+      expect(grosseTension.path).toBe("cable->grosse-tension");
+      expect(grosseTension.owner).toEqual(ELEC_OWNER);
+    });
   });
   describe("update a category", () => {
     describe(`update category name
@@ -208,11 +244,11 @@ describe("Category", () => {
       - Cascade slug updates on sub categories
     `, () => {
       describe.each`
-        toUpdateCategory                                                                       | expectedPath                                  | childCategory                                                     | grandChildCategory
-        ${{ id: 1, name: "Bricolles", owner: { id: 1, name: "matos" } }}                       | ${"bricolles"}                                | ${undefined}                                                      | ${undefined}
-        ${{ id: 4, name: "Mega Grosses Tensions", owner: { id: 3, name: "elec" }, parent: 3 }} | ${"electrique->cable->mega-grosses-tensions"} | ${undefined}                                                      | ${undefined}
-        ${{ id: 3, name: "Cablage", owner: { id: 3, name: "elec" }, parent: 2 }}               | ${"electrique->cablage"}                      | ${{ id: 4, expectedPath: "electrique->cablage->grosse-tension" }} | ${undefined}
-        ${{ id: 2, name: "Electricite", owner: { id: 3, name: "elec" } }}                      | ${"electricite"}                              | ${{ id: 3, expectedPath: "electricite->cable" }}                  | ${{ id: 4, expectedPath: "electricite->cable->grosse-tension" }}
+        toUpdateCategory                                                                         | expectedPath                                  | childCategory                                                                              | grandChildCategory
+        ${{ ...BRICOLAGE_CATEGORY, name: "Bricolles", owner: MATOS_OWNER.code }}                 | ${"bricolles"}                                | ${{ id: OUTILS_CATEGORY.id, expectedPath: "bricolles->outils" }}                           | ${undefined}
+        ${{ ...GROSSE_TENSION_CATEGORY, name: "Mega Grosses Tensions", owner: ELEC_OWNER.code }} | ${"electrique->cable->mega-grosses-tensions"} | ${undefined}                                                                               | ${undefined}
+        ${{ ...CABLE_CATEGORY, name: "Cablage", owner: ELEC_OWNER.code }}                        | ${"electrique->cablage"}                      | ${{ id: GROSSE_TENSION_CATEGORY.id, expectedPath: "electrique->cablage->grosse-tension" }} | ${undefined}
+        ${{ ...ELECTRIQUE_CATEGORY, name: "Electricite", owner: ELEC_OWNER.code }}               | ${"electricite"}                              | ${{ id: CABLE_CATEGORY.id, expectedPath: "electricite->cable" }}                           | ${{ id: GROSSE_TENSION_CATEGORY.id, expectedPath: "electricite->cable->grosse-tension" }}
       `(
         'when update category #$toUpdateCategory.id name to "$toUpdateCategory.name"',
         ({
@@ -249,10 +285,10 @@ describe("Category", () => {
       - Cascade owner updates on sub categories
     `, () => {
       describe.each`
-        toUpdateCategory                                       | expectedOwner  | childCategory | grandChildCategory
-        ${{ id: 1, name: "Bricollage", owner: "signa" }}       | ${SIGNA_OWNER} | ${undefined}  | ${undefined}
-        ${{ id: 3, name: "Cable", owner: "signa", parent: 2 }} | ${ELEC_OWNER}  | ${{ id: 3 }}  | ${undefined}
-        ${{ id: 2, name: "Electrique", owner: "signa" }}       | ${SIGNA_OWNER} | ${{ id: 3 }}  | ${{ id: 3 }}
+        toUpdateCategory                                       | expectedOwner  | childCategory                         | grandChildCategory
+        ${{ ...BRICOLAGE_CATEGORY, owner: SIGNA_OWNER.code }}  | ${SIGNA_OWNER} | ${{ id: OUTILS_CATEGORY.id }}         | ${undefined}
+        ${{ ...CABLE_CATEGORY, owner: SIGNA_OWNER.code }}      | ${ELEC_OWNER}  | ${{ id: GROSSE_TENSION_CATEGORY.id }} | ${undefined}
+        ${{ ...ELECTRIQUE_CATEGORY, owner: SIGNA_OWNER.code }} | ${SIGNA_OWNER} | ${{ id: CABLE_CATEGORY.id }}          | ${{ id: GROSSE_TENSION_CATEGORY.id }}
       `(
         "when update category #$toUpdateCategory.id owner to #$toUpdateCategory.owner team",
         ({
@@ -290,10 +326,10 @@ describe("Category", () => {
       - Cascade owner changes on sub categories
     `, () => {
       describe.each`
-        toUpdateCategory                                        | expectedOwner  | expectedPath           | childCategory              | grandChildCategory
-        ${{ ...OUTILS_CATEGORY, parent: MOBILIER_CATEGORY.id }} | ${MATOS_OWNER} | ${"mobilier->outils"}  | ${undefined}               | ${undefined}
-        ${{ ...CABLE_CATEGORY, parent: undefined }}             | ${ELEC_OWNER}  | ${"cable"}             | ${GROSSE_TENSION_CATEGORY} | ${undefined}
-        ${{ ...CABLE_CATEGORY, parent: BRICOLAGE_CATEGORY.id }} | ${MATOS_OWNER} | ${"bricollage->cable"}
+        toUpdateCategory                                                                 | expectedOwner  | expectedPath           | childCategory                                                                            | grandChildCategory
+        ${{ ...OUTILS_CATEGORY, parent: MOBILIER_CATEGORY.id, owner: MATOS_OWNER.code }} | ${MATOS_OWNER} | ${"mobilier->outils"}  | ${undefined}                                                                             | ${undefined}
+        ${{ ...CABLE_CATEGORY, parent: undefined, owner: ELEC_OWNER.code }}              | ${ELEC_OWNER}  | ${"cable"}             | ${{ id: GROSSE_TENSION_CATEGORY.id, expectedPath: "cable->grosse-tension" }}             | ${undefined}
+        ${{ ...CABLE_CATEGORY, parent: BRICOLAGE_CATEGORY.id, owner: ELEC_OWNER.code }}  | ${MATOS_OWNER} | ${"bricollage->cable"} | ${{ id: GROSSE_TENSION_CATEGORY.id, expectedPath: "bricollage->cable->grosse-tension" }} | ${undefined}
       `(
         "when update #$toUpdateCategory.id category parent to #$toUpdateCategory.parent category",
         ({
@@ -534,10 +570,10 @@ describe("Category", () => {
     describe.each`
       searchName   | searchOwner  | expectedCategories
       ${undefined} | ${undefined} | ${CATEGORIES}
-      ${"bric"}    | ${undefined} | ${[CATEGORIES[0]]}
-      ${"elec"}    | ${undefined} | ${[CATEGORIES[1]]}
+      ${"bric"}    | ${undefined} | ${[BRICOLAGE_CATEGORY]}
+      ${"elec"}    | ${undefined} | ${[ELECTRIQUE_CATEGORY]}
       ${"elec"}    | ${"matos"}   | ${[]}
-      ${undefined} | ${"elec"}    | ${[CATEGORIES[1], CATEGORIES[2], CATEGORIES[3]]}
+      ${undefined} | ${"elec"}    | ${[ELECTRIQUE_CATEGORY, CABLE_CATEGORY, GROSSE_TENSION_CATEGORY]}
     `(
       'When looking for "$searchName" with "$searchOwner" owner',
       ({ searchName, searchOwner, expectedCategories }) => {

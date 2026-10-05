@@ -6,27 +6,33 @@ import {
   CategorySearchOptions,
 } from "./category.js";
 import { CatalogCategories } from "./category-manager.js";
+import { SlugifyService } from "@overbookd/slugify";
 
 class CategorySearchBuilder {
   private ownerCondition = true;
   private nameCondition = true;
-  private category: CatalogCategory;
 
-  constructor(category: CatalogCategory) {
-    this.category = category;
-  }
+  constructor(private readonly category: CatalogCategory) {}
 
-  addOwnerCondition(ownerSearch?: string) {
-    this.ownerCondition = ownerSearch
-      ? (this.category.owner?.code?.includes(ownerSearch) ?? false)
-      : true;
+  addOwnerCondition(ownerSearch?: string): this {
+    if (!ownerSearch) {
+      this.ownerCondition = true;
+      return this;
+    }
+    const categoryOwnerCode = SlugifyService.applyOnOptional(
+      this.category.owner?.code,
+    );
+    this.ownerCondition = categoryOwnerCode?.includes(ownerSearch) ?? false;
     return this;
   }
 
-  addNameCondition(nameSearch?: string) {
-    this.nameCondition = nameSearch
-      ? this.category.name.toLocaleLowerCase().includes(nameSearch)
-      : true;
+  addNameCondition(nameSearch?: string): this {
+    if (!nameSearch) {
+      this.nameCondition = true;
+      return this;
+    }
+    const categoryName = SlugifyService.apply(this.category.name);
+    this.nameCondition = categoryName.includes(nameSearch);
     return this;
   }
 

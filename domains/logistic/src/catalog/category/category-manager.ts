@@ -124,9 +124,35 @@ export class CatalogCategoryManager {
   }
 
   async remove(id: number): Promise<void> {
-    const toDeleteCategory = await this.categories.getCategory(id);
-    if (!toDeleteCategory) return;
-    await this.cascadingUpdateSubCategories(toDeleteCategory);
+    const categoryToDelete = await this.categories.getCategory(id);
+    if (!categoryToDelete) return;
+
+    const newParent =
+      categoryToDelete.parent !== undefined
+        ? await this.categories.getCategory(categoryToDelete.parent)
+        : undefined;
+    const directChildren = await this.categories.getSubCategories(
+      categoryToDelete.id,
+    );
+
+    const updates: CatalogCategory[] = [];
+    for (const child of directChildren) {
+      const updatedChild: CatalogCategory = {
+        ...child,
+        parent: newParent?.id,
+        path: this.generatePath(child.name, newParent),
+        owner: newParent?.owner ?? child.owner,
+      };
+      updates.push(updatedChild);
+
+      const descendantUpdates =
+        await this.computeDescendantUpdates(updatedChild);
+      updates.push(...descendantUpdates);
+    }
+    if (updates.length > 0) {
+      await this.categories.updateCategories(updates);
+    }
+
     await this.categories.removeCategory(id);
   }
 
@@ -137,63 +163,6 @@ export class CatalogCategoryManager {
       name: nameSlug,
       owner: ownerSlug,
     });
-  }
-
-  private async cascadingUpdateSubCategories(currentCategory: CatalogCategory) {
-    const newParent = currentCategory.parent
-      ? await this.categories.getCategory(currentCategory.parent)
-      : undefined;
-
-    const subCategories = await this.linkSubCategoriesToNewParent(
-      currentCategory.id,
-      newParent,
-    );
-
-    const toUpdateCategories = await this.pathComputeCascading(
-      newParent,
-      subCategories,
-    );
-    await this.categories.updateCategories(toUpdateCategories);
-    return;
-  }
-
-  private async pathComputeCascading(
-    currentCategory: CatalogCategory,
-    subCategories: CatalogCategory[],
-    toUpdateCategories: CatalogCategory[] = [],
-  ): Promise<CatalogCategory[]> {
-    if (!subCategories.length) return toUpdateCategories;
-
-    const updatedSubCategories = subCategories.map((subCategory) => ({
-      ...subCategory,
-      path: this.generatePath(subCategory.name, currentCategory),
-    }));
-
-    toUpdateCategories.push(...updatedSubCategories);
-
-    const toUpdateCategoriesListing = await Promise.all(
-      updatedSubCategories.map(async (subCategory) =>
-        this.pathComputeCascading(
-          subCategory,
-          await this.categories.getSubCategories(subCategory.id),
-          toUpdateCategories,
-        ),
-      ),
-    );
-    return toUpdateCategoriesListing.flat();
-  }
-
-  private async linkSubCategoriesToNewParent(
-    id: number,
-    newParent: CatalogCategory,
-  ) {
-    const categories = await this.categories.getSubCategories(id);
-
-    const updatedSubCategories = categories.map((subCategory) => ({
-      ...subCategory,
-      parent: newParent?.id,
-    }));
-    return this.categories.updateCategories(updatedSubCategories);
   }
 
   private async fetchParentCategory(parent?: number) {
