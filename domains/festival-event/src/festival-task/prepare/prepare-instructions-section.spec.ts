@@ -706,10 +706,10 @@ describe("Prepare festival task instructions section", () => {
 
   describe("Force instructions update", () => {
     describe.each`
-      fields                   | instructions                                        | approvers   | taskName                               | task
-      ${"global"}              | ${{ global: "C'est push" }}                         | ${[HUMAIN]} | ${parcoursCollageTrajetA.general.name} | ${parcoursCollageTrajetA}
-      ${"inCharge"}            | ${{ inCharge: "C'est push" }}                       | ${[noel]}   | ${parcoursCollageTrajetA.general.name} | ${parcoursCollageTrajetA}
-      ${"global and inCharge"} | ${{ inCharge: "C'est push", global: "Avec force" }} | ${[noel]}   | ${parcoursCollageTrajetA.general.name} | ${parcoursCollageTrajetA}
+      fields                   | instructions                                        | taskName                               | task
+      ${"global"}              | ${{ global: "C'est push" }}                         | ${parcoursCollageTrajetA.general.name} | ${parcoursCollageTrajetA}
+      ${"inCharge"}            | ${{ inCharge: "C'est push" }}                       | ${parcoursCollageTrajetA.general.name} | ${parcoursCollageTrajetA}
+      ${"global and inCharge"} | ${{ inCharge: "C'est push", global: "Avec force" }} | ${parcoursCollageTrajetA.general.name} | ${parcoursCollageTrajetA}
     `(
       "when forcing $fields instructions on $taskName",
       ({ fields, instructions, task }) => {
