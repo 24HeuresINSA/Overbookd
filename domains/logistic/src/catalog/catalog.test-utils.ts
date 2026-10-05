@@ -149,39 +149,3 @@ export const TIREUSE: SavedCatalogGear = {
   isConsumable: false,
 };
 export const TIREUSE_WITH_CODE: CatalogGear = TIREUSE;
-
-export const TABLIER: SavedCatalogGear = {
-  id: 4,
-  name: "Tablier",
-  slug: "tablier",
-  isPonctualUsage: true,
-  isConsumable: false,
-};
-
-export const PONCEUSE: SavedCatalogGear = {
-  id: 5,
-  name: "Ponçeuse",
-  slug: "ponceuse",
-  category: {
-    id: OUTILS_CATEGORY.id,
-    path: OUTILS_CATEGORY.path,
-    name: OUTILS_CATEGORY.name,
-  },
-  owner: MATOS_OWNER,
-  isPonctualUsage: true,
-  isConsumable: false,
-};
-
-export const TABLE: SavedCatalogGear = {
-  id: 6,
-  name: "Table",
-  slug: "table",
-  category: {
-    id: MOBILIER_CATEGORY.id,
-    path: MOBILIER_CATEGORY.path,
-    name: MOBILIER_CATEGORY.name,
-  },
-  owner: MATOS_OWNER,
-  isPonctualUsage: false,
-  isConsumable: false,
-};
