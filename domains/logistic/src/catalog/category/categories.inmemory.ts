@@ -69,7 +69,7 @@ export class InMemoryCatalogCategories implements CatalogCategories {
     if (existingCategory) {
       throw new CategoryAlreadyExists(existingCategory.name);
     }
-  
+
     const createdCategory: CatalogCategory = {
       ...category,
       id: this.generateId(),

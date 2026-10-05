@@ -86,8 +86,7 @@ export class CatalogCategoryManager {
   private async updateSubCategories(
     updatedCategory: CatalogCategory,
   ): Promise<void> {
-    const updates =
-      await this.computeDescendantUpdates(updatedCategory);
+    const updates = await this.computeDescendantUpdates(updatedCategory);
     if (updates.length > 0) {
       await this.categories.updateCategories(updates);
     }
@@ -98,7 +97,7 @@ export class CatalogCategoryManager {
   ): Promise<CatalogCategory[]> {
     const children = await this.categories.getSubCategories(parent.id);
     const updates: CatalogCategory[] = [];
-  
+
     for (const child of children) {
       const updatedChild: CatalogCategory = {
         ...child,
@@ -106,7 +105,7 @@ export class CatalogCategoryManager {
         owner: parent.owner,
       };
       updates.push(updatedChild);
-  
+
       const descendantUpdates =
         await this.computeDescendantUpdates(updatedChild);
       updates.push(...descendantUpdates);
@@ -204,9 +203,7 @@ export class CatalogCategoryManager {
 
   private generatePath(name: string, parentCategory?: CatalogCategory): string {
     const slug = SlugifyService.apply(name);
-    return parentCategory
-      ? `${parentCategory.path}->${slug}`
-      : slug;
+    return parentCategory ? `${parentCategory.path}->${slug}` : slug;
   }
 
   private async findOwner(

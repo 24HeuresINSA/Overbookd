@@ -151,7 +151,9 @@ describe("Category", () => {
             await categoryManager.create({
               name: MOBILIER_CATEGORY.name,
             }),
-        ).rejects.toThrow(`La catégorie "${MOBILIER_CATEGORY.name}" existe déjà`);
+        ).rejects.toThrow(
+          `La catégorie "${MOBILIER_CATEGORY.name}" existe déjà`,
+        );
       });
     });
   });
