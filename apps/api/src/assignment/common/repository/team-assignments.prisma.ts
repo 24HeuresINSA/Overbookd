@@ -1,7 +1,6 @@
 import {
   AssignmentIdentifier,
   AssignmentIdentifierWithTeam,
-  retrieveImplicitTeams,
   TeamAssignments,
 } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
@@ -30,13 +29,10 @@ export class PrismaTeamAssignments implements TeamAssignments {
       where: { id: volunteerId, ...IS_NOT_DELETED },
       select: SELECT_TEAM_CODES,
     });
-
-    const extendedTeams = retrieveImplicitTeams(
-      volunteer.teams.map(({ teamCode }) => teamCode),
-    );
+    const teams = volunteer.teams.map(({ teamCode }) => teamCode);
 
     const teamsCondition = {
-      teamCode: { in: extendedTeams },
+      teamCode: { in: teams },
       count: ALL_TEAM_MEMBERS,
     };
     const assignments = await this.prisma.assignment.findMany({
@@ -64,17 +60,14 @@ export class PrismaTeamAssignments implements TeamAssignments {
       where: { id: volunteerId, ...IS_NOT_DELETED },
       select: SELECT_TEAM_CODES,
     });
-
-    const extendedTeams = retrieveImplicitTeams(
-      volunteer.teams.map(({ teamCode }) => teamCode),
-    );
+    const teams = volunteer.teams.map(({ teamCode }) => teamCode);
 
     const assignments = await this.prisma.assignment.findMany({
       where: {
         assignees: {
           some: {
             userId: volunteerId,
-            teamCode: { not: null, notIn: extendedTeams },
+            teamCode: { not: null, notIn: teams },
           },
         },
       },

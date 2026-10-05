@@ -1,5 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
+import {
+  ALL_TEAM_MEMBERS,
+  READY_TO_ASSIGN,
+} from "@overbookd/festival-event-constants";
 import { GeoLocation } from "@overbookd/geo-location";
 import { PlanningTask } from "@overbookd/http";
 import { IProvidePeriod } from "@overbookd/time";
@@ -13,6 +16,7 @@ import {
   SELECT_PERIOD_WITH_ID,
 } from "../../../common/query/period.query";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
+import { SELECT_TEAM_CODES } from "../../../common/query/user.query";
 
 const SELECT_LOCATION = { id: true, name: true };
 const SELECT_FESTIVAL_TASK = {
@@ -103,8 +107,24 @@ export class PrismaTaskRepository implements TaskRepository {
   async getVolunteerTasksHeIsPartOf(
     volunteerId: number,
   ): Promise<PlanningTask[]> {
+    const volunteer = await this.prisma.user.findUnique({
+      where: { id: volunteerId, ...IS_NOT_DELETED },
+      select: SELECT_TEAM_CODES,
+    });
+    const teams = volunteer.teams.map(({ teamCode }) => teamCode);
+
     const volunteerIsPartOfMobilization = {
-      volunteers: { some: { volunteerId } },
+      OR: [
+        { volunteers: { some: { volunteerId } } },
+        {
+          teams: {
+            some: {
+              count: ALL_TEAM_MEMBERS,
+              teamCode: { in: teams },
+            },
+          },
+        },
+      ],
     };
 
     const mobilizations = await this.prisma.festivalTaskMobilization.findMany({

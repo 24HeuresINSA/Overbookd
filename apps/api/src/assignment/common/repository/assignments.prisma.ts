@@ -19,10 +19,14 @@ import {
 import { MISSING_ITEM_INDEX } from "@overbookd/list";
 import { TaskForCalendar } from "@overbookd/http";
 import { Period } from "@overbookd/time";
-import { SELECT_USER_IDENTIFIER } from "../../../common/query/user.query";
+import {
+  SELECT_TEAM_CODES,
+  SELECT_USER_IDENTIFIER,
+} from "../../../common/query/user.query";
 import { SELECT_PERIOD_WITH_ID } from "../../../common/query/period.query";
 import { SELECT_CONTACT } from "../../../festival-event/task/common/repository/adherent.query";
 import { SELECT_LOCATION } from "../../../festival-event/common/repository/location.query";
+import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -131,12 +135,13 @@ export class PrismaAssignments implements AssignmentRepository {
     volunteers,
   }: VolunteersForAssignment): Promise<Assignment> {
     for (const { id, as } of volunteers) {
-      const volunteerTeamCodes = await this.prisma.userTeam.findMany({
-        where: { userId: id },
-        select: { teamCode: true },
+      const volunteer = await this.prisma.user.findUnique({
+        where: { id, ...IS_NOT_DELETED },
+        select: SELECT_TEAM_CODES,
       });
-      const volunteerTeams = volunteerTeamCodes.map(({ teamCode }) => teamCode);
-      const withImplicitTeams = retrieveImplicitTeams(volunteerTeams);
+      const withImplicitTeams = retrieveImplicitTeams(
+        volunteer.teams.map(({ teamCode }) => teamCode),
+      );
       const memberOfTeam = withImplicitTeams.includes(as);
       if (!memberOfTeam) throw new WrongTeam(id, as);
     }

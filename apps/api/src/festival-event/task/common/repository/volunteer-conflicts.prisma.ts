@@ -12,6 +12,7 @@ import {
 } from "@overbookd/festival-event-constants";
 import { PrismaService } from "../../../../prisma.service";
 import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
+import { SELECT_TEAM_CODES } from "../../../../common/query/user.query";
 
 export class PrismaVolunteerConflicts implements VolunteerConflicts {
   constructor(private readonly prisma: PrismaService) {}
@@ -32,10 +33,11 @@ export class PrismaVolunteerConflicts implements VolunteerConflicts {
     { start, end }: IProvidePeriod,
     volunteerId: Volunteer["id"],
   ): Promise<FestivalTaskLink[]> {
-    const teams = await this.prisma.userTeam.findMany({
-      where: { userId: volunteerId },
+    const volunteer = await this.prisma.user.findUnique({
+      where: { id: volunteerId, ...IS_NOT_DELETED },
+      select: SELECT_TEAM_CODES,
     });
-    const teamCodes = teams.map(({ teamCode }) => teamCode);
+    const teams = volunteer.teams.map(({ teamCode }) => teamCode);
 
     const conflicts = await this.prisma.festivalTaskMobilization.findMany({
       where: {
@@ -48,7 +50,7 @@ export class PrismaVolunteerConflicts implements VolunteerConflicts {
             teams: {
               some: {
                 count: ALL_TEAM_MEMBERS,
-                team: { code: { in: teamCodes } },
+                teamCode: { in: teams },
               },
             },
           },

@@ -10,7 +10,6 @@ import {
 } from "./whole-team-assignments.js";
 import { Volunteer } from "../../volunteer.js";
 import { ALL_TEAM_MEMBERS } from "@overbookd/festival-event-constants";
-import { retrieveImplicitTeams } from "../../candidate-teams.js";
 
 export class InMemoryTeamAssignments implements TeamAssignments {
   constructor(
@@ -34,10 +33,9 @@ export class InMemoryTeamAssignments implements TeamAssignments {
         );
         if (isAlreadyAssigned) return assignments;
 
-        const teams = retrieveImplicitTeams(volunteer.teams);
         const teamDemand = demands.find(
           ({ team, demand }) =>
-            demand === ALL_TEAM_MEMBERS && teams.includes(team),
+            demand === ALL_TEAM_MEMBERS && volunteer.teams.includes(team),
         );
         if (teamDemand)
           assignments.push({
@@ -62,9 +60,9 @@ export class InMemoryTeamAssignments implements TeamAssignments {
 
     const assignments = this.assignments.reduce<AssignmentIdentifier[]>(
       (assignments, { taskId, mobilizationId, assignmentId, assignees }) => {
-        const teams = retrieveImplicitTeams(volunteer.teams);
         const isWronglyAssigned = assignees.some(
-          (assignee) => isTeamMember(assignee) && !teams.includes(assignee.as),
+          (assignee) =>
+            isTeamMember(assignee) && !volunteer.teams.includes(assignee.as),
         );
         if (isWronglyAssigned)
           assignments.push({ taskId, mobilizationId, assignmentId });
