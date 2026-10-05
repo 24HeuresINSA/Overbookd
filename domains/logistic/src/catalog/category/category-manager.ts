@@ -83,20 +83,35 @@ export class CatalogCategoryManager {
     return updatedCategory;
   }
 
-  private async updateSubCategories(updatedCategory: CatalogCategory) {
-    const subCategories = await this.categories.getSubCategories(
-      updatedCategory.id,
-    );
-    const categoriesWithNewPath = await this.pathComputeCascading(
-      updatedCategory,
-      subCategories,
-    );
-    const categoriesWithNewOwner = categoriesWithNewPath.map((category) => {
-      const owner = updatedCategory.owner ?? category.owner;
-      return { ...category, owner };
-    });
+  private async updateSubCategories(
+    updatedCategory: CatalogCategory,
+  ): Promise<void> {
+    const updates =
+      await this.computeDescendantUpdates(updatedCategory);
+    if (updates.length > 0) {
+      await this.categories.updateCategories(updates);
+    }
+  }
 
-    await this.categories.updateCategories(categoriesWithNewOwner);
+  private async computeDescendantUpdates(
+    parent: CatalogCategory,
+  ): Promise<CatalogCategory[]> {
+    const children = await this.categories.getSubCategories(parent.id);
+    const updates: CatalogCategory[] = [];
+  
+    for (const child of children) {
+      const updatedChild: CatalogCategory = {
+        ...child,
+        path: this.generatePath(child.name, parent),
+        owner: parent.owner,
+      };
+      updates.push(updatedChild);
+  
+      const descendantUpdates =
+        await this.computeDescendantUpdates(updatedChild);
+      updates.push(...descendantUpdates);
+    }
+    return updates;
   }
 
   async find(id: number): Promise<CatalogCategory> {
@@ -188,18 +203,17 @@ export class CatalogCategoryManager {
   }
 
   private generatePath(name: string, parentCategory?: CatalogCategory): string {
+    const slug = SlugifyService.apply(name);
     return parentCategory
-      ? `${parentCategory.path}->${SlugifyService.apply(name)}`
-      : SlugifyService.apply(name);
+      ? `${parentCategory.path}->${slug}`
+      : slug;
   }
 
   private async findOwner(
     owner?: string,
     parentCategory?: CatalogCategory,
   ): Promise<CategoryOwner | undefined> {
-    if (parentCategory) {
-      return parentCategory?.owner ?? this.findOwner(owner);
-    }
+    if (parentCategory) return parentCategory.owner;
     return owner ? this.teams.getTeam(owner) : undefined;
   }
 }

@@ -131,7 +131,7 @@ describe("Category", () => {
     );
     describe("when parent category doesn't exist ", () => {
       const categoryName = "Rangement";
-      const inexistantParentCategory = 5;
+      const inexistantParentCategory = 999;
       it("should inform the user parent category doesn't exist", async () => {
         await expect(
           async () =>
@@ -146,13 +146,12 @@ describe("Category", () => {
     });
     describe("when a category already exists", () => {
       it("should inform the user category already exists", async () => {
-        const name = CATEGORIES[0].name.toUpperCase();
         await expect(
           async () =>
             await categoryManager.create({
-              name,
+              name: MOBILIER_CATEGORY.name,
             }),
-        ).rejects.toThrow(`"${CATEGORIES[0].name}" category already exist`);
+        ).rejects.toThrow(`La catégorie "${MOBILIER_CATEGORY.name}" existe déjà`);
       });
     });
   });

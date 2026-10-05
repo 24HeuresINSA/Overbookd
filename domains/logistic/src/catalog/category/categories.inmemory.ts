@@ -38,6 +38,15 @@ class CategorySearchBuilder {
 export class InMemoryCatalogCategories implements CatalogCategories {
   constructor(private categories: CatalogCategory[]) {}
 
+  private generateId(): number {
+    return (
+      this.categories.reduce(
+        (maxId, category) => Math.max(maxId, category.id),
+        0,
+      ) + 1
+    );
+  }
+
   getCategory(id: number): Promise<CatalogCategory | undefined> {
     return Promise.resolve(
       this.categories.find((categorie) => categorie.id === id),
@@ -54,17 +63,19 @@ export class InMemoryCatalogCategories implements CatalogCategories {
     category: Omit<CatalogCategory, "id">,
   ): Promise<CatalogCategory> {
     const existingCategory = this.categories.find(
-      (categ) => categ.path === category.path,
+      ({ name }) =>
+        SlugifyService.apply(name) === SlugifyService.apply(category.name),
     );
-    if (existingCategory)
+    if (existingCategory) {
       throw new CategoryAlreadyExists(existingCategory.name);
-    const id = this.categories.length + 1;
-    const createdCategory = {
+    }
+  
+    const createdCategory: CatalogCategory = {
       ...category,
-      id,
+      id: this.generateId(),
     };
     this.categories = [...this.categories, createdCategory];
-    return Promise.resolve(createdCategory);
+    return createdCategory;
   }
 
   removeCategory(id: number): Promise<CatalogCategory | undefined> {
