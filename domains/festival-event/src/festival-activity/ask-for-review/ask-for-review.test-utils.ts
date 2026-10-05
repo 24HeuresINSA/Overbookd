@@ -17,6 +17,7 @@ import {
   REJECTED,
   REVIEWING,
 } from "@overbookd/festival-event-constants";
+import { PLAIZIR } from "@overbookd/team-code";
 
 const factory = getFactory();
 
@@ -45,7 +46,7 @@ export const finaleEsport = factory
     isFlagship: true,
     timeWindows: [saturday19hToSunday01h],
   })
-  .withInCharge({ adherent: faker, team: "plaizir" })
+  .withInCharge({ adherent: faker, team: PLAIZIR })
   .withSigna({ location: agora })
   .withSecurity({ specialNeed: "Une armee d'AS super malin" })
   .withInquiry({
@@ -76,7 +77,7 @@ export const publicWithoutPhoto = factory
     timeWindows: [saturday19hToSunday01h],
   })
   .withGeneral({ photoLink: null })
-  .withInCharge({ adherent: faker, team: "plaizir" })
+  .withInCharge({ adherent: faker, team: PLAIZIR })
   .withSigna({ location: agora })
   .withSecurity({ specialNeed: "Une armee d'AS super malin" })
   .withInquiry({
@@ -94,7 +95,7 @@ export const publicWithoutCategory = factory
     timeWindows: [saturday19hToSunday01h],
   })
   .withGeneral({ categories: [] })
-  .withInCharge({ adherent: faker, team: "plaizir" })
+  .withInCharge({ adherent: faker, team: PLAIZIR })
   .withSigna({ location: agora })
   .withSecurity({ specialNeed: "Une armee d'AS super malin" })
   .withInquiry({
@@ -113,7 +114,7 @@ export const publicWithoutTimeWindows = factory
     timeWindows: [saturday19hToSunday01h],
   })
   .withGeneral({ timeWindows: [] })
-  .withInCharge({ adherent: faker, team: "plaizir" })
+  .withInCharge({ adherent: faker, team: PLAIZIR })
   .withSigna({ location: agora })
   .withSecurity({ specialNeed: "Une armee d'AS super malin" })
   .withInquiry({

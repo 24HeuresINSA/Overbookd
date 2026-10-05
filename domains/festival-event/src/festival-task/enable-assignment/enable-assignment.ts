@@ -99,10 +99,10 @@ class ReadyToAssignFestivalTask {
       Assignments.generate(mobilization),
     );
 
-    const teamAssignments = new TeamAssignments(this.volunteers);
+    const wholeTeamAssignments = new WholeTeamAssignments(this.volunteers);
     const mobilizationsWithTeamAssignments = await Promise.all(
       mobilizations.map((mobilization) =>
-        teamAssignments.generate(mobilization),
+        wholeTeamAssignments.generate(mobilization),
       ),
     );
 
@@ -173,7 +173,7 @@ export function extractVolunteerData(volunteer: Volunteer) {
   };
 }
 
-class TeamAssignments {
+class WholeTeamAssignments {
   constructor(private readonly volunteers: VolunteersForEnableAssignment) {}
 
   async generate(

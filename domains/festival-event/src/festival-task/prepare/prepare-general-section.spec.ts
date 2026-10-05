@@ -18,6 +18,7 @@ import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
 import { isDraft } from "../../festival-event.js";
 import { APPROVED, REVIEWING } from "@overbookd/festival-event-constants";
+import { HUMAIN, PLAIZIR, SPORTS } from "@overbookd/team-code";
 
 describe("Prepare festival task general section", () => {
   let prepare: PrepareFestivalTask;
@@ -37,20 +38,20 @@ describe("Prepare festival task general section", () => {
     prepare = new PrepareFestivalTask(festivalTasks, translator);
   });
   describe.each`
-    fields                            | taskName                            | taskId                    | update                                                                                     | name                                         | administrator                                | team
-    ${"name"}                         | ${installEscapeGame.general.name}   | ${installEscapeGame.id}   | ${{ name: "Install escape game on friday" }}                                               | ${"Install escape game on friday"}           | ${installEscapeGame.general.administrator}   | ${installEscapeGame.general.team}
-    ${"name"}                         | ${uninstallEscapeGame.general.name} | ${uninstallEscapeGame.id} | ${{ name: "Uninstall escape game on sunday" }}                                             | ${"Uninstall escape game on sunday"}         | ${uninstallEscapeGame.general.administrator} | ${uninstallEscapeGame.general.team}
-    ${"administrator"}                | ${installEscapeGame.general.name}   | ${installEscapeGame.id}   | ${{ administrator: lea }}                                                                  | ${installEscapeGame.general.name}            | ${lea}                                       | ${installEscapeGame.general.team}
-    ${"administrator"}                | ${uninstallEscapeGame.general.name} | ${uninstallEscapeGame.id} | ${{ administrator: lea }}                                                                  | ${uninstallEscapeGame.general.name}          | ${lea}                                       | ${uninstallEscapeGame.general.team}
-    ${"team"}                         | ${installEscapeGame.general.name}   | ${installEscapeGame.id}   | ${{ team: "sports" }}                                                                      | ${installEscapeGame.general.name}            | ${installEscapeGame.general.administrator}   | ${"sports"}
-    ${"team"}                         | ${uninstallEscapeGame.general.name} | ${uninstallEscapeGame.id} | ${{ team: "sports" }}                                                                      | ${uninstallEscapeGame.general.name}          | ${uninstallEscapeGame.general.administrator} | ${"sports"}
-    ${"team"}                         | ${presentEscapeGame.general.name}   | ${presentEscapeGame.id}   | ${{ team: null }}                                                                          | ${presentEscapeGame.general.name}            | ${presentEscapeGame.general.administrator}   | ${null}
-    ${"name and team"}                | ${presentEscapeGame.general.name}   | ${presentEscapeGame.id}   | ${{ team: null, name: "Present escape game on saturday" }}                                 | ${"Present escape game on saturday"}         | ${presentEscapeGame.general.administrator}   | ${null}
-    ${"name and administrator"}       | ${presentEscapeGame.general.name}   | ${presentEscapeGame.id}   | ${{ name: "Present escape game on saturday", administrator: lea }}                         | ${"Present escape game on saturday"}         | ${lea}                                       | ${presentEscapeGame.general.team}
-    ${"name, administrator and team"} | ${installEscapeGame.general.name}   | ${installEscapeGame.id}   | ${{ name: "Install escape game on saturday", administrator: lea, team: "plaizir" }}        | ${"Install escape game on saturday"}         | ${lea}                                       | ${"plaizir"}
-    ${"name"}                         | ${guardJustDance.general.name}      | ${guardJustDance.id}      | ${{ name: "Guard just dance on friday and saturday" }}                                     | ${"Guard just dance on friday and saturday"} | ${guardJustDance.general.administrator}      | ${guardJustDance.general.team}
-    ${"name, administrator and team"} | ${guardJustDance.general.name}      | ${guardJustDance.id}      | ${{ name: "Guard just dance on friday and saturday", administrator: lea, team: "humain" }} | ${"Guard just dance on friday and saturday"} | ${lea}                                       | ${"humain"}
-    ${"name"}                         | ${installBarbecue.general.name}     | ${installBarbecue.id}     | ${{ name: "Install barbecue on friday" }}                                                  | ${"Install barbecue on friday"}              | ${installBarbecue.general.administrator}     | ${installBarbecue.general.team}
+    fields                            | taskName                            | taskId                    | update                                                                                   | name                                         | administrator                                | team
+    ${"name"}                         | ${installEscapeGame.general.name}   | ${installEscapeGame.id}   | ${{ name: "Install escape game on friday" }}                                             | ${"Install escape game on friday"}           | ${installEscapeGame.general.administrator}   | ${installEscapeGame.general.team}
+    ${"name"}                         | ${uninstallEscapeGame.general.name} | ${uninstallEscapeGame.id} | ${{ name: "Uninstall escape game on sunday" }}                                           | ${"Uninstall escape game on sunday"}         | ${uninstallEscapeGame.general.administrator} | ${uninstallEscapeGame.general.team}
+    ${"administrator"}                | ${installEscapeGame.general.name}   | ${installEscapeGame.id}   | ${{ administrator: lea }}                                                                | ${installEscapeGame.general.name}            | ${lea}                                       | ${installEscapeGame.general.team}
+    ${"administrator"}                | ${uninstallEscapeGame.general.name} | ${uninstallEscapeGame.id} | ${{ administrator: lea }}                                                                | ${uninstallEscapeGame.general.name}          | ${lea}                                       | ${uninstallEscapeGame.general.team}
+    ${"team"}                         | ${installEscapeGame.general.name}   | ${installEscapeGame.id}   | ${{ team: SPORTS }}                                                                      | ${installEscapeGame.general.name}            | ${installEscapeGame.general.administrator}   | ${SPORTS}
+    ${"team"}                         | ${uninstallEscapeGame.general.name} | ${uninstallEscapeGame.id} | ${{ team: SPORTS }}                                                                      | ${uninstallEscapeGame.general.name}          | ${uninstallEscapeGame.general.administrator} | ${SPORTS}
+    ${"team"}                         | ${presentEscapeGame.general.name}   | ${presentEscapeGame.id}   | ${{ team: null }}                                                                        | ${presentEscapeGame.general.name}            | ${presentEscapeGame.general.administrator}   | ${null}
+    ${"name and team"}                | ${presentEscapeGame.general.name}   | ${presentEscapeGame.id}   | ${{ team: null, name: "Present escape game on saturday" }}                               | ${"Present escape game on saturday"}         | ${presentEscapeGame.general.administrator}   | ${null}
+    ${"name and administrator"}       | ${presentEscapeGame.general.name}   | ${presentEscapeGame.id}   | ${{ name: "Present escape game on saturday", administrator: lea }}                       | ${"Present escape game on saturday"}         | ${lea}                                       | ${presentEscapeGame.general.team}
+    ${"name, administrator and team"} | ${installEscapeGame.general.name}   | ${installEscapeGame.id}   | ${{ name: "Install escape game on saturday", administrator: lea, team: PLAIZIR }}        | ${"Install escape game on saturday"}         | ${lea}                                       | ${PLAIZIR}
+    ${"name"}                         | ${guardJustDance.general.name}      | ${guardJustDance.id}      | ${{ name: "Guard just dance on friday and saturday" }}                                   | ${"Guard just dance on friday and saturday"} | ${guardJustDance.general.administrator}      | ${guardJustDance.general.team}
+    ${"name, administrator and team"} | ${guardJustDance.general.name}      | ${guardJustDance.id}      | ${{ name: "Guard just dance on friday and saturday", administrator: lea, team: HUMAIN }} | ${"Guard just dance on friday and saturday"} | ${lea}                                       | ${HUMAIN}
+    ${"name"}                         | ${installBarbecue.general.name}     | ${installBarbecue.id}     | ${{ name: "Install barbecue on friday" }}                                                | ${"Install barbecue on friday"}              | ${installBarbecue.general.administrator}     | ${installBarbecue.general.team}
   `(
     "when updating $fields from $taskName",
     ({ fields, taskId, update, name, administrator, team }) => {
@@ -83,7 +84,7 @@ describe("Prepare festival task general section", () => {
     describe("when updating name then team consecutively", () => {
       it("should update both name and team", async () => {
         const updateName = { name: "Install escape game on friday" };
-        const updateTeam = { team: "plaizir" };
+        const updateTeam = { team: PLAIZIR };
         await prepare.updateGeneralSection(installEscapeGame.id, updateName);
         const { general } = await prepare.updateGeneralSection(
           installEscapeGame.id,

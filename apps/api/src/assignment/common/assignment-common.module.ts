@@ -45,14 +45,14 @@ import { WholeTeamAssignments } from "@overbookd/assignment";
         stats: PrismaAssignmentStats,
         planning: PrismaPlanning,
         eventStore: DomainEventService,
-        teamAssignments: WholeTeamAssignments,
+        wholeTeamAssignments: WholeTeamAssignments,
       ) =>
         new AssignmentService(
           assignments,
           stats,
           planning,
           eventStore,
-          teamAssignments,
+          wholeTeamAssignments,
         ),
       inject: [
         PrismaAssignments,

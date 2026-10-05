@@ -60,7 +60,15 @@ import {
   REVIEWING,
   WILL_NOT_REVIEW,
 } from "@overbookd/festival-event-constants";
-import { CONFIANCE, HARD, PERSONNE, VIEUX } from "@overbookd/team-code";
+import {
+  CONFIANCE,
+  DD,
+  HARD,
+  PERSONNE,
+  PLAIZIR,
+  SPORTS,
+  VIEUX,
+} from "@overbookd/team-code";
 
 const factory = getFactory();
 
@@ -100,7 +108,7 @@ export const presentEscapeGame = factory
 
 export const guardEscapeGame = factory
   .draft("Guard Escape Game")
-  .withGeneral({ team: "sports" })
+  .withGeneral({ team: SPORTS })
   .withFestivalActivity(escapeGame)
   .withInstructions({
     contacts: [noelContact],
@@ -118,7 +126,7 @@ export const guardEscapeGame = factory
 
 export const installJustDance = factory
   .draft("Install Just Dance")
-  .withGeneral({ team: "plaizir" })
+  .withGeneral({ team: PLAIZIR })
   .withFestivalActivity(justDance)
   .withInstructions({
     appointment: mdeHall,
@@ -157,7 +165,7 @@ export const installJustDance = factory
 
 export const guardJustDance = factory
   .inReview("Guard Just Dance")
-  .withGeneral({ team: "plaizir" })
+  .withGeneral({ team: PLAIZIR })
   .withFestivalActivity(justDance)
   .withInstructions({
     appointment: mdeHall,
@@ -180,7 +188,7 @@ export const guardJustDance = factory
 
 export const serveWaterOnJustDance = factory
   .inReview("Serve water during Just Dance")
-  .withGeneral({ team: "plaizir" })
+  .withGeneral({ team: PLAIZIR })
   .withFestivalActivity(justDance)
   .withInstructions({
     appointment: mdeHall,
@@ -241,7 +249,7 @@ const twoVolunteersOnFriday10hToFriday11h = MobilizationBuilder.init({
 
 export const installPreventionVillage = factory
   .draft("Install Prevention Village")
-  .withGeneral({ team: "dd" })
+  .withGeneral({ team: DD })
   .withFestivalActivity(preventionVillage)
   .withInstructions({
     appointment: humaGrass,
@@ -264,7 +272,7 @@ export const installPreventionVillage = factory
 
 export const guardPreventionVillage = factory
   .draft("Guard Prevention Village")
-  .withGeneral({ team: "dd", administrator: noel })
+  .withGeneral({ team: DD, administrator: noel })
   .withFestivalActivity(preventionVillage)
   .withInstructions({
     appointment: humaGrass,

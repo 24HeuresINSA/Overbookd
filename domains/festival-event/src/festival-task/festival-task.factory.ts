@@ -10,7 +10,13 @@ import {
   REVIEWING,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
-import { CONDUCTEUR, HUMAIN, LOG_MATOS, PERSONNE } from "@overbookd/team-code";
+import {
+  CONDUCTEUR,
+  HUMAIN,
+  LOG_MATOS,
+  PERSONNE,
+  PLAIZIR,
+} from "@overbookd/team-code";
 import { isKeyOf } from "../is-key-of.js";
 import {
   Draft,
@@ -374,7 +380,7 @@ function defaultGeneral(name: string): Reviewable["general"] {
   return {
     name,
     administrator: noel,
-    team: "plaizir",
+    team: PLAIZIR,
   };
 }
 

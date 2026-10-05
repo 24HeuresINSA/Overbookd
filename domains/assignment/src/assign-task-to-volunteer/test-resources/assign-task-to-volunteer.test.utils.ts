@@ -95,7 +95,7 @@ const availableVolunteersForMissingOnePlaizir: AssignableVolunteerFactory[] = [
 
 const oneHardDemanded = AssignmentTeamFactory.init().withCode(HARD);
 const oneHardAssignedAndDemanded = oneHardDemanded.withAssigned(1);
-const onePlaizirDemanded = AssignmentTeamFactory.init().withCode("plaizir");
+const onePlaizirDemanded = AssignmentTeamFactory.init().withCode(PLAIZIR);
 const twoVieuxDemanded = AssignmentTeamFactory.init()
   .withCode(VIEUX)
   .withDemands(2);

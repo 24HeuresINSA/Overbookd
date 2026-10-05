@@ -34,6 +34,7 @@ import {
   george,
 } from "../festival-activity.fake.js";
 import { APPROVED } from "@overbookd/festival-event-constants";
+import { CULTURE, PLAIZIR } from "@overbookd/team-code";
 
 const factory = getFactory();
 
@@ -47,7 +48,7 @@ export const escapeGame = factory
   })
   .withInCharge({
     adherent: noel,
-    team: "culture",
+    team: CULTURE,
     contractors: [neverEscape],
   })
   .withSigna({
@@ -86,7 +87,7 @@ export const justDance = factory
   })
   .withInCharge({
     adherent: noel,
-    team: "culture",
+    team: CULTURE,
     contractors: [videoGameCollectif],
   })
   .withSigna({
@@ -113,7 +114,7 @@ export const baladeEnPoney = factory
     isFlagship: false,
     timeWindows: [saturday14hToSaturday18h, sunday14hToSunday18h],
   })
-  .withInCharge({ adherent: noel, team: "plaizir" })
+  .withInCharge({ adherent: noel, team: PLAIZIR })
   .withSigna({ location: pelouseHumas, signages: [bacheBienvenue10m] })
   .withInquiry({
     timeWindows: [saturday14hToSaturday18h],

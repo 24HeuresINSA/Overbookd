@@ -19,6 +19,7 @@ import {
 import { getFactory } from "./festival-activity.factory";
 import { faker, lea, lumiere, noel } from "./festival-activity.fake";
 import { previewOf } from "./preview-of";
+import { CULTURE, PLAIZIR } from "@overbookd/team-code";
 
 const festivalActivityFactory = getFactory();
 
@@ -33,7 +34,7 @@ type TestHelper<Preview extends PreviewReviewable> = {
 describe("Transform a festival activity to its preview", () => {
   describe.each([
     { name: "VGC Tournament", adherent: lea, team: null },
-    { name: "Escape game", adherent: noel, team: "plaizirs" },
+    { name: "Escape game", adherent: noel, team: PLAIZIR },
   ])("when the festival activity is in draft", ({ name, adherent, team }) => {
     it("should return a draft preview", () => {
       const draft = festivalActivityFactory
@@ -55,7 +56,7 @@ describe("Transform a festival activity to its preview", () => {
     {
       name: "VGC Tournament",
       adherent: lea,
-      team: "culture",
+      team: CULTURE,
       reviews: {
         humain: REVIEWING,
         communication: REVIEWING,
@@ -70,7 +71,7 @@ describe("Transform a festival activity to its preview", () => {
     {
       name: "Escape game",
       adherent: noel,
-      team: "plaizirs",
+      team: PLAIZIR,
       reviews: {
         humain: REVIEWING,
         communication: NOT_ASKING_TO_REVIEW,
@@ -109,7 +110,7 @@ describe("Transform a festival activity to its preview", () => {
     {
       name: "VGC Tournament",
       adherent: lea,
-      team: "culture",
+      team: CULTURE,
       reviews: {
         humain: APPROVED,
         communication: APPROVED,
@@ -124,7 +125,7 @@ describe("Transform a festival activity to its preview", () => {
     {
       name: "Escape game",
       adherent: noel,
-      team: "plaizirs",
+      team: PLAIZIR,
       reviews: {
         humain: APPROVED,
         communication: NOT_ASKING_TO_REVIEW,
@@ -163,7 +164,7 @@ describe("Transform a festival activity to its preview", () => {
     {
       name: "VGC Tournament",
       adherent: lea,
-      team: "culture",
+      team: CULTURE,
       reviews: {
         humain: APPROVED,
         communication: APPROVED,
@@ -178,7 +179,7 @@ describe("Transform a festival activity to its preview", () => {
     {
       name: "Escape game",
       adherent: noel,
-      team: "plaizirs",
+      team: PLAIZIR,
       reviews: {
         humain: REVIEWING,
         communication: NOT_ASKING_TO_REVIEW,
@@ -225,7 +226,7 @@ describe("Transform a festival activity to its preview", () => {
     {
       name: "Escape game",
       adherent: noel,
-      team: "plaizirs",
+      team: PLAIZIR,
       electricity: [lumiere],
       water: null,
       needSupply: true,
