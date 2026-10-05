@@ -138,10 +138,10 @@ describe("Festival Task - ask for review", () => {
         ${"with some mobilizations without any volunteer requests"}       | ${withSomeMobilizationsWithoutRequest}                | ${noel}    | ${"Toutes les mobilisations doivent demander au moins une personne (nominativement ou via les équipes)"}
       `("when task is $indication", ({ task, instigator, explanation }) => {
         it("should indicate can't ask for review with explanation", async () => {
-          expect(
+          await expect(
             async () => await askForReview.from(task.id, instigator),
           ).rejects.toThrow(ReadyForReviewError);
-          expect(
+          await expect(
             async () => await askForReview.from(task.id, instigator),
           ).rejects.toThrow(explanation);
         });

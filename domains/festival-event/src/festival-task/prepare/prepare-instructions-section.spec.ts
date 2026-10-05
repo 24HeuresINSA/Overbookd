@@ -113,7 +113,7 @@ describe("Prepare festival task instructions section", () => {
     "when trying to clear mandatory field of an in review task",
     ({ task, update, expectedError }) => {
       it("should indicate the mandatory field is required", async () => {
-        expect(
+        await expect(
           async () =>
             await prepare.updateInstructionsSection(task.id, update, noel),
         ).rejects.toThrow(expectedError);
@@ -122,7 +122,7 @@ describe("Prepare festival task instructions section", () => {
   );
   describe("when trying to update an unexisting task", () => {
     it("should indicate task not found", async () => {
-      expect(
+      await expect(
         async () =>
           await prepare.updateInstructionsSection(
             10000,
@@ -251,7 +251,7 @@ describe("Prepare festival task instructions section", () => {
     });
     describe("when task is under review and doesn't have in charge instructions", () => {
       it("should indicate instructions are also required", async () => {
-        expect(
+        await expect(
           async () =>
             await prepare.addInChargeVolunteer(guardJustDance.id, noel),
         ).rejects.toThrow(
@@ -342,9 +342,9 @@ describe("Prepare festival task instructions section", () => {
         if (approvers.includes(humain)) {
           describe("humain ownership", () => {
             describe("when trying to update appointment location", () => {
-              it("should indicate task is already approved by humain", () => {
+              it("should indicate task is already approved by humain", async () => {
                 const update = { appointment: mdeHall };
-                expect(
+                await expect(
                   async () =>
                     await prepare.updateInstructionsSection(
                       task.id,
@@ -355,32 +355,32 @@ describe("Prepare festival task instructions section", () => {
               });
             });
             describe("when trying to add a contact", () => {
-              it("should indicate task is already approved by humain", () => {
-                expect(
+              it("should indicate task is already approved by humain", async () => {
+                await expect(
                   async () => await prepare.addContact(task.id, leaContact),
                 ).rejects.toThrow(AlreadyApprovedBy);
               });
             });
             describe("when trying to remove a contact", () => {
-              it("should indicate task is already approved by humain", () => {
+              it("should indicate task is already approved by humain", async () => {
                 const contactId = task.instructions.contacts.at(0).id;
-                expect(
+                await expect(
                   async () => await prepare.removeContact(task.id, contactId),
                 ).rejects.toThrow(AlreadyApprovedBy);
               });
             });
             describe("when trying to add an in charge volunteer", () => {
-              it("should indicate task is already approved by humain", () => {
-                expect(
+              it("should indicate task is already approved by humain", async () => {
+                await expect(
                   async () => await prepare.addInChargeVolunteer(task.id, lea),
                 ).rejects.toThrow(AlreadyApprovedBy);
               });
             });
             describe("when trying to remove an in charge volunteer", () => {
-              it("should indicate task is already approved by humain", () => {
+              it("should indicate task is already approved by humain", async () => {
                 const volunteerId =
                   task.instructions.inCharge.volunteers.at(0).id;
-                expect(
+                await expect(
                   async () =>
                     await prepare.removeInChargeVolunteer(task.id, volunteerId),
                 ).rejects.toThrow(AlreadyApprovedBy);
@@ -395,8 +395,8 @@ describe("Prepare festival task instructions section", () => {
               ${"global instructions"}    | ${{ global: "Update global instruction" }}
               ${"in charge instructions"} | ${{ inCharge: "Update global instruction" }}
             `("when trying to update $field on $taskName", ({ update }) => {
-              it(`should indicate task is already approved by ${approvers}`, () => {
-                expect(
+              it(`should indicate task is already approved by ${approvers}`, async () => {
+                await expect(
                   async () =>
                     await prepare.updateInstructionsSection(
                       task.id,
@@ -407,19 +407,19 @@ describe("Prepare festival task instructions section", () => {
               });
             });
             describe("when trying to clear in charge section", () => {
-              it("should indicate task is already approved", () => {
-                expect(
+              it("should indicate task is already approved", async () => {
+                await expect(
                   async () => await prepare.clearInCharge(task.id, noel),
                 ).rejects.toThrow(AlreadyApprovedBy);
               });
             });
             describe("when trying to init in charge section", () => {
-              it("should indicate task is already approved", () => {
+              it("should indicate task is already approved", async () => {
                 const form = {
                   volunteers: [noel],
                   instruction: "Some instruction",
                 };
-                expect(
+                await expect(
                   async () => await prepare.initInCharge(task.id, form, noel),
                 ).rejects.toThrow(AlreadyApprovedBy);
               });
@@ -626,7 +626,7 @@ describe("Prepare festival task instructions section", () => {
       `(
         "should indicate task is already approved by $approver",
         async ({ task }) => {
-          expect(
+          await expect(
             async () =>
               await prepare.updateInstructionsSection(
                 task.id,
@@ -749,7 +749,7 @@ describe("Prepare festival task instructions section", () => {
       it("should indicate task is in draft", async () => {
         const taskId = installEscapeGame.id;
         const update = { global: "C'est push" };
-        expect(
+        await expect(
           async () => await prepare.forceInstructions(taskId, update, noel),
         ).rejects.toThrow(ForceUpdateError.isDraft(taskId));
       });
@@ -758,7 +758,7 @@ describe("Prepare festival task instructions section", () => {
       it("should indicate task is not approved", async () => {
         const taskId = guardJustDance.id;
         const update = { global: "C'est push" };
-        expect(
+        await expect(
           async () => await prepare.forceInstructions(taskId, update, noel),
         ).rejects.toThrow(ForceUpdateError.noApprovals(taskId));
       });

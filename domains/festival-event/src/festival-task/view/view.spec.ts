@@ -79,10 +79,10 @@ describe("View festival tasks", () => {
           });
         });
         describe("when looking for an unknown task", () => {
-          it("should indicate task not found", () => {
-            expect(async () => await view.one(nonExistingId)).rejects.toThrow(
-              FestivalTaskNotFound,
-            );
+          it("should indicate task not found", async () => {
+            await expect(
+              async () => await view.one(nonExistingId),
+            ).rejects.toThrow(FestivalTaskNotFound);
           });
         });
       },

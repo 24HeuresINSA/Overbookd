@@ -206,7 +206,7 @@ describe("Approve festival activity", () => {
   });
   describe("when approving an already approved festival activity", () => {
     it("should indicate activity already approved", async () => {
-      expect(
+      await expect(
         async () =>
           await reviewing.approve(alreadyApprovedByHumain.id, HUMAIN, george),
       ).rejects.toThrow(AlreadyApproved);
@@ -214,7 +214,7 @@ describe("Approve festival activity", () => {
   });
   describe("when approving a private festival activity as communication", () => {
     it("should indicate that communication is not asking to review it", async () => {
-      expect(
+      await expect(
         async () =>
           await reviewing.approve(privateActivity.id, COMMUNICATION, george),
       ).rejects.toThrow(NotAskingToReview);
@@ -229,7 +229,7 @@ describe("Approve festival activity", () => {
     "when trying to approve $activityName even with not assigned to drive inquiries as $reviewer",
     ({ activityId, reviewer, approver }) => {
       it("should indicate that inquiries should been assigned to a drive", async () => {
-        expect(
+        await expect(
           async () =>
             await reviewing.approve(activityId, reviewer, approver.id),
         ).rejects.toThrow(ShouldAssignDrive);
@@ -244,7 +244,7 @@ describe("Approve festival activity", () => {
     "when trying to approve $activityName even without catalog items linked to signages as signa",
     ({ activityId, approver }) => {
       it("should indicate that signages should been linked to a catalog item", async () => {
-        expect(
+        await expect(
           async () => await reviewing.approve(activityId, SIGNA, approver.id),
         ).rejects.toThrow(ShouldLinkCatalogItem);
       });
@@ -354,7 +354,7 @@ describe("Reject festival activity", () => {
 
   describe("when rejecting a private festival activity as communication", () => {
     it("should indicate that communication is not asking to review it", async () => {
-      expect(
+      await expect(
         async () =>
           await reviewing.reject(privateActivity.id, {
             team: COMMUNICATION,
@@ -367,7 +367,7 @@ describe("Reject festival activity", () => {
 
   describe("when rejecting an already rejected festival activity ", () => {
     it("should indicate activity already rejected", async () => {
-      expect(
+      await expect(
         async () =>
           await reviewing.reject(alreadyRejectedByHumain.id, {
             team: HUMAIN,

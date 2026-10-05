@@ -45,7 +45,7 @@ describe("Edit Charisma Event Participation", () => {
       };
       it("should indicate that the participation does not exist", async () => {
         const apply = () => takePart.editParticipation(participationToEdit);
-        expect(apply).rejects.toThrow(InexistentParticipation);
+        await expect(apply).rejects.toThrow(InexistentParticipation);
       });
     },
   );
@@ -65,9 +65,9 @@ describe("Edit Charisma Event Participation", () => {
           participantId: lea.id,
           charisma,
         };
-        it("should indicate that the charisma per hour is not valid", () => {
+        it("should indicate that the charisma per hour is not valid", async () => {
           const apply = () => takePart.editParticipation(participationToEdit);
-          expect(apply).rejects.toThrow(expectedError);
+          await expect(apply).rejects.toThrow(expectedError);
         });
       },
     );

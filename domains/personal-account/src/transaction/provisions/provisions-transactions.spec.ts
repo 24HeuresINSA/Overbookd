@@ -159,9 +159,9 @@ describe("Create provisions transactions", () => {
       { consumer: drapsag.id, consumption: 1 },
       { consumer: lea.id, consumption: -3 },
     ];
-    it("should indicate that consumption cannot be negative", () => {
+    it("should indicate that consumption cannot be negative", async () => {
       const applyConsumption = () => create.apply(60, consumers);
-      expect(applyConsumption).rejects.toThrow(
+      await expect(applyConsumption).rejects.toThrow(
         AtLeastOneInsufficientConsumption,
       );
     });
@@ -171,31 +171,31 @@ describe("Create provisions transactions", () => {
       { consumer: drapsag.id, consumption: 0 },
       { consumer: lea.id, consumption: 1 },
     ];
-    it("should indicate that consumption cannot be null", () => {
+    it("should indicate that consumption cannot be null", async () => {
       const applyConsumption = () => create.apply(60, consumers);
-      expect(applyConsumption).rejects.toThrow(
+      await expect(applyConsumption).rejects.toThrow(
         AtLeastOneInsufficientConsumption,
       );
     });
   });
   describe("when provisions are consumed by zero person", () => {
-    it("should indicate that at least one consumer is required", () => {
+    it("should indicate that at least one consumer is required", async () => {
       const applyConsumption = () => create.apply(60, []);
-      expect(applyConsumption).rejects.toThrow(NoConsumer);
+      await expect(applyConsumption).rejects.toThrow(NoConsumer);
     });
   });
   describe("when create transactions with negative stick price", () => {
-    it("should indicate that stick price cannot be negative", () => {
+    it("should indicate that stick price cannot be negative", async () => {
       const consumers = [{ consumer: drapsag.id, consumption: 1 }];
       const applyConsumption = () => create.apply(-60, consumers);
-      expect(applyConsumption).rejects.toThrow(InsufficientStickPrice);
+      await expect(applyConsumption).rejects.toThrow(InsufficientStickPrice);
     });
   });
   describe("when create transactions with null stick price", () => {
-    it("should indicate that stick price cannot be null", () => {
+    it("should indicate that stick price cannot be null", async () => {
       const consumers = [{ consumer: drapsag.id, consumption: 1 }];
       const applyConsumption = () => create.apply(0, consumers);
-      expect(applyConsumption).rejects.toThrow(InsufficientStickPrice);
+      await expect(applyConsumption).rejects.toThrow(InsufficientStickPrice);
     });
   });
 });

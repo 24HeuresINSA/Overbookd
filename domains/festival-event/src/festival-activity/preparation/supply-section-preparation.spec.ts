@@ -17,9 +17,9 @@ import {
   PC16_Prise_classique,
 } from "../sections/supply.js";
 import { PrepareElectricitySupplyUpdate } from "./prepare-festival-activity.model.js";
-import { elec } from "../../common/review.js";
 import { PrepareError } from "./prepare-in-review-festival-activity.js";
 import { nintendoSwitchSupply } from "../festival-activity.fake.js";
+import { LOG_ELEC } from "@overbookd/team-code";
 
 describe("Supply section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -92,7 +92,7 @@ describe("Supply section of festival activity preparation", () => {
         it("should indicate that electricity supply already exists", async () => {
           const { id, ...rest } = newSupply;
 
-          expect(
+          await expect(
             async () =>
               await prepareFestivalActivity.addElectricitySupply(
                 activityId,
@@ -209,10 +209,10 @@ describe("Supply section of festival activity preparation", () => {
     );
   });
 
-  describe(`when ${approvedByElec.general.name} is already validated by ${elec}`, () => {
+  describe(`when ${approvedByElec.general.name} is already validated by ${LOG_ELEC}`, () => {
     describe("when trying to update water", () => {
       it("should indicate that supply section is locked", async () => {
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.updateSupplySection(
               approvedByElec.id,
@@ -223,7 +223,7 @@ describe("Supply section of festival activity preparation", () => {
     });
     describe("when trying to add an electricity supply", () => {
       it("should indicate that supply section is locked", async () => {
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.addElectricitySupply(
               approvedByElec.id,
@@ -234,7 +234,7 @@ describe("Supply section of festival activity preparation", () => {
     });
     describe("when trying to update an electricity supply", () => {
       it("should indicate that supply section is locked", async () => {
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.updateElectricitySupply(
               approvedByElec.id,
@@ -245,7 +245,7 @@ describe("Supply section of festival activity preparation", () => {
     });
     describe("when trying to remove an electricity supply", () => {
       it("should indicate that supply section is locked", async () => {
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.removeElectricitySupply(
               approvedByElec.id,

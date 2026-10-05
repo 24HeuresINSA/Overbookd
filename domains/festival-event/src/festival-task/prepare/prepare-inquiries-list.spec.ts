@@ -98,7 +98,7 @@ describe("Prepare festival task inquiries list", () => {
     describe("when adding inquiry when matos approved the task", () => {
       it("should indicate that inquiries are locked", async () => {
         const inquiry = { ...ficelle, quantity: 1 };
-        expect(
+        await expect(
           async () => await prepare.addInquiry(onlyApprovedByMatos.id, inquiry),
         ).rejects.toThrow("La FT a déjà été validée par l'équipe matos.");
       });
@@ -125,10 +125,10 @@ describe("Prepare festival task inquiries list", () => {
       });
     });
     describe("when inquiry is about an already required gear", () => {
-      it("should indicate that there is already a request for it", () => {
+      it("should indicate that there is already a request for it", async () => {
         const task = uninstallEscapeGame;
         const inquiry = { ...sacPoubelle, quantity: 1 };
-        expect(
+        await expect(
           async () => await prepare.addInquiry(task.id, inquiry),
         ).rejects.toThrow(InquiryAlreadyExists);
       });
@@ -177,7 +177,7 @@ describe("Prepare festival task inquiries list", () => {
     describe("when updating inquiry when matos approved the task", () => {
       it("should indicate that inquiries are locked", async () => {
         const inquiry = { ...ficelle, quantity: 1 };
-        expect(
+        await expect(
           async () =>
             await prepare.updateInquiry(onlyApprovedByMatos.id, inquiry),
         ).rejects.toThrow("La FT a déjà été validée par l'équipe matos.");
@@ -205,10 +205,10 @@ describe("Prepare festival task inquiries list", () => {
       });
     });
     describe("when inquiry is about an unexisting gear", () => {
-      it("should indicate that there is no request for it", () => {
+      it("should indicate that there is no request for it", async () => {
         const task = uninstallEscapeGame;
         const inquiry = { ...chaise, quantity: 1 };
-        expect(
+        await expect(
           async () => await prepare.updateInquiry(task.id, inquiry),
         ).rejects.toThrow(InquiryNotFound);
       });
@@ -250,7 +250,7 @@ describe("Prepare festival task inquiries list", () => {
     describe("when removing inquiry when matos approved the task", () => {
       it("should indicate that inquiries are locked", async () => {
         const inquiry = onlyApprovedByMatos.inquiries[0];
-        expect(
+        await expect(
           async () =>
             await prepare.removeInquiry(onlyApprovedByMatos.id, inquiry.slug),
         ).rejects.toThrow("La FT a déjà été validée par l'équipe matos.");
@@ -270,7 +270,7 @@ describe("Prepare festival task inquiries list", () => {
   describe("Assign inquiry to drive", () => {
     describe("when trying to assign a drive to an inquiry request from a draft festival task", () => {
       it("should indicate that we can't assign drive to inquiry request from draft festival task", async () => {
-        expect(
+        await expect(
           async () =>
             await prepare.assignInquiryToDrive(installEscapeGame.id, {
               slug: ficelle.slug,

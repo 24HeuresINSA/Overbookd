@@ -82,7 +82,7 @@ describe("External event transactions", () => {
   });
 
   describe("when adding an adherent's consumption to an external event with negative amount", () => {
-    it("should indicate that amount cannot be negative", () => {
+    it("should indicate that amount cannot be negative", async () => {
       const negativeConsumptionForm = {
         amount: -10,
         consumer: olop.id,
@@ -91,11 +91,11 @@ describe("External event transactions", () => {
       const applyConsumption = () =>
         externalEvent.apply(negativeConsumptionForm);
 
-      expect(applyConsumption).rejects.toThrow(InsufficientAmount);
+      await expect(applyConsumption).rejects.toThrow(InsufficientAmount);
     });
   });
   describe("when adding an adherent's consumption to an external event with null amount", () => {
-    it("should indicate that amount cannot be negative", () => {
+    it("should indicate that amount cannot be negative", async () => {
       const nullConsumptionForm = {
         amount: 0,
         consumer: olop.id,
@@ -103,7 +103,7 @@ describe("External event transactions", () => {
       };
       const applyConsumption = () => externalEvent.apply(nullConsumptionForm);
 
-      expect(applyConsumption).rejects.toThrow(InsufficientAmount);
+      await expect(applyConsumption).rejects.toThrow(InsufficientAmount);
     });
   });
 
@@ -139,10 +139,10 @@ describe("External event transactions", () => {
       { amount: 100, consumer: olop.id, context: "Gala" },
       { amount: -200, consumer: cul.id, context: "Gala" },
     ];
-    it("should indicate that amount cannot be negative or null", () => {
+    it("should indicate that amount cannot be negative or null", async () => {
       const applyMultipleConsumptions = () =>
         externalEvent.applyMultiple(consumptionForms);
-      expect(applyMultipleConsumptions).rejects.toThrow(
+      await expect(applyMultipleConsumptions).rejects.toThrow(
         AtLeastOneInsufficientAmount,
       );
     });

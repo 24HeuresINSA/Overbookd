@@ -185,7 +185,7 @@ describe("In Charge section of festival activity preparation", () => {
   describe(`when ${approvedByHumain.general.name} is already validated by ${HUMAIN}`, () => {
     describe("when trying to update in charge information", () => {
       it("should indicate that in charge section is locked", async () => {
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.updateInChargeSection(
               approvedByHumain.id,
@@ -196,7 +196,7 @@ describe("In Charge section of festival activity preparation", () => {
     });
     describe("when trying to add a contractor", () => {
       it("should indicate that in charge section is locked", async () => {
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.addContractor(approvedByHumain.id, {
               firstName: "Benjos",
@@ -208,7 +208,7 @@ describe("In Charge section of festival activity preparation", () => {
     });
     describe("when trying to remove a contractor", () => {
       it("should indicate that in charge section is locked", async () => {
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.removeContractor(
               approvedByHumain.id,
@@ -219,7 +219,7 @@ describe("In Charge section of festival activity preparation", () => {
     });
     describe("when trying to update a contractor", () => {
       it("should indicate that in charge section is locked", async () => {
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.updateContractor(
               approvedByHumain.id,

@@ -66,7 +66,7 @@ describe("Transfer", () => {
         const wantedTransfer = Payor.init(lea.id).transferTo(transferToSend);
         const sendTransfer = () => transfer.send(wantedTransfer);
 
-        expect(sendTransfer).rejects.toThrow(
+        await expect(sendTransfer).rejects.toThrow(
           TRANSFER_TO_YOURSELF_ERROR_MESSAGE,
         );
       });
@@ -79,11 +79,13 @@ describe("Transfer", () => {
         context: "Miam miam",
       };
 
-      it("should indicate that the amount can't be negative", () => {
+      it("should indicate that the amount can't be negative", async () => {
         const wantedTransfer = Payor.init(lea.id).transferTo(transferToSend);
         const sendTransfer = () => transfer.send(wantedTransfer);
 
-        expect(sendTransfer).rejects.toThrow(NEGATIVE_AMOUNT_ERROR_MESSAGE);
+        await expect(sendTransfer).rejects.toThrow(
+          NEGATIVE_AMOUNT_ERROR_MESSAGE,
+        );
       });
     });
 
@@ -94,11 +96,13 @@ describe("Transfer", () => {
         context: "Miam miam",
       };
 
-      it("should indicate that the amount must be higher than 0", () => {
+      it("should indicate that the amount must be higher than 0", async () => {
         const wantedTransfer = Payor.init(lea.id).transferTo(transferToSend);
         const sendTransfer = () => transfer.send(wantedTransfer);
 
-        expect(sendTransfer).rejects.toThrow(INSUFFICIENT_AMOUNT_ERROR_MESSAGE);
+        await expect(sendTransfer).rejects.toThrow(
+          INSUFFICIENT_AMOUNT_ERROR_MESSAGE,
+        );
       });
     });
 
@@ -109,11 +113,11 @@ describe("Transfer", () => {
         context: "Miam miam",
       };
 
-      it("should indicate that the amount is too high", () => {
+      it("should indicate that the amount is too high", async () => {
         const wantedTransfer = Payor.init(lea.id).transferTo(transferToSend);
         const sendTransfer = () => transfer.send(wantedTransfer);
 
-        expect(sendTransfer).rejects.toThrow(AmountTooHigh);
+        await expect(sendTransfer).rejects.toThrow(AmountTooHigh);
       });
     });
 
@@ -124,11 +128,11 @@ describe("Transfer", () => {
         context: "Miam miam",
       };
 
-      it("should indicate that adherent is not allowed to transfer", () => {
+      it("should indicate that adherent is not allowed to transfer", async () => {
         const wantedTransfer = Payor.init(neimad.id).transferTo(transferToSend);
         const sendTransfer = () => transfer.send(wantedTransfer);
 
-        expect(sendTransfer).rejects.toThrow(
+        await expect(sendTransfer).rejects.toThrow(
           PAYOR_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE,
         );
       });
@@ -141,11 +145,11 @@ describe("Transfer", () => {
         context: "Miam miam",
       };
 
-      it("should indicate that adherent is not allowed to transfer", () => {
+      it("should indicate that adherent is not allowed to transfer", async () => {
         const wantedTransfer = Payor.init(nodorf.id).transferTo(transferToSend);
         const sendTransfer = () => transfer.send(wantedTransfer);
 
-        expect(sendTransfer).rejects.toThrow(NegativePersonalAccount);
+        await expect(sendTransfer).rejects.toThrow(NegativePersonalAccount);
       });
     });
 
@@ -156,11 +160,11 @@ describe("Transfer", () => {
         context: "Miam miam",
       };
 
-      it("should indicate that payee is not allowed to receive transfer", () => {
+      it("should indicate that payee is not allowed to receive transfer", async () => {
         const wantedTransfer = Payor.init(noel.id).transferTo(transferToSend);
         const sendTransfer = () => transfer.send(wantedTransfer);
 
-        expect(sendTransfer).rejects.toThrow(
+        await expect(sendTransfer).rejects.toThrow(
           PAYEE_NOT_HAVE_PERSONAL_ACCOUNT_ERROR_MESSAGE,
         );
       });

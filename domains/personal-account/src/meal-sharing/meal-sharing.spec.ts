@@ -184,7 +184,7 @@ describe("Meal Sharing", () => {
       describe("when lea shotguns again", () => {
         it("should indicate that lea can't shotgun again for this meal", async () => {
           await mealSharing.addPortion(rizCantonnais.id, lea.id);
-          expect(
+          await expect(
             async () => await mealSharing.addPortion(rizCantonnais.id, lea.id),
           ).rejects.toThrow(MultipleShotgunsDisallowed);
         });
@@ -217,7 +217,7 @@ describe("Meal Sharing", () => {
     });
     describe("when shogosse shotguns for salade de fruits", () => {
       it("should indicate that shogosse can't shotgun more portions for this meal", async () => {
-        expect(
+        await expect(
           async () =>
             await mealSharing.addPortion(saladeDeFruits.id, shogosse.id),
         ).rejects.toThrow(TooManyPortions);
@@ -252,7 +252,7 @@ describe("Meal Sharing", () => {
     describe("when one of the guests tries to remove a portion", () => {
       it("should indicate only chef can remove a portion", async () => {
         const instigator = shogosse.id;
-        expect(
+        await expect(
           async () =>
             await mealSharing.removePortion(removeShotgun, instigator),
         ).rejects.toThrow(OnlyChefCan.removePortionFor(rizCantonnais));
@@ -261,7 +261,7 @@ describe("Meal Sharing", () => {
     describe("when one of the guests tries to cancel their shotgun", () => {
       it("should indicate only chef can unshotgun", async () => {
         const instigator = shogosse.id;
-        expect(
+        await expect(
           async () =>
             await mealSharing.cancelShotgun(removeShotgun, instigator),
         ).rejects.toThrow(OnlyChefCan.cancelShotgunFor(rizCantonnais));
@@ -333,8 +333,8 @@ describe("Meal Sharing", () => {
       mealSharing = new MealSharing(sharedMeals, adherents);
     });
     describe("when adherent other than chef tries to record expense", () => {
-      it("should indicate that only chef can record expense", () => {
-        expect(
+      it("should indicate that only chef can record expense", async () => {
+        await expect(
           async () =>
             await mealSharing.recordExpense(rizCantonnais.id, lea.id, expense),
         ).rejects.toThrow(OnlyChefCan.recordExpenseFor(rizCantonnais));
@@ -356,24 +356,24 @@ describe("Meal Sharing", () => {
           expect(pastSharedMeal.closedAt).toStrictEqual(expect.any(Date));
         });
         it("should indicate shared meal is past for new adherent trying to shotgun", async () => {
-          expect(async () => {
+          await expect(async () => {
             await mealSharing.addPortion(rizCantonnais.id, tatouin.id);
           }).rejects.toThrow(ADD_PORTION_PAST_MEAL_ERROR);
         });
         it("should indicate shared meal is past for chef trying to remove a portion", async () => {
-          expect(async () => {
+          await expect(async () => {
             const remove = { mealId: rizCantonnais.id, guestId: julie.id };
             await mealSharing.removePortion(remove, rizCantonnais.chef.id);
           }).rejects.toThrow(REMOVE_PORTION_PAST_MEAL_ERROR);
         });
         it("should indicate shared meal is past for chef trying to cancel a shotgun", async () => {
-          expect(async () => {
+          await expect(async () => {
             const cancel = { mealId: rizCantonnais.id, guestId: julie.id };
             await mealSharing.cancelShotgun(cancel, rizCantonnais.chef.id);
           }).rejects.toThrow(CANCEL_SHOTGUN_PAST_MEAL_ERROR);
         });
         it("should indicate shared meal is past for chef trying to cancel it", async () => {
-          expect(async () => {
+          await expect(async () => {
             await mealSharing.cancelMeal(
               rizCantonnais.id,
               rizCantonnais.chef.id,
@@ -381,7 +381,7 @@ describe("Meal Sharing", () => {
           }).rejects.toThrow(CANCEL_MEAL_PAST_MEAL_ERROR);
         });
         it("should indicate shared meal is past for chef trying to close the shotguns", async () => {
-          expect(async () => {
+          await expect(async () => {
             await mealSharing.closeShotguns(
               rizCantonnais.id,
               rizCantonnais.chef.id,
@@ -389,7 +389,7 @@ describe("Meal Sharing", () => {
           }).rejects.toThrow(CLOSE_SHOTGUNS_PAST_MEAL_ERROR);
         });
         it("should indicate shared meal is past for chef trying to open the shotguns", async () => {
-          expect(async () => {
+          await expect(async () => {
             await mealSharing.openShotguns(
               rizCantonnais.id,
               rizCantonnais.chef.id,
@@ -397,7 +397,7 @@ describe("Meal Sharing", () => {
           }).rejects.toThrow(OPEN_SHOTGUNS_PAST_MEAL_ERROR);
         });
         it("should indicate shared meal is past for chef trying to allow multiple shotguns", async () => {
-          expect(async () => {
+          await expect(async () => {
             await mealSharing.allowMultipleShotguns(
               rizCantonnais.id,
               rizCantonnais.chef.id,
@@ -405,7 +405,7 @@ describe("Meal Sharing", () => {
           }).rejects.toThrow(ALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR);
         });
         it("should indicate shared meal is past for chef trying to disallow multiple shotguns", async () => {
-          expect(async () => {
+          await expect(async () => {
             await mealSharing.disallowMultipleShotguns(
               rizCantonnais.id,
               rizCantonnais.chef.id,
@@ -417,8 +417,8 @@ describe("Meal Sharing", () => {
         });
       });
       describe("when the amount is too low", () => {
-        it("should indicate we cannot record expense", () => {
-          expect(
+        it("should indicate we cannot record expense", async () => {
+          await expect(
             async () =>
               await mealSharing.recordExpense(rizCantonnais.id, julie.id, {
                 amount: 0,
@@ -427,8 +427,8 @@ describe("Meal Sharing", () => {
         });
       });
       describe("when the amount is too high", () => {
-        it("should indicate we cannot record expense", () => {
-          expect(
+        it("should indicate we cannot record expense", async () => {
+          await expect(
             async () =>
               await mealSharing.recordExpense(rizCantonnais.id, julie.id, {
                 amount: 200000,
@@ -437,8 +437,8 @@ describe("Meal Sharing", () => {
         });
       });
       describe("when no one shotguns for the meal", () => {
-        it("should indicate we cannot record expense", () => {
-          expect(
+        it("should indicate we cannot record expense", async () => {
+          await expect(
             async () =>
               await mealSharing.recordExpense(
                 lonelyMeal.id,
@@ -450,7 +450,7 @@ describe("Meal Sharing", () => {
       });
       describe("when meal is already closed", () => {
         it("should indicate that meal is already closed", async () => {
-          expect(
+          await expect(
             async () =>
               await mealSharing.recordExpense(
                 closedMeal.id,
@@ -477,7 +477,7 @@ describe("Meal Sharing", () => {
         expect(sharedMeals.all).not.toContainEqual(rizCantonnais);
       });
       it("should not be possible to shotgun it afterwards", async () => {
-        expect(
+        await expect(
           async () =>
             await mealSharing.addPortion(rizCantonnais.id, shogosse.id),
         ).rejects.toThrow(MealNotFound);
@@ -485,7 +485,7 @@ describe("Meal Sharing", () => {
     });
     describe("when someone else is trying to cancel a meal", () => {
       it("should indicate that only chef can cancel a meal", async () => {
-        expect(
+        await expect(
           async () =>
             await mealSharing.cancelMeal(rizCantonnais.id, shogosse.id),
         ).rejects.toThrow(OnlyChefCan.cancel(rizCantonnais));
@@ -500,15 +500,15 @@ describe("Meal Sharing", () => {
       mealSharing = new MealSharing(sharedMeals, adherents);
     });
     describe("when adherent other than chef tries to close the shotguns", () => {
-      it("should indicate that only chef can close the shotguns", () => {
-        expect(
+      it("should indicate that only chef can close the shotguns", async () => {
+        await expect(
           async () => await mealSharing.closeShotguns(rizCantonnais.id, lea.id),
         ).rejects.toThrow(OnlyChefCan.closeShotguns(rizCantonnais));
       });
     });
     describe("when adherent other than chef tries to open the shotguns", () => {
-      it("should indicate that only chef can open the shotguns", () => {
-        expect(
+      it("should indicate that only chef can open the shotguns", async () => {
+        await expect(
           async () => await mealSharing.openShotguns(rizCantonnais.id, lea.id),
         ).rejects.toThrow(OnlyChefCan.openShotguns(rizCantonnais));
       });
@@ -526,7 +526,7 @@ describe("Meal Sharing", () => {
           expect(sharedMeal.areShotgunsOpen).toBe(false);
         });
         it("should indicate shotguns are closed for new adherent trying to shotgun", async () => {
-          expect(async () => {
+          await expect(async () => {
             await mealSharing.addPortion(rizCantonnais.id, tatouin.id);
           }).rejects.toThrow(ShotgunsClosed);
         });
@@ -552,8 +552,8 @@ describe("Meal Sharing", () => {
         });
       });
       describe("on a meal with shotguns closed", () => {
-        it("should indicate that the shotguns are already closed", () => {
-          expect(
+        it("should indicate that the shotguns are already closed", async () => {
+          await expect(
             async () =>
               await mealSharing.closeShotguns(
                 rizCantonnais.id,
@@ -565,8 +565,8 @@ describe("Meal Sharing", () => {
     });
     describe("when chef opens the shotguns", () => {
       describe("on a meal with shotguns opened", () => {
-        it("should indicate that the shotguns are already opened", () => {
-          expect(
+        it("should indicate that the shotguns are already opened", async () => {
+          await expect(
             async () =>
               await mealSharing.openShotguns(
                 rizCantonnais.id,
@@ -585,16 +585,16 @@ describe("Meal Sharing", () => {
       mealSharing = new MealSharing(sharedMeals, adherents);
     });
     describe("when adherent other than chef tries to allow multiple shotguns", () => {
-      it("should indicate that only chef can allow multiple shotguns", () => {
-        expect(
+      it("should indicate that only chef can allow multiple shotguns", async () => {
+        await expect(
           async () =>
             await mealSharing.allowMultipleShotguns(rizCantonnais.id, lea.id),
         ).rejects.toThrow(OnlyChefCan.allowMultipleShotguns(rizCantonnais));
       });
     });
     describe("when adherent other than chef tries to disallow multiple shotguns", () => {
-      it("should indicate that only chef can disallow multiple shotguns", () => {
-        expect(
+      it("should indicate that only chef can disallow multiple shotguns", async () => {
+        await expect(
           async () =>
             await mealSharing.disallowMultipleShotguns(
               rizCantonnais.id,
@@ -627,8 +627,8 @@ describe("Meal Sharing", () => {
         });
       });
       describe("on a meal with multiple shotguns allowed", () => {
-        it("should indicate that multiple shotguns are already allowed", () => {
-          expect(
+        it("should indicate that multiple shotguns are already allowed", async () => {
+          await expect(
             async () =>
               await mealSharing.allowMultipleShotguns(
                 saladeDeFruits.id,
@@ -658,15 +658,15 @@ describe("Meal Sharing", () => {
           ).toBe(true);
         });
         it("should be not be possible for noel to shotgun another portion", async () => {
-          expect(
+          await expect(
             async () =>
               await mealSharing.addPortion(saladeDeFruits.id, noel.id),
           ).rejects.toThrow(MultipleShotgunsDisallowed);
         });
       });
       describe("on a meal with multiple shotguns disallowed", () => {
-        it("should indicate that multiple shotguns are already disallowed", () => {
-          expect(
+        it("should indicate that multiple shotguns are already disallowed", async () => {
+          await expect(
             async () =>
               await mealSharing.disallowMultipleShotguns(
                 rizCantonnais.id,

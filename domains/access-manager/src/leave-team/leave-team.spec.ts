@@ -49,7 +49,7 @@ describe("Leave team", () => {
       const member = { id: userId, name: userName };
       const leavingTeam = { member, team };
       it("should apply without issue", async () => {
-        expect(leaveTeam.apply(leavingTeam)).resolves.ok;
+        await expect(leaveTeam.apply(leavingTeam)).resolves.not.toThrow();
       });
       it("should publish a team left event", async () => {
         const expectedEvent = { type: TEAM_LEFT, data: leavingTeam };
@@ -69,7 +69,7 @@ describe("Leave team", () => {
   describe("when user is not member of the team", () => {
     const leavingTeam = { member: shogosse, team: CONFIANCE };
     it("should apply without issue", async () => {
-      expect(leaveTeam.apply(leavingTeam)).resolves.ok;
+      await expect(leaveTeam.apply(leavingTeam)).resolves.not.toThrow();
     });
     it("should not publish a team left event", async () => {
       await leaveTeam.apply(leavingTeam);
@@ -80,7 +80,7 @@ describe("Leave team", () => {
   describe("when the team does not exist", () => {
     const leavingTeam = { member: shogosse, team: "unknown" };
     it("should apply without issue", async () => {
-      expect(leaveTeam.apply(leavingTeam)).resolves.ok;
+      await expect(leaveTeam.apply(leavingTeam)).resolves.not.toThrow();
     });
     it("should not publish a team left event", async () => {
       await leaveTeam.apply(leavingTeam);

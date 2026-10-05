@@ -41,7 +41,9 @@ describe("Enroll candidates to a joinable team", () => {
     },
   ])("when enrolling $names to $team", ({ team, candidates }) => {
     it("should apply without issues", async () => {
-      await expect(enrollCandidates.apply({ candidates, team })).resolves.ok;
+      await expect(
+        enrollCandidates.apply({ candidates, team }),
+      ).resolves.not.toThrow();
     });
     it(`should set all candidates as ${team} members`, async () => {
       await enrollCandidates.apply({ candidates, team });
@@ -125,7 +127,7 @@ describe("Enroll candidates to a joinable team", () => {
       candidates: [shogosse, noel],
     };
     it("should apply without issue", async () => {
-      await expect(enrollCandidates.apply(enrolling)).resolves.ok;
+      await expect(enrollCandidates.apply(enrolling)).resolves.not.toThrow();
     });
     it("should generate enrolled candidate event only for candidates not already enrolled", async () => {
       const data = { candidate: noel, team: HARD };

@@ -125,7 +125,7 @@ describe("Inquiry section of festival activity preparation", () => {
 
   describe("when activity doesn't have any inquiry request but is already approved", () => {
     it("should indicate that inquiry section is lock", async () => {
-      expect(
+      await expect(
         async () =>
           await prepareFestivalActivity.initInquiry(
             approvedByElecWithNoRequestAtAll.id,
@@ -153,7 +153,7 @@ describe("Inquiry section of festival activity preparation", () => {
         const request = { ...branleCanisse, quantity: 1 };
         const initializer = { timeWindow, request };
 
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.initInquiry(activityId, initializer),
         ).rejects.toThrow(AlreadyInitialized);
@@ -242,7 +242,7 @@ describe("Inquiry section of festival activity preparation", () => {
             end: new Date("2024-05-18T22:00+02:00"),
           };
 
-          expect(
+          await expect(
             async () =>
               await prepareFestivalActivity.addTimeWindowInInquiry(
                 activityId,
@@ -327,7 +327,7 @@ describe("Inquiry section of festival activity preparation", () => {
       it("should indicate that we can't remove the last time window", async () => {
         const timeWindowIdToRemove = baladeEnPoney.inquiry.timeWindows[0].id;
 
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.removeTimeWindowFromInquiry(
               baladeEnPoney.id,
@@ -375,7 +375,7 @@ describe("Inquiry section of festival activity preparation", () => {
       "when adding again $requestName on $activityName",
       ({ activityId, requestName, request }) => {
         it(`should indicate that there is already a request for ${requestName}`, async () => {
-          expect(
+          await expect(
             async () =>
               await prepareFestivalActivity.addInquiryRequest(
                 activityId,
@@ -395,7 +395,7 @@ describe("Inquiry section of festival activity preparation", () => {
       "when adding $requestName on non initialized inquiry section like in $activityName",
       ({ activityId, request }) => {
         it("should indicate that inquiry section must be initialized before", async () => {
-          expect(
+          await expect(
             async () =>
               await prepareFestivalActivity.addInquiryRequest(
                 activityId,
@@ -440,7 +440,7 @@ describe("Inquiry section of festival activity preparation", () => {
       "when updating unexisting $requestName request in $activityName",
       ({ activityId, request }) => {
         it("should indicate that the request doesn't exist", async () => {
-          expect(
+          await expect(
             async () =>
               await prepareFestivalActivity.updateInquiryRequest(
                 activityId,
@@ -480,7 +480,7 @@ describe("Inquiry section of festival activity preparation", () => {
       it("should indicate that we can't remove the last request", async () => {
         const requestSlug = baladeEnPoney.inquiry.barriers[0].slug;
 
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.removeInquiryRequest(
               baladeEnPoney.id,
@@ -522,7 +522,7 @@ describe("Inquiry section of festival activity preparation", () => {
   describe("when trying to assign a drive to an inquiry request from a draft festival activity", () => {
     it("should indicate that we can't assign drive to inquiry request from draft festival activity", async () => {
       const vaubanRequest = escapeGame.inquiry.barriers[0].slug;
-      expect(
+      await expect(
         async () =>
           await prepareFestivalActivity.assignInquiryToDrive(escapeGame.id, {
             slug: vaubanRequest,
@@ -545,7 +545,7 @@ describe("Inquiry section of festival activity preparation", () => {
     ({ activity, gearsAvailable, barriersAvailable, elecAvailable }) => {
       describe("when trying to add a time window", () => {
         it("should indicate that time window inquiry section is locked", async () => {
-          expect(
+          await expect(
             async () =>
               await prepareFestivalActivity.addTimeWindowInInquiry(
                 activity.id,
@@ -556,7 +556,7 @@ describe("Inquiry section of festival activity preparation", () => {
       });
       describe("when trying to update a time window", () => {
         it("should indicate that time window inquiry section is locked", async () => {
-          expect(
+          await expect(
             async () =>
               await prepareFestivalActivity.updateTimeWindowInInquiry(
                 activity.id,
@@ -568,7 +568,7 @@ describe("Inquiry section of festival activity preparation", () => {
       });
       describe("when trying to remove a time window", () => {
         it("should indicate that time window inquiry section is locked", async () => {
-          expect(
+          await expect(
             async () =>
               await prepareFestivalActivity.removeTimeWindowFromInquiry(
                 activity.id,
@@ -580,7 +580,7 @@ describe("Inquiry section of festival activity preparation", () => {
 
       describe("when trying to add the first request with time window", () => {
         it("should indicate that inquiry section is already initialized", async () => {
-          expect(
+          await expect(
             async () =>
               await prepareFestivalActivity.initInquiry(activity.id, {
                 timeWindow: saturday14hToSaturday18h,
@@ -601,7 +601,7 @@ describe("Inquiry section of festival activity preparation", () => {
           });
         } else {
           it("should indicate that gears inquiry requests section is locked", async () => {
-            expect(
+            await expect(
               async () =>
                 await prepareFestivalActivity.addInquiryRequest(activity.id, {
                   ...troisTables,
@@ -628,7 +628,7 @@ describe("Inquiry section of festival activity preparation", () => {
           });
         } else {
           it("should indicate that gears inquiry requests section is locked", async () => {
-            expect(
+            await expect(
               async () =>
                 await prepareFestivalActivity.updateInquiryRequest(
                   activity.id,
@@ -655,7 +655,7 @@ describe("Inquiry section of festival activity preparation", () => {
           });
         } else {
           it("should indicate that gears inquiry requests section is locked", async () => {
-            expect(
+            await expect(
               async () =>
                 await prepareFestivalActivity.removeInquiryRequest(
                   activity.id,
@@ -680,7 +680,7 @@ describe("Inquiry section of festival activity preparation", () => {
           });
         } else {
           it("should indicate that barriers inquiry requests section is locked", async () => {
-            expect(
+            await expect(
               async () =>
                 await prepareFestivalActivity.addInquiryRequest(activity.id, {
                   ...quatreHeras,
@@ -707,7 +707,7 @@ describe("Inquiry section of festival activity preparation", () => {
           });
         } else {
           it("should indicate that barriers inquiry requests section is locked", async () => {
-            expect(
+            await expect(
               async () =>
                 await prepareFestivalActivity.updateInquiryRequest(
                   activity.id,
@@ -734,7 +734,7 @@ describe("Inquiry section of festival activity preparation", () => {
           });
         } else {
           it("should indicate that barriers inquiry requests section is locked", async () => {
-            expect(
+            await expect(
               async () =>
                 await prepareFestivalActivity.removeInquiryRequest(
                   activity.id,
@@ -759,7 +759,7 @@ describe("Inquiry section of festival activity preparation", () => {
           });
         } else {
           it("should indicate that electricty inquiry requests section is lock", async () => {
-            expect(
+            await expect(
               async () =>
                 await prepareFestivalActivity.addInquiryRequest(activity.id, {
                   ...cinqGuirlandeLED,
@@ -786,7 +786,7 @@ describe("Inquiry section of festival activity preparation", () => {
           });
         } else {
           it("should indicate that electricty inquiry requests section is lock", async () => {
-            expect(
+            await expect(
               async () =>
                 await prepareFestivalActivity.updateInquiryRequest(
                   activity.id,
@@ -815,7 +815,7 @@ describe("Inquiry section of festival activity preparation", () => {
           });
         } else {
           it("should indicate that electricty inquiry requests section is locked", async () => {
-            expect(
+            await expect(
               async () =>
                 await prepareFestivalActivity.removeInquiryRequest(
                   activity.id,
@@ -872,7 +872,7 @@ describe("Inquiry section of festival activity preparation", () => {
   describe("when all reviewers approved inquiry that doesn't have any request", () => {
     describe("when trying to add time window", () => {
       it("should indicate that inquiry section is locked", async () => {
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.addTimeWindowInInquiry(
               approvedByAllInquiryOwnersWithoutRequest.id,
@@ -883,7 +883,7 @@ describe("Inquiry section of festival activity preparation", () => {
     });
     describe("when trying to update a time window", () => {
       it("should indicate that inquiry section is locked", async () => {
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.updateTimeWindowInInquiry(
               approvedByAllInquiryOwnersWithoutRequest.id,
@@ -895,7 +895,7 @@ describe("Inquiry section of festival activity preparation", () => {
     });
     describe("when trying to remove a time window", () => {
       it("should indicate that inquiry section is locked", async () => {
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.removeTimeWindowFromInquiry(
               approvedByAllInquiryOwnersWithoutRequest.id,
@@ -953,7 +953,7 @@ describe("Inquiry section of festival activity preparation", () => {
         `(
           "should indicate that $activityName is already approved by logistic team",
           async ({ activityId }) => {
-            expect(
+            await expect(
               async () =>
                 await prepareFestivalActivity.clearInquiry(activityId),
             ).rejects.toThrow(PrepareError.AlreadyApprovedBy);

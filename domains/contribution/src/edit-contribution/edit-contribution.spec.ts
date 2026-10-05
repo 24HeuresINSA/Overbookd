@@ -65,7 +65,7 @@ describe("Edit contribution", () => {
     });
     describe("when new amount is less than 100 cents", () => {
       it("should indicate that the minimum amount is 100 cents", async () => {
-        expect(
+        await expect(
           async () =>
             await edit.amount(
               noelContrib.adherentId,
@@ -82,7 +82,7 @@ describe("Edit contribution", () => {
     const adherents = new InMemoryAdherents([noel, lea]);
     const edit = new EditContribution(contributions, adherents);
     it("should indicate that the contribution does not exist", async () => {
-      expect(
+      await expect(
         async () => await edit.amount(200, CURRENT_EDITION, VALID_AMOUNT),
       ).rejects.toThrow(NotFoundContribution);
     });

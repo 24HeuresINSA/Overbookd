@@ -55,7 +55,7 @@ describe("Join teams", () => {
       const member = { id: userId, name: userName };
       const joiningTeams = { member, teams };
       it("should apply without issue", async () => {
-        expect(joinTeams.apply(joiningTeams)).resolves.ok;
+        await expect(joinTeams.apply(joiningTeams)).resolves.not.toThrow();
       });
       it("should publish a teams joined event", async () => {
         const expectedEvent = { type: TEAMS_JOINED, data: joiningTeams };
@@ -76,7 +76,7 @@ describe("Join teams", () => {
   describe("when user is already member of all the teams", () => {
     const joiningTeams = { member: shogosse, teams: [SOFT] };
     it("should apply without issue", async () => {
-      expect(joinTeams.apply(joiningTeams)).resolves.ok;
+      await expect(joinTeams.apply(joiningTeams)).resolves.not.toThrow();
     });
     it("should not publish a teams joined event", async () => {
       await joinTeams.apply(joiningTeams);

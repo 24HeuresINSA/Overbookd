@@ -21,11 +21,11 @@ import {
   SignageNotFound,
 } from "../festival-activity.error.js";
 import { LocationIsRequired } from "./section-aggregates/signages.js";
-import { signa } from "../../common/review.js";
 import { PrepareError } from "./prepare-in-review-festival-activity.js";
 import { afficheJustDanceA2 } from "../festival-activity.fake.js";
 import { agora, creuxCgu, local24h } from "../festival-activity.fake.js";
 import { AssignCatalogItemInDraftActivity } from "./prepare-draft-festival-activity.js";
+import { SIGNA } from "@overbookd/team-code";
 
 const panneauEscapeGameInCatalog: SignageCatalogItem = {
   id: 1,
@@ -95,10 +95,10 @@ describe("Signa section of festival activity preparation", () => {
   `(
     "when trying to reset location to null on in review one like $activityName",
     ({ activityId }) => {
-      it("should indicate that a location is required", () => {
+      it("should indicate that a location is required", async () => {
         const update = { location: null };
 
-        expect(async () =>
+        await expect(async () =>
           prepareFestivalActivity.updateSignaSection(activityId, update),
         ).rejects.toThrow(LocationIsRequired);
       });
@@ -143,7 +143,7 @@ describe("Signa section of festival activity preparation", () => {
           it("should indicate that signage already exists", async () => {
             const signage = { text, size, type, quantity: 5 };
 
-            expect(
+            await expect(
               async () =>
                 await prepareFestivalActivity.addSignage(activityId, signage),
             ).rejects.toThrow(SignageAlreadyExists);
@@ -202,7 +202,7 @@ describe("Signa section of festival activity preparation", () => {
           comment: "Oui",
         };
 
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.updateSignage(activityId, signage),
         ).rejects.toThrow(SignageNotFound);
@@ -223,7 +223,7 @@ describe("Signa section of festival activity preparation", () => {
           ...update,
         };
 
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.updateSignage(activityId, signage),
         ).rejects.toThrow(SignageAlreadyExists);
@@ -251,10 +251,10 @@ describe("Signa section of festival activity preparation", () => {
     },
   );
 
-  describe(`when ${approvedBySigna.general.name} is already validated by ${signa}`, () => {
+  describe(`when ${approvedBySigna.general.name} is already validated by ${SIGNA}`, () => {
     describe("when trying to update location", () => {
       it("should indicate that signa section is locked", async () => {
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.updateSignaSection(
               approvedBySigna.id,
@@ -265,7 +265,7 @@ describe("Signa section of festival activity preparation", () => {
     });
     describe("when trying to add a signage", () => {
       it("should indicate that signa section is locked", async () => {
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.addSignage(approvedBySigna.id, {
               quantity: 10,
@@ -278,7 +278,7 @@ describe("Signa section of festival activity preparation", () => {
     });
     describe("when trying to update a signage", () => {
       it("should indicate that signa section is locked", async () => {
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.updateSignage(approvedBySigna.id, {
               id: afficheJustDanceA2.id,
@@ -292,7 +292,7 @@ describe("Signa section of festival activity preparation", () => {
     });
     describe("when trying to remove a signage", () => {
       it("should indicate that signa section is locked", async () => {
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.removeSignage(
               approvedBySigna.id,
@@ -331,7 +331,7 @@ describe("Signa section of festival activity preparation", () => {
 
   describe("when trying to link a catalog item to a signage request from a draft festival activity", () => {
     it("should indicate that we can't link catalog item to signage request from draft festival activity", async () => {
-      expect(
+      await expect(
         async () =>
           await prepareFestivalActivity.linkSignageToCatalogItem(
             escapeGame.id,

@@ -45,7 +45,9 @@ describe("Revoke permission", () => {
     ({ permission, team }) => {
       const revokingPermission = { permission, from: team };
       it("should apply without issue", async () => {
-        expect(revokePermission.apply(revokingPermission)).resolves.ok;
+        await expect(
+          revokePermission.apply(revokingPermission),
+        ).resolves.not.toThrow();
       });
       it("should not have the permission anymore", async () => {
         await revokePermission.apply(revokingPermission);
@@ -68,7 +70,9 @@ describe("Revoke permission", () => {
     const permission = WRITE_FA;
     const revokingPermission = { permission, from: SOFT } as const;
     it("should apply without issue", async () => {
-      expect(revokePermission.apply(revokingPermission)).resolves.ok;
+      await expect(
+        revokePermission.apply(revokingPermission),
+      ).resolves.not.toThrow();
     });
     it("should not publish a permission revoked event", async () => {
       await revokePermission.apply(revokingPermission);
@@ -80,7 +84,9 @@ describe("Revoke permission", () => {
     const permission = WRITE_FA;
     const revokingPermission = { permission, from: "unknown" } as const;
     it("should apply without issue", async () => {
-      expect(revokePermission.apply(revokingPermission)).resolves.ok;
+      await expect(
+        revokePermission.apply(revokingPermission),
+      ).resolves.not.toThrow();
     });
     it("should not publish a permission revoked event", async () => {
       await revokePermission.apply(revokingPermission);

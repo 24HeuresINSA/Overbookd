@@ -181,7 +181,7 @@ describe("Approve festival task", () => {
   describe("when trying to approve task even with not assigned to drive inquiries as matos", () => {
     it("should indicate that inquiries should been assigned to a drive", async () => {
       const approval: Approval<"FT"> = { team: LOG_MATOS, reviewer: noel };
-      expect(
+      await expect(
         async () => await review.approve(withInvalidInquiries.id, approval),
       ).rejects.toThrow(new ShouldAssignDrive("FT"));
     });
@@ -199,7 +199,7 @@ describe("Approve festival task", () => {
   describe("when approving an already approved festival task", () => {
     it("should indicate task already approved", async () => {
       const approval: Approval<"FT"> = { team: HUMAIN, reviewer: george };
-      expect(
+      await expect(
         async () => await review.approve(alreadyApprovedByHumain.id, approval),
       ).rejects.toThrow(AlreadyApproved);
     });
@@ -207,7 +207,7 @@ describe("Approve festival task", () => {
   describe("when approving a festival task with no need to be reviewed by elec", () => {
     it("should indicate that elec is not asking to review it", async () => {
       const approval: Approval<"FT"> = { team: LOG_ELEC, reviewer: george };
-      expect(
+      await expect(
         async () => await review.approve(caissierBar.id, approval),
       ).rejects.toThrow(NotAskingToReview);
     });
@@ -281,7 +281,7 @@ describe("Reject festival task", () => {
   });
   describe("when rejecting a task with no need to be reviewed by elec", () => {
     it("should indicate elec is not asking to review it", async () => {
-      expect(
+      await expect(
         async () =>
           await review.reject(uninstallPreventionVillage.id, {
             team: LOG_ELEC,

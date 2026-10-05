@@ -53,7 +53,7 @@ describe("Define barrel price", () => {
     it("should indicate that a similar barrel exist", async () => {
       const barrels = new InMemoryBarrels([ambree]);
       const defineBarrelPrice = new DefineBarrelPrice(barrels);
-      expect(
+      await expect(
         async () => await defineBarrelPrice.add({ ...ambree, price: 8500 }),
       ).rejects.toThrow(SimilarBarrelExist);
     });
@@ -156,7 +156,7 @@ describe("Define barrel price", () => {
       const price = ambree.price + 1000;
       const barrels = new InMemoryBarrels();
       const defineBarrelPrice = new DefineBarrelPrice(barrels);
-      expect(async () => {
+      await expect(async () => {
         await defineBarrelPrice.adjustPrice({ slug, price });
       }).rejects.toThrow(BarrelNotConfigured);
     });

@@ -74,10 +74,10 @@ describe("Take part in Charisma Event", () => {
   `(
     "when name $name generates an empty slug",
     ({ name, charismaPerHour, eventDate, participants }) => {
-      it("should indicate that the name is not valid", () => {
+      it("should indicate that the name is not valid", async () => {
         const eventForm = { name, charismaPerHour, eventDate };
         const apply = () => takePart.takePart(eventForm, participants);
-        expect(apply).rejects.toThrow(InvalidName);
+        await expect(apply).rejects.toThrow(InvalidName);
       });
     },
   );
@@ -90,10 +90,10 @@ describe("Take part in Charisma Event", () => {
   `(
     "when taking part in $name",
     ({ name, charismaPerHour, eventDate, participants, expectedError }) => {
-      it("should indicate that the charisma per hour is not valid", () => {
+      it("should indicate that the charisma per hour is not valid", async () => {
         const eventForm = { name, charismaPerHour, eventDate };
         const apply = () => takePart.takePart(eventForm, participants);
-        expect(apply).rejects.toThrow(expectedError);
+        await expect(apply).rejects.toThrow(expectedError);
       });
     },
   );
@@ -105,33 +105,33 @@ describe("Take part in Charisma Event", () => {
       eventDate: eventDate1,
     };
     describe("when participants are empty", () => {
-      it("should indicate that participants are required", () => {
+      it("should indicate that participants are required", async () => {
         const apply = () => takePart.takePart(eventForm, []);
-        expect(apply).rejects.toThrow(NoParticipant);
+        await expect(apply).rejects.toThrow(NoParticipant);
       });
     });
     describe("when at least one participant has a null or negative number of hours", () => {
-      it("should indicate that hours should be positive", () => {
+      it("should indicate that hours should be positive", async () => {
         const participants = [{ id: lea.id, hours: 0 }];
         const apply = () => takePart.takePart(eventForm, participants);
-        expect(apply).rejects.toThrow(InvalidParticipantHours);
+        await expect(apply).rejects.toThrow(InvalidParticipantHours);
       });
     });
     describe("when there are same participants multiple times", () => {
-      it("should indicate that participants should be unique", () => {
+      it("should indicate that participants should be unique", async () => {
         const participants = [
           { id: lea.id, hours: 1 },
           { id: lea.id, hours: 2 },
         ];
         const apply = () => takePart.takePart(eventForm, participants);
-        expect(apply).rejects.toThrow(SameParticipantMultipleTimes);
+        await expect(apply).rejects.toThrow(SameParticipantMultipleTimes);
       });
     });
     describe("when event already exists for participants", () => {
       it("should indicate that event already exists", async () => {
         await takePart.takePart(eventForm, oneParticipant);
         const apply = () => takePart.takePart(eventForm, oneParticipant);
-        expect(apply).rejects.toThrow(
+        await expect(apply).rejects.toThrow(
           "Lea Mouyno participe(nt) déjà à cet évènement",
         );
       });
