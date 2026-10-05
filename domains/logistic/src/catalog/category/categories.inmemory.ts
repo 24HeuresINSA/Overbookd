@@ -63,7 +63,8 @@ export class InMemoryCatalogCategories implements CatalogCategories {
     category: Omit<CatalogCategory, "id">,
   ): Promise<CatalogCategory> {
     const existingCategory = this.categories.find(
-      ({ path }) => category.path === path);
+      ({ path }) => category.path === path,
+    );
     if (existingCategory) {
       throw new CategoryAlreadyExists(existingCategory.name);
     }
