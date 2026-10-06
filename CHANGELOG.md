@@ -1,3 +1,17 @@
+## [4.2.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.1.0...v4.2.0) (2026-10-06)
+
+### Features
+
+* **assignment:** add mobilization and assignment for all members of a team [#2668](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2668) ([b0fb9ca](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b0fb9ca284b7d7d06961896bcae10c6a8752a9e2))
+* **break-period:** allow half-hour break periods [#2697](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2697) ([806ca16](https://gitlab.com/24-heures-insa/overbookd-mono/commit/806ca1652c3c98c686bc1af8724a610d19c59314))
+
+### Bug Fixes
+
+* **api:** fix email templates build path [#2812](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2812) ([30baebd](https://gitlab.com/24-heures-insa/overbookd-mono/commit/30baebdcbcc235bf44c2517275188bdf8ed23e0e))
+* **fa:** add an extra hour by default to the inquiry end field in init form [#2810](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2810) ([1befb9b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1befb9b4163a19f775ca3a50011f646188e8e453))
+* **ft:** add an extra hour by default to the mobilization end field in the creation form [#2809](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2809) ([44d3396](https://gitlab.com/24-heures-insa/overbookd-mono/commit/44d33968fb5fbdaa65d6bd40163db2d5257ac57e))
+* **ft:** update the display of the location of the parent FA's equipment [#2469](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2469) ([b95d345](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b95d34545db36a7b523c486994c728171f196bfd))
+
 ## [4.1.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.0.3...v4.1.0) (2026-10-01)
 
 ### Features
