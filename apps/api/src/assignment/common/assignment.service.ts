@@ -3,10 +3,10 @@ import {
   Assignment,
   AssignmentIdentifier,
   Assignments,
+  AssignWholeTeam,
   Planning,
   PlanningEvent,
   VolunteersForAssignment,
-  WholeTeamAssignments,
 } from "@overbookd/assignment";
 import {
   VolunteerWithAssignmentStats,
@@ -38,24 +38,24 @@ export class AssignmentService implements OnApplicationBootstrap {
     private readonly stats: AssignmentStatsRepository,
     private readonly planning: Planning,
     private readonly eventStore: DomainEventService,
-    private readonly wholeTeamAssignments: WholeTeamAssignments,
+    private readonly assignWholeTeam: AssignWholeTeam,
   ) {}
 
   onApplicationBootstrap(): void {
     this.eventStore.teamsJoined.subscribe(({ data: { member } }) =>
-      this.wholeTeamAssignments.addMissingTeamAssignments(member.id),
+      this.assignWholeTeam.addMissingTeamAssignments(member.id),
     );
 
     this.eventStore.volunteersEnrolled.subscribe(({ data: { candidate } }) =>
-      this.wholeTeamAssignments.addMissingTeamAssignments(candidate.id),
+      this.assignWholeTeam.addMissingTeamAssignments(candidate.id),
     );
 
     this.eventStore.organizerEnrolled.subscribe(({ data: { candidate } }) =>
-      this.wholeTeamAssignments.addMissingTeamAssignments(candidate.id),
+      this.assignWholeTeam.addMissingTeamAssignments(candidate.id),
     );
 
     this.eventStore.teamLeft.subscribe(({ data: { member } }) =>
-      this.wholeTeamAssignments.removeIrrelevantTeamAssignments(member.id),
+      this.assignWholeTeam.removeIrrelevantTeamAssignments(member.id),
     );
   }
 

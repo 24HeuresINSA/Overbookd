@@ -7,7 +7,7 @@ import {
   noel,
 } from "../test-resources/assign-task-to-volunteer.test.utils";
 import { InMemoryTeamAssignments } from "./team-assignments.inmemory";
-import { WholeTeamAssignments } from "./whole-team-assignments";
+import { AssignWholeTeam } from "./assign-whole-team";
 import { PLAIZIR, VIEUX } from "@overbookd/team-code";
 import { ALL_TEAM_MEMBERS } from "@overbookd/festival-event-constants";
 import { Assignment } from "../assignment";
@@ -23,7 +23,7 @@ const missingOneHardAndAllVieuxDemandedWithNoelAssignedAssignment =
     { id: noel.id, as: VIEUX },
   ]);
 
-const missingOneHardAllVieuxDemandedAndAllPlaizirWithNoelAssignedAssignment =
+const missingOneHardAllVieuxAndAllPlaizirDemandedWithNoelAssignedAssignment =
   missingOneHardAndAllVieuxDemandedAssignment
     .withRequestedTeams([
       ...missingOneHardAndAllVieuxDemandedAssignment.assignment.demands,
@@ -33,8 +33,8 @@ const missingOneHardAllVieuxDemandedAndAllPlaizirWithNoelAssignedAssignment =
       ...missingOneHardAndAllVieuxDemandedAssignment.assignment.assignees,
       { id: noel.id, as: VIEUX },
     ]);
-const missingOneHardAllVieuxDemandedAndAllPlaizirWithNoelAssignedAsPlaizirAssignment =
-  missingOneHardAllVieuxDemandedAndAllPlaizirWithNoelAssignedAssignment.withAssignees(
+const missingOneHardAllVieuxAndAllPlaizirDemandedWithNoelAssignedAsPlaizirAssignment =
+  missingOneHardAllVieuxAndAllPlaizirDemandedWithNoelAssignedAssignment.withAssignees(
     [
       ...missingOneHardAndAllVieuxDemandedAssignment.assignment.assignees,
       { id: noel.id, as: PLAIZIR },
@@ -50,7 +50,7 @@ describe("Whole team assignments", () => {
   const volunteers = [noel, lea];
   let assignments: Assignment[];
   let teamAssignments: InMemoryTeamAssignments;
-  let wholeTeamAssignments: WholeTeamAssignments;
+  let assignWholeTeam: AssignWholeTeam;
 
   describe("when adding missing whole team assignments", () => {
     describe("when there are missing team assignments", () => {
@@ -61,8 +61,8 @@ describe("Whole team assignments", () => {
           fulfilledAssignment.assignment,
         ];
         teamAssignments = new InMemoryTeamAssignments(assignments, volunteers);
-        wholeTeamAssignments = new WholeTeamAssignments(teamAssignments);
-        await wholeTeamAssignments.addMissingTeamAssignments(lea.id);
+        assignWholeTeam = new AssignWholeTeam(teamAssignments);
+        await assignWholeTeam.addMissingTeamAssignments(lea.id);
       });
       it("should add the assignments", () => {
         const expectedAssignments = [
@@ -81,8 +81,8 @@ describe("Whole team assignments", () => {
           missingTwoVieuxAssignment.assignment,
         ];
         teamAssignments = new InMemoryTeamAssignments(assignments, volunteers);
-        wholeTeamAssignments = new WholeTeamAssignments(teamAssignments);
-        await wholeTeamAssignments.addMissingTeamAssignments(lea.id);
+        assignWholeTeam = new AssignWholeTeam(teamAssignments);
+        await assignWholeTeam.addMissingTeamAssignments(lea.id);
       });
       it("should not add any assignment", () => {
         expect(teamAssignments.all).toEqual(assignments);
@@ -99,8 +99,8 @@ describe("Whole team assignments", () => {
           fulfilledWithLeaAssignedAssignment.assignment,
         ];
         teamAssignments = new InMemoryTeamAssignments(assignments, volunteers);
-        wholeTeamAssignments = new WholeTeamAssignments(teamAssignments);
-        await wholeTeamAssignments.removeIrrelevantTeamAssignments(noel.id);
+        assignWholeTeam = new AssignWholeTeam(teamAssignments);
+        await assignWholeTeam.removeIrrelevantTeamAssignments(noel.id);
       });
       it("should remove the assignments", () => {
         const expectedAssignments = [
@@ -115,15 +115,15 @@ describe("Whole team assignments", () => {
     describe("when there is an irrelevant assignment that should be replaced by another", () => {
       beforeAll(async () => {
         assignments = [
-          missingOneHardAllVieuxDemandedAndAllPlaizirWithNoelAssignedAssignment.assignment,
+          missingOneHardAllVieuxAndAllPlaizirDemandedWithNoelAssignedAssignment.assignment,
         ];
         teamAssignments = new InMemoryTeamAssignments(assignments, volunteers);
-        wholeTeamAssignments = new WholeTeamAssignments(teamAssignments);
-        await wholeTeamAssignments.removeIrrelevantTeamAssignments(noel.id);
+        assignWholeTeam = new AssignWholeTeam(teamAssignments);
+        await assignWholeTeam.removeIrrelevantTeamAssignments(noel.id);
       });
       it("should change the assignments as team", () => {
         const expectedAssignments = [
-          missingOneHardAllVieuxDemandedAndAllPlaizirWithNoelAssignedAsPlaizirAssignment.assignment,
+          missingOneHardAllVieuxAndAllPlaizirDemandedWithNoelAssignedAsPlaizirAssignment.assignment,
         ];
         expect(teamAssignments.all).toEqual(expectedAssignments);
       });
@@ -136,8 +136,8 @@ describe("Whole team assignments", () => {
           missingTwoVieuxAssignment.assignment,
         ];
         teamAssignments = new InMemoryTeamAssignments(assignments, volunteers);
-        wholeTeamAssignments = new WholeTeamAssignments(teamAssignments);
-        await wholeTeamAssignments.removeIrrelevantTeamAssignments(lea.id);
+        assignWholeTeam = new AssignWholeTeam(teamAssignments);
+        await assignWholeTeam.removeIrrelevantTeamAssignments(lea.id);
       });
       it("should not remove any assignment", () => {
         expect(teamAssignments.all).toEqual(assignments);

@@ -22,7 +22,7 @@ export type TeamAssignments = {
   ): Promise<void>;
 };
 
-export class WholeTeamAssignments {
+export class AssignWholeTeam {
   constructor(private readonly teamAssignments: TeamAssignments) {}
 
   async addMissingTeamAssignments(volunteerId: Volunteer["id"]): Promise<void> {

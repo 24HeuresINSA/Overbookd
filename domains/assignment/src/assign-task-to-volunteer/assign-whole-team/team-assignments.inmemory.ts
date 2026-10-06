@@ -7,7 +7,7 @@ import {
 import {
   AssignmentIdentifierWithTeam,
   TeamAssignments,
-} from "./whole-team-assignments.js";
+} from "./assign-whole-team.js";
 import { Volunteer } from "../../volunteer.js";
 import { ALL_TEAM_MEMBERS } from "@overbookd/festival-event-constants";
 
