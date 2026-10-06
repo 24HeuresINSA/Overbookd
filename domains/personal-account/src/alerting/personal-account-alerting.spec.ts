@@ -2,8 +2,7 @@ import { describe, it, expect, beforeAll } from "vitest";
 import { Adherents } from "./adherents.js";
 import { PersonalAccountAlerting } from "./personal-account-alerting.js";
 import { InMemoryAdhrents } from "./adherents.in-memory.js";
-import { CURRENT_BALANCE_MESSAGE } from "../balance/current-balance.constant.js";
-import { NEGATIVE_BALANCE } from "../in-debt/in-debt-alerting.constant.js";
+import { NEGATIVE_BALANCE } from "./in-debt-alerting.constant.js";
 
 const adherentWithCredit = { id: 1, balance: 13 };
 const adherentWithEmptyAccount = { id: 2, balance: 0 };
@@ -21,17 +20,9 @@ describe("In Debt Alerting", () => {
     personalAccountAlert = new PersonalAccountAlerting(adherents);
   });
   describe("when adherent has positive balance", () => {
-    it("should generate current balance alert", async () => {
+    it("shouldn't generate alert", async () => {
       const alert = await personalAccountAlert.for(adherentWithCredit.id);
-      expect(alert).not.toBe(undefined);
-    });
-    it("should indicate adherent has positive balance", async () => {
-      const alert = await personalAccountAlert.for(adherentWithCredit.id);
-      expect(alert?.summary).toBe(CURRENT_BALANCE_MESSAGE);
-    });
-    it("should indicate adherent balance", async () => {
-      const alert = await personalAccountAlert.for(adherentWithCredit.id);
-      expect(alert?.balance).toBe(adherentWithCredit.balance);
+      expect(alert).toBe(undefined);
     });
   });
   describe("when adherent has balance to 0", () => {
