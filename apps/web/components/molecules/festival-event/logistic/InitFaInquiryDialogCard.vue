@@ -22,7 +22,7 @@
 
 <script lang="ts" setup>
 import type { CatalogGear, InitInquiryRequest } from "@overbookd/http";
-import { type IProvidePeriod, Period } from "@overbookd/time";
+import { type IProvidePeriod, ONE_HOUR_IN_MS, Period } from "@overbookd/time";
 
 const configurationStore = useConfigurationStore();
 const faStore = useFestivalActivityStore();
@@ -30,7 +30,9 @@ const faStore = useFestivalActivityStore();
 const gear = ref<CatalogGear | undefined>();
 const quantity = ref<number>(1);
 const start = ref<Date>(configurationStore.eventStartDate);
-const end = ref<Date>(configurationStore.eventStartDate);
+const end = ref<Date>(
+  new Date(configurationStore.eventStartDate.getTime() + ONE_HOUR_IN_MS),
+);
 
 const period = computed<IProvidePeriod>(() => ({
   start: start.value,
@@ -63,7 +65,9 @@ const initInquiry = () => {
   gear.value = undefined;
   quantity.value = 1;
   start.value = configurationStore.eventStartDate;
-  end.value = configurationStore.eventStartDate;
+  end.value = new Date(
+    configurationStore.eventStartDate.getTime() + ONE_HOUR_IN_MS,
+  );
 };
 </script>
 
