@@ -15,7 +15,7 @@
     "assets": [
       {
         "include": "**/*.ejs",
-        "outDir": "dist/apps/api/src",
+        "outDir": "dist/src",
         "watchAssets": true
       },
       {
