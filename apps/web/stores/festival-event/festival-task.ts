@@ -42,6 +42,7 @@ import {
 } from "~/utils/assignment/assignment";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import { updateItemToList } from "@overbookd/list";
+import { FestivalActivityRepository } from "~/repositories/festival-event/festival-activity.repository";
 
 const repo = FestivalTaskRepository;
 
@@ -176,6 +177,14 @@ export const useFestivalTaskStore = defineStore("festival-task", {
       const res = await repo.updateGeneral(this.selectedTask.id, general);
       if (isHttpError(res)) return;
       this.selectedTask = castTaskWithDate(res);
+    },
+
+    /* UPDATE PARENT FA SECTION */
+    async linkDriveFromParentActivity(link: AssignDrive) {
+      const activityId = this.selectedTask.festivalActivity.id;
+      const res = await FestivalActivityRepository.linkDrive(activityId, link);
+      if (isHttpError(res)) return;
+      await this.fetchTask(this.selectedTask.id);
     },
 
     /* UPDATE INSTRUCTIONS SECTION */
