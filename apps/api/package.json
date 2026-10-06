@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/api",
-  "version": "3.1.22",
+  "version": "3.1.23",
   "description": "API pour le logiciel de gestion du festival des 24 heures de l'INSA",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -30,8 +30,8 @@
     "version:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
     "version:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
     "version:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
-    "test:unit": "vitest --config ../../vitest.config.ts",
-    "test:unit:ci": "vitest --config ../../vitest-ci.config.ts --watch=false",
+    "test:unit": "vitest --config ../../vitest.config.mts",
+    "test:unit:ci": "vitest --config ../../vitest-ci.config.mts --watch=false",
     "prisma:generate": "npx prisma generate",
     "database:init": "pnpm prisma:generate && pnpm database:migrate && pnpm database:seed",
     "database:migrate": "npx prisma migrate deploy",

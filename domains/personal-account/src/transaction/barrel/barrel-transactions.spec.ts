@@ -166,9 +166,9 @@ describe("Create barrel transactions", () => {
       { consumer: drapsag.id, consumption: 1 },
       { consumer: lea.id, consumption: -3 },
     ];
-    it("should indicate that consumption cannot be negative", () => {
+    it("should indicate that consumption cannot be negative", async () => {
       const applyConsumption = () => create.apply(ambree, consumers);
-      expect(applyConsumption).rejects.toThrow(
+      await expect(applyConsumption).rejects.toThrow(
         AtLeastOneInsufficientConsumption,
       );
     });
@@ -178,17 +178,17 @@ describe("Create barrel transactions", () => {
       { consumer: drapsag.id, consumption: 0 },
       { consumer: lea.id, consumption: 1 },
     ];
-    it("should indicate that consumption cannot be null", () => {
+    it("should indicate that consumption cannot be null", async () => {
       const applyConsumption = () => create.apply(ambree, consumers);
-      expect(applyConsumption).rejects.toThrow(
+      await expect(applyConsumption).rejects.toThrow(
         AtLeastOneInsufficientConsumption,
       );
     });
   });
   describe("when barrel is consumed by zero person", () => {
-    it("should indicate that at least one consumer is required", () => {
+    it("should indicate that at least one consumer is required", async () => {
       const applyConsumption = () => create.apply(ambree, []);
-      expect(applyConsumption).rejects.toThrow(NoConsumer);
+      await expect(applyConsumption).rejects.toThrow(NoConsumer);
     });
   });
 });

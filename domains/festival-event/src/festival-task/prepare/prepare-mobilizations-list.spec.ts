@@ -146,7 +146,7 @@ describe("Prepare festival task mobilizations list", () => {
         "when $taskName task is $taskStatus and mobilization has not volunteer nor team requested",
         ({ task, mobilization }) => {
           it("should indicate a mobilization should have at least one volunteer or team", async () => {
-            expect(
+            await expect(
               async () =>
                 await prepare.addMobilization(task.id, mobilization.form, noel),
             ).rejects.toThrow(
@@ -164,7 +164,7 @@ describe("Prepare festival task mobilizations list", () => {
         "when $taskName task is $taskStatus and mobilization has an invalid number of team members requested",
         ({ task, mobilization }) => {
           it("should indicate a mobilization should have a valid number of team members", async () => {
-            expect(
+            await expect(
               async () =>
                 await prepare.addMobilization(task.id, mobilization.form, noel),
             ).rejects.toThrow(MobilizationInvalidTeamCount);
@@ -314,7 +314,7 @@ describe("Prepare festival task mobilizations list", () => {
           const task = installEscapeGame;
           const mobilization =
             friday11hfriday18hMobilization.withDurationSplit(2);
-          expect(
+          await expect(
             async () =>
               await prepare.addMobilization(task.id, mobilization.form, noel),
           ).rejects.toThrow(SplitDurationIsNotPeriodDivider);
@@ -340,7 +340,7 @@ describe("Prepare festival task mobilizations list", () => {
     describe("when adding a mobilization for the same period than an existing one", () => {
       it("should indicate an existing mobilization exist on the same period", async () => {
         const task = presentEscapeGame;
-        expect(
+        await expect(
           async () =>
             await prepare.addMobilization(
               task.id,
@@ -380,7 +380,7 @@ describe("Prepare festival task mobilizations list", () => {
         "when removing the last mobilization of $taskName task with status $taskStatus",
         ({ task, mobilization }) => {
           it("should indicate that at least one mobilization is mandatory", async () => {
-            expect(
+            await expect(
               async () =>
                 await prepare.removeMobilization(
                   task.id,
@@ -447,7 +447,7 @@ describe("Prepare festival task mobilizations list", () => {
         `(
           "should indicate that split duration doesn't match period duration",
           async ({ task, update, mobilization }) => {
-            expect(
+            await expect(
               async () =>
                 await prepare.updateMobilization(
                   task.id,
@@ -467,7 +467,7 @@ describe("Prepare festival task mobilizations list", () => {
         `(
           "should indicate that period is not valid",
           async ({ task, update, mobilization }) => {
-            expect(
+            await expect(
               async () =>
                 await prepare.updateMobilization(
                   task.id,
@@ -487,7 +487,7 @@ describe("Prepare festival task mobilizations list", () => {
             end: task.mobilizations[1].end,
             durationSplitInHour: null,
           };
-          expect(
+          await expect(
             async () =>
               await prepare.updateMobilization(
                 task.id,
@@ -505,7 +505,7 @@ describe("Prepare festival task mobilizations list", () => {
         const mobilizationId = friday18hsaturday10hMobilization.mobilization.id;
         const update = { durationSplitInHour: null };
 
-        expect(
+        await expect(
           async () =>
             await prepare.updateMobilization(
               task.id,
@@ -567,7 +567,7 @@ describe("Prepare festival task mobilizations list", () => {
       `(
         "should indicate a mobilization should have a valid number of team members",
         async ({ task, mobilization, team }) => {
-          expect(
+          await expect(
             async () =>
               await prepare.addTeamToMobilization(
                 task.id,
@@ -609,7 +609,7 @@ describe("Prepare festival task mobilizations list", () => {
         "when removing the last team of a $taskName task with status $taskStatus",
         ({ task, mobilization, team }) => {
           it("should indicate that at least one team or one volunteer is mandatory", async () => {
-            expect(
+            await expect(
               async () =>
                 await prepare.removeTeamFromMobilization(
                   task.id,
@@ -703,7 +703,7 @@ describe("Prepare festival task mobilizations list", () => {
         "when removing the last volunteer of a $taskName task with status $taskStatus",
         ({ task, mobilization, volunteer }) => {
           it("should indicate that at least one team or one volunteer is mandatory", async () => {
-            expect(
+            await expect(
               async () =>
                 await prepare.removeVolunteerFromMobilization(
                   task.id,
@@ -758,7 +758,7 @@ describe("Prepare festival task mobilizations list", () => {
             describe("when trying to add volunteer to existing mobilization", () => {
               it("should indicate task is already approved by humain", async () => {
                 const mobilization = task.mobilizations[0];
-                expect(
+                await expect(
                   async () =>
                     await prepare.addVolunteerToMobilization(
                       task.id,
@@ -774,7 +774,7 @@ describe("Prepare festival task mobilizations list", () => {
               it("should indicate task is already approved by humain", async () => {
                 const mobilization = task.mobilizations[0];
                 const volunteer = mobilization.volunteers[0];
-                expect(
+                await expect(
                   async () =>
                     await prepare.removeVolunteerFromMobilization(
                       task.id,
@@ -790,7 +790,7 @@ describe("Prepare festival task mobilizations list", () => {
               it("should indicate task is already approved by humain", async () => {
                 const mobilization = task.mobilizations[0];
                 const team = { team: "elec", count: 5 };
-                expect(
+                await expect(
                   async () =>
                     await prepare.addTeamToMobilization(
                       task.id,
@@ -806,7 +806,7 @@ describe("Prepare festival task mobilizations list", () => {
               it("should indicate task is already approved by humain", async () => {
                 const mobilization = task.mobilizations[0];
                 const { team } = mobilization.teams[0];
-                expect(
+                await expect(
                   async () =>
                     await prepare.removeTeamFromMobilization(
                       task.id,
@@ -825,7 +825,7 @@ describe("Prepare festival task mobilizations list", () => {
             describe("when trying to add mobilization", () => {
               it(`should indicate task is already approved by ${approvers}`, async () => {
                 const form = friday18hsaturday10hMobilization.form;
-                expect(
+                await expect(
                   async () =>
                     await prepare.addMobilization(task.id, form, noel),
                 ).rejects.toThrow(AlreadyApprovedBy);
@@ -835,7 +835,7 @@ describe("Prepare festival task mobilizations list", () => {
               describe("when trying to remove mobilization which is not the last", () => {
                 it(`should indicate task is already approved by ${approvers}`, async () => {
                   const mobilization = task.mobilizations[0];
-                  expect(
+                  await expect(
                     async () =>
                       await prepare.removeMobilization(
                         task.id,
@@ -856,7 +856,7 @@ describe("Prepare festival task mobilizations list", () => {
               ({ update }) => {
                 it(`should indicate task is already approved by ${approvers}`, async () => {
                   const mobilization = task.mobilizations[0];
-                  expect(
+                  await expect(
                     async () =>
                       await prepare.updateMobilization(
                         task.id,

@@ -67,19 +67,19 @@ describe("Deposit", () => {
   });
 
   describe("when adding a deposit with negative amount", () => {
-    it("should indicate that amount cannot be negative", () => {
+    it("should indicate that amount cannot be negative", async () => {
       const negativeDepositForm = { amount: -10, depositor: olop.id };
       const applyDeposit = () => deposit.apply(negativeDepositForm);
 
-      expect(applyDeposit).rejects.toThrow(InsufficientAmount);
+      await expect(applyDeposit).rejects.toThrow(InsufficientAmount);
     });
   });
   describe("when adding a deposit with null amount", () => {
-    it("should indicate that amount cannot be negative", () => {
+    it("should indicate that amount cannot be negative", async () => {
       const nullDepositForm = { amount: 0, depositor: olop.id };
       const applyDeposit = () => deposit.apply(nullDepositForm);
 
-      expect(applyDeposit).rejects.toThrow(InsufficientAmount);
+      await expect(applyDeposit).rejects.toThrow(InsufficientAmount);
     });
   });
 
@@ -117,9 +117,9 @@ describe("Deposit", () => {
       { amount: 100, depositor: olop.id },
       { amount: -200, depositor: cul.id },
     ];
-    it("should indicate that amount cannot be negative or null", () => {
+    it("should indicate that amount cannot be negative or null", async () => {
       const applyMultipleDeposits = () => deposit.applyMultiple(depositForms);
-      expect(applyMultipleDeposits).rejects.toThrow(
+      await expect(applyMultipleDeposits).rejects.toThrow(
         AtLeastOneInsufficientAmount,
       );
     });

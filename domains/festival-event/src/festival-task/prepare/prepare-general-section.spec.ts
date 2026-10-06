@@ -67,7 +67,7 @@ describe("Prepare festival task general section", () => {
   describe("when trying to clear mandatory field of an in review task", () => {
     it("should indicate the mandatory field is required", async () => {
       const update = { team: null };
-      expect(
+      await expect(
         async () =>
           await prepare.updateGeneralSection(guardJustDance.id, update),
       ).rejects.toThrow("Une équipe responsable est nécessaire");
@@ -75,7 +75,7 @@ describe("Prepare festival task general section", () => {
   });
   describe("when trying to update an unexisting task", () => {
     it("should indicate task not found", async () => {
-      expect(
+      await expect(
         async () => await prepare.updateGeneralSection(10000, { name: "Test" }),
       ).rejects.toThrow(FestivalTaskNotFound);
     });
@@ -99,7 +99,7 @@ describe("Prepare festival task general section", () => {
   describe("when updating name when humain approved the task", () => {
     it("should indicate that general section are locked", async () => {
       const name = "Task with locked general section";
-      expect(
+      await expect(
         async () =>
           await prepare.updateGeneralSection(onlyApprovedByHumain.id, { name }),
       ).rejects.toThrow("La FT a déjà été validée par l'équipe humain.");

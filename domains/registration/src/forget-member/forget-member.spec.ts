@@ -117,28 +117,28 @@ describe("Forget member", () => {
   describe("when asking to forget a member", () => {
     describe("when they have a task assigned in futur", () => {
       it("should indicate that we can't forget about assigned member", async () => {
-        expect(
+        await expect(
           async () => await forget.apply(withTaskMember.id),
         ).rejects.toThrow(HAS_FUTURE_ASSIGNMENT_ERROR_MESSAGE);
       });
     });
     describe("when they have money in their account", () => {
       it("should indicate that we can't forget about member with money in their account", async () => {
-        expect(
+        await expect(
           async () => await forget.apply(positiveBalanceMember.id),
         ).rejects.toThrow(HAS_MONEY_ERROR_MESSAGE);
       });
     });
     describe("when they are in debt", () => {
       it("should indicate that we can't forget about in debt member", async () => {
-        expect(async () => await forget.apply(inDebtMember.id)).rejects.toThrow(
-          IN_DEBT_ERROR_MESSAGE,
-        );
+        await expect(
+          async () => await forget.apply(inDebtMember.id),
+        ).rejects.toThrow(IN_DEBT_ERROR_MESSAGE);
       });
     });
     describe("when they have activities", () => {
       it("should indicate that we can't forget about member with activities", async () => {
-        expect(
+        await expect(
           async () => await forget.apply(withActivitiesMember.id),
         ).rejects.toThrow(
           `${DEFAULT_ERROR_MESSAGE}Iel est affecté·e aux FA : #1.`,
@@ -147,7 +147,7 @@ describe("Forget member", () => {
     });
     describe("when they have tasks", () => {
       it("should indicate that we can't forget about member with tasks", async () => {
-        expect(
+        await expect(
           async () => await forget.apply(withTasksMember.id),
         ).rejects.toThrow(
           `${DEFAULT_ERROR_MESSAGE}Iel est affecté·e aux FT : #3.`,
@@ -156,7 +156,7 @@ describe("Forget member", () => {
     });
     describe("when they have open shared meals", () => {
       it("should indicate that we can't forget about member with future shared meals", async () => {
-        expect(
+        await expect(
           async () => await forget.apply(withOpenSharedMealsMember.id),
         ).rejects.toThrow(
           `${DEFAULT_ERROR_MESSAGE}Iel est inscrit·e à des repas partagés non cloturés: 01/01/2025 SOIR.`,

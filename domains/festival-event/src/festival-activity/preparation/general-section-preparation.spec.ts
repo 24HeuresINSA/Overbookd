@@ -149,7 +149,7 @@ describe("General section of festival activity preparation", () => {
               toPublish: true,
               ...update,
             };
-            expect(
+            await expect(
               async () =>
                 await prepareFestivalActivity.updateGeneralSection(
                   pcSecurite.id,
@@ -306,7 +306,7 @@ describe("General section of festival activity preparation", () => {
     describe("when trying to remove the last one on a public in review activity", () => {
       it("should indicate that we can't remove the last time window", async () => {
         const timeWindow = justDance.general.timeWindows[0];
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.removeTimeWindowFromGeneral(
               justDance.id,
@@ -379,7 +379,7 @@ describe("General section of festival activity preparation", () => {
       });
       describe("when trying to update general information", () => {
         it("should indicate that general section is locked", async () => {
-          expect(
+          await expect(
             async () =>
               await prepareFestivalActivity.updateGeneralSection(
                 activityId,
@@ -400,7 +400,7 @@ describe("General section of festival activity preparation", () => {
     ({ activityId, toAdd, timeWindow }) => {
       describe("when trying to add a timeWindow", () => {
         it("should indicate that general section is locked", async () => {
-          expect(
+          await expect(
             async () =>
               await prepareFestivalActivity.addTimeWindowInGeneral(
                 activityId,
@@ -411,7 +411,7 @@ describe("General section of festival activity preparation", () => {
       });
       describe("when trying to update a timeWindow", () => {
         it("should indicate that general section is locked", async () => {
-          expect(
+          await expect(
             async () =>
               await prepareFestivalActivity.updateTimeWindowInGeneral(
                 activityId,
@@ -423,7 +423,7 @@ describe("General section of festival activity preparation", () => {
       });
       describe("when trying to remove a timeWindow", () => {
         it("should indicate that general section is locked", async () => {
-          expect(
+          await expect(
             async () =>
               await prepareFestivalActivity.removeTimeWindowFromGeneral(
                 activityId,
@@ -448,7 +448,7 @@ describe("General section of festival activity preparation", () => {
     describe("when private activity is already validated by humain", () => {
       it("should indicate that general section is locked", async () => {
         const update = { description: "An updated description" };
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.updateGeneralSection(
               approvedByHumain.id,

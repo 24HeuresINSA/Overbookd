@@ -6,9 +6,9 @@ import {
   pcSecurite,
   validatedBySecu,
 } from "./preparation.test-utils.js";
-import { secu } from "../../common/review.js";
 import { PrepareError } from "./prepare-in-review-festival-activity.js";
 import { FreePassMustBePositive } from "../festival-activity.error.js";
+import { SECU } from "@overbookd/team-code";
 
 describe("Security section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -53,7 +53,7 @@ describe("Security section of festival activity preparation", () => {
   describe("when adherent want to update free pass with negative value", () => {
     it("should indicate that free pass must be positive", async () => {
       const update = { freePass: -1 };
-      expect(
+      await expect(
         async () =>
           await prepareFestivalActivity.updateSecuritySection(
             escapeGame.id,
@@ -63,11 +63,11 @@ describe("Security section of festival activity preparation", () => {
     });
   });
 
-  describe(`when ${validatedBySecu.general.name} is already validated by ${secu} team`, () => {
+  describe(`when ${validatedBySecu.general.name} is already validated by ${SECU} team`, () => {
     describe("when trying to update the security information", () => {
       it("should indicate that security section is locked", async () => {
         const update = { specialNeed: "3 maîtres chien", freePass: 3 };
-        expect(
+        await expect(
           async () =>
             await prepareFestivalActivity.updateSecuritySection(
               validatedBySecu.id,

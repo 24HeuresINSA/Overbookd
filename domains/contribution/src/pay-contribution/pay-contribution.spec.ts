@@ -80,7 +80,7 @@ describe("Pay contribution", () => {
       describe("when adherent try to pay less than 100 cents", () => {
         it("should indicate that the minimum amount is 100 cents", async () => {
           const contributionForm = { adherentId: lea.id, amount: 90 };
-          expect(
+          await expect(
             async () => await payContribution.for(contributionForm),
           ).rejects.toThrow(INSUFFICIENT_AMOUNT_ERROR_MESSAGE);
         });
@@ -89,7 +89,7 @@ describe("Pay contribution", () => {
       describe("when non adherent try to pay a contribution", () => {
         it("should indicate that non adherent is not allowed to pay contribution", async () => {
           const contributionForm = { adherentId: tatouin.id, amount: 100 };
-          expect(
+          await expect(
             async () => await payContribution.for(contributionForm),
           ).rejects.toThrow(NOT_ALLOWED_TO_PAY_CONTRIBUTION_ERROR_MESSAGE);
         });
@@ -154,7 +154,7 @@ describe("Pay contribution", () => {
       const contribution = { adherentId: noel.id, amount: 150 };
 
       it("should indicate that adherent has already payed", async () => {
-        expect(
+        await expect(
           async () => await payContribution.for(contribution),
         ).rejects.toThrow(HAS_ALREADY_PAYED_ERROR_MESSAGE);
       });

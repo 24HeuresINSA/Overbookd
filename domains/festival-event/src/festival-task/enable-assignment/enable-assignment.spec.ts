@@ -251,7 +251,7 @@ describe("Enable assignment", () => {
   );
   describe("when trying to enable assignment on unknown festival task", () => {
     it("should indicate festival task is not found", async () => {
-      expect(
+      await expect(
         async () =>
           await enableAssignment.for(1000, noel, {
             category: BAR,
@@ -267,7 +267,7 @@ describe("Enable assignment", () => {
     ${uninstallPreventionVillage} | ${uninstallPreventionVillage.status}
   `("when trying to enable assignment on $status festival task", ({ task }) => {
     it("should indicate festival task is not found", async () => {
-      expect(
+      await expect(
         async () =>
           await enableAssignment.for(task.id, noel, {
             category: BAR,
@@ -279,14 +279,14 @@ describe("Enable assignment", () => {
   describe("when trying to enable assignment on festival task with at least on required volunteer that is not available", () => {
     it("should indicate that all required volunteers as to be available during mobilizations", async () => {
       const task = leadPressConference;
-      expect(
+      await expect(
         async () =>
           await enableAssignment.for(task.id, noel, {
             category: BAR,
             topPriority: false,
           }),
       ).rejects.toThrow(ReadyToAssignError);
-      expect(
+      await expect(
         async () =>
           await enableAssignment.for(task.id, noel, {
             category: BAR,
@@ -298,14 +298,14 @@ describe("Enable assignment", () => {
   describe("when trying to enable assignment on festival task with at least on required volunteer that is assigned on another task", () => {
     it("should indicate that all required volunteers as to be available during mobilizations", async () => {
       const task = findTruck;
-      expect(
+      await expect(
         async () =>
           await enableAssignment.for(task.id, noel, {
             category: BAR,
             topPriority: false,
           }),
       ).rejects.toThrow(ReadyToAssignError);
-      expect(
+      await expect(
         async () =>
           await enableAssignment.for(task.id, noel, {
             category: BAR,
