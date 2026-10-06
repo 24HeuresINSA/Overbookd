@@ -5,6 +5,10 @@ import { PrismaAssignments } from "./repository/assignments.prisma";
 import { AssignmentService } from "./assignment.service";
 import { PrismaPlanning } from "./repository/planning.prisma";
 import { PrismaAssignmentStats } from "./repository/assignment-stats.prisma";
+import { DomainEventService } from "../../domain-event/domain-event.service";
+import { DomainEventModule } from "../../domain-event/domain-event.module";
+import { PrismaTeamAssignments } from "./repository/team-assignments.prisma";
+import { AssignWholeTeam } from "@overbookd/assignment";
 
 @Module({
   providers: [
@@ -24,16 +28,42 @@ import { PrismaAssignmentStats } from "./repository/assignment-stats.prisma";
       inject: [PrismaService],
     },
     {
+      provide: PrismaTeamAssignments,
+      useFactory: (prisma: PrismaService) => new PrismaTeamAssignments(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: AssignWholeTeam,
+      useFactory: (teamAssignments: PrismaTeamAssignments) =>
+        new AssignWholeTeam(teamAssignments),
+      inject: [PrismaTeamAssignments],
+    },
+    {
       provide: AssignmentService,
       useFactory: (
         assignments: PrismaAssignments,
         stats: PrismaAssignmentStats,
         planning: PrismaPlanning,
-      ) => new AssignmentService(assignments, stats, planning),
-      inject: [PrismaAssignments, PrismaAssignmentStats, PrismaPlanning],
+        eventStore: DomainEventService,
+        assignWholeTeam: AssignWholeTeam,
+      ) =>
+        new AssignmentService(
+          assignments,
+          stats,
+          planning,
+          eventStore,
+          assignWholeTeam,
+        ),
+      inject: [
+        PrismaAssignments,
+        PrismaAssignmentStats,
+        PrismaPlanning,
+        DomainEventService,
+        AssignWholeTeam,
+      ],
     },
   ],
   exports: [AssignmentService],
-  imports: [PrismaModule],
+  imports: [PrismaModule, DomainEventModule],
 })
 export class AssignmentCommonModule {}

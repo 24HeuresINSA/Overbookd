@@ -37,7 +37,7 @@ describe("Prepare festival task inquiries list", () => {
       onlyApprovedByHumain,
     ];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
-    const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, []);
+    const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, [], []);
     const translator = new FestivalTaskTranslator(volunteerConflicts);
     prepare = new PrepareFestivalTask(festivalTasks, translator);
   });

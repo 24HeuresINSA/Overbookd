@@ -1,5 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
+import {
+  ALL_TEAM_MEMBERS,
+  READY_TO_ASSIGN,
+} from "@overbookd/festival-event-constants";
 import {
   IProvidePeriod,
   Period,
@@ -186,7 +189,10 @@ export class OrgaNeedsService {
   }
 
   private teamMemberRequestsSelection(teams: string[]) {
-    const condition = this.teamIsSearchedCondition(teams);
+    const condition = {
+      ...this.teamIsSearchedCondition(teams),
+      count: { not: ALL_TEAM_MEMBERS },
+    };
     return { teams: { select: { count: true }, where: condition } };
   }
 
@@ -383,7 +389,10 @@ export class OrgaNeedsService {
           select: {
             ...SELECT_PERIOD,
             teams: {
-              where: this.teamIsSearchedCondition(teams),
+              where: {
+                ...this.teamIsSearchedCondition(teams),
+                count: { not: ALL_TEAM_MEMBERS },
+              },
               select: { count: true },
             },
           },

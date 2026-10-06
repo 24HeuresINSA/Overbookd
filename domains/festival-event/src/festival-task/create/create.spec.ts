@@ -9,7 +9,7 @@ import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
 describe("Create festival task", () => {
   describe(`when ${noel.firstName} create Install escape game task`, async () => {
     const festivalTasks = new InMemoryFestivalTasks();
-    const volunteerConflicts = new InMemoryVolunteerConflicts([], []);
+    const volunteerConflicts = new InMemoryVolunteerConflicts([], [], []);
     const translator = new FestivalTaskTranslator(volunteerConflicts);
     const create = new CreateFestivalTask(festivalTasks, translator);
     const installEscapeGame = await create.apply({
@@ -83,7 +83,7 @@ describe("Create festival task", () => {
   describe("when previous task id is 419", () => {
     describe(`when ${noel.firstName} create Install escape game task`, async () => {
       const festivalTasks = new InMemoryFestivalTasks();
-      const volunteerConflicts = new InMemoryVolunteerConflicts([], []);
+      const volunteerConflicts = new InMemoryVolunteerConflicts([], [], []);
       const translator = new FestivalTaskTranslator(volunteerConflicts);
       const create = new CreateFestivalTask(festivalTasks, translator, 420);
       const installEscapeGame = await create.apply({

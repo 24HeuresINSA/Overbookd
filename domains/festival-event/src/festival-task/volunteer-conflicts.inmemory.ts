@@ -4,15 +4,17 @@ import {
   VolunteerConflicts,
   WithConflicts,
 } from "./volunteer-conflicts.js";
-import { Volunteer } from "./sections/instructions.js";
+import { Volunteer, VolunteerWithTeams } from "./sections/instructions.js";
 import { Conflicts, FestivalTaskLink } from "./sections/mobilizations.js";
 import { Mobilization } from "./sections/mobilizations.js";
 import { FestivalTask, isReadyToAssign } from "./festival-task.js";
+import { ALL_TEAM_MEMBERS } from "@overbookd/festival-event-constants";
 
 export class InMemoryVolunteerConflicts implements VolunteerConflicts {
   constructor(
     private readonly tasks: WithConflicts[],
     private readonly availabilities: VolunteerAvailabilities[],
+    private readonly volunteers: VolunteerWithTeams[],
   ) {}
 
   async on(
@@ -34,6 +36,8 @@ export class InMemoryVolunteerConflicts implements VolunteerConflicts {
     volunteerId: Volunteer["id"],
   ): Promise<FestivalTaskLink[]> {
     const requestedPeriod = Period.init(period);
+    const volunteerTeams =
+      this.volunteers.find(({ id }) => id === volunteerId)?.teams ?? [];
     const tasks = this.tasks
       .filter(({ mobilizations, id }) => {
         const isDifferentTask = taskId !== id;
@@ -41,6 +45,7 @@ export class InMemoryVolunteerConflicts implements VolunteerConflicts {
           MobilizationHelper.build(mobilization).isRequestingVolunteerOn(
             volunteerId,
             requestedPeriod,
+            volunteerTeams,
           ),
         );
         return isDifferentTask && isAlsoRequestingVolunteer;
@@ -102,13 +107,18 @@ class MobilizationHelper {
   isRequestingVolunteerOn(
     volunteerId: Volunteer["id"],
     period: Period,
+    volunteerTeams: string[],
   ): boolean {
-    const { start, end, volunteers } = this.mobilization;
+    const { start, end, volunteers, teams } = this.mobilization;
     const otherPeriod = Period.init({ start, end });
 
     const happenAtSameTime = otherPeriod.isOverlapping(period);
     const isVolunteerRequired = volunteers.some(({ id }) => id === volunteerId);
+    const isTeamRequired = teams.some(
+      ({ count, team }) =>
+        count === ALL_TEAM_MEMBERS && volunteerTeams.includes(team),
+    );
 
-    return isVolunteerRequired && happenAtSameTime;
+    return (isVolunteerRequired || isTeamRequired) && happenAtSameTime;
   }
 }

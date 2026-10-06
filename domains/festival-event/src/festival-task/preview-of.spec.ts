@@ -21,6 +21,7 @@ import {
 import { getFactory } from "./festival-task.factory";
 import { previewOf } from "./preview-of";
 import { lea, noel } from "./festival-task.test-util";
+import { CULTURE, PLAIZIR } from "@overbookd/team-code";
 
 const festivalTaskFactory = getFactory();
 
@@ -44,7 +45,7 @@ describe("Transform a festival task to its preview", () => {
       name: "Install Escape game",
       administrator: noel,
       reviewer: lea,
-      team: "plaizirs",
+      team: PLAIZIR,
     },
   ])("when the festival task is in draft", ({ name, administrator, team }) => {
     it("should return a draft preview", () => {
@@ -67,7 +68,7 @@ describe("Transform a festival task to its preview", () => {
     {
       name: "Watch VGC Tournament",
       administrator: lea,
-      team: "culture",
+      team: CULTURE,
       reviewer: noel,
       reviews: {
         humain: REVIEWING,
@@ -78,7 +79,7 @@ describe("Transform a festival task to its preview", () => {
     {
       name: "Install Escape game",
       administrator: noel,
-      team: "plaizirs",
+      team: PLAIZIR,
       reviewer: lea,
       reviews: {
         humain: REVIEWING,
@@ -115,7 +116,7 @@ describe("Transform a festival task to its preview", () => {
     {
       name: "Watch VGC Tournament",
       administrator: lea,
-      team: "culture",
+      team: CULTURE,
       reviewer: noel,
       reviews: {
         humain: APPROVED,
@@ -126,7 +127,7 @@ describe("Transform a festival task to its preview", () => {
     {
       name: "Install Escape game",
       administrator: noel,
-      team: "plaizirs",
+      team: PLAIZIR,
       reviewer: lea,
       reviews: {
         humain: APPROVED,
@@ -163,7 +164,7 @@ describe("Transform a festival task to its preview", () => {
     {
       name: "Watch VGC Tournament",
       administrator: lea,
-      team: "culture",
+      team: CULTURE,
       reviewer: noel,
       reviews: {
         humain: APPROVED,
@@ -174,7 +175,7 @@ describe("Transform a festival task to its preview", () => {
     {
       name: "Install Escape game",
       administrator: noel,
-      team: "plaizirs",
+      team: PLAIZIR,
       reviewer: lea,
       reviews: {
         humain: REVIEWING,
@@ -211,7 +212,7 @@ describe("Transform a festival task to its preview", () => {
     {
       name: "Watch VGC Tournament",
       administrator: lea,
-      team: "culture",
+      team: CULTURE,
       reviewer: noel,
       reviews: {
         humain: APPROVED,
@@ -222,7 +223,7 @@ describe("Transform a festival task to its preview", () => {
     {
       name: "Install Escape game",
       administrator: noel,
-      team: "plaizirs",
+      team: PLAIZIR,
       reviewer: lea,
       reviews: {
         humain: APPROVED,

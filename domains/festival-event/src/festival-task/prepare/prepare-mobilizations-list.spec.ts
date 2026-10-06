@@ -5,6 +5,7 @@ import { InMemoryFestivalTasks } from "./festival-tasks.inmemory.js";
 import { PrepareFestivalTask } from "./prepare.js";
 import {
   MobilizationAlreadyExist,
+  MobilizationInvalidTeamCount,
   MobilizationNotFound,
   SplitDurationIsNotPeriodDivider,
 } from "../festival-task.error.js";
@@ -33,8 +34,17 @@ import {
   requestGabMobilization,
   gab,
   saturday14h,
+  friday11hfriday17hMobilization,
+  friday17hfriday18hMobilization,
+  sunday11h,
+  sunday14h,
+  sunday12h,
+  sunday18h,
+  leaWithTeams,
+  noelWithTeams,
 } from "../festival-task.test-util.js";
 import {
+  vieuxBriefing,
   gabIsAssignedTo,
   installEscapeGame,
   uninstallEscapeGame,
@@ -54,7 +64,6 @@ import {
   approvedByMatosRejectedByHumainAndElec,
 } from "../festival-task.fake.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
-import { elec, humain, matos } from "../../common/review.js";
 import { AlreadyApprovedBy } from "../../common/review.error.js";
 import { isDraft } from "../../festival-event.js";
 import {
@@ -64,7 +73,15 @@ import {
   RESET_REVIEW,
   REVIEWING,
 } from "@overbookd/festival-event-constants";
-import { PERSONNE, HARD, VIEUX, CONFIANCE } from "@overbookd/team-code";
+import {
+  PERSONNE,
+  HARD,
+  VIEUX,
+  CONFIANCE,
+  HUMAIN,
+  LOG_MATOS,
+  LOG_ELEC,
+} from "@overbookd/team-code";
 
 describe("Prepare festival task mobilizations list", () => {
   let prepare: PrepareFestivalTask;
@@ -85,12 +102,15 @@ describe("Prepare festival task mobilizations list", () => {
       approvedByElecRejectedByMatos,
       approvedByMatosRejectedByHumainAndElec,
       gabIsAssignedTo,
+      vieuxBriefing,
     ];
     const availabilities = [noelAvailabilities, leaAvailabilities];
+    const volunteers = [noelWithTeams, leaWithTeams];
     const festivalTasks = new InMemoryFestivalTasks(tasks);
     const volunteerConflicts = new InMemoryVolunteerConflicts(
       tasks,
       availabilities,
+      volunteers,
     );
     const translator = new FestivalTaskTranslator(volunteerConflicts);
     prepare = new PrepareFestivalTask(festivalTasks, translator);
@@ -136,16 +156,35 @@ describe("Prepare festival task mobilizations list", () => {
         },
       );
       describe.each`
-        indication                       | task                 | start          | end
-        ${"period with same boundaries"} | ${presentEscapeGame} | ${saturday08h} | ${saturday11h}
-        ${"larger period"}               | ${presentEscapeGame} | ${saturday07h} | ${saturday12h}
-        ${"smaller period"}              | ${presentEscapeGame} | ${saturday09h} | ${saturday10h}
-        ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday07h} | ${saturday10h}
-        ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday07h} | ${saturday09h}
-        ${"overlapping period on end"}   | ${presentEscapeGame} | ${saturday10h} | ${saturday12h}
+        taskName                          | taskStatus                  | task                 | mobilization
+        ${presentEscapeGame.general.name} | ${presentEscapeGame.status} | ${presentEscapeGame} | ${friday11hfriday17hMobilization}
+        ${guardJustDance.general.name}    | ${guardJustDance.status}    | ${guardJustDance}    | ${friday11hfriday17hMobilization}
+        ${installBarbecue.general.name}   | ${installBarbecue.status}   | ${installBarbecue}   | ${friday17hfriday18hMobilization}
       `(
-        "when volunteer is requested on $indication on any mobilization",
-        ({ task, start, end }) => {
+        "when $taskName task is $taskStatus and mobilization has an invalid number of team members requested",
+        ({ task, mobilization }) => {
+          it("should indicate a mobilization should have a valid number of team members", async () => {
+            expect(
+              async () =>
+                await prepare.addMobilization(task.id, mobilization.form, noel),
+            ).rejects.toThrow(MobilizationInvalidTeamCount);
+          });
+        },
+      );
+      describe.each`
+        by              | indication                       | task                 | start          | end            | requestedBy
+        ${"personnaly"} | ${"period with same boundaries"} | ${presentEscapeGame} | ${saturday08h} | ${saturday11h} | ${guardEscapeGame}
+        ${"personnaly"} | ${"larger period"}               | ${presentEscapeGame} | ${saturday07h} | ${saturday12h} | ${guardEscapeGame}
+        ${"personnaly"} | ${"smaller period"}              | ${presentEscapeGame} | ${saturday09h} | ${saturday10h} | ${guardEscapeGame}
+        ${"personnaly"} | ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday07h} | ${saturday10h} | ${guardEscapeGame}
+        ${"personnaly"} | ${"overlapping period on start"} | ${presentEscapeGame} | ${saturday07h} | ${saturday09h} | ${guardEscapeGame}
+        ${"personnaly"} | ${"overlapping period on end"}   | ${presentEscapeGame} | ${saturday10h} | ${saturday12h} | ${guardEscapeGame}
+        ${"by team"}    | ${"period with same boundaries"} | ${presentEscapeGame} | ${sunday12h}   | ${sunday18h}   | ${vieuxBriefing}
+        ${"by team"}    | ${"smaller period"}              | ${presentEscapeGame} | ${sunday14h}   | ${sunday18h}   | ${vieuxBriefing}
+        ${"by team"}    | ${"overlapping period on end"}   | ${presentEscapeGame} | ${sunday11h}   | ${sunday14h}   | ${vieuxBriefing}
+      `(
+        "when volunteer is requested $by on $indication on any mobilization",
+        ({ task, start, end, requestedBy }) => {
           it("should list tasks that are requesting the same volunteer at the same time", async () => {
             const helper = saturday08hsaturday11hMobilization
               .withStart(start)
@@ -163,8 +202,8 @@ describe("Prepare festival task mobilizations list", () => {
             );
             const expectedRequestedBy = [
               {
-                id: guardEscapeGame.id,
-                name: guardEscapeGame.general.name,
+                id: requestedBy.id,
+                name: requestedBy.general.name,
               },
             ];
             expect(volunteer?.conflicts.tasks).toEqual(expectedRequestedBy);
@@ -178,7 +217,6 @@ describe("Prepare festival task mobilizations list", () => {
           });
         },
       );
-
       describe.each`
         indication                       | task                 | start          | end
         ${"period with same boundaries"} | ${presentEscapeGame} | ${saturday08h} | ${saturday12h}
@@ -212,7 +250,6 @@ describe("Prepare festival task mobilizations list", () => {
           });
         },
       );
-
       describe.each`
         indication    | task                 | start          | end
         ${"previous"} | ${presentEscapeGame} | ${saturday07h} | ${saturday08h}
@@ -239,7 +276,6 @@ describe("Prepare festival task mobilizations list", () => {
           });
         },
       );
-
       describe.each`
         indication                       | task                 | start          | end            | hasAvailabilityConflict
         ${"period with same boundaries"} | ${presentEscapeGame} | ${saturday08h} | ${saturday11h} | ${false}
@@ -523,6 +559,25 @@ describe("Prepare festival task mobilizations list", () => {
         },
       );
     });
+    describe("when number of team members is invalid", () => {
+      it.each`
+        taskName                          | task                 | mobilization                          | team
+        ${presentEscapeGame.general.name} | ${presentEscapeGame} | ${presentEscapeGame.mobilizations[0]} | ${{ team: HARD, count: 0 }}
+        ${guardJustDance.general.name}    | ${guardJustDance}    | ${guardJustDance.mobilizations[0]}    | ${{ team: HARD, count: -2 }}
+      `(
+        "should indicate a mobilization should have a valid number of team members",
+        async ({ task, mobilization, team }) => {
+          expect(
+            async () =>
+              await prepare.addTeamToMobilization(
+                task.id,
+                mobilization.id,
+                team,
+              ),
+          ).rejects.toThrow(MobilizationInvalidTeamCount);
+        },
+      );
+    });
   });
   describe("Remove team from existing mobilization", () => {
     describe("when team is part of the mobilization", () => {
@@ -680,13 +735,13 @@ describe("Prepare festival task mobilizations list", () => {
   });
   describe("Update after approvals", () => {
     describe.each`
-      approvers         | rejectors         | humain       | matos        | elec                    | taskName                                               | task                                      | firstMobilizationHumanReadable
-      ${[humain]}       | ${[]}             | ${APPROVED}  | ${REVIEWING} | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByHumain.general.name}                   | ${onlyApprovedByHumain}                   | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
-      ${[matos]}        | ${[]}             | ${REVIEWING} | ${APPROVED}  | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByMatos.general.name}                    | ${onlyApprovedByMatos}                    | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
-      ${[humain]}       | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${NOT_ASKING_TO_REVIEW} | ${approvedByHumainRejectedByMatos.general.name}        | ${approvedByHumainRejectedByMatos}        | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
-      ${[humain, elec]} | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos} | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
-      ${[elec]}         | ${[matos]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByElecRejectedByMatos.general.name}          | ${approvedByElecRejectedByMatos}          | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
-      ${[matos]}        | ${[humain, elec]} | ${REJECTED}  | ${REVIEWING} | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name} | ${approvedByMatosRejectedByHumainAndElec} | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      approvers             | rejectors             | humain       | matos        | elec                    | taskName                                               | task                                      | firstMobilizationHumanReadable
+      ${[HUMAIN]}           | ${[]}                 | ${APPROVED}  | ${REVIEWING} | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByHumain.general.name}                   | ${onlyApprovedByHumain}                   | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      ${[LOG_MATOS]}        | ${[]}                 | ${REVIEWING} | ${APPROVED}  | ${NOT_ASKING_TO_REVIEW} | ${onlyApprovedByMatos.general.name}                    | ${onlyApprovedByMatos}                    | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      ${[HUMAIN]}           | ${[LOG_MATOS]}        | ${REVIEWING} | ${REJECTED}  | ${NOT_ASKING_TO_REVIEW} | ${approvedByHumainRejectedByMatos.general.name}        | ${approvedByHumainRejectedByMatos}        | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      ${[HUMAIN, LOG_ELEC]} | ${[LOG_MATOS]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByHumainAndElecRejectedByMatos.general.name} | ${approvedByHumainAndElecRejectedByMatos} | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      ${[LOG_ELEC]}         | ${[LOG_MATOS]}        | ${REVIEWING} | ${REJECTED}  | ${REVIEWING}            | ${approvedByElecRejectedByMatos.general.name}          | ${approvedByElecRejectedByMatos}          | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
+      ${[LOG_MATOS]}        | ${[HUMAIN, LOG_ELEC]} | ${REJECTED}  | ${REVIEWING} | ${REJECTED}             | ${approvedByMatosRejectedByHumainAndElec.general.name} | ${approvedByMatosRejectedByHumainAndElec} | ${"du vendredi 17 mai à 10:00 au vendredi 17 mai à 18:00"}
     `(
       "when $approvers approved the task $taskName",
       ({

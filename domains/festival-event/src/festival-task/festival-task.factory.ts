@@ -10,7 +10,13 @@ import {
   REVIEWING,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
-import { CONDUCTEUR, HUMAIN, LOG_MATOS, PERSONNE } from "@overbookd/team-code";
+import {
+  CONDUCTEUR,
+  HUMAIN,
+  LOG_MATOS,
+  PERSONNE,
+  PLAIZIR,
+} from "@overbookd/team-code";
 import { isKeyOf } from "../is-key-of.js";
 import {
   Draft,
@@ -190,6 +196,7 @@ class FestivalTaskBuilder<T extends WithConflicts> {
     return Object.keys(current).reduce<T>((acc: T, key: string) => {
       if (!isKeyOf(current, key)) return acc;
 
+      // eslint-disable-next-line security/detect-object-injection
       const updated = update[key];
       if (updated === undefined) return acc;
 
@@ -373,7 +380,7 @@ function defaultGeneral(name: string): Reviewable["general"] {
   return {
     name,
     administrator: noel,
-    team: "plaizir",
+    team: PLAIZIR,
   };
 }
 

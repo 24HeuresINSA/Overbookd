@@ -44,6 +44,12 @@ export class MobilizationNotFound extends FestivalTaskError {
   }
 }
 
+export class MobilizationInvalidTeamCount extends FestivalTaskError {
+  constructor() {
+    super("Le nombre de membres d'équipe n'est pas valide");
+  }
+}
+
 export class FestivalTaskNotValidated extends FestivalTaskError {
   constructor(ftId: FestivalTask["id"]) {
     super(`La fiche tâche #${ftId} n'est pas encore validée`);

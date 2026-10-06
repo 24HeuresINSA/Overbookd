@@ -9,8 +9,8 @@ import {
   AssignableVolunteerFactory,
   MaybeCategory,
 } from "./factory/assignable-volunteer.factory.js";
-import { BAR } from "@overbookd/festival-event-constants";
-import { PERSONNE, HARD, VIEUX } from "@overbookd/team-code";
+import { ALL_TEAM_MEMBERS, BAR } from "@overbookd/festival-event-constants";
+import { PERSONNE, HARD, VIEUX, PLAIZIR } from "@overbookd/team-code";
 
 const friday08hto09h = Period.init({
   start: new Date("2024-05-17T08:00+02:00"),
@@ -50,16 +50,16 @@ const friday09hto10hBarAssignment = {
   category: BAR,
 } as const;
 
-const noel: Volunteer = {
+export const noel: Volunteer = {
   id: 1,
   firstName: "Noel",
   lastName: "Ertsemud",
   nickname: "Moto",
   charisma: 1000,
-  teams: [HARD, "plaizir"],
+  teams: [HARD, PLAIZIR],
   assignmentPreference: "NO_PREF",
 };
-const lea: Volunteer = {
+export const lea: Volunteer = {
   id: 2,
   firstName: "Lea",
   lastName: "Mauyno",
@@ -95,7 +95,7 @@ const availableVolunteersForMissingOnePlaizir: AssignableVolunteerFactory[] = [
 
 const oneHardDemanded = AssignmentTeamFactory.init().withCode(HARD);
 const oneHardAssignedAndDemanded = oneHardDemanded.withAssigned(1);
-const onePlaizirDemanded = AssignmentTeamFactory.init().withCode("plaizir");
+const onePlaizirDemanded = AssignmentTeamFactory.init().withCode(PLAIZIR);
 const twoVieuxDemanded = AssignmentTeamFactory.init()
   .withCode(VIEUX)
   .withDemands(2);
@@ -107,16 +107,23 @@ const twoBenevoleDemanded = AssignmentTeamFactory.init()
   .withDemands(2);
 const threeHardDemandedAndTwoAssigned = threeHardDemanded.withAssigned(2);
 const twoBenevoleDemandedAndOneAssigned = twoBenevoleDemanded.withAssigned(1);
+const allVieuxDemanded = twoVieuxDemanded.withDemands(ALL_TEAM_MEMBERS);
 
 const fulfilledAssignmentSummary = AssignmentSummaryFactory.init(
   friday08hto09h,
   1,
-).withTeams([oneHardAssignedAndDemanded.assignmentTeam]);
+).withTeams([
+  oneHardAssignedAndDemanded.assignmentTeam,
+  allVieuxDemanded.assignmentTeam,
+]);
 export const fulfilledAssignment = AssignmentBuilder.init({
   assignmentPeriod: friday08hto09h,
 })
   .withAssignees([{ as: HARD, id: 100 }])
-  .withRequestedTeams([oneHardDemanded.assignmentTeam])
+  .withRequestedTeams([
+    oneHardDemanded.assignmentTeam,
+    allVieuxDemanded.assignmentTeam,
+  ])
   .withSummary(fulfilledAssignmentSummary);
 
 const missingOnePlaizirAssignmentSummary = AssignmentSummaryFactory.init(
@@ -168,3 +175,22 @@ export const missingOneHardAndOneBenevoleAssignment = AssignmentBuilder.init({
     twoBenevoleDemanded.assignmentTeam,
   ])
   .withSummary(missingOneHardAndOneBenevoleAssignmentSummary);
+
+const missingOneHardAndAllVieuxDemandedAssignmentSummary =
+  AssignmentSummaryFactory.init(friday08hto09h, 9).withTeams([
+    threeHardDemandedAndTwoAssigned.assignmentTeam,
+    allVieuxDemanded.assignmentTeam,
+  ]);
+export const missingOneHardAndAllVieuxDemandedAssignment =
+  AssignmentBuilder.init({
+    assignmentPeriod: friday08hto09h,
+  })
+    .withAssignees([
+      { as: HARD, id: 102 },
+      { as: HARD, id: 103 },
+    ])
+    .withRequestedTeams([
+      threeHardDemanded.assignmentTeam,
+      allVieuxDemanded.assignmentTeam,
+    ])
+    .withSummary(missingOneHardAndAllVieuxDemandedAssignmentSummary);

@@ -34,7 +34,7 @@
             v-for="{ team, demand, assigned } in requestedTeams"
             :key="team"
             :team="team"
-            :prefix="`${assigned}/${demand}`"
+            :prefix="`${assigned}/${formatTeamCount(demand)}`"
             size="medium"
             with-name
             show-hidden
@@ -160,6 +160,7 @@ import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { FT_URL, PLANNING_URL } from "@overbookd/web-page";
 import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
+import { formatTeamCount } from "~/utils/assignment/assignment-team";
 
 const route = useRoute();
 const myStore = useMyStore();

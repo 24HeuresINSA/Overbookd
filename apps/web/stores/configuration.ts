@@ -15,7 +15,7 @@ import {
   defaultVolunteerCommitmentPresentation,
   defaultStaffCommitmentPresentation,
 } from "@overbookd/registration";
-import { Duration, OverDate, type IProvidePeriod } from "@overbookd/time";
+import { Duration, OverDate } from "@overbookd/time";
 import { ConfigurationRepository } from "~/repositories/configuration.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
 
@@ -122,13 +122,6 @@ export const useConfigurationStore = defineStore("configuration", {
       const res = await ConfigurationRepository.save(config);
       if (isHttpError(res)) return;
       sendSuccessNotification("La configuration a été sauvegardée");
-      this._updateConfig(res);
-    },
-
-    async saveBriefingTimeWindow(period: IProvidePeriod) {
-      const res = await ConfigurationRepository.saveBriefingTimeWindow(period);
-      if (isHttpError(res)) return;
-      sendSuccessNotification("Le créneau du brief a été sauvegardé");
       this._updateConfig(res);
     },
 

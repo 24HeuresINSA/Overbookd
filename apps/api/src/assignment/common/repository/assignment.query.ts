@@ -1,6 +1,7 @@
 import {
   Assignee,
   AssignmentIdentifier,
+  AssignmentIdentifierWithTeam,
   BaseAssigneeForDetails,
   isTeamMember,
 } from "@overbookd/assignment";
@@ -34,6 +35,12 @@ export type DatabaseAssignment = IProvidePeriod & {
   mobilization: {
     teams: { teamCode: string; count: number }[];
   };
+};
+
+export type DatabaseAssignmentIdentifier = {
+  id: string;
+  mobilizationId: string;
+  festivalTaskId: number;
 };
 
 const SELECT_ASSIGNEE_PERSONAL_DATA = {
@@ -73,6 +80,12 @@ export const SELECT_ASSIGNMENT = {
   mobilization: { select: SELECT_MOBILIZATION },
 };
 
+export const SELECT_ASSIGNMENT_IDENTIFIER = {
+  id: true,
+  mobilizationId: true,
+  festivalTaskId: true,
+};
+
 export function uniqueAssignment(identifier: AssignmentIdentifier) {
   const { taskId, mobilizationId, assignmentId } = identifier;
   return {
@@ -100,6 +113,24 @@ export function updateAssigneesOnAssignment(
     update: { teamCode: as },
     create: { userId: id, teamCode: as },
   }));
+}
+
+export function updateAssigneeOnAssignmentWithTeam(
+  volunteerId: Assignee["id"],
+  { assignmentId, mobilizationId, taskId, as }: AssignmentIdentifierWithTeam,
+) {
+  return {
+    where: {
+      userId_assignmentId_mobilizationId_festivalTaskId: {
+        assignmentId,
+        mobilizationId,
+        festivalTaskId: taskId,
+        userId: volunteerId,
+      },
+    },
+    update: { teamCode: as },
+    create: { userId: volunteerId, teamCode: as },
+  };
 }
 
 export function friendAssigneesCount(volunteerId: number) {

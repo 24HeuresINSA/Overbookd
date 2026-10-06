@@ -280,7 +280,7 @@ export class UserService {
     return assignments.map(toPlanningEventFromAssignment);
   }
 
-  async getUserTeams(userId: number): Promise<string[]> {
+  private async getUserTeams(userId: number): Promise<string[]> {
     const teams = await this.prisma.team.findMany({
       select: { code: true },
       where: {

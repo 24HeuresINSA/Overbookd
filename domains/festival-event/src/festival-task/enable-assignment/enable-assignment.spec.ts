@@ -26,6 +26,7 @@ import {
   friday20hfriday22h,
   friday22hsaturday00h,
   gab,
+  gabWithTeams,
   monday00h,
   noel,
   saturday00hsaturday02h,
@@ -55,6 +56,7 @@ import {
   sunday20hsunday22h,
   sunday22hmonday00h,
   valery,
+  valeryWithTeams,
 } from "../festival-task.test-util.js";
 import { EnableAssignment } from "./enable-assignment.js";
 import { InMemoryFestivalTasksForEnableAssignment } from "./festival-tasks-for-enable-assignment.inmemory.js";
@@ -65,6 +67,8 @@ import {
 } from "../festival-task.error.js";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
+import { InMemoryVolunteersForEnableAssignment } from "./volunteers-for-enable-assignment.inmemory.js";
+import { PERSONNE } from "@overbookd/team-code";
 
 const expectedGuardPsAssignments = [
   { ...friday18hfriday20h, assignees: [] },
@@ -113,7 +117,7 @@ const expectedBarCashierAssignmentsSaturdayNigth = [
 ];
 
 const expectedPreparePressConferenceAssignments = [
-  { ...sunday11hsunday12h, assignees: [valery] },
+  { ...sunday11hsunday12h, assignees: [valery, { ...gab, as: PERSONNE }] },
 ];
 
 const expectedCleanPressConferenceAssignments = [
@@ -138,8 +142,7 @@ describe("Enable assignment", () => {
       gabIsAssignedTo,
       findTruck,
     ];
-    festivalTasks = new InMemoryFestivalTasksForEnableAssignment(tasks);
-    const volunteerConflicts = new InMemoryVolunteerConflicts(tasks, [
+    const availabilities = [
       {
         volunteer: valery,
         availabilities: [
@@ -151,9 +154,22 @@ describe("Enable assignment", () => {
         volunteer: gab,
         availabilities: [{ start: saturday08h.date, end: monday00h.date }],
       },
-    ]);
+    ];
+    const volunteers = [valeryWithTeams, gabWithTeams];
+    festivalTasks = new InMemoryFestivalTasksForEnableAssignment(tasks);
+    const volunteerConflicts = new InMemoryVolunteerConflicts(
+      tasks,
+      availabilities,
+      volunteers,
+    );
     const translator = new FestivalTaskTranslator(volunteerConflicts);
-    enableAssignment = new EnableAssignment(festivalTasks, translator);
+    const volunteersForEnableAssignment =
+      new InMemoryVolunteersForEnableAssignment(volunteers);
+    enableAssignment = new EnableAssignment(
+      festivalTasks,
+      translator,
+      volunteersForEnableAssignment,
+    );
   });
   describe.each`
     task                      | instigator | categorize                                      | expectedMobilizations

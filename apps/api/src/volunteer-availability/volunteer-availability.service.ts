@@ -1,9 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  Logger,
-  OnApplicationBootstrap,
-} from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { Prisma } from "../generated/prisma/client";
 import {
   Edition,
@@ -18,34 +13,10 @@ import {
 import { PrismaService } from "../prisma.service";
 import { SELECT_PERIOD } from "../common/query/period.query";
 import { VOLUNTEER } from "@overbookd/registration";
-import { DomainEventService } from "../domain-event/domain-event.service";
-import { VOLUNTEER_BRIEFING_TIME_WINDOW_KEY } from "@overbookd/configuration";
 
 @Injectable()
-export class VolunteerAvailabilityService implements OnApplicationBootstrap {
-  private logger = new Logger(VolunteerAvailabilityService.name);
-
-  constructor(
-    private readonly eventStore: DomainEventService,
-    private readonly prisma: PrismaService,
-  ) {}
-
-  onApplicationBootstrap(): void {
-    this.eventStore.volunteersEnrolled.subscribe(
-      async ({ data: enrolling }) => {
-        const candidateName = enrolling.candidate.name;
-        this.logger.log(`Adding briefing availabilities for ${candidateName}`);
-        const briefing = await this.getBriefingTimeWindow();
-        if (!briefing) {
-          this.logger.error(
-            `Briefing time window not found for ${candidateName}`,
-          );
-          return;
-        }
-        this.addAvailabilities(enrolling.candidate.id, [briefing]);
-      },
-    );
-  }
+export class VolunteerAvailabilityService {
+  constructor(private readonly prisma: PrismaService) {}
 
   async addAvailabilities(
     userId: number,
@@ -138,15 +109,6 @@ export class VolunteerAvailabilityService implements OnApplicationBootstrap {
         .join("\n");
       throw new ForbiddenException(errors);
     }
-  }
-
-  private async getBriefingTimeWindow(): Promise<IProvidePeriod | null> {
-    const config = await this.prisma.configuration.findUnique({
-      where: { key: VOLUNTEER_BRIEFING_TIME_WINDOW_KEY },
-    });
-    if (!config) return null;
-    const { start, end } = config.value as unknown as IProvidePeriod;
-    return { start: new Date(start), end: new Date(end) };
   }
 }
 

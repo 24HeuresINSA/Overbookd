@@ -33,6 +33,7 @@ import { NO_PREF } from "@overbookd/preference";
 import { IS_MEMBER_OF_VOLUNTEER_TEAM } from "../../../common/query/user.query";
 import { IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER } from "../../../user/user.query";
 import { SELECT_PERIOD_AND_TASK_CATEGORY } from "../../common/repository/assignment-stats.query";
+import { SELECT_ASSIGNMENT_IDENTIFIER } from "../../common/repository/assignment.query";
 
 export class PrismaAssignableVolunteers implements AssignableVolunteers {
   constructor(private readonly prisma: PrismaService) {}
@@ -105,9 +106,7 @@ export class PrismaAssignableVolunteers implements AssignableVolunteers {
     const selectAssignment = {
       assignment: {
         select: {
-          festivalTaskId: true,
-          mobilizationId: true,
-          id: true,
+          ...SELECT_ASSIGNMENT_IDENTIFIER,
           ...SELECT_PERIOD,
         },
       },

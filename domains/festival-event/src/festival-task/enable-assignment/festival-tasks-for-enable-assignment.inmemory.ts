@@ -9,6 +9,7 @@ import { FestivalTasksForEnableAssignment } from "./enable-assignment.js";
 
 export class InMemoryFestivalTasksForEnableAssignment implements FestivalTasksForEnableAssignment {
   constructor(private tasks: FestivalTask[]) {}
+
   findById(id: FestivalTask["id"]): Promise<WithoutConflicts | null> {
     const task = this.tasks.find((task) => task.id === id);
     return Promise.resolve(task ?? null);

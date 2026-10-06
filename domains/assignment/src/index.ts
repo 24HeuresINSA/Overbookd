@@ -66,6 +66,11 @@ export type {
   Assignments,
   VolunteersForAssignment,
 } from "./assign-task-to-volunteer/repositories/assignments.js";
+export { AssignWholeTeam } from "./assign-task-to-volunteer/assign-whole-team/assign-whole-team.js";
+export type {
+  AssignmentIdentifierWithTeam,
+  TeamAssignments,
+} from "./assign-task-to-volunteer/assign-whole-team/assign-whole-team.js";
 export { countAssigneesInTeam } from "./count-assignees-in-team.js";
 export { AssignVolunteerFunnel } from "./assign-task-to-volunteer/funnel/assign-volunteer-funnel.js";
 export { ReadyToStart } from "./assign-task-to-volunteer/funnel/startup-funnel.js";

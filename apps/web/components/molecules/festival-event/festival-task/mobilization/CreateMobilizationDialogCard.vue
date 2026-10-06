@@ -39,7 +39,7 @@
           v-for="team in teams"
           :key="team.team"
           :team="team.team"
-          :prefix="team.count.toString()"
+          :prefix="formatTeamCount(team.count)"
           with-name
           show-hidden
           closable
@@ -47,12 +47,38 @@
         />
       </div>
       <div class="team-form">
+        <v-btn
+          v-if="canAddAllUsersFromTeam"
+          :icon="
+            isAllUsersFromTeamToggled
+              ? 'mdi-account-multiple'
+              : 'mdi-account-multiple-outline'
+          "
+          variant="outlined"
+          color="secondary"
+          :active="isAllUsersFromTeamToggled"
+          aria-label="Ajouter tous les bénévoles de l'équipe"
+          title="Ajouter tous les bénévoles de l'équipe"
+          @click="toggleAllUsersFromTeam"
+        />
         <v-text-field
+          v-if="isAllUsersFromTeamToggled"
+          model-value="Tous"
+          label="Nombre de bénévoles"
+          class="team-form__field"
+          clearable
+          hide-details
+          readonly
+          @click:clear="toggleAllUsersFromTeam"
+        />
+        <v-text-field
+          v-else
           v-model="teamQuantity"
           type="number"
           label="Nombre de bénévoles"
           class="team-form__field"
           :rules="[isNumber, min(1)]"
+          min="1"
           hide-details
         />
         <SearchTeam
@@ -86,7 +112,11 @@ import type { AddMobilizationForm } from "@overbookd/http";
 import type { Team } from "@overbookd/team";
 import { isNumber, min } from "~/utils/rules/input.rules";
 import { type User, buildUserNameWithNickname } from "@overbookd/user";
+import { AFFECT_VOLUNTEER } from "@overbookd/permission";
+import { formatTeamCount } from "~/utils/assignment/assignment-team";
+import { ALL_TEAM_MEMBERS } from "@overbookd/festival-event-constants";
 
+const myStore = useMyStore();
 const userStore = useUserStore();
 const teamStore = useTeamStore();
 const configurationStore = useConfigurationStore();
@@ -111,21 +141,6 @@ const displayedManifDate = computed<string>(
 const emit = defineEmits(["add", "close"]);
 const close = () => emit("close");
 
-const mobilizableTeams = computed<Team[]>(() => teamStore.mobilizableTeams);
-const addTeam = (team?: Team) => {
-  if (!team) return;
-  const count = +teamQuantity.value;
-  teams.value = [...teams.value, { team: team.code, count }];
-
-  teamQuantity.value = 1;
-  teamToAdd.value = undefined;
-};
-const removeTeam = (toRemove: TeamMobilization) => {
-  teams.value = teams.value.filter(
-    ({ team }: TeamMobilization) => team !== toRemove.team,
-  );
-};
-
 userStore.fetchVolunteers();
 const addableVolunteers = computed<User[]>(() =>
   userStore.volunteers.filter(
@@ -142,6 +157,28 @@ const removeVolunteer = (volunteerId: User["id"]) => {
   volunteers.value = volunteers.value.filter((v: User) => v.id !== volunteerId);
 };
 
+const canAddAllUsersFromTeam = computed<boolean>(() =>
+  myStore.can(AFFECT_VOLUNTEER),
+);
+const isAllUsersFromTeamToggled = ref<boolean>(false);
+const toggleAllUsersFromTeam = () =>
+  (isAllUsersFromTeamToggled.value = !isAllUsersFromTeamToggled.value);
+
+const mobilizableTeams = computed<Team[]>(() => teamStore.mobilizableTeams);
+const addTeam = (team?: Team) => {
+  if (!team) return;
+  const count = isAllUsersFromTeamToggled.value
+    ? ALL_TEAM_MEMBERS
+    : +teamQuantity.value;
+  teams.value = [...teams.value, { team: team.code, count }];
+  cleanTeamFormData();
+};
+const removeTeam = (toRemove: TeamMobilization) => {
+  teams.value = teams.value.filter(
+    ({ team }: TeamMobilization) => team !== toRemove.team,
+  );
+};
+
 const cleanData = () => {
   start.value = eventStartDate.value;
   end.value = new Date(eventStartDate.value.getTime() + ONE_HOUR_IN_MS);
@@ -149,8 +186,12 @@ const cleanData = () => {
   teams.value = [];
   volunteers.value = [];
   volunteerToAdd.value = undefined;
+  cleanTeamFormData();
+};
+const cleanTeamFormData = () => {
   teamToAdd.value = undefined;
   teamQuantity.value = 1;
+  isAllUsersFromTeamToggled.value = false;
 };
 
 const canAddMobilization = computed<boolean>(() => {
@@ -193,8 +234,13 @@ const addMobilization = () => {
 }
 
 .chip-group {
-  margin-bottom: 5px;
-  margin-top: 2px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-bottom: 10px;
+  margin-top: 3px;
+  max-height: 80px;
+  overflow-y: auto;
 }
 
 h3 {

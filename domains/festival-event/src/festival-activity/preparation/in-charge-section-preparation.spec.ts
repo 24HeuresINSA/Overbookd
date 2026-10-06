@@ -10,9 +10,8 @@ import { george, lafarge } from "../festival-activity.fake.js";
 import { lea } from "../festival-activity.fake";
 import { InMemoryPrepareFestivalActivityRepository } from "./festival-activities.inmemory.js";
 import { ContractorNotFound } from "../festival-activity.error.js";
-import { HUMAIN } from "../../common/review.js";
 import { PrepareError } from "./prepare-in-review-festival-activity.js";
-import { VIEUX } from "@overbookd/team-code";
+import { CULTURE, HUMAIN, PLAIZIR, SPORTS, VIEUX } from "@overbookd/team-code";
 
 describe("In Charge section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -34,10 +33,10 @@ describe("In Charge section of festival activity preparation", () => {
     fields                 | activityName               | activityId       | update                                  | adherent                        | team                        | contractors
     ${"adherent"}          | ${escapeGame.general.name} | ${escapeGame.id} | ${{ adherent: lea }}                    | ${lea}                          | ${escapeGame.inCharge.team} | ${escapeGame.inCharge.contractors}
     ${"adherent"}          | ${justDance.general.name}  | ${justDance.id}  | ${{ adherent: george }}                 | ${george}                       | ${justDance.inCharge.team}  | ${justDance.inCharge.contractors}
-    ${"team"}              | ${escapeGame.general.name} | ${escapeGame.id} | ${{ team: "plaizir" }}                  | ${escapeGame.inCharge.adherent} | ${"plaizir"}                | ${escapeGame.inCharge.contractors}
+    ${"team"}              | ${escapeGame.general.name} | ${escapeGame.id} | ${{ team: PLAIZIR }}                    | ${escapeGame.inCharge.adherent} | ${PLAIZIR}                  | ${escapeGame.inCharge.contractors}
     ${"team"}              | ${justDance.general.name}  | ${justDance.id}  | ${{ team: VIEUX }}                      | ${justDance.inCharge.adherent}  | ${VIEUX}                    | ${justDance.inCharge.contractors}
     ${"adherent and team"} | ${escapeGame.general.name} | ${escapeGame.id} | ${{ team: "Qlture", adherent: george }} | ${george}                       | ${"Qlture"}                 | ${escapeGame.inCharge.contractors}
-    ${"adherent and team"} | ${justDance.general.name}  | ${justDance.id}  | ${{ team: "culture", adherent: lea }}   | ${lea}                          | ${"culture"}                | ${justDance.inCharge.contractors}
+    ${"adherent and team"} | ${justDance.general.name}  | ${justDance.id}  | ${{ team: CULTURE, adherent: lea }}     | ${lea}                          | ${CULTURE}                  | ${justDance.inCharge.contractors}
   `(
     "when updating $fields from $activityName",
     ({ fields, activityId, update, adherent, team, contractors }) => {
@@ -59,7 +58,7 @@ describe("In Charge section of festival activity preparation", () => {
     describe("when adherent want to update adherent then team in 2 times", () => {
       it("should update both adherent and team", async () => {
         const updateAdherent = { adherent: lea };
-        const updateTeam = { team: "plaizir" };
+        const updateTeam = { team: PLAIZIR };
 
         await prepareFestivalActivity.updateInChargeSection(
           escapeGame.id,
@@ -190,7 +189,7 @@ describe("In Charge section of festival activity preparation", () => {
           async () =>
             await prepareFestivalActivity.updateInChargeSection(
               approvedByHumain.id,
-              { team: "sports" },
+              { team: SPORTS },
             ),
         ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
       });

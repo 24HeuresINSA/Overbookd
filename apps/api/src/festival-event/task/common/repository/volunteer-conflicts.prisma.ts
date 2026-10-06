@@ -6,9 +6,13 @@ import {
   Conflicts,
 } from "@overbookd/festival-event";
 import { IProvidePeriod } from "@overbookd/time";
-import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
+import {
+  ALL_TEAM_MEMBERS,
+  READY_TO_ASSIGN,
+} from "@overbookd/festival-event-constants";
 import { PrismaService } from "../../../../prisma.service";
 import { IS_NOT_DELETED } from "../../../../common/query/not-deleted.query";
+import { SELECT_TEAM_CODES } from "../../../../common/query/user.query";
 
 export class PrismaVolunteerConflicts implements VolunteerConflicts {
   constructor(private readonly prisma: PrismaService) {}
@@ -29,12 +33,28 @@ export class PrismaVolunteerConflicts implements VolunteerConflicts {
     { start, end }: IProvidePeriod,
     volunteerId: Volunteer["id"],
   ): Promise<FestivalTaskLink[]> {
+    const volunteer = await this.prisma.user.findUnique({
+      where: { id: volunteerId, ...IS_NOT_DELETED },
+      select: SELECT_TEAM_CODES,
+    });
+    const teams = volunteer.teams.map(({ teamCode }) => teamCode);
+
     const conflicts = await this.prisma.festivalTaskMobilization.findMany({
       where: {
         ft: IS_NOT_DELETED,
         start: { lt: end },
         end: { gt: start },
-        volunteers: { some: { volunteerId } },
+        OR: [
+          { volunteers: { some: { volunteerId } } },
+          {
+            teams: {
+              some: {
+                count: ALL_TEAM_MEMBERS,
+                teamCode: { in: teams },
+              },
+            },
+          },
+        ],
         NOT: [
           { ft: { id: taskId }, start, end },
           { ft: { status: READY_TO_ASSIGN } },
