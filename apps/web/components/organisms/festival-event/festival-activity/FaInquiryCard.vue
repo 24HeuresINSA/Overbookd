@@ -195,7 +195,7 @@ const shouldHideDrive = computed<boolean>(() => {
   return isDraft(selectedActivity.value);
 });
 const linkDrive = (link: AssignDrive) => {
-  faStore.linkDrive(link, selectedActivity.value.id);
+  faStore.linkDrive(link);
 };
 
 const addTimeWindow = (period: IProvidePeriod) => {

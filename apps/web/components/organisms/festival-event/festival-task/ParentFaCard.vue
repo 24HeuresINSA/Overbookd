@@ -66,7 +66,6 @@ import { LOG_MATOS } from "@overbookd/team-code";
 import { FA_URL } from "@overbookd/web-page";
 
 const ftStore = useFestivalTaskStore();
-const faStore = useFestivalActivityStore();
 
 const activity = computed<FestivalTask["festivalActivity"]>(
   () => ftStore.selectedTask.festivalActivity,
@@ -76,7 +75,7 @@ const emit = defineEmits(["open:calendar"]);
 const openCalendar = () => emit("open:calendar");
 
 const linkDrive = (link: AssignDrive) => {
-  faStore.linkDrive(link, activity.value.id);
+  ftStore.linkDriveFromParentActivity(link);
 };
 </script>
 
