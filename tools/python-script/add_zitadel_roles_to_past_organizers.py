@@ -111,7 +111,7 @@ def get_user_by_email(email: str):
             {
                 "emailQuery": {
                     "emailAddress": email,
-                    "method": "TEXT_QUERY_METHOD_EQUALS",
+                    "method": "TEXT_QUERY_METHOD_EQUALS_IGNORE_CASE",
                 }
             }
         ],
