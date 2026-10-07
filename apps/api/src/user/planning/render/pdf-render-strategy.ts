@@ -1,7 +1,7 @@
-import PdfPrinter from "pdfmake";
+import pdfmake from "pdfmake";
 import sanitizeHtml from "sanitize-html";
 import htmlToPdfMake from "html-to-pdfmake";
-import { join } from "path";
+import { join, resolve, sep } from "path";
 import { Content, StyleDictionary } from "pdfmake/interfaces";
 import { JSDOM } from "jsdom";
 import {
@@ -42,8 +42,6 @@ const MAX_LINES = 5;
 const SECURITY_PLAN_PAGE = 2;
 
 export class PdfRenderStrategy implements RenderStrategy {
-  private printer: PdfPrinter;
-
   private htmlToPdfDefaultStyle: StyleDictionary = {
     b: { bold: true },
     strong: { bold: true },
@@ -95,31 +93,33 @@ export class PdfRenderStrategy implements RenderStrategy {
     otherFrequency: { fontSize: 12, marginBottom: 10 },
   };
 
+  private FONTS_DIR = join(__dirname, "../../../..", "/fonts");
+  private ASSETS_DIR = join(__dirname, "../../../..", "/assets");
+
   private fonts = {
     Roboto: {
-      normal: join(__dirname, "../../../..", "/fonts/Roboto-Regular.ttf"),
-      bold: join(__dirname, "../../../..", "/fonts/Roboto-Medium.ttf"),
-      italics: join(__dirname, "../../../..", "/fonts/Roboto-Italic.ttf"),
-      bolditalics: join(
-        __dirname,
-        "../../../..",
-        "/fonts/Roboto-MediumItalic.ttf",
-      ),
+      normal: join(this.FONTS_DIR, "/Roboto-Regular.ttf"),
+      bold: join(this.FONTS_DIR, "/Roboto-Medium.ttf"),
+      italics: join(this.FONTS_DIR, "/Roboto-Italic.ttf"),
+      bolditalics: join(this.FONTS_DIR, "/Roboto-MediumItalic.ttf"),
     },
     NotoEmoji: {
-      normal: join(__dirname, "../../../..", "/fonts/NotoEmoji-Regular.ttf"),
-      bold: join(__dirname, "../../../..", "/fonts/NotoEmoji-Regular.ttf"),
-      italics: join(__dirname, "../../../..", "/fonts/NotoEmoji-Regular.ttf"),
-      bolditalics: join(
-        __dirname,
-        "../../../..",
-        "/fonts/NotoEmoji-Regular.ttf",
-      ),
+      normal: join(this.FONTS_DIR, "/NotoEmoji-Regular.ttf"),
+      bold: join(this.FONTS_DIR, "/NotoEmoji-Regular.ttf"),
+      italics: join(this.FONTS_DIR, "/NotoEmoji-Regular.ttf"),
+      bolditalics: join(this.FONTS_DIR, "/NotoEmoji-Regular.ttf"),
     },
   };
 
   constructor(private readonly volunteers: PlanningVolunteers) {
-    this.printer = new PdfPrinter(this.fonts);
+    pdfmake.setFonts(this.fonts);
+    pdfmake.setUrlAccessPolicy(() => false);
+    pdfmake.setLocalAccessPolicy((filePath) => {
+      const resolved = resolve(filePath);
+      const isFont = resolved.startsWith(`${this.FONTS_DIR}${sep}`);
+      const isAsset = resolved.startsWith(`${this.ASSETS_DIR}${sep}`);
+      return isFont || isAsset;
+    });
   }
 
   async render(tasks: Task[], volunteerId: Volunteer["id"]): Promise<unknown> {
@@ -134,30 +134,22 @@ export class PdfRenderStrategy implements RenderStrategy {
     const footer = this.generateFooter();
     const info = this.generateMetadata(volunteerWithName);
 
-    const pdf = this.printer.createPdfKitDocument({
-      info,
-      header,
-      footer,
-      content: pdfContentWithEmojis,
-      defaultStyle: { fontSize: 10 },
-      styles: this.pdfStyles,
-      pageMargins: [40, 80, 40, 80],
-    });
+    try {
+      const pdf = pdfmake.createPdf({
+        info,
+        header,
+        footer,
+        content: pdfContentWithEmojis,
+        defaultStyle: { fontSize: 10 },
+        styles: this.pdfStyles,
+        pageMargins: [40, 80, 40, 80],
+      });
 
-    const chunks = [];
-    return new Promise((resolve, reject) => {
-      pdf.on("data", function (chunk) {
-        chunks.push(chunk);
-      });
-      pdf.on("end", function () {
-        const result = Buffer.concat(chunks);
-        resolve(result.toString("base64"));
-      });
-      pdf.on("err", function (error) {
-        reject(new PdfException(error));
-      });
-      pdf.end();
-    });
+      return await pdf.getBase64();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      throw new PdfException(message, { cause: error });
+    }
   }
 
   private generateMetadata(volunteer: Volunteer) {
@@ -171,7 +163,7 @@ export class PdfRenderStrategy implements RenderStrategy {
   }
 
   private generateFooter() {
-    return function (currentPage: number): Content {
+    return (currentPage: number): Content => {
       return {
         columns: [
           {
@@ -205,7 +197,9 @@ export class PdfRenderStrategy implements RenderStrategy {
   }
 
   private generateHeader(volunteer: Volunteer) {
-    return function (currentPage: number): Content {
+    const ASSETS_DIR = this.ASSETS_DIR;
+
+    return (currentPage: number): Content => {
       const headerTitle =
         currentPage === SECURITY_PLAN_PAGE
           ? "Plan du Festival"
@@ -213,7 +207,7 @@ export class PdfRenderStrategy implements RenderStrategy {
       return {
         columns: [
           {
-            image: join(__dirname, "../../../..", "/assets/logo_24h.png"),
+            image: join(ASSETS_DIR, "/logo_24h.png"),
             fit: [50, 50],
             width: 50,
             margin: [20, 15],
