@@ -1,3 +1,10 @@
+## [4.2.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.2.0...v4.2.1) (2026-10-07)
+
+### Bug Fixes
+
+* **api:** ignore email case when checking for existing zitadel account [#2814](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2814) ([acda847](https://gitlab.com/24-heures-insa/overbookd-mono/commit/acda847986d30b86c8e1a8479a424bd72c475e01))
+* **planning:** fix pdf generation [#2811](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2811) ([198cad6](https://gitlab.com/24-heures-insa/overbookd-mono/commit/198cad6a478219eab56fdff565cef03283eea7d8))
+
 ## [4.2.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.1.0...v4.2.0) (2026-10-06)
 
 ### Features
