@@ -20,12 +20,12 @@
       },
       {
         "include": "../fonts",
-        "outDir": "dist/apps/api/fonts",
+        "outDir": "dist/fonts",
         "watchAssets": true
       },
       {
         "include": "../assets",
-        "outDir": "dist/apps/api/assets",
+        "outDir": "dist/assets",
         "watchAssets": true
       }
     ]
