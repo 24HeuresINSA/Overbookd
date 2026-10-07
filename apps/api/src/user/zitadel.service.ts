@@ -60,7 +60,7 @@ export class ZitadelService {
         {
           emailQuery: {
             emailAddress: userEmail,
-            method: "TEXT_QUERY_METHOD_EQUALS",
+            method: "TEXT_QUERY_METHOD_EQUALS_IGNORE_CASE",
           },
         },
       ],
