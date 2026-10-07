@@ -12,6 +12,7 @@ stages:
   - docker-build
   - docker-scan
   - docker-publish
+  - npm-publish
   - deploy
   - release
 
@@ -35,5 +36,6 @@ include:
   - local: /.gitlab/ci/docker-build-web.gitlab-ci.yml
   - local: /.gitlab/ci/docker-scan.gitlab-ci.yml
   - local: /.gitlab/ci/docker-publish.gitlab-ci.yml
+  - local: /.gitlab/ci/npm-publish.gitlab-ci.yml
   - local: /.gitlab/ci/deploy.gitlab-ci.yml
   - local: /.gitlab/ci/release.gitlab-ci.yml
