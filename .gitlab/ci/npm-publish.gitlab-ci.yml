@@ -2,7 +2,7 @@
   stage: npm-publish
   extends: .setup-pnpm
   interruptible: true
-  image: node:24.19.0-alpine
+  image: node:24.21.0-alpine
   needs: []
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'
