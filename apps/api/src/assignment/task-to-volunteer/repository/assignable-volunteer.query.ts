@@ -1,8 +1,6 @@
 import { IProvidePeriod } from "@overbookd/time";
-import { UserDataForCharisma } from "../../../common/query/charisma.query";
-import { User } from "@overbookd/user";
-import { AssignmentPreferenceType } from "@overbookd/preference";
 import { DatabaseAssignmentWithTaskCategory } from "../../common/repository/assignment-stats.query";
+import { DatabaseVolunteer } from "../../common/repository/volunteer.query";
 
 export type DatabaseFriend = {
   id: number;
@@ -15,15 +13,9 @@ export type DatabaseFriend = {
   }[];
 };
 
-export type DatabaseStoredAssignableVolunteer = User &
-  UserDataForCharisma & {
-    comment: string;
-    note: string;
-    teams: { teamCode: string }[];
-    birthDate: Date;
-    assigned: { assignment: DatabaseAssignmentWithTaskCategory }[];
-    preference?: { assignment: AssignmentPreferenceType };
-    festivalTaskMobilizations: { mobilization: IProvidePeriod }[];
-    friends: { requestor: DatabaseFriend }[];
-    friendRequestors: { friend: DatabaseFriend }[];
-  };
+export type DatabaseStoredAssignableVolunteer = DatabaseVolunteer & {
+  assigned: { assignment: DatabaseAssignmentWithTaskCategory }[];
+  festivalTaskMobilizations: { mobilization: IProvidePeriod }[];
+  friends: { requestor: DatabaseFriend }[];
+  friendRequestors: { friend: DatabaseFriend }[];
+};

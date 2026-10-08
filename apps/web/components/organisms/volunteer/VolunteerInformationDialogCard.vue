@@ -71,7 +71,13 @@
               :rules="[rules.required, rules.minDate, rules.maxDate]"
               :readonly="!canManageUsers"
               prepend-icon="mdi-calendar"
-              hide-details
+              class="birth-date"
+              :class="{ 'birth-date__minor-hint': shouldDisplayMinorHint }"
+              :hint="
+                shouldDisplayMinorHint ? 'Sera mineur·e à la manif' : undefined
+              "
+              :persistent-hint="shouldDisplayMinorHint"
+              hide-details="auto"
             />
 
             <v-text-field
@@ -219,6 +225,7 @@ import {
   NON_MANAGEABLE_TEAMS,
   isTeamManageable,
 } from "@overbookd/access-manager";
+import { willBeMinorAtEvent } from "~/utils/user/minor-volunteer";
 
 const myStore = useMyStore();
 const userStore = useUserStore();
@@ -273,6 +280,12 @@ const assignmentPreferenceLabel = computed<string>(() => {
   if (!assignment) return assignmentPreferenceLabels.NO_PREF;
   return assignmentPreferenceLabels[assignment];
 });
+
+const shouldDisplayMinorHint = computed<boolean>(
+  () =>
+    myStore.can(AFFECT_VOLUNTEER) &&
+    willBeMinorAtEvent(new Date(birthDay.value)),
+);
 
 const updateVolunteerInformations = async () => {
   nickname.value = props.volunteer.nickname ?? null;
@@ -442,6 +455,12 @@ const isCandidate = (volunteer: UserWithTeams) =>
   flex-direction: column;
   gap: 20px;
   margin-top: 10px;
+}
+
+.birth-date__minor-hint {
+  :deep(.v-messages__message) {
+    color: rgb(var(--v-theme-error));
+  }
 }
 
 .preference {

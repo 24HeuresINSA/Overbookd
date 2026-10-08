@@ -76,7 +76,9 @@ export const useAssignTaskToVolunteerStore = defineStore(
         ]);
         if (isHttpError(assignableVolunteersRes) || isHttpError(assignmentRes))
           return;
-        this.assignableVolunteers = assignableVolunteersRes;
+        this.assignableVolunteers = assignableVolunteersRes.map(
+          castVolunteerWithDate,
+        );
         this.selectedAssignment = castAssignmentWithDate(assignmentRes);
       },
 
@@ -143,5 +145,14 @@ function castTaskWithAssignmentsSummaryWithDate(
       ...assignment,
       ...castPeriodWithDate(assignment),
     })),
+  };
+}
+
+function castVolunteerWithDate(
+  volunteer: HttpStringified<AssignableVolunteer>,
+): AssignableVolunteer {
+  return {
+    ...volunteer,
+    birthDate: new Date(volunteer.birthDate),
   };
 }

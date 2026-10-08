@@ -48,7 +48,10 @@ export const useAssignVolunteerToTaskStore = defineStore(
         const res = await VolunteerToTaskRepository.getVolunteers();
         if (isHttpError(res)) return;
         this.volunteers = new Map<number, VolunteerWithAssignmentDuration>(
-          res.map((volunteer) => [volunteer.id, volunteer]),
+          res.map((volunteer) => [
+            volunteer.id,
+            castVolunteerWithDate(volunteer),
+          ]),
         );
       },
 
@@ -131,5 +134,14 @@ function castAssignmentSummaryWithTaskWithDate(
   return {
     ...assignment,
     ...castPeriodWithDate(assignment),
+  };
+}
+
+function castVolunteerWithDate(
+  volunteer: HttpStringified<VolunteerWithAssignmentDuration>,
+): VolunteerWithAssignmentDuration {
+  return {
+    ...volunteer,
+    birthDate: new Date(volunteer.birthDate),
   };
 }
