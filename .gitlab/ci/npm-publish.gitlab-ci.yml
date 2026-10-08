@@ -18,7 +18,7 @@ npm-publish:
     - pnpm i --filter "${PNPM_WORKSPACE}..."
     - pnpm --filter "${PNPM_WORKSPACE}" run build:ci
     - pnpm --filter "${PNPM_WORKSPACE}" publish --no-git-checks
-parallel:
-  matrix:
-    - PNPM_WORKSPACE: "@overbookd/csv"
-    - PNPM_WORKSPACE: "@overbookd/slugify"
+  parallel:
+    matrix:
+      - PNPM_WORKSPACE: "@overbookd/csv"
+      - PNPM_WORKSPACE: "@overbookd/slugify"
