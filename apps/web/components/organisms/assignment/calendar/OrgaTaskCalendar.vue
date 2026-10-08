@@ -57,7 +57,7 @@ const configurationStore = useConfigurationStore();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 const availabilitiesStore = useVolunteerAvailabilityStore();
 
-const { canUseCalendarShortcuts } = defineProps({
+defineProps({
   canUseCalendarShortcuts: {
     type: Boolean,
     default: true,
