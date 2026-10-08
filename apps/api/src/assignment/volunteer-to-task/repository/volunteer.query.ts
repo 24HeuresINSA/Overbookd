@@ -4,26 +4,12 @@ import {
   SELECT_USER_FRIENDS_FOR_COUNT,
 } from "../../common/repository/friend.query";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
-import {
-  SELECT_USER_ASSIGNMENT_PREFERENCE,
-  SELECT_USER_IDENTIFIER,
-  SELECT_USER_WITH_TEAM_CODES,
-} from "../../../common/query/user.query";
-import {
-  SELECT_USER_DATA_FOR_CHARISMA,
-  UserDataForCharisma,
-} from "../../../common/query/charisma.query";
+import { SELECT_USER_IDENTIFIER } from "../../../common/query/user.query";
+import { UserDataForCharisma } from "../../../common/query/charisma.query";
 import { User } from "@overbookd/user";
 import { AssignmentPreferenceType } from "@overbookd/preference";
 import { IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER } from "../../../user/user.query";
-
-const SELECT_VOLUNTEER = {
-  ...SELECT_USER_WITH_TEAM_CODES,
-  ...SELECT_USER_ASSIGNMENT_PREFERENCE,
-  ...SELECT_USER_DATA_FOR_CHARISMA,
-  comment: true,
-  note: true,
-};
+import { SELECT_VOLUNTEER } from "../../common/repository/volunteer.query";
 
 const SELECT_ASSIGNMENTS = {
   assigned: { select: { assignment: { select: SELECT_PERIOD } } },

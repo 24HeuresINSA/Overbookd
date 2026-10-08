@@ -10,7 +10,6 @@ import { PrismaService } from "../../../prisma.service";
 import {
   DatabaseFriend,
   DatabaseStoredAssignableVolunteer,
-  SELECT_VOLUNTEER,
 } from "./assignable-volunteer.query";
 import {
   SELECT_PERIOD,
@@ -34,6 +33,7 @@ import { IS_MEMBER_OF_VOLUNTEER_TEAM } from "../../../common/query/user.query";
 import { IS_CURRENT_EDITION_CANDIDATE_OR_VOLUNTEER } from "../../../user/user.query";
 import { SELECT_PERIOD_AND_TASK_CATEGORY } from "../../common/repository/assignment-stats.query";
 import { SELECT_ASSIGNMENT_IDENTIFIER } from "../../common/repository/assignment.query";
+import { SELECT_VOLUNTEER } from "../../common/repository/volunteer.query";
 
 export class PrismaAssignableVolunteers implements AssignableVolunteers {
   constructor(private readonly prisma: PrismaService) {}
@@ -209,6 +209,7 @@ function toStoredAssignableVolunteer(
     comment: volunteer.comment,
     note: volunteer.note,
     teams: volunteer.teams.map((team) => team.teamCode),
+    birthDate: volunteer.birthDate,
     assignments,
     requestedDuring,
     assignableFriendsIds: assignableFriendsIds,

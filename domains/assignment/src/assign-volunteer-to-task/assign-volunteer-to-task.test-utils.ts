@@ -28,6 +28,7 @@ const noel: VolunteerWithFriendFilter = {
   teams: [HARD, "comsa"],
   friendCount: defaultFriendCount,
   assignmentPreference: "NO_PREF",
+  birthDate: new Date("2000-07-01T00:00:00Z"),
 };
 const lea: VolunteerWithFriendFilter = {
   id: 2,
@@ -37,6 +38,7 @@ const lea: VolunteerWithFriendFilter = {
   teams: [VIEUX],
   friendCount: defaultFriendCount,
   assignmentPreference: "NO_PREF",
+  birthDate: new Date("2005-07-01T00:00:00Z"),
 };
 
 export const noelAssignee: VolunteerWithAssignments = {

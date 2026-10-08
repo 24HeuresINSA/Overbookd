@@ -34,6 +34,9 @@ export class AssignableVolunteerResponseDto implements AssignableVolunteer {
   @ApiProperty({ type: String, isArray: true })
   teams: string[];
 
+  @ApiProperty({ type: Date })
+  birthDate: Date;
+
   @ApiProperty({ type: Number })
   totalAssignmentDuration: number;
 

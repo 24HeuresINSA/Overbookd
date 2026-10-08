@@ -1,6 +1,14 @@
 <template>
   <div class="icons">
     <v-icon
+      v-if="willBeMinorAtEvent(volunteer.birthDate)"
+      v-tooltip:top="'Sera mineur·e à la manif'"
+      icon="mdi-teddy-bear"
+      :aria-label="'Sera mineur·e à la manif'"
+      size="small"
+      color="error"
+    />
+    <v-icon
       v-if="!volunteer.friendCount.volunteerCount"
       v-tooltip:top="getNoFriendLabel(volunteer.friendCount.candidateCount)"
       icon="mdi-account-alert"
@@ -62,6 +70,7 @@ import {
   isAssignableVolunteer,
   type AssignmentVolunteer,
 } from "~/utils/assignment/assignment-volunteer";
+import { willBeMinorAtEvent } from "~/utils/user/minor-volunteer";
 
 const { volunteer } = defineProps({
   volunteer: {
@@ -83,7 +92,7 @@ const preferenceAssignmentIcon = computed<AssignmentPreferenceIcon | null>(
       case STACKED:
         return {
           icon: "mdi-format-vertical-align-center",
-          label: "Des créneaux régroupés",
+          label: "Des créneaux regroupés",
         };
       case FRAGMENTED:
         return {
