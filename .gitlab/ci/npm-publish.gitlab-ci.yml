@@ -14,12 +14,22 @@
     - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
     - pnpm --filter "${PNPM_WORKSPACE}" publish --no-git-checks
 
-overbookd-csv_publish:
-  extends: .npm-publish
-  variables:
-    PNPM_WORKSPACE: "@overbookd/csv"
-
-overbookd-slugify_publish:
-  extends: .npm-publish
-  variables:
-    PNPM_WORKSPACE: "@overbookd/slugify"
+npm-publish:
+  stage: npm-publish
+  extends: .setup-pnpm
+  interruptible: true
+  image: node:24.21.0-alpine
+  needs: []
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'
+    - when: never
+  script:
+    - pnpm i --filter "${PNPM_WORKSPACE}..."
+    - pnpm --filter "${PNPM_WORKSPACE}" run build:ci
+    - echo "@overbookd:registry=${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/npm/" >> .npmrc
+    - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
+    - pnpm --filter "${PNPM_WORKSPACE}" publish --no-git-checks
+parallel:
+      matrix:
+        - PNPM_WORKSPACE: "@overbookd/csv"
+        - PNPM_WORKSPACE: "@overbookd/slugify"
