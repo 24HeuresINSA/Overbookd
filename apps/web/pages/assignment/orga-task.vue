@@ -140,7 +140,20 @@ const updateFilters = () => {
   }
 };
 
+const handleKeydown = (event: KeyboardEvent) => {
+  const target = event.target as HTMLElement;
+  if (
+    target instanceof HTMLInputElement ||
+    target instanceof HTMLTextAreaElement ||
+    target.isContentEditable
+  )
+    return;
+  if (!canUseCalendarShortcuts) return;
+  if (event.key === "p") toggleVolunteerInfoDialog();
+};
+
 onMounted(async () => {
+  window.addEventListener("keydown", handleKeydown);
   await assignVolunteerToTaskStore.fetchVolunteers();
 
   updateFilters();
@@ -151,6 +164,9 @@ onMounted(async () => {
   }
   const volunteer = assignVolunteerToTaskStore.volunteers.get(volunteerId);
   if (volunteer) selectVolunteer(volunteer);
+});
+onUnmounted(() => {
+  window.removeEventListener("keydown", handleKeydown);
 });
 
 const canUseCalendarShortcuts = computed<boolean>(() => {
@@ -194,6 +210,12 @@ const onUpdateSelectedVolunteerAvailabilities = () => {
 };
 const closeVolunteerInfoDialog = () => {
   isVolunteerInfoDialogOpen.value = false;
+};
+const toggleVolunteerInfoDialog = () => {
+  if (isVolunteerInfoDialogOpen.value) {
+    return closeVolunteerInfoDialog();
+  }
+  openVolunteerInfoDialog();
 };
 
 const displayAssignmentDetailsDialog = ref<boolean>(false);

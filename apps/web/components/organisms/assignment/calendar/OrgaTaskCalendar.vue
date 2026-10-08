@@ -172,24 +172,6 @@ const formatTaskForCalendar = ({
     link: `${FT_URL}/${id}`,
   });
 };
-
-const handleKeydown = (event: KeyboardEvent) => {
-  const target = event.target as HTMLElement;
-  if (
-    target instanceof HTMLInputElement ||
-    target instanceof HTMLTextAreaElement ||
-    target.isContentEditable
-  )
-    return;
-  if (!canUseCalendarShortcuts) return;
-  if (event.key === "p") displayVolunteerDetails();
-};
-onMounted(() => {
-  window.addEventListener("keydown", handleKeydown);
-});
-onUnmounted(() => {
-  window.removeEventListener("keydown", handleKeydown);
-});
 </script>
 
 <style lang="scss" scoped>
