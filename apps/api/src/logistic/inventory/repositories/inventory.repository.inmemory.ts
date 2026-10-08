@@ -55,5 +55,4 @@ export class InMemoryInventoryRepository implements InventoryRepository {
       ...new Set(this.records.map((record) => record.storage)),
     ]);
   }
-
 }
