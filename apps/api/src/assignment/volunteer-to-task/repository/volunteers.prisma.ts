@@ -59,6 +59,7 @@ function toVolunteerWithAssignments(
     comment: volunteer.comment,
     note: volunteer.note,
     charisma,
+    birthDate: volunteer.birthDate,
     teams: volunteer.teams.map(({ teamCode }) => teamCode),
     assignmentPreference: volunteer.preference?.assignment || NO_PREF,
     friendCount: getFriendCount(volunteer),

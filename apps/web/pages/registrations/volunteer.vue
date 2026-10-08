@@ -75,7 +75,7 @@
           <span class="candidate-name">
             {{ buildUserNameWithNickname(item) }}
             <v-icon
-              v-if="willBeMinorAtEvent(item)"
+              v-if="willBeMinorAtEvent(item.birthDate)"
               v-tooltip:top="'Sera mineur·e à la manif'"
               icon="mdi-teddy-bear"
               color="error"
@@ -207,13 +207,13 @@ import { CSVBuilder } from "@overbookd/csv";
 import { downloadCsv } from "~/utils/file/download.utils";
 import { formatPhoneNumber } from "@overbookd/registration";
 import { ENROLL_HARD } from "@overbookd/permission";
+import { willBeMinorAtEvent } from "~/utils/user/minor-volunteer";
 
 useHead({ title: "Admissions bénévoles" });
 
 const membershipApplicationStore = useMembershipApplicationStore();
 const layoutStore = useLayoutStore();
 const userStore = useUserStore();
-const configurationStore = useConfigurationStore();
 const myStore = useMyStore();
 
 const showTooltip = ref<boolean>(false);
@@ -309,16 +309,6 @@ const cancelCandidateRejection = (candidateId: number) => {
 const switchToStaffApplication = (candidateId: number) => {
   membershipApplicationStore.switchVolunteerToStaffApplication(candidateId);
   closeCandidateInfoDialog();
-};
-
-const willBeMinorAtEvent = ({ birthDate }: VolunteerCandidate): boolean => {
-  const MAJORITY_AGE = 18;
-  const majorityDate = new Date(
-    birthDate.getFullYear() + MAJORITY_AGE,
-    birthDate.getMonth(),
-    birthDate.getDate(),
-  );
-  return majorityDate > configurationStore.mondayBeforeEventDate;
 };
 
 const exportCSV = async () => {

@@ -34,4 +34,7 @@ export class VolunteerWithAssignmentDurationResponseDto
 
   @ApiProperty({ type: FriendCountResponseDto })
   friendCount: FriendCount;
+
+  @ApiProperty({ type: Date })
+  birthDate: Date;
 }

@@ -58,6 +58,7 @@ export const noel: Volunteer = {
   charisma: 1000,
   teams: [HARD, PLAIZIR],
   assignmentPreference: "NO_PREF",
+  birthDate: new Date("2000-07-01T00:00:00Z"),
 };
 export const lea: Volunteer = {
   id: 2,
@@ -69,6 +70,7 @@ export const lea: Volunteer = {
   comment: "Je suis une bénévole de longue date",
   note: "Elle est vraiment très vieille",
   assignmentPreference: "NO_PREF",
+  birthDate: new Date("2005-07-01T00:00:00Z"),
 };
 
 const defaultAssignmentDurations: Record<MaybeCategory, number> = {
