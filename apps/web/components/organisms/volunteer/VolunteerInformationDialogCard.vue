@@ -60,7 +60,7 @@
               label="Surnom"
               :rules="[rules.maxLength(30)]"
               prepend-icon="mdi-account"
-              hide-details
+              hide-details="auto"
               clearable
             />
 
@@ -88,7 +88,7 @@
               :readonly="!canManageUsers"
               prepend-icon="mdi-send"
               persistent-hint
-              hide-details
+              hide-details="auto"
               @click:prepend="sendEmail"
             />
 
@@ -98,7 +98,7 @@
               :readonly="!canManageUsers"
               :rules="[rules.required, rules.mobilePhone]"
               prepend-icon="mdi-phone"
-              hide-details
+              hide-details="auto"
               @click:prepend="callPhoneNumber"
             />
             <div v-if="canManageUsers" class="preference">
