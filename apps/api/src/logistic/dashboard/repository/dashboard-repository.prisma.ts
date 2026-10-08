@@ -5,7 +5,7 @@ import { DashboardGear } from "../domain/dashboard-gear";
 import { Period } from "@overbookd/time";
 import { GearPreview, GearWithDetails } from "@overbookd/http";
 import { GearSearchOptions } from "@overbookd/logistic";
-import { GearFilter } from "../../common/gear.filter";
+import { filterGears } from "../../common/gear-search.builder";
 
 export class PrismaDashboardGears implements DashboardGears {
   constructor(private readonly prisma: PrismaService) {}
@@ -14,7 +14,7 @@ export class PrismaDashboardGears implements DashboardGears {
     const gears = await this.prisma.catalogGear.findMany({
       select: SELECT_DASHBOARD_GEAR,
     });
-    const filteredGears = GearFilter.apply(gears, searchOptions);
+    const filteredGears = filterGears(gears, searchOptions);
     return filteredGears.map(DashboardGear.generatePreview);
   }
 

@@ -4,7 +4,7 @@ import {
   GearSearchOptions,
 } from "@overbookd/logistic";
 import { convertGearToApiContract, SELECT_GEAR } from "./gear.query";
-import { GearFilter } from "./gear.filter";
+import { filterGears } from "./gear-search.builder";
 import { PrismaService } from "../../prisma.service";
 import { SearchGears } from "./search-gears";
 
@@ -15,7 +15,7 @@ export class PrismaSearchGears implements SearchGears {
     const gears = await this.prismaService.catalogGear.findMany({
       select: SELECT_GEAR,
     });
-    const filteredGears = GearFilter.apply(gears, searchOptions);
+    const filteredGears = filterGears(gears, searchOptions);
     return filteredGears.map((gear) => ({
       ...convertGearToApiContract(gear),
       code: gear.category

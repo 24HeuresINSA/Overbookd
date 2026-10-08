@@ -6,8 +6,7 @@ import {
   InventoryRecord,
   InventoryRecordSearchOptions,
 } from "@overbookd/http";
-import { SlugifyService } from "@overbookd/slugify";
-import { InventoryRecordSearchBuilder } from "../inventory-record-search.builder";
+import { matchesInventorySearch } from "../inventory-record-search.builder";
 import { GroupInventoryRecord } from "../inventory-grouped-record";
 import { convertGearToApiContract } from "../../common/gear.query";
 
@@ -75,7 +74,7 @@ export class PrismaInventoryRepository implements InventoryRepository {
       return { ...record, gear };
     });
     return records
-      .filter((record) => this.isMatchingSearch(options, record))
+      .filter((record) => matchesInventorySearch(record, options))
       .reduce((groupedRecords, record) => {
         const groupedRecord = GroupInventoryRecord.fromInventoryRecord(record);
         const similarRecordIndex = groupedRecords.findIndex(
@@ -125,29 +124,5 @@ export class PrismaInventoryRepository implements InventoryRepository {
     return this.prismaService.inventoryRecord.createMany({
       data,
     });
-  }
-
-  private isMatchingSearch(
-    {
-      category,
-      search,
-      owner,
-      ponctualUsage,
-      storage,
-    }: InventoryRecordSearchOptions,
-    record: InventoryRecord,
-  ): boolean {
-    const slug = SlugifyService.applyOnOptional(search);
-    const categorySlug = SlugifyService.applyOnOptional(category);
-    const ownerSlug = SlugifyService.applyOnOptional(owner);
-    const storageSlug = SlugifyService.applyOnOptional(storage);
-
-    const gearSearch = new InventoryRecordSearchBuilder(record)
-      .addCategoryCondition(categorySlug)
-      .addSlugCondition(slug)
-      .addOwnerCondition(ownerSlug)
-      .addPonctualUsageCondition(ponctualUsage)
-      .addStorageCondition(storageSlug);
-    return gearSearch.match;
   }
 }

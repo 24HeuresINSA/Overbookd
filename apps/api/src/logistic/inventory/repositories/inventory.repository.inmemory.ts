@@ -5,8 +5,7 @@ import {
   InventoryRecord,
   InventoryRecordSearchOptions,
 } from "@overbookd/http";
-import { SlugifyService } from "@overbookd/slugify";
-import { InventoryRecordSearchBuilder } from "../inventory-record-search.builder";
+import { matchesInventorySearch } from "../inventory-record-search.builder";
 
 export class InMemoryInventoryRepository implements InventoryRepository {
   private records: InventoryRecord[];
@@ -25,7 +24,7 @@ export class InMemoryInventoryRepository implements InventoryRepository {
   ): Promise<InventoryGroupedRecord[]> {
     return Promise.resolve(
       this.records
-        .filter((record) => this.isMatchingSearch(options, record))
+        .filter((record) => matchesInventorySearch(record, options))
         .reduce((groupedRecords, record) => {
           const groupedRecord =
             GroupInventoryRecord.fromInventoryRecord(record);
@@ -57,27 +56,4 @@ export class InMemoryInventoryRepository implements InventoryRepository {
     ]);
   }
 
-  private isMatchingSearch(
-    {
-      category,
-      search,
-      owner,
-      ponctualUsage,
-      storage,
-    }: InventoryRecordSearchOptions,
-    record: InventoryRecord,
-  ): boolean {
-    const slug = SlugifyService.applyOnOptional(search);
-    const categorySlug = SlugifyService.applyOnOptional(category);
-    const ownerSlug = SlugifyService.applyOnOptional(owner);
-    const storageSlug = SlugifyService.applyOnOptional(storage);
-
-    const gearSearch = new InventoryRecordSearchBuilder(record)
-      .addCategoryCondition(categorySlug)
-      .addSlugCondition(slug)
-      .addOwnerCondition(ownerSlug)
-      .addPonctualUsageCondition(ponctualUsage)
-      .addStorageCondition(storageSlug);
-    return gearSearch.match;
-  }
 }

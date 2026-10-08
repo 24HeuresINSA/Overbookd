@@ -1,5 +1,5 @@
 import { SlugifyService } from "@overbookd/slugify";
-import { InventoryRecord } from "@overbookd/http";
+import { InventoryRecord, InventoryRecordSearchOptions } from "@overbookd/http";
 import { GearSearchBuilder } from "../common/gear-search.builder";
 
 export class InventoryRecordSearchBuilder {
@@ -44,4 +44,21 @@ export class InventoryRecordSearchBuilder {
   get match(): boolean {
     return this.gearSearchBuilder.match && this.storageCondition;
   }
+}
+
+export function matchesInventorySearch(
+  record: InventoryRecord,
+  options: InventoryRecordSearchOptions,
+): boolean {
+  const slug = SlugifyService.applyOnOptional(options.search);
+  const category = SlugifyService.applyOnOptional(options.category);
+  const owner = SlugifyService.applyOnOptional(options.owner);
+  const storage = SlugifyService.applyOnOptional(options.storage);
+
+  return new InventoryRecordSearchBuilder(record)
+    .addCategoryCondition(category)
+    .addSlugCondition(slug)
+    .addOwnerCondition(owner)
+    .addPonctualUsageCondition(options.ponctualUsage)
+    .addStorageCondition(storage).match;
 }
