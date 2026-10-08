@@ -1,6 +1,6 @@
 export type CatalogGearForm = {
   name: string;
-  categoryId?: number;
+  categoryId: number;
   isPonctualUsage: boolean;
   isConsumable: boolean;
 };

@@ -127,10 +127,9 @@ export class CatalogCategoryManager {
     const categoryToDelete = await this.categories.getCategory(id);
     if (!categoryToDelete) return;
 
-    const newParent =
-      categoryToDelete.parent !== undefined
-        ? await this.categories.getCategory(categoryToDelete.parent)
-        : undefined;
+    const newParent = categoryToDelete.parent
+      ? await this.categories.getCategory(categoryToDelete.parent)
+      : undefined;
     const directChildren = await this.categories.getSubCategories(
       categoryToDelete.id,
     );

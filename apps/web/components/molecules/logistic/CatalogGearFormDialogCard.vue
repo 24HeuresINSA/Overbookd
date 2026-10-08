@@ -81,10 +81,6 @@ watch(
   },
 );
 
-const shouldUpdateCategory = computed<boolean>(
-  () => category.value !== undefined || props.gear.category !== undefined,
-);
-
 const emit = defineEmits(["close"]);
 const close = () => emit("close");
 
@@ -92,15 +88,12 @@ const cantCreateOrUpdateGear = computed<boolean>(
   () => name.value.length < NAME_MIN_LENGTH || !category.value,
 );
 const createOrUpdateGear = async () => {
-  if (cantCreateOrUpdateGear.value) return;
-  const categoryParams = shouldUpdateCategory.value
-    ? { category: category.value?.id }
-    : {};
+  if (cantCreateOrUpdateGear.value || !category.value) return;
   const gear: CatalogGearForm = {
     name: name.value,
     isPonctualUsage: isPonctualUsage.value,
     isConsumable: isConsumable.value,
-    ...categoryParams,
+    categoryId: category.value.id,
   };
   props.gear.id
     ? await catalogGearStore.updateGear(props.gear.id, gear)

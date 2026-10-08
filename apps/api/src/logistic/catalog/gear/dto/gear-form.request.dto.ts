@@ -4,7 +4,6 @@ import {
   IsBoolean,
   IsDefined,
   IsInt,
-  IsOptional,
   IsString,
   MinLength,
 } from "class-validator";
@@ -36,10 +35,10 @@ export class GearFormRequestDto implements CatalogGearForm {
   isConsumable: boolean;
 
   @ApiProperty({
-    required: false,
+    required: true,
     description: "Category id to link gear to",
   })
-  @IsOptional()
+  @IsDefined()
   @IsInt()
-  category?: number;
+  categoryId: number;
 }

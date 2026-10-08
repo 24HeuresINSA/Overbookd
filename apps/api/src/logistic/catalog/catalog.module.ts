@@ -14,6 +14,7 @@ import { PrismaFindCatalogCategories } from "./gear/repository/find-catalog-cate
 import { PrismaCatalogCategories } from "./category/repository/catalog-categories.prisma";
 import { PrismaSearchGears } from "../common/search-gears.prisma";
 import { SearchGears } from "../common/search-gears";
+import { PrismaModule } from "../../prisma.module";
 
 @Module({
   providers: [
@@ -79,5 +80,6 @@ import { SearchGears } from "../common/search-gears";
   ],
   controllers: [CategoryController, CatalogGearController],
   exports: [CatalogGearService, CatalogCategoryService],
+  imports: [PrismaModule],
 })
 export class CatalogModule {}
