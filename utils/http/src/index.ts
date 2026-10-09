@@ -55,12 +55,6 @@ export type {
   GearWithDetails,
   Inquiry as GearDetailsInquiry,
 } from "./logistic/dashboard";
-export type {
-  InventoryRecordSearchOptions,
-  InventoryGroupedRecord,
-  InventoryRecord,
-  LiteInventoryRecord,
-} from "./logistic/inventory";
 
 // PLANNING
 export type { PlanningTask, TaskForCalendar } from "./planning/task";

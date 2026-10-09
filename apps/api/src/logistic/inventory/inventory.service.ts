@@ -1,46 +1,30 @@
-import { Inject } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import {
   InventoryGroupedRecord,
   InventoryRecord,
   InventoryRecordSearchOptions,
-  LiteInventoryRecord,
 } from "@overbookd/http";
+import { InventoryManager } from "@overbookd/logistic";
 
-export function toLiteRecord(record: InventoryRecord): LiteInventoryRecord {
-  const { gear: _, ...liteRecord } = record;
-  return liteRecord;
-}
-
-export type InventoryRepository = {
-  searchGroupedRecords(
-    searchOptions: InventoryRecordSearchOptions,
-  ): Promise<InventoryGroupedRecord[]>;
-  resetRecords(records: InventoryRecord[]): Promise<InventoryGroupedRecord[]>;
-  getRecords(gearId: number): Promise<InventoryRecord[]>;
-  getStoragesHavingGear(): Promise<string[]>;
-};
-
+@Injectable()
 export class InventoryService {
-  constructor(
-    @Inject("INVENTORY_REPOSITORY")
-    private inventoryRepository: InventoryRepository,
-  ) {}
+  constructor(private readonly inventory: InventoryManager) {}
 
   setup(records: InventoryRecord[]): Promise<InventoryGroupedRecord[]> {
-    return this.inventoryRepository.resetRecords(records);
+    return this.inventory.setup(records);
   }
 
   search(
     searchOptions: InventoryRecordSearchOptions,
   ): Promise<InventoryGroupedRecord[]> {
-    return this.inventoryRepository.searchGroupedRecords(searchOptions);
+    return this.inventory.search(searchOptions);
   }
 
   getDetails(gearId: number): Promise<InventoryRecord[]> {
-    return this.inventoryRepository.getRecords(gearId);
+    return this.inventory.getDetails(gearId);
   }
 
   getStoragesHavingGear(): Promise<string[]> {
-    return this.inventoryRepository.getStoragesHavingGear();
+    return this.inventory.getStoragesHavingGear();
   }
 }

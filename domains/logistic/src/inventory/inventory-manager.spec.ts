@@ -1,7 +1,8 @@
-import { InventoryGroupedRecord } from "@overbookd/http";
-import { CatalogCategory, CatalogGear } from "@overbookd/logistic";
-import { InventoryService, toLiteRecord } from "./inventory.service";
-import { InMemoryInventoryRepository } from "./repositories/inventory.repository.inmemory";
+import { CatalogCategory } from "../catalog/category/category.js";
+import { CatalogGear } from "../catalog/gear/gear.js";
+import { InventoryGroupedRecord, toLiteRecord } from "./inventory.js";
+import { InventoryManager } from "./inventory-manager.js";
+import { InMemoryInventoryRecords } from "./inventory-records.inmemory.js";
 import { beforeAll, describe, expect, it } from "vitest";
 
 const teamMatos = { name: "Orga Logistique Matos", code: "matos" };
@@ -66,14 +67,14 @@ const TABLE: CatalogGear = {
   isConsumable: false,
 };
 
-describe("Inventory Service", () => {
+describe("Inventory Manager", () => {
   describe("Setup inventory", () => {
-    const inventoryRepository = new InMemoryInventoryRepository();
-    const inventoryService = new InventoryService(inventoryRepository);
+    const inventoryRepository = new InMemoryInventoryRecords();
+    const inventoryManager = new InventoryManager(inventoryRepository);
     describe("when ask to setup inventory with 2 records for different gear", () => {
       let inventory: InventoryGroupedRecord[];
       beforeAll(async () => {
-        inventory = await inventoryService.setup([
+        inventory = await inventoryManager.setup([
           {
             quantity: 3,
             gear: PONCEUSE,
@@ -112,7 +113,7 @@ describe("Inventory Service", () => {
         });
       });
       it("should persist the inventory after setup", async () => {
-        const persistInventory = await inventoryService.search({});
+        const persistInventory = await inventoryManager.search({});
         expect(persistInventory).toEqual(inventory);
       });
     });
@@ -123,7 +124,7 @@ describe("Inventory Service", () => {
           { quantity: 20, gear: TABLE, storage: "Cave du E" },
           { quantity: 7, gear: TABLE, storage: "Conteneur H" },
         ];
-        const inventory = await inventoryService.setup(records);
+        const inventory = await inventoryManager.setup(records);
         expect(inventory).toHaveLength(1);
         expect(inventory).toContainEqual({
           quantity: 30,
@@ -159,7 +160,7 @@ describe("Inventory Service", () => {
             storage: "Conteneur H",
           },
         ];
-        const inventory = await inventoryService.setup([
+        const inventory = await inventoryManager.setup([
           ...tableRecords,
           ...ponceuseRecords,
           ...marteauRecords,
@@ -209,11 +210,11 @@ describe("Inventory Service", () => {
       },
     ];
     const records = [...tableRecords, ...marteauRecords, ...ponceuseRecords];
-    const inventoryRepository = new InMemoryInventoryRepository(records);
-    const inventoryService = new InventoryService(inventoryRepository);
+    const inventoryRepository = new InMemoryInventoryRecords(records);
+    const inventoryManager = new InventoryManager(inventoryRepository);
     describe("When searching all grouped records", () => {
       it("should return all grouped records with the sum of quantities", async () => {
-        const records = await inventoryService.search({});
+        const records = await inventoryManager.search({});
         expect(records).toHaveLength(3);
         expect(records).toContainEqual({
           quantity: 30,
@@ -256,7 +257,7 @@ describe("Inventory Service", () => {
         expectedGroupedRecords,
       }) => {
         it("should return all grouped records matching the gear", async () => {
-          const records = await inventoryService.search({
+          const records = await inventoryManager.search({
             search,
             category: searchCategory,
             owner: searchOwner,
@@ -290,8 +291,8 @@ describe("Inventory Service", () => {
         storage: "Conteneur H",
       },
     ];
-    const inventoryRepository = new InMemoryInventoryRepository(records);
-    const inventoryService = new InventoryService(inventoryRepository);
+    const inventoryRepository = new InMemoryInventoryRecords(records);
+    const inventoryManager = new InventoryManager(inventoryRepository);
     describe.each`
       gear                          | expectedRecords
       ${MARTEAU}                    | ${[{ quantity: 5, gear: MARTEAU, storage: "Local" }, { quantity: 15, gear: MARTEAU, storage: "Conteneur H" }]}
@@ -301,7 +302,7 @@ describe("Inventory Service", () => {
       "When looking for $gear.name inventory records",
       ({ gear, expectedRecords }) => {
         it(`should return all ${expectedRecords.length} records matching it`, async () => {
-          const res = await inventoryService.getDetails(gear.id);
+          const res = await inventoryManager.getDetails(gear.id);
           expect(res).toHaveLength(expectedRecords.length);
         });
       },
@@ -328,11 +329,11 @@ describe("Inventory Service", () => {
         storage: "Conteneur H",
       },
     ];
-    const inventoryRepository = new InMemoryInventoryRepository(records);
-    const inventoryService = new InventoryService(inventoryRepository);
+    const inventoryRepository = new InMemoryInventoryRecords(records);
+    const inventoryManager = new InventoryManager(inventoryRepository);
     describe("When searching storage locations", () => {
       it("should return all storages", async () => {
-        const res = await inventoryService.getStoragesHavingGear();
+        const res = await inventoryManager.getStoragesHavingGear();
         expect(res).toHaveLength(3);
         expect(res).toEqual(["Local", "Cave du E", "Conteneur H"]);
       });
