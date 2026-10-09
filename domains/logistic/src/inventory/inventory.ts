@@ -1,4 +1,4 @@
-import { CatalogGear, GearSearchOptions } from "@overbookd/logistic";
+import { CatalogGear, GearSearchOptions } from "../catalog/gear/gear.js";
 
 export type InventoryRecordSearchOptions = GearSearchOptions & {
   storage?: string;
@@ -18,3 +18,8 @@ export type InventoryGroupedRecord = {
   quantity: number;
   records: LiteInventoryRecord[];
 };
+
+export function toLiteRecord(record: InventoryRecord): LiteInventoryRecord {
+  const { gear: _, ...liteRecord } = record;
+  return liteRecord;
+}

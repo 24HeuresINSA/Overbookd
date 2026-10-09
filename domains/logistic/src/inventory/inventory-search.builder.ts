@@ -1,6 +1,6 @@
 import { SlugifyService } from "@overbookd/slugify";
-import { InventoryRecord, InventoryRecordSearchOptions } from "@overbookd/http";
-import { GearSearchBuilder } from "@overbookd/logistic";
+import { GearSearchBuilder } from "../catalog/gear/gear-search.builder.js";
+import { InventoryRecord, InventoryRecordSearchOptions } from "./inventory.js";
 
 class InventoryRecordSearchBuilder {
   private storageCondition = true;
