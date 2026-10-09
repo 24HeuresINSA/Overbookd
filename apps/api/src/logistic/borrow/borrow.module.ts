@@ -3,12 +3,12 @@ import { BorrowController } from "./borrow.controller";
 import { PrismaModule } from "../../prisma.module";
 import { PrismaService } from "../../prisma.service";
 import { CancelBorrow, InitBorrow, PlanBorrow } from "@overbookd/logistic";
-import { PrismaInitBorrows } from "./repository/init-borrows.prisma";
-import { PrismaPlanBorrows } from "./repository/plan-borrows.prisma";
+import { PrismaInitBorrows } from "./repositories/init-borrows.prisma";
+import { PrismaPlanBorrows } from "./repositories/plan-borrows.prisma";
 import { BorrowService, BorrowsForView } from "./borrow.service";
-import { FindGears, PrismaFindGears } from "./repository/find-gears.prisma";
-import { PrismaViewBorrows } from "./repository/view-borrows.prisma";
-import { PrismaCancelBorrows } from "./repository/cancel-borrows.prisma";
+import { FindGears, PrismaFindGears } from "./repositories/find-gears.prisma";
+import { PrismaViewBorrows } from "./repositories/view-borrows.prisma";
+import { PrismaCancelBorrows } from "./repositories/cancel-borrows.prisma";
 
 @Module({
   controllers: [BorrowController],

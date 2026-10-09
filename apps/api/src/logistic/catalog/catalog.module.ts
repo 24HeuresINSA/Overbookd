@@ -4,14 +4,14 @@ import { CatalogCategoryService } from "./category/category.service";
 import { CategoryController } from "./category/category.controller";
 import { CatalogGearController } from "./gear/gear.controller";
 import { PrismaService } from "../../prisma.service";
-import { PrismaCatalogGears } from "./gear/repository/catalog-gears.prisma";
-import { PrismaCatalogTeams } from "./category/repository/catalog-teams.prisma";
+import { PrismaCatalogGears } from "./gear/repositories/catalog-gears.prisma";
+import { PrismaCatalogTeams } from "./category/repositories/catalog-teams.prisma";
 import {
   CatalogCategoryManager,
   CatalogGearManager,
 } from "@overbookd/logistic";
-import { PrismaFindCatalogCategories } from "./gear/repository/find-catalog-categories.prisma";
-import { PrismaCatalogCategories } from "./category/repository/catalog-categories.prisma";
+import { PrismaFindCatalogCategories } from "./gear/repositories/find-catalog-categories.prisma";
+import { PrismaCatalogCategories } from "./category/repositories/catalog-categories.prisma";
 import { PrismaSearchGears } from "../common/search-gears.prisma";
 import { SearchGears } from "../common/search-gears";
 import { PrismaModule } from "../../prisma.module";

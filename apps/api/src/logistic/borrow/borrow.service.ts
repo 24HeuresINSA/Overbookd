@@ -9,7 +9,7 @@ import {
   PlanBorrow,
   PlanBorrowForm,
 } from "@overbookd/logistic";
-import { FindGears } from "./repository/find-gears.prisma";
+import { FindGears } from "./repositories/find-gears.prisma";
 
 export type BorrowsForView = {
   findAll(): Promise<Borrow[]>;
