@@ -5,7 +5,7 @@ import { DashboardGear } from "../domain/dashboard-gear";
 import { Period } from "@overbookd/time";
 import { GearPreview, GearWithDetails } from "@overbookd/http";
 import { GearSearchOptions } from "@overbookd/logistic";
-import { filterGears } from "../../common/gear-search.builder";
+import { filterGears } from "../../common/filter-gears";
 
 export class PrismaDashboardGears implements DashboardGears {
   constructor(private readonly prisma: PrismaService) {}

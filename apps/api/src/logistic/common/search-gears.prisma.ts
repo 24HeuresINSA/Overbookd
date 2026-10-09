@@ -4,7 +4,7 @@ import {
   GearSearchOptions,
 } from "@overbookd/logistic";
 import { convertGearToApiContract, SELECT_GEAR } from "./gear.query";
-import { filterGears } from "./gear-search.builder";
+import { filterGears } from "./filter-gears";
 import { PrismaService } from "../../prisma.service";
 import { SearchGears } from "./search-gears";
 
