@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import {
   GearLinkedItems,
   CatalogGears,
+  CatalogGear,
   SavedCatalogGear,
 } from "@overbookd/logistic";
 import { PrismaService } from "../../../../prisma.service";
@@ -14,7 +15,7 @@ import {
 export class PrismaCatalogGears implements CatalogGears {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findById(id: number): Promise<SavedCatalogGear | undefined> {
+  async findById(id: number): Promise<CatalogGear | undefined> {
     const gear = await this.prismaService.catalogGear.findUnique({
       where: { id },
       select: SELECT_GEAR,
@@ -22,7 +23,7 @@ export class PrismaCatalogGears implements CatalogGears {
     return gear ? convertGearToApiContract(gear) : undefined;
   }
 
-  async findBySlug(slug: string): Promise<SavedCatalogGear | undefined> {
+  async findBySlug(slug: string): Promise<CatalogGear | undefined> {
     const gear = await this.prismaService.catalogGear.findUnique({
       where: { slug },
       select: SELECT_GEAR,
@@ -30,24 +31,16 @@ export class PrismaCatalogGears implements CatalogGears {
     return gear ? convertGearToApiContract(gear) : undefined;
   }
 
-  async addGear(gear: Omit<SavedCatalogGear, "id">): Promise<SavedCatalogGear> {
+  async addGear(gear: Omit<SavedCatalogGear, "id">): Promise<CatalogGear> {
+    const { category, owner: _, ...baseGear } = gear;
     const newGear = await this.prismaService.catalogGear.create({
-      data: this.buildUpsertData(gear),
+      data: { ...baseGear, category: { connect: { id: category.id } } },
       select: SELECT_GEAR,
     });
     return convertGearToApiContract(newGear);
   }
 
-  private buildUpsertData(gear: Omit<SavedCatalogGear, "id">) {
-    const { category, owner: _, ...baseGear } = gear;
-    const categoryLink = category
-      ? { category: { connect: { id: category.id } } }
-      : {};
-
-    return { ...baseGear, ...categoryLink };
-  }
-
-  async updateGear(gear: SavedCatalogGear): Promise<SavedCatalogGear> {
+  async updateGear(gear: SavedCatalogGear): Promise<CatalogGear> {
     const { id, category, owner: _, ...data } = gear;
     const updatedGear = await this.prismaService.catalogGear.update({
       data: { ...data, category: { connect: { id: category.id } } },
@@ -75,13 +68,5 @@ export class PrismaCatalogGears implements CatalogGears {
       tasks: gear.festivalTaskInquiries.map(({ ftId }) => ftId),
       borrows: gear.borrows.map(({ borrowId }) => borrowId),
     };
-  }
-
-  async getLastId(): Promise<number> {
-    const lastGear = await this.prismaService.catalogGear.findFirst({
-      orderBy: { id: "desc" },
-      select: { id: true },
-    });
-    return lastGear?.id ?? 0;
   }
 }

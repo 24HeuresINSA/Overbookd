@@ -167,13 +167,7 @@ describe("Catalog Gear Manager", () => {
           const updatedGear = gearRepository.savedGears.find(
             (g) => g.id === toUpdateGear.id,
           );
-          const expectedGear = {
-            ...toUpdateGear,
-            slug: expectedSlug,
-            category: expectedCategory,
-            isPonctualUsage: toUpdateGear.isPonctualUsage,
-            isConsumable: toUpdateGear.isConsumable,
-          };
+          const expectedGear = { ...toUpdateGear, slug: expectedSlug };
           expect(updatedGear).toMatchObject(expectedGear);
         });
         if (expectedCategory) {

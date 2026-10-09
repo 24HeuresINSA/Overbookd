@@ -144,4 +144,8 @@ export class InMemoryCatalogCategories implements CatalogCategories {
       }),
     );
   }
+
+  get savedCategories(): CatalogCategory[] {
+    return this.categories;
+  }
 }

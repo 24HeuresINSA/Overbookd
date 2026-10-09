@@ -60,9 +60,9 @@ export class PrismaCatalogCategories implements CatalogCategories {
     const { id, ...baseCategory } = category;
     const data = this.buildUpsertData(baseCategory);
     return this.prismaService.catalogCategory.update({
-      select: SELECT_CATALOG_CATEGORY,
-      data,
       where: { id },
+      data,
+      select: SELECT_CATALOG_CATEGORY,
     });
   }
 
@@ -101,15 +101,8 @@ export class PrismaCatalogCategories implements CatalogCategories {
   private buildSearchConditions({ name, owner }: CategorySearchOptions) {
     const nameCondition = name ? { path: { contains: name } } : {};
     const ownerCondition = owner
-      ? {
-          owner: {
-            code: {
-              contains: owner,
-            },
-          },
-        }
+      ? { owner: { code: { contains: owner } } }
       : {};
-
     return { ...nameCondition, ...ownerCondition };
   }
 

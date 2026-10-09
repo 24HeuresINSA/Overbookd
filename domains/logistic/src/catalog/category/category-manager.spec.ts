@@ -23,8 +23,8 @@ describe("Category", () => {
   let teamRepository: InMemoryCatalogTeams;
   let categoryManager: CatalogCategoryManager;
   beforeEach(() => {
-    categoryRepository = new InMemoryCatalogCategories([...CATEGORIES]);
-    teamRepository = new InMemoryCatalogTeams([...OWNERS]);
+    categoryRepository = new InMemoryCatalogCategories(CATEGORIES);
+    teamRepository = new InMemoryCatalogTeams(OWNERS);
     categoryManager = new CatalogCategoryManager(
       categoryRepository,
       teamRepository,
@@ -74,10 +74,10 @@ describe("Category", () => {
         });
         it("should be accessible after", async () => {
           const createdCategory = await categoryManager.create({ name });
-          const fetchedCategory = await categoryManager.find(
-            createdCategory.id,
+          const fetchedCategory = categoryRepository.savedCategories.find(
+            (category) => category.id === createdCategory.id,
           );
-          expect(createdCategory).toMatchObject(fetchedCategory);
+          expect(createdCategory).toMatchObject(fetchedCategory!);
         });
       },
     );
@@ -174,68 +174,74 @@ describe("Category", () => {
         grandChildCategory,
         expectedGrandChildPath,
       }) => {
-        it(`should not find category #${toDeleteCategory.id} after deletion`, async () => {
+        it(`should remove category #${toDeleteCategory.id} from persistence`, async () => {
           await categoryManager.remove(toDeleteCategory.id);
-          await expect(
-            categoryManager.find(toDeleteCategory.id),
-          ).rejects.toThrow(
-            `La catégorie #${toDeleteCategory.id} n'existe pas`,
-          );
+          expect(
+            categoryRepository.savedCategories.find(
+              (category) => category.id === toDeleteCategory.id,
+            ),
+          ).toBeUndefined();
         });
         if (childCategory) {
           it(`should attach child #${childCategory.id} to the deleted category parent`, async () => {
             await categoryManager.remove(toDeleteCategory.id);
-            const child = await categoryManager.find(childCategory.id);
-            expect(child.parent).toBe(expectedChildParent);
+            const child = categoryRepository.savedCategories.find(
+              (category) => category.id === childCategory.id,
+            );
+            expect(child!.parent).toBe(expectedChildParent);
           });
           it(`should update child #${childCategory.id} path to "${expectedChildPath}"`, async () => {
             await categoryManager.remove(toDeleteCategory.id);
-            const child = await categoryManager.find(childCategory.id);
-            expect(child.path).toBe(expectedChildPath);
+            const child = categoryRepository.savedCategories.find(
+              (category) => category.id === childCategory.id,
+            );
+            expect(child!.path).toBe(expectedChildPath);
           });
         }
         if (grandChildCategory) {
           it(`should preserve grandchild #${grandChildCategory.id} parent`, async () => {
             await categoryManager.remove(toDeleteCategory.id);
-            const grandChild = await categoryManager.find(
-              grandChildCategory.id,
+            const grandChild = categoryRepository.savedCategories.find(
+              (category) => category.id === grandChildCategory.id,
             );
-            expect(grandChild.parent).toBe(childCategory.id);
+            expect(grandChild!.parent).toBe(childCategory.id);
           });
           it(`should update grandchild #${grandChildCategory.id} path to "${expectedGrandChildPath}"`, async () => {
             await categoryManager.remove(toDeleteCategory.id);
-            const grandChild = await categoryManager.find(
-              grandChildCategory.id,
+            const grandChild = categoryRepository.savedCategories.find(
+              (category) => category.id === grandChildCategory.id,
             );
-            expect(grandChild.path).toBe(expectedGrandChildPath);
+            expect(grandChild!.path).toBe(expectedGrandChildPath);
           });
         }
       },
     );
     it("should inherit the new parent owner after deleting Cable", async () => {
       await categoryManager.remove(CABLE_CATEGORY.id);
-      const grosseTension = await categoryManager.find(
-        GROSSE_TENSION_CATEGORY.id,
+      const grosseTension = categoryRepository.savedCategories.find(
+        (category) => category.id === GROSSE_TENSION_CATEGORY.id,
       );
-      expect(grosseTension.parent).toBe(ELECTRIQUE_CATEGORY.id);
-      expect(grosseTension.path).toBe("electrique->grosse-tension");
-      expect(grosseTension.owner).toEqual(ELEC_OWNER);
+      expect(grosseTension!.parent).toBe(ELECTRIQUE_CATEGORY.id);
+      expect(grosseTension!.path).toBe("electrique->grosse-tension");
+      expect(grosseTension!.owner).toEqual(ELEC_OWNER);
     });
     it("should keep the child owner when deleting a root category", async () => {
       await categoryManager.remove(ELECTRIQUE_CATEGORY.id);
-      const cable = await categoryManager.find(CABLE_CATEGORY.id);
-      expect(cable.parent).toBeUndefined();
-      expect(cable.path).toBe("cable");
-      expect(cable.owner).toEqual(ELEC_OWNER);
+      const cable = categoryRepository.savedCategories.find(
+        (category) => category.id === CABLE_CATEGORY.id,
+      );
+      expect(cable!.parent).toBeUndefined();
+      expect(cable!.path).toBe("cable");
+      expect(cable!.owner).toEqual(ELEC_OWNER);
     });
     it("should update descendant paths after deleting a root category", async () => {
       await categoryManager.remove(ELECTRIQUE_CATEGORY.id);
-      const grosseTension = await categoryManager.find(
-        GROSSE_TENSION_CATEGORY.id,
+      const grosseTension = categoryRepository.savedCategories.find(
+        (category) => category.id === GROSSE_TENSION_CATEGORY.id,
       );
-      expect(grosseTension.parent).toBe(CABLE_CATEGORY.id);
-      expect(grosseTension.path).toBe("cable->grosse-tension");
-      expect(grosseTension.owner).toEqual(ELEC_OWNER);
+      expect(grosseTension!.parent).toBe(CABLE_CATEGORY.id);
+      expect(grosseTension!.path).toBe("cable->grosse-tension");
+      expect(grosseTension!.owner).toEqual(ELEC_OWNER);
     });
   });
   describe("update a category", () => {
@@ -266,15 +272,19 @@ describe("Category", () => {
           if (childCategory) {
             it(`should update #${childCategory.id} child category path to ${childCategory.expectedPath}`, async () => {
               await categoryManager.update(toUpdateCategory);
-              const child = await categoryManager.find(childCategory.id);
-              expect(child.path).toBe(childCategory.expectedPath);
+              const child = categoryRepository.savedCategories.find(
+                (category) => category.id === childCategory.id,
+              );
+              expect(child!.path).toBe(childCategory.expectedPath);
             });
           }
           if (grandChildCategory) {
             it(`should update #${grandChildCategory.id} grandchild category path to ${grandChildCategory.expectedPath}`, async () => {
               await categoryManager.update(toUpdateCategory);
-              const child = await categoryManager.find(grandChildCategory.id);
-              expect(child.path).toBe(grandChildCategory.expectedPath);
+              const child = categoryRepository.savedCategories.find(
+                (category) => category.id === grandChildCategory.id,
+              );
+              expect(child!.path).toBe(grandChildCategory.expectedPath);
             });
           }
         },
@@ -305,15 +315,19 @@ describe("Category", () => {
           if (childCategory) {
             it(`should set #${childCategory.id} child category owner to "${expectedOwner.name}"`, async () => {
               await categoryManager.update(toUpdateCategory);
-              const child = await categoryManager.find(childCategory.id);
-              expect(child.owner).toMatchObject(expectedOwner);
+              const child = categoryRepository.savedCategories.find(
+                (category) => category.id === childCategory.id,
+              );
+              expect(child!.owner).toMatchObject(expectedOwner);
             });
           }
           if (grandChildCategory) {
             it(`should set #${grandChildCategory.id} grandchild category owner to "${expectedOwner.name}"`, async () => {
               await categoryManager.update(toUpdateCategory);
-              const child = await categoryManager.find(grandChildCategory.id);
-              expect(child.owner).toMatchObject(expectedOwner);
+              const child = categoryRepository.savedCategories.find(
+                (category) => category.id === grandChildCategory.id,
+              );
+              expect(child!.owner).toMatchObject(expectedOwner);
             });
           }
         },
@@ -353,25 +367,33 @@ describe("Category", () => {
           if (childCategory) {
             it(`should set #${childCategory.id} child category owner to "${expectedOwner.name}"`, async () => {
               await categoryManager.update(toUpdateCategory);
-              const child = await categoryManager.find(childCategory.id);
-              expect(child.owner).toMatchObject(expectedOwner);
+              const child = categoryRepository.savedCategories.find(
+                (category) => category.id === childCategory.id,
+              );
+              expect(child!.owner).toMatchObject(expectedOwner);
             });
             it(`should update #${childCategory.id} child category path to ${childCategory.expectedPath}`, async () => {
               await categoryManager.update(toUpdateCategory);
-              const child = await categoryManager.find(childCategory.id);
-              expect(child.path).toBe(childCategory.expectedPath);
+              const child = categoryRepository.savedCategories.find(
+                (category) => category.id === childCategory.id,
+              );
+              expect(child!.path).toBe(childCategory.expectedPath);
             });
           }
           if (grandChildCategory) {
             it(`should set #${grandChildCategory.id} grandchild category owner to "${expectedOwner.name}"`, async () => {
               await categoryManager.update(toUpdateCategory);
-              const child = await categoryManager.find(grandChildCategory.id);
-              expect(child.owner).toMatchObject(expectedOwner);
+              const child = categoryRepository.savedCategories.find(
+                (category) => category.id === grandChildCategory.id,
+              );
+              expect(child!.owner).toMatchObject(expectedOwner);
             });
             it(`should update #${grandChildCategory.id} grandchild category path to ${grandChildCategory.expectedPath}`, async () => {
               await categoryManager.update(toUpdateCategory);
-              const child = await categoryManager.find(grandChildCategory.id);
-              expect(child.path).toBe(grandChildCategory.expectedPath);
+              const child = categoryRepository.savedCategories.find(
+                (category) => category.id === grandChildCategory.id,
+              );
+              expect(child!.path).toBe(grandChildCategory.expectedPath);
             });
           }
         },

@@ -1,4 +1,4 @@
-import { SavedCatalogGear } from "@overbookd/logistic";
+import { CatalogGear, GearReferenceCodeGenerator } from "@overbookd/logistic";
 
 export const SELECT_GEAR = {
   id: true,
@@ -38,7 +38,7 @@ export type DatabaseGear = {
   isConsumable: boolean;
 };
 
-export function convertGearToApiContract(gear: DatabaseGear): SavedCatalogGear {
+export function convertGearToApiContract(gear: DatabaseGear): CatalogGear {
   const baseGear = {
     name: gear.name,
     slug: gear.slug,
@@ -56,5 +56,8 @@ export function convertGearToApiContract(gear: DatabaseGear): SavedCatalogGear {
   const owner = gear.category?.owner
     ? { name: gear.category.owner.name, code: gear.category.owner.code }
     : undefined;
-  return { ...baseGear, category, owner };
+  const code = gear.category
+    ? GearReferenceCodeGenerator.generate(gear.category, gear.id)
+    : undefined;
+  return { ...baseGear, category, owner, code };
 }

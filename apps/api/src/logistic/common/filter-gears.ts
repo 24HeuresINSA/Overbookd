@@ -1,20 +1,11 @@
 import { SlugifyService } from "@overbookd/slugify";
 import {
   CatalogGear,
-  GearReferenceCodeGenerator,
   GearSearchBuilder,
   GearSearchOptions,
 } from "@overbookd/logistic";
-import { convertGearToApiContract, DatabaseGear } from "./gear.query";
 
-function toCatalogGear(gear: DatabaseGear): CatalogGear {
-  const code = gear.category
-    ? GearReferenceCodeGenerator.generate(gear.category, gear.id)
-    : undefined;
-  return { ...convertGearToApiContract(gear), code };
-}
-
-export function filterGears<T extends DatabaseGear>(
+export function filterGears<T extends CatalogGear>(
   gears: T[],
   options: GearSearchOptions,
 ): T[] {
@@ -23,7 +14,7 @@ export function filterGears<T extends DatabaseGear>(
   const owner = SlugifyService.applyOnOptional(options.owner);
   return gears.filter(
     (gear) =>
-      new GearSearchBuilder(toCatalogGear(gear))
+      new GearSearchBuilder(gear)
         .addSlugCondition(slug)
         .addCategoryCondition(category)
         .addOwnerCondition(owner)

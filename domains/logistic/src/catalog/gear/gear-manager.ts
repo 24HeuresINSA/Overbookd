@@ -3,7 +3,6 @@ import { CatalogGear, GearLinkedItems, SavedCatalogGear } from "./gear";
 import { CatalogCategory } from "../category/category";
 import { GearNotFound } from "../../logistic.error";
 import { GearAlreadyExists, GearHasLinkedItems } from "../catalog.error";
-import { GearReferenceCodeGenerator } from "./gear-reference-code";
 
 type CatalogGearToAdd = {
   name: string;
@@ -17,11 +16,10 @@ type CatalogGearToUpdate = CatalogGearToAdd & {
 };
 
 export type CatalogGears = {
-  findById(id: number): Promise<SavedCatalogGear | undefined>;
-  findBySlug(slug: string): Promise<SavedCatalogGear | undefined>;
-  getLastId(): Promise<number>;
-  addGear(gear: Omit<SavedCatalogGear, "id">): Promise<SavedCatalogGear>;
-  updateGear(gear: SavedCatalogGear): Promise<SavedCatalogGear | undefined>;
+  findById(id: number): Promise<CatalogGear | undefined>;
+  findBySlug(slug: string): Promise<CatalogGear | undefined>;
+  addGear(gear: Omit<SavedCatalogGear, "id">): Promise<CatalogGear>;
+  updateGear(gear: SavedCatalogGear): Promise<CatalogGear | undefined>;
   removeGear(id: number): Promise<void>;
   getLinkedItems(id: number): Promise<Partial<GearLinkedItems>>;
 };
@@ -32,7 +30,7 @@ export class CatalogGearManager {
   async find(id: number): Promise<CatalogGear> {
     const gear = await this.gear.findById(id);
     if (!gear) throw new GearNotFound(id);
-    return this.computeGearCode(gear);
+    return gear;
   }
 
   async add({
@@ -44,7 +42,7 @@ export class CatalogGearManager {
     const existingGear = await this.gear.findBySlug(SlugifyService.apply(name));
     if (existingGear) throw new GearAlreadyExists(existingGear.name);
 
-    const newGear = await this.gear.addGear({
+    return this.gear.addGear({
       name,
       category,
       owner: category?.owner,
@@ -52,7 +50,6 @@ export class CatalogGearManager {
       isPonctualUsage,
       isConsumable,
     });
-    return this.computeGearCode(newGear);
   }
 
   async update(gear: CatalogGearToUpdate): Promise<CatalogGear> {
@@ -63,7 +60,7 @@ export class CatalogGearManager {
       owner: gear.category?.owner,
     });
     if (!updatedGear) throw new GearNotFound(gear.id);
-    return this.computeGearCode(updatedGear);
+    return updatedGear;
   }
 
   async remove(id: number): Promise<void> {
@@ -86,13 +83,5 @@ export class CatalogGearManager {
     }
 
     return this.gear.removeGear(id);
-  }
-
-  private computeGearCode(gear: SavedCatalogGear): CatalogGear {
-    if (!gear.category) return gear;
-    return {
-      ...gear,
-      code: GearReferenceCodeGenerator.generate(gear.category, gear.id),
-    };
   }
 }
