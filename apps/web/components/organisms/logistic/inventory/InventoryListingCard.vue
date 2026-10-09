@@ -65,11 +65,11 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  type GearSearchOptions,
-  type InventoryGroupedRecord,
-  type InventoryRecordSearchOptions,
+import type {
+  InventoryGroupedRecord,
+  InventoryRecordSearchOptions,
 } from "@overbookd/http";
+import type { GearSearchOptions } from "@overbookd/logistic";
 import type { FilterGear } from "~/utils/logistic/filter-gear";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { slugifiedFilter } from "~/utils/search/search.utils";

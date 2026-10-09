@@ -1,4 +1,4 @@
-import { CatalogGear, GearSearchOptions } from "./gear";
+import { CatalogGear, GearSearchOptions } from "@overbookd/logistic";
 
 export type InventoryRecordSearchOptions = GearSearchOptions & {
   storage?: string;

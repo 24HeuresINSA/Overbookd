@@ -36,7 +36,7 @@ import type {
   CatalogCategory,
   CatalogCategoryTree,
   CategoryForm,
-} from "@overbookd/http";
+} from "@overbookd/logistic";
 import type { Team } from "@overbookd/team";
 import { minLength, required } from "~/utils/rules/input.rules";
 

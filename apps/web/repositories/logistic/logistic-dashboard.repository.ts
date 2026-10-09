@@ -1,9 +1,5 @@
-import {
-  CSV,
-  type GearPreview,
-  type GearSearchOptions,
-  type GearWithDetails,
-} from "@overbookd/http";
+import { CSV, type GearPreview, type GearWithDetails } from "@overbookd/http";
+import type { GearSearchOptions } from "@overbookd/logistic";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class LogisticDashboardRepository {

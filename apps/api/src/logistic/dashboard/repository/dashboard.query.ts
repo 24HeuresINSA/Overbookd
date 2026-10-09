@@ -1,6 +1,6 @@
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
-import { SELECT_GEAR } from "../../common/repositories/gear.query";
+import { SELECT_GEAR } from "../../common/gear.query";
 
 const SELECT_INVENTORY = {
   inventoryRecords: {

@@ -1,10 +1,7 @@
 import type { Gears } from "~/domain/inventory/gears";
 import { InMemoryGears } from "~/domain/inventory/gears.inmemory";
-import type {
-  CatalogGear,
-  CatalogGearForm,
-  GearSearchOptions,
-} from "@overbookd/http";
+import type { CatalogGear, GearSearchOptions } from "@overbookd/logistic";
+import type { CatalogGearForm } from "@overbookd/http";
 import { GearsRepository } from "~/repositories/logistic/catalog.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
 

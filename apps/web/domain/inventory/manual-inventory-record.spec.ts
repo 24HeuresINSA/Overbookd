@@ -7,7 +7,7 @@ import {
   ManualInventoryRecordError,
 } from "./manual-inventory-record";
 import { marteau, perceuse, scieCirculaire } from "./test-helper";
-import type { CatalogGear } from "@overbookd/http";
+import type { CatalogGear } from "@overbookd/logistic";
 
 describe("Inventory Fill Form", () => {
   describe("When using a manual record with existing gear", () => {

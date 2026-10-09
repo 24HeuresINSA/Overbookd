@@ -1,4 +1,4 @@
-import type { CatalogGear } from "@overbookd/http";
+import type { CatalogGear } from "@overbookd/logistic";
 import type { Gears } from "./gears";
 import { InventoryRecord } from "./inventory-record";
 

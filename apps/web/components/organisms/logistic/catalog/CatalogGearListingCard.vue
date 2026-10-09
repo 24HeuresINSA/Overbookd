@@ -122,7 +122,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { CatalogGear, GearSearchOptions } from "@overbookd/http";
+import type { CatalogGear, GearSearchOptions } from "@overbookd/logistic";
 import { WRITE_GEAR_CATALOG } from "@overbookd/permission";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import type { FilterGear } from "~/utils/logistic/filter-gear";

@@ -105,7 +105,7 @@ import {
   DisplayableManualInventoryRecordError,
   ManualInventoryRecordError,
 } from "~/domain/inventory/manual-inventory-record";
-import type { CatalogGear } from "@overbookd/http";
+import type { CatalogGear } from "@overbookd/logistic";
 import type { Gears } from "~/domain/inventory/gears";
 
 const catalogGearStore = useCatalogGearStore();

@@ -21,7 +21,8 @@
 </template>
 
 <script lang="ts" setup>
-import type { CatalogGear, InitInquiryRequest } from "@overbookd/http";
+import type { CatalogGear } from "@overbookd/logistic";
+import type { InitInquiryRequest } from "@overbookd/http";
 import { type IProvidePeriod, ONE_HOUR_IN_MS, Period } from "@overbookd/time";
 
 const configurationStore = useConfigurationStore();

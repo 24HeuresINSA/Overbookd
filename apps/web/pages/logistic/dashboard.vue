@@ -42,7 +42,7 @@
 <script lang="ts" setup>
 import type { FilterGear } from "~/utils/logistic/filter-gear";
 import { ONE_DAY_IN_MS } from "@overbookd/time";
-import type { GearSearchOptions } from "@overbookd/http";
+import type { GearSearchOptions } from "@overbookd/logistic";
 import { downloadCsv } from "~/utils/file/download.utils";
 
 useHead({ title: "Récap Matos" });

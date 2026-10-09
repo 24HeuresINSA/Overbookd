@@ -3,9 +3,9 @@ import {
   GearBorrow,
   GearDetailsInquiry,
   GearPreview,
-  GearSearchOptions,
   GearWithDetails,
 } from "@overbookd/http";
+import { GearSearchOptions } from "@overbookd/logistic";
 import { Period } from "@overbookd/time";
 import { DashboardGearFormat } from "./domain/dashboard-gear-format";
 

@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { CatalogGear } from "@overbookd/http";
+import type { CatalogGear } from "@overbookd/logistic";
 import { isNumber, min } from "~/utils/rules/input.rules";
 
 const gear = defineModel<CatalogGear>("gear", { required: false });

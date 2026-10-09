@@ -3,8 +3,8 @@ import {
   CatalogCategoryIdentifier,
   CatalogGear,
   CategoryOwner,
-} from "@overbookd/http";
-import { CategoryOwnerResponseDto } from "../../catalog/dto/category-owner.response.dto";
+} from "@overbookd/logistic";
+import { CategoryOwnerResponseDto } from "../../catalog/category/dto/category-owner.response.dto";
 import { CatalogCategoryIdentifierResponseDto } from "./catalog-category-identifier.dto";
 
 export class CatalogGearResponseDto implements CatalogGear {

@@ -8,7 +8,7 @@ import {
   monday21At10,
   saturday19At16,
   table,
-} from "../../logistic.test-utils.js";
+} from "../borrow.test-utils.js";
 import { NotEnoughQuantity } from "../../logistic.error.js";
 
 describe("Plan borrow", () => {

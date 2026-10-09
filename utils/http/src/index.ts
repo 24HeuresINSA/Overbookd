@@ -44,6 +44,7 @@ export type {
 
 // LOGISTIC
 export type { AddGearRequestForm } from "./logistic/borrow";
+export type { CatalogGearForm } from "./logistic/catalog";
 export type {
   Inquiry,
   BaseGearDetails,
@@ -60,19 +61,6 @@ export type {
   InventoryRecord,
   LiteInventoryRecord,
 } from "./logistic/inventory";
-export type {
-  GearSearchOptions,
-  CatalogGear,
-  CatalogGearForm,
-} from "./logistic/gear";
-export type {
-  CategoryOwner,
-  CategoryForm,
-  CatalogCategoryIdentifier,
-  CategorySearchOptions,
-  CatalogCategory,
-  CatalogCategoryTree,
-} from "./logistic/catalog";
 
 // PLANNING
 export type { PlanningTask, TaskForCalendar } from "./planning/task";

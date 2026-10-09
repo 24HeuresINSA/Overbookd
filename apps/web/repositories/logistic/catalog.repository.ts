@@ -5,12 +5,12 @@ import type {
   GearSearchOptions,
   CatalogCategory,
   CatalogCategoryTree,
-  CatalogGearForm,
-} from "@overbookd/http";
+} from "@overbookd/logistic";
+import type { CatalogGearForm } from "@overbookd/http";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class GearsRepository {
-  private static readonly basePath = "logistic/gears";
+  private static readonly basePath = "logistic/catalog/gears";
 
   static searchGears(searchOptions: GearSearchOptions) {
     return HttpClient.get<CatalogGear[]>({
@@ -33,7 +33,7 @@ export class GearsRepository {
 }
 
 export class CategoryRepository {
-  private static readonly basePath = "logistic/categories";
+  private static readonly basePath = "logistic/catalog/categories";
 
   static searchCategories(searchOptions?: CategorySearchOptions) {
     return HttpClient.get<CatalogCategory[]>({

@@ -1,0 +1,118 @@
+import { Injectable } from "@nestjs/common";
+import { PrismaService } from "../../../../prisma.service";
+import {
+  CatalogCategory,
+  CatalogCategoryTree,
+  CategorySearchOptions,
+  CategoryAlreadyExists,
+  CatalogCategories,
+} from "@overbookd/logistic";
+import { SELECT_CATALOG_CATEGORY } from "./catalog-categories.query";
+
+@Injectable()
+export class PrismaCatalogCategories implements CatalogCategories {
+  constructor(private readonly prismaService: PrismaService) {}
+
+  getCategory(id: number): Promise<CatalogCategory> {
+    return this.prismaService.catalogCategory.findUnique({
+      select: SELECT_CATALOG_CATEGORY,
+      where: { id },
+    });
+  }
+
+  getSubCategories(parentId: number): Promise<CatalogCategory[]> {
+    return this.prismaService.catalogCategory.findMany({
+      select: SELECT_CATALOG_CATEGORY,
+      where: {
+        parent: parentId,
+      },
+    });
+  }
+
+  async addCategory(
+    category: Omit<CatalogCategory, "id">,
+  ): Promise<CatalogCategory> {
+    try {
+      const data = this.buildUpsertData(category);
+      return await this.prismaService.catalogCategory.create({
+        select: SELECT_CATALOG_CATEGORY,
+        data,
+      });
+    } catch (e) {
+      if (this.prismaService.isUniqueConstraintViolation(e)) {
+        throw new CategoryAlreadyExists(category.name);
+      }
+      throw e;
+    }
+  }
+
+  removeCategory(id: number): Promise<CatalogCategory> {
+    return this.prismaService.catalogCategory.delete({ where: { id } });
+  }
+
+  updateCategories(categories: CatalogCategory[]): Promise<CatalogCategory[]> {
+    return this.prismaService.$transaction(
+      categories.map((category) => this.updateCategory(category)),
+    );
+  }
+
+  updateCategory(category: CatalogCategory) {
+    const { id, ...baseCategory } = category;
+    const data = this.buildUpsertData(baseCategory);
+    return this.prismaService.catalogCategory.update({
+      where: { id },
+      data,
+      select: SELECT_CATALOG_CATEGORY,
+    });
+  }
+
+  getCategoryTrees(): Promise<CatalogCategoryTree[]> {
+    return this.prismaService.catalogCategory.findMany({
+      select: {
+        ...SELECT_CATALOG_CATEGORY,
+        subCategories: {
+          select: {
+            ...SELECT_CATALOG_CATEGORY,
+            subCategories: {
+              select: {
+                ...SELECT_CATALOG_CATEGORY,
+                subCategories: {
+                  select: {
+                    ...SELECT_CATALOG_CATEGORY,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      where: { parent: null },
+    });
+  }
+
+  searchCategory(search: CategorySearchOptions): Promise<CatalogCategory[]> {
+    const where = this.buildSearchConditions(search);
+    return this.prismaService.catalogCategory.findMany({
+      select: SELECT_CATALOG_CATEGORY,
+      where,
+    });
+  }
+
+  private buildSearchConditions({ name, owner }: CategorySearchOptions) {
+    const nameCondition = name ? { path: { contains: name } } : {};
+    const ownerCondition = owner
+      ? { owner: { code: { contains: owner } } }
+      : {};
+    return { ...nameCondition, ...ownerCondition };
+  }
+
+  private buildUpsertData(category: Omit<CatalogCategory, "id">) {
+    const { owner, parent, ...baseCategory } = category;
+    const ownerLink = owner ? { owner: { connect: { code: owner.code } } } : {};
+    const parentLink = parent
+      ? { parentCategory: { connect: { id: parent } } }
+      : {};
+
+    return { ...baseCategory, ...ownerLink, ...parentLink };
+  }
+}
