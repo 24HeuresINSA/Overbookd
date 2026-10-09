@@ -21,7 +21,7 @@ export const SELECT_GEAR = {
   },
 };
 
-export type DatabaseGear = {
+type DatabaseGear = {
   id: number;
   name: string;
   slug: string;
