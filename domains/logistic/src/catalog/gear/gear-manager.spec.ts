@@ -155,7 +155,7 @@ describe("Catalog Gear Manager", () => {
       ${{ id: 2, name: "Transat", isPonctualUsage: false, isConsumable: true }}                                    | ${"transat"}        | ${undefined}
     `(
       `When update #$toUpdateGear.id existing gear
-        with $toUpdateGear.name as name and with $toUpdateGear.category.name as category
+        with $toUpdateGear.name as name and with $expectedCategory.name as category
       `,
       ({ toUpdateGear, expectedSlug, expectedCategory }) => {
         it(`should update gear slug to ${expectedSlug}`, async () => {
