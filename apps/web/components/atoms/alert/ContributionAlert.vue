@@ -1,10 +1,12 @@
 <template>
   <v-alert
     icon="mdi-hand-coin"
+    color="secondary"
+    variant="elevated"
     border="start"
     prominent
     closable
-    @click:close="dismiss"
+    class="px-16"
   >
     <h2 class="summary">{{ alert.summary }}</h2>
     <p class="catch-phrase">
@@ -16,6 +18,15 @@
       les évènements mais aussi d'avoir le droit de votes lors des différentes
       Assemblées Générales.
     </p>
+
+    <template #close>
+      <v-btn
+        icon="mdi-close"
+        size="x-large"
+        density="compact"
+        @click="dismiss"
+      />
+    </template>
   </v-alert>
 </template>
 
@@ -41,7 +52,6 @@ const dismiss = () => emit("dismiss");
 }
 
 .details {
-  padding-right: 30px;
   @media only screen and (max-width: $mobile-max-width) {
     display: none;
   }
