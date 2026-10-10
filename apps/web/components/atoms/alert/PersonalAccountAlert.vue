@@ -2,11 +2,11 @@
   <v-alert
     icon="mdi-nuke"
     color="error"
+    variant="elevated"
     border="start"
-    dark
     prominent
     closable
-    @click:close="dismiss"
+    class="px-16"
   >
     <h2 class="summary">{{ alert.summary }}</h2>
     <p class="details">
@@ -14,8 +14,17 @@
       <br />
       Les comptes persos ne peuvent exister que si tout le monde joue le jeu en
       restant dans le positif. Sinon ça veut dire que :
-      {{ "Pas d'argent >> Pas de fûts >> Pas de manif >> Pas de manif." }}
+      <strong>Pas d'argent >> Pas de fûts >> Pas de manif >> Pas de manif.</strong>
     </p>
+
+    <template #close>
+      <v-btn
+        icon="mdi-close"
+        size="x-large"
+        density="compact"
+        @click="dismiss"
+      />
+    </template>
   </v-alert>
 </template>
 
@@ -44,7 +53,6 @@ const dismiss = () => emit("dismiss");
 }
 
 .details {
-  padding-right: 30px;
   @media only screen and (max-width: $mobile-max-width) {
     display: none;
   }

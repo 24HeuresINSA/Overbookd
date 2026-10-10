@@ -1,43 +1,67 @@
 <template>
-  <div class="alerts" :class="{ multiple: multipleAlerts, expanded: expanded }">
-    <PersonalAccountAlert
-      v-if="personalAccountAlert"
-      class="alert"
-      :alert="personalAccountAlert"
-      @dismiss="dismiss('personalAccount')"
-    />
-    <ContributionAlert
-      v-if="contributionAlert"
-      id="contribution"
-      class="alert"
-      :alert="contributionAlert"
-      @dismiss="dismiss('contribution')"
-    />
-    <ProfilePictureAlert
-      v-if="profilePictureAlert"
-      id="profile-picture"
-      class="alert"
-      @dismiss="dismiss('profilePicture')"
-    />
-    <v-btn v-if="multipleAlerts" block color="primary" @click="toggleExpand">
-      <v-icon left>
-        {{ expanded ? "mdi-arrow-collapse" : "mdi-arrow-expand" }}
-      </v-icon>
-      {{ expanded ? "Une seule alerte" : "Toutes les alertes" }}
-    </v-btn>
-  </div>
+  <v-window
+    v-model="current"
+    continuous
+    :show-arrows="alertCount > 1"
+    @mouseenter="pause"
+    @mouseleave="resume"
+  >
+    <template #prev="{ props }">
+      <v-btn
+        icon
+        size="x-large"
+        density="compact"
+        variant="plain"
+        @click="props.onClick"
+      >
+        <v-icon icon="mdi-chevron-left" :size="38" />
+      </v-btn>
+    </template>
+
+    <template #next="{ props }">
+      <v-btn
+        icon
+        size="x-large"
+        density="compact"
+        variant="plain"
+        @click="props.onClick"
+      >
+        <v-icon icon="mdi-chevron-right" :size="38" />
+      </v-btn>
+    </template>
+
+    <v-window-item v-if="personalAccountAlert">
+      <PersonalAccountAlert
+        :alert="personalAccountAlert"
+        @dismiss="dismiss('personalAccount')"
+      />
+    </v-window-item>
+
+    <v-window-item v-if="contributionAlert">
+      <ContributionAlert
+        id="contribution"
+        :alert="contributionAlert"
+        @dismiss="dismiss('contribution')"
+      />
+    </v-window-item>
+
+    <v-window-item v-if="profilePictureAlert">
+      <ProfilePictureAlert
+        id="profile-picture"
+        @dismiss="dismiss('profilePicture')"
+      />
+    </v-window-item>
+  </v-window>
 </template>
 
 <script lang="ts" setup>
 import { PersonalAccountAlert as PersonalAccountAlertType } from "@overbookd/personal-account";
 import type { Alerts } from "@overbookd/alerts";
 import { SettleAlert } from "@overbookd/contribution";
+import { useIntervalFn } from "@vueuse/core";
 
 const alertStore = useAlertStore();
-alertStore.fetchAlerts();
-
-const expanded = ref<boolean>(false);
-const toggleExpand = () => (expanded.value = !expanded.value);
+await alertStore.fetchAlerts();
 
 const personalAccountAlert = computed<PersonalAccountAlertType | undefined>(
   () => alertStore.alerts.personalAccount,
@@ -49,48 +73,19 @@ const profilePictureAlert = computed<boolean | undefined>(
   () => alertStore.alerts.profilePicture,
 );
 
-const multipleAlerts = computed<boolean>(() => {
-  const allAlerts = Object.values(alertStore.alerts);
-  const displayedAlerts = allAlerts.filter((alert) => !!alert);
-  return displayedAlerts.length > 1;
+const dismiss = (alert: keyof Alerts) => alertStore.dismiss(alert);
+
+const current = ref<number>(0);
+const alertCount = computed<number>(
+  () => Object.values(alertStore.alerts).filter((value) => !!value).length,
+);
+
+watch(alertCount, (count) => {
+  if (current.value >= count) current.value = Math.max(0, count - 1);
 });
 
-const dismiss = (alert: keyof Alerts) => alertStore.dismiss(alert);
+const { pause, resume } = useIntervalFn(() => {
+  if (alertCount.value === 1) return;
+  current.value = (current.value + 1) % alertCount.value;
+}, 5000);
 </script>
-
-<style lang="scss" scoped>
-.alerts {
-  margin: 10px 0;
-  .alert:nth-of-type(n + 2) {
-    display: none;
-  }
-  &.multiple {
-    #expand-alerts {
-      display: unset;
-    }
-    .alert:first-of-type {
-      margin-bottom: 3px;
-    }
-    &.expanded {
-      .alert:nth-of-type(n + 2) {
-        display: block;
-      }
-      .alert:first-of-type {
-        margin-bottom: 16px;
-      }
-      .alert:last-of-type {
-        margin-bottom: 3px;
-      }
-    }
-  }
-}
-
-#contribution,
-#profile-picture {
-  background-color: $yellow-24h;
-  border-color: $yellow-24h;
-  a {
-    color: $red-24h;
-  }
-}
-</style>
