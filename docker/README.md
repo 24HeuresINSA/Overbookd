@@ -1,6 +1,6 @@
 # Docker pour Overbookd
 
-Ce dossier contient les fichiers nécessaires pour lancer overbookd pour le dev avec Docker.
+Ce dossier contient les fichiers nécessaires pour lancer overbookd pour le dev avec Docker (ou Podman pour les plus aventureux/libristes).
 
 ## Les alias de commande sont dans le package.json root
 
@@ -23,7 +23,7 @@ pnpm prerelease : update version as realese-candidate (rc) of api and web
 
 ### Le fichier .env
 
-Avant de lancer le projet, il faut avoir un fichier `.env` avec les bonnes valeurs. Pour ce faire 2 options sont possibles, récupérer le fichier `.env`depuis le vault OU le remplir à la main.
+Avant de lancer le projet, il faut avoir un fichier `.env` avec les bonnes valeurs. Pour ce faire 2 options sont possibles, récupérer le fichier `.env` depuis le vault OU le remplir à la main.
 
 #### Avec le cli bitwarden
 
@@ -54,13 +54,16 @@ Les certificats sont automatiquement téléchargés avec le container `certs-dow
 
 ### Le dossier `data`
 
-Contient les données de la base de données. La structure est la suivantes :
+Contient les données de la base de données PostgreSQL. La structure est la suivante :
 
 ```txt
 data\
-    postgresql\
-        (all postgresql data)
+    dev\
+        postgresql\
+            (all postgresql data)
 ```
+
+> Au passage d'un moteur de conteneurs à l'autre, des conflits dans la gestion de l'appartenance (UID/GID) des données entre Docker et Podman apparaissent. Le plus simple pour régler le problème est de supprimer le répertoire `docker/data/dev/postgresql` pour qu'il soit recréé par le moteur nouvellement utilisé. Ça implique un reset de la DB cependant.
 
 ## Les docker-compose de prod, preprod et cetaitmieuxavant
 
@@ -110,6 +113,53 @@ Firefox utilise son propre magasin de certificats, il faut donc ajouter la CA ma
 - Cliquer sur "OK"
 
 Un tuto pour t'aider : <https://docs.redhat.com/fr/documentation/red_hat_enterprise_linux/7/html/system-level_authentication_guide/using_the_certificates_on_the_token_for_ssl_>
+
+## Utiliser Podman en développement
+
+Les commandes `pnpm dev:*` utilisent la CLI `docker`. Pour utiliser Podman à la place, il faut installer sa couche de compatibilité Docker et Docker Compose. (par exemple `podman`, `podman-docker` et `podman-compose` sous Fedora)
+
+Une fois installé, il faut activer le socket utilisateur. Sur une distribution Linux/systemd avec Podman rootless :
+
+```bash
+systemctl --user enable --now podman.socket
+```
+
+Ajouter les variables suivantes au fichier local `docker/.env` :
+
+- `CONTAINER_SOCKET_PATH=/run/user/${MY_UID}/podman/podman.sock` : pour pointer compose vers le socket Podman rootless (différent du chemin par défaut Docker)
+
+- `PODMAN_COMPOSE_IN_POD=false` : désactive le regroupement en pod de `podman-compose`, pour que `keep-id` s'applique correctement sans que le namespace du pod ne remplace ce réglage
+
+- `APP_USERNS_MODE=keep-id` : applique le paramètre `keep-id` aux conteneurs `api` et `web`, afin de conserver le même UID entre host et guest
+
+> Ne pas définir `PODMAN_USERNS=keep-id` globalement : les autres services, notamment PostgreSQL, doivent conserver leur utilisateur de démarrage par défaut.
+
+Avec Docker, laisser ces paramètres non définis pour conserver le comportement habituel. Au passage de l'un à l'autre, il faudra recréer les conteneurs concernés.
+
+### Autoriser les ports 80 et 443 avec Podman rootless
+
+Traefik publie les ports 80 et 443 pour conserver éviter de devoir préciser les ports de dev dans les URL. Toutefois, Linux réserve ces ports aux processus privilégiés par défaut, ce qui entre en conflit avec la nature rootless de Podman. 
+
+Pour changer le réglage ponctuellement :
+
+```bash
+sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80
+```
+
+Pour conserver ce réglage après un redémarrage :
+
+```bash
+echo 'net.ipv4.ip_unprivileged_port_start=80' | sudo tee /etc/sysctl.d/90-rootless-container-ports.conf
+sudo sysctl --system
+```
+
+Attention : ce réglage s'applique à tout le système, pas seulement à Podman. Il permet à tous les processus non privilégiés de réserver les ports disponibles de 80 à 1023, qui sont habituellement privilégiés. Ce réglage n'est pas nécessaire avec Docker rootful et n'est pas appliqué automatiquement par les scripts du projet.
+
+### SELinux (pour Fedora, entre autres)
+
+La configuration actuelle des conteneurs respecte les principes de fonctionnement de SELinux. (points de montage avec l'option `:z`)
+
+> Testé sur ma machine (Fedora 44 ARM64). Si ça ne fonctionne pas chez vous, faites signe !
 
 ## Les liens utiles
 
