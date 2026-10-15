@@ -68,7 +68,24 @@ Le mode `keep-id` est appliqué uniquement aux services `api` et `web`, qui doiv
 
 Avec Docker, laisser ces paramètres non définis pour conserver le comportement habituel. Après modification du mode utilisateur, recréer les conteneurs concernés pour appliquer le réglage.
 
-Traefik publie les ports 80 et 443 : le système doit autoriser Podman rootless à les utiliser. Selon la configuration SELinux, l'accès aux montages peut également nécessiter une configuration locale.
+#### Autoriser les ports 80 et 443 avec Podman rootless
+
+Traefik publie les ports 80 et 443 pour conserver les mêmes URL qu'avec Docker. Sur Linux, si ces ports sont réservés aux processus privilégiés, autoriser leur utilisation sans privilèges :
+
+```bash
+sudo sysctl -w net.ipv4.ip_unprivileged_port_start=80
+```
+
+Pour conserver ce réglage après un redémarrage :
+
+```bash
+echo 'net.ipv4.ip_unprivileged_port_start=80' | sudo tee /etc/sysctl.d/90-rootless-container-ports.conf
+sudo sysctl --system
+```
+
+Attention : ce réglage s'applique à tout le système, pas seulement à Podman. Il permet à tous les processus non privilégiés de réserver les ports disponibles à partir de 80, notamment les ports 80 à 1023 habituellement privilégiés. Les ports inférieurs à 80 restent privilégiés. Ce réglage n'est pas nécessaire avec Docker rootful et n'est pas appliqué automatiquement par les scripts du projet.
+
+Selon la configuration SELinux, l'accès aux montages peut également nécessiter une configuration locale.
 
 ### Le fichier `assets/traefik/tls.yml`
 
