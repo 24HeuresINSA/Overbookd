@@ -10,7 +10,7 @@ volumes:
 services:
   certs-downloader:
     container_name: overbookd-certs-downloader
-    image: alpine
+    image: docker.io/library/alpine
     command: >
       sh -c "cd /etc/ssl/traefik   && wget https://gitlab.com/24-heures-insa/infra/-/raw/main/data/traefik/certs/cert.pem -O cert.pem   && wget https://gitlab.com/24-heures-insa/infra/-/raw/main/data/traefik/certs/privkey.pem -O privkey.pem"
     volumes:
@@ -18,7 +18,7 @@ services:
 
   traefik:
     container_name: overbookd-traefik
-    image: traefik:v3.7.13
+    image: docker.io/library/traefik:v3.7.13
     restart: unless-stopped
     command:
       # Docker config
@@ -46,7 +46,7 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${CONTAINER_SOCKET_PATH:-/var/run/docker.sock}:/var/run/docker.sock:ro
       - certs:/etc/ssl/traefik
       - ./data/traefik/tls.yml:/etc/traefik/tls.yml
     networks:
@@ -121,7 +121,7 @@ services:
 
   mail_catcher:
     container_name: overbookd-mail-catcher
-    image: sj26/mailcatcher:v0.11.0
+    image: docker.io/sj26/mailcatcher:v0.11.0
     restart: unless-stopped
     networks:
       - overbookd_net-api
@@ -135,7 +135,7 @@ services:
 
   postgresql:
     container_name: overbookd-postgresql
-    image: postgres:18.6
+    image: docker.io/library/postgres:18.6
     restart: unless-stopped
     environment:
       - POSTGRES_USER=${OVERBOOKD_DATABASE_USERNAME}
@@ -150,7 +150,7 @@ services:
 
   adminer:
     container_name: overbookd-adminer
-    image: adminer:6.1.1
+    image: docker.io/library/adminer:6.1.1
     restart: unless-stopped
     networks:
       - overbookd_net-api
