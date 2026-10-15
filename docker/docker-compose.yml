@@ -64,6 +64,7 @@ services:
 
   api:
     container_name: overbookd-api
+    init: true
     user: ${MY_UID}:${MY_GID}
     userns_mode: ${APP_USERNS_MODE:-}
     image: overbookd:dev
@@ -170,6 +171,7 @@ services:
 
   web:
     container_name: overbookd-web
+    init: true
     user: ${MY_UID}:${MY_GID}
     userns_mode: ${APP_USERNS_MODE:-}
     image: overbookd:dev
