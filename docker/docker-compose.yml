@@ -5,6 +5,7 @@ networks:
 
 volumes:
   certs:
+  postgresql-data:
 
 
 services:
@@ -146,7 +147,7 @@ services:
     networks:
       - overbookd_net-api
     volumes:
-      - ./data/dev/postgresql:/var/lib/postgresql
+      - postgresql-data:/var/lib/postgresql
 
   adminer:
     container_name: overbookd-adminer

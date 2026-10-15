@@ -52,15 +52,13 @@ Contient les certificats TLS pour le dev. Il est fourni dans se repo.
 Sans lui, le domaine `24h.localhost` ne sera pas de confiance.
 Les certificats sont automatiquement téléchargés avec le container `certs-downloader:` et sont stockés dans le volume `certs` au chemin `/etc/ssl/traefik`.
 
-### Le dossier `data`
+### Les données PostgreSQL
 
-Contient les données de la base de données. La structure est la suivantes :
+Les données de la base de données sont stockées dans le volume nommé `postgresql-data`, géré par Docker ou Podman. Chaque moteur utilise son propre volume, ce qui évite les conflits de permissions entre Docker et Podman rootless.
 
-```txt
-data\
-    postgresql\
-        (all postgresql data)
-```
+Le volume est conservé lors d'un `pnpm dev:down`. Attention : `docker compose down --volumes` (ou son équivalent Podman, avec les mêmes options de projet) supprime les volumes du projet, dont les données PostgreSQL.
+
+L'ancien dossier `docker/data/dev/postgresql` n'est plus utilisé. Ses données ne sont pas migrées automatiquement : après ce changement, lancer `pnpm db:reset` pour appliquer les migrations et initialiser les données de développement. Cette commande réinitialise la base de données.
 
 ## Les docker-compose de prod, preprod et cetaitmieuxavant
 
