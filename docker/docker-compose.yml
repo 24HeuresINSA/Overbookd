@@ -65,6 +65,7 @@ services:
   api:
     container_name: overbookd-api
     user: ${MY_UID}:${MY_GID}
+    userns_mode: ${APP_USERNS_MODE:-}
     image: overbookd:dev
     restart: unless-stopped
     networks:
@@ -170,6 +171,7 @@ services:
   web:
     container_name: overbookd-web
     user: ${MY_UID}:${MY_GID}
+    userns_mode: ${APP_USERNS_MODE:-}
     image: overbookd:dev
     volumes:
       - ../:/overbookd

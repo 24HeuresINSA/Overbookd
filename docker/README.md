@@ -46,6 +46,30 @@ Copier et modifier les valeurs du fichier `.env`
 cp docker/.env.example docker/.env
 ```
 
+### Utiliser Podman en développement
+
+Les commandes `pnpm dev:*` utilisent le CLI `docker`. Avec Podman, installer sa couche de compatibilité Docker (par exemple `podman-docker`) ainsi que `podman-compose` pour conserver les mêmes commandes.
+
+Sur Linux avec Podman rootless, activer le socket utilisateur :
+
+```bash
+systemctl --user enable --now podman.socket
+```
+
+Ajouter les paramètres suivants au fichier local `docker/.env` :
+
+```dotenv
+CONTAINER_SOCKET_PATH=/run/user/${MY_UID}/podman/podman.sock
+PODMAN_COMPOSE_IN_POD=false
+APP_USERNS_MODE=keep-id
+```
+
+Le mode `keep-id` est appliqué uniquement aux services `api` et `web`, qui doivent écrire dans le dépôt monté depuis l'hôte. Le regroupement en pod est désactivé pour que le namespace du pod ne remplace pas ce réglage. Ne pas définir `PODMAN_USERNS=keep-id` globalement : les autres services, notamment PostgreSQL, doivent conserver leur utilisateur de démarrage par défaut.
+
+Avec Docker, laisser ces paramètres non définis pour conserver le comportement habituel. Après modification du mode utilisateur, recréer les conteneurs concernés pour appliquer le réglage.
+
+Traefik publie les ports 80 et 443 : le système doit autoriser Podman rootless à les utiliser. Selon la configuration SELinux, l'accès aux montages peut également nécessiter une configuration locale.
+
 ### Le fichier `assets/traefik/tls.yml`
 
 Contient les certificats TLS pour le dev. Il est fourni dans se repo.
