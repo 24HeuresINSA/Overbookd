@@ -85,7 +85,15 @@ sudo sysctl --system
 
 Attention : ce réglage s'applique à tout le système, pas seulement à Podman. Il permet à tous les processus non privilégiés de réserver les ports disponibles à partir de 80, notamment les ports 80 à 1023 habituellement privilégiés. Les ports inférieurs à 80 restent privilégiés. Ce réglage n'est pas nécessaire avec Docker rootful et n'est pas appliqué automatiquement par les scripts du projet.
 
-Selon la configuration SELinux, l'accès aux montages peut également nécessiter une configuration locale.
+#### SELinux (Fedora notamment)
+
+Les montages du dépôt dans `api` et `web` utilisent l'option `:z`. Docker ou Podman applique ainsi aux fichiers un label SELinux autorisant leur partage entre conteneurs, sans changer leur propriétaire. Ne pas remplacer `:z` par `:Z` : ce dernier attribue un label privé incompatible avec le partage du même dépôt entre ces services. Le premier démarrage peut être plus lent, car le moteur parcourt les fichiers pour les réétiqueter. Ces labels restent sur les fichiers après l'arrêt des conteneurs.
+
+Le volume nommé `certs`, partagé entre `certs-downloader` et Traefik, utilise également `:z` sur les deux montages. Ce réglage permet au téléchargeur, qui reste confiné, d'écrire les certificats même lorsque le volume est aussi utilisé par Traefik sans séparation SELinux.
+
+Traefik utilise `security_opt: [label=disable]` pour accéder au socket du moteur sans réétiqueter ce socket système. Cela désactive uniquement la séparation SELinux de Traefik ; les autres services conservent leur confinement. Ce choix est réservé à cette configuration de développement et réduit l'isolation de Traefik.
+
+Il n'est pas nécessaire de désactiver SELinux globalement ni de générer une règle `audit2allow` pour autoriser les conteneurs à accéder aux fichiers ordinaires du dossier personnel. En mode permissif, les alertes signalent les accès qui seraient bloqués en mode enforcing : un démarrage réussi en mode permissif ne suffit donc pas à valider le confinement.
 
 ### Le fichier `assets/traefik/tls.yml`
 

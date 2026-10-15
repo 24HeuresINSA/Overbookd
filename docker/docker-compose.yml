@@ -15,10 +15,13 @@ services:
     command: >
       sh -c "cd /etc/ssl/traefik   && wget https://gitlab.com/24-heures-insa/infra/-/raw/main/data/traefik/certs/cert.pem -O cert.pem   && wget https://gitlab.com/24-heures-insa/infra/-/raw/main/data/traefik/certs/privkey.pem -O privkey.pem"
     volumes:
-      - certs:/etc/ssl/traefik
+      - certs:/etc/ssl/traefik:z
 
   traefik:
     container_name: overbookd-traefik
+    # Access the host container socket without relabeling the socket itself.
+    security_opt:
+      - label=disable
     image: docker.io/library/traefik:v3.7.13
     restart: unless-stopped
     command:
@@ -48,7 +51,7 @@ services:
       - 443:443
     volumes:
       - ${CONTAINER_SOCKET_PATH:-/var/run/docker.sock}:/var/run/docker.sock:ro
-      - certs:/etc/ssl/traefik
+      - certs:/etc/ssl/traefik:z
       - ./data/traefik/tls.yml:/etc/traefik/tls.yml
     networks:
       - traefik-public
@@ -73,7 +76,7 @@ services:
       - overbookd_net-api
       - traefik-public
     volumes:
-      - ../:/overbookd
+      - ../:/overbookd:z
     environment:
       HOME: /overbookd
       DOMAIN: ${OVERBOOKD_DOMAIN}
@@ -176,7 +179,7 @@ services:
     userns_mode: ${APP_USERNS_MODE:-}
     image: overbookd:dev
     volumes:
-      - ../:/overbookd
+      - ../:/overbookd:z
     environment:
       HOME: /overbookd
       HOST: 0.0.0.0
