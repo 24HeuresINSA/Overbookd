@@ -1,5 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { InventoryGroupedRecord, LiteInventoryRecord } from "@overbookd/http";
+import {
+  InventoryGroupedRecord,
+  LiteInventoryRecord,
+} from "@overbookd/logistic";
 import { CatalogGear } from "@overbookd/logistic";
 import { CatalogGearResponseDto } from "../../common/dto/catalog-gear.response.dto";
 

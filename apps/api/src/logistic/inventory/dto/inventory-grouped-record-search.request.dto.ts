@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsBoolean, IsOptional, IsString, MinLength } from "class-validator";
 import { Transform } from "class-transformer";
-import { InventoryRecordSearchOptions } from "@overbookd/http";
+import { InventoryRecordSearchOptions } from "@overbookd/logistic";
 
 export class InventoryGroupedRecordSearchRequestDto implements InventoryRecordSearchOptions {
   @ApiProperty({

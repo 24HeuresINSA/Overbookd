@@ -68,7 +68,7 @@
 import type {
   InventoryGroupedRecord,
   InventoryRecordSearchOptions,
-} from "@overbookd/http";
+} from "@overbookd/logistic";
 import type { GearSearchOptions } from "@overbookd/logistic";
 import type { FilterGear } from "~/utils/logistic/filter-gear";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
