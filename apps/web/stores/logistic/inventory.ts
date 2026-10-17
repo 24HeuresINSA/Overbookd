@@ -3,7 +3,7 @@ import { InventoryRecord } from "~/domain/inventory/inventory-record";
 import type {
   InventoryGroupedRecord,
   InventoryRecordSearchOptions,
-} from "@overbookd/http";
+} from "@overbookd/logistic";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import { InventoryRepository } from "~/repositories/logistic/inventory.repository";
 

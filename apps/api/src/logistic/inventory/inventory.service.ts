@@ -3,8 +3,8 @@ import {
   InventoryGroupedRecord,
   InventoryRecord,
   InventoryRecordSearchOptions,
-} from "@overbookd/http";
-import { InventoryManager } from "@overbookd/logistic";
+  InventoryManager,
+} from "@overbookd/logistic";
 
 @Injectable()
 export class InventoryService {
