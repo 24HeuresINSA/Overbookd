@@ -6,19 +6,21 @@ networks:
 volumes:
   certs:
 
-
 services:
   certs-downloader:
     container_name: overbookd-certs-downloader
     image: alpine
     command: >
-      sh -c "cd /etc/ssl/traefik   && wget https://gitlab.com/24-heures-insa/infra/-/raw/main/data/traefik/certs/cert.pem -O cert.pem   && wget https://gitlab.com/24-heures-insa/infra/-/raw/main/data/traefik/certs/privkey.pem -O privkey.pem"
+      sh -c "cd /etc/ssl/traefik && wget https://gitlab.com/24-heures-insa/infra/-/raw/main/data/traefik/certs/cert.pem -O cert.pem && wget https://gitlab.com/24-heures-insa/infra/-/raw/main/data/traefik/certs/privkey.pem -O privkey.pem"
     volumes:
       - certs:/etc/ssl/traefik
 
   traefik:
     container_name: overbookd-traefik
     image: traefik:v3.7.13
+    depends_on:
+      certs-downloader:
+        condition: service_completed_successfully
     restart: unless-stopped
     command:
       # Docker config
