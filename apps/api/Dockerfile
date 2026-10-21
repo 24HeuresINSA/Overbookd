@@ -4,12 +4,10 @@ ENV CI=true
 
 WORKDIR /overbookd
 
-RUN npm install -g pnpm@10.34.5
-COPY pnpm-lock.yaml package.json ./
+RUN npm install -g pnpm@12.14.0
+COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 
 RUN pnpm fetch
-
-COPY pnpm-workspace.yaml ./
 
 COPY apps/api/ ./apps/api
 COPY libraries/ ./libraries
@@ -38,7 +36,7 @@ LABEL org.24heures.overbookd.image.title="Overbookd-api" \
 
 ENV NODE_ENV=production
 
-RUN npm install -g pnpm@10.34.5 \
+RUN npm install -g pnpm@12.14.0 \
   && apk update \
   && apk add --no-cache openssl
 
