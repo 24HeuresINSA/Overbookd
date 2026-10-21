@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/time",
-  "version": "2.0.20",
+  "version": "2.0.21",
   "description": "Gestion du temps pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -53,7 +53,7 @@
     "edition"
   ],
   "engines": {
-    "node": "24.21.0",
+    "node": "24.22.0",
     "pnpm": "12.14.0"
   }
 }
