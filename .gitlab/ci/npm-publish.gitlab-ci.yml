@@ -1,7 +1,7 @@
 npm-publish:
   stage: npm-publish
   extends: .setup-pnpm
-  image: node:24.21.0-alpine
+  image: node:24.22.1-alpine
   needs: []
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $RELEASE'

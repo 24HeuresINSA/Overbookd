@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "4.2.2-rc.2",
+  "version": "4.2.2-rc.3",
   "main": "index.js",
   "keywords": [],
   "license": "Apache-2.0",
@@ -48,7 +48,7 @@
   },
   "packageManager": "pnpm@12.14.0",
   "engines": {
-    "node": "24.21.0",
+    "node": "24.22.1",
     "pnpm": "12.14.0"
   },
   "scarfSettings": {
