@@ -5,11 +5,9 @@ ENV CI=true
 WORKDIR /overbookd
 
 RUN npm install -g pnpm@12.14.0
-COPY pnpm-lock.yaml package.json ./
+COPY pnpm-lock.yaml package.json pnpm-workspace.yaml ./
 
 RUN pnpm fetch
-
-COPY pnpm-workspace.yaml ./
 
 COPY apps/api/ ./apps/api
 COPY libraries/ ./libraries

@@ -5,6 +5,7 @@ packages:
   - apps/**
   - utils/**
   - '!**/dist/**'
+minimumReleaseAge: 0
 allowBuilds:
   '@nestjs/core': true
   '@parcel/watcher': true

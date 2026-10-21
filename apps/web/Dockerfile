@@ -3,11 +3,10 @@ FROM node:24.21.0-alpine AS installer
 WORKDIR /overbookd
 
 RUN npm install -g pnpm@12.14.0
-COPY pnpm-lock.yaml ./
+COPY pnpm-lock.yaml pnpm-workspace.yaml ./
 
 RUN pnpm fetch
 
-COPY pnpm-workspace.yaml ./
 COPY package.json ./
 
 COPY apps/web /overbookd/apps/web
