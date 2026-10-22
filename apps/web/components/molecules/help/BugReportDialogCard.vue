@@ -95,6 +95,10 @@ const copyIssueTemplate = async () => {
 </script>
 
 <style lang="scss" scoped>
+code {
+  word-break: break-all;
+}
+
 .textarea {
   margin-top: 15px;
 }

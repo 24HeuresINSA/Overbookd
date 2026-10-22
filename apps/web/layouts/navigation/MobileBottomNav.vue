@@ -44,11 +44,26 @@
               :is-folded="false"
               @click="navigateAndCloseMenu(page.to)"
             />
+            <v-divider class="divider" />
+            <v-list-item
+              prepend-icon="mdi-bug"
+              class="navigation-item unfolded-item"
+              link
+              @click="openReportBugDialog"
+            >
+              <template #title>
+                <span class="navigation-item__title">Signaler un bug</span>
+              </template>
+            </v-list-item>
           </v-list>
         </v-overlay>
       </v-menu>
     </v-btn-group>
   </nav>
+
+  <v-dialog v-model="reportBug" max-width="800">
+    <BugReportDialogCard @close="reportBug = false" />
+  </v-dialog>
 </template>
 
 <script lang="ts" setup>
@@ -98,6 +113,12 @@ const navigateAndCloseMenu = async (to: string) => {
   isMenuOpen.value = false;
 };
 
+const reportBug = ref<boolean>(false);
+const openReportBugDialog = () => {
+  isMenuOpen.value = false;
+  reportBug.value = true;
+};
+
 const isCurrent = ({ to }: PageInSummary): boolean => {
   const currentPage = findPage(route.path);
   return currentPage?.to === to;
@@ -108,6 +129,8 @@ const hasPermissionFor = ({ permission }: PageInSummary): boolean => {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:meta";
+
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -171,6 +194,7 @@ const hasPermissionFor = ({ permission }: PageInSummary): boolean => {
     padding-left: 5px;
     padding-bottom: calc($bottom-nav-height + 5px);
     border-radius: $field-border-radius;
+    @include meta.load-css("./side-nav-list.scss");
   }
 }
 </style>
