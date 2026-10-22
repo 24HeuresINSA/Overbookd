@@ -111,7 +111,7 @@ const hasPermissionFor = ({ permission }: PageInSummary): boolean => {
 .bottom-nav {
   position: fixed;
   bottom: 0;
-  z-index: 100;
+  z-index: 102;
   height: $bottom-nav-height;
   width: 100vw;
   background: rgb(var(--v-theme-surface));
@@ -160,7 +160,8 @@ const hasPermissionFor = ({ permission }: PageInSummary): boolean => {
 }
 
 .overlay {
-  z-index: 10 !important;
+  // Above BottomActionBar (100), below the nav itself
+  z-index: 101 !important;
   display: flex;
   align-items: end;
   justify-content: flex-end;
