@@ -117,6 +117,10 @@ $divider-height: 1px + $divider-margin-bottom;
   }
 }
 
+.divider {
+  margin-top: $divider-margin-bottom;
+}
+
 .hide-scrollbar {
   scrollbar-width: none;
 
