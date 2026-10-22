@@ -196,6 +196,11 @@ const doughnutOptions: ChartOptions<"doughnut"> = {
   &__chart {
     position: relative;
     height: 90px;
+
+    canvas {
+      position: relative;
+      z-index: 1;
+    }
   }
 
   &__placeholder {
