@@ -61,9 +61,11 @@ const config = useRuntimeConfig();
 const version = config.public.version;
 
 const oidcUtils = useOidcUtils();
+const route = useRoute();
 
 const login = async () => {
-  await oidcUtils.login();
+  const redirect = route.query.redirect;
+  await oidcUtils.login(typeof redirect === "string" ? redirect : undefined);
   planJauneAudioPlay();
 };
 
