@@ -122,7 +122,7 @@
 
 <script lang="ts" setup>
 import type { ConfiguredBarrel } from "@overbookd/personal-account";
-import { NEGATIVE_CP_BODY_TEMPLATE } from "~/utils/mail/mail-body.constant";
+import { negativeCpBody } from "~/utils/mail/mail-body.constant";
 import { mailLinkForClient } from "~/utils/mail/mail.utils";
 import {
   CASK_MODE,
@@ -141,6 +141,7 @@ import {
 import { formatDate } from "@overbookd/time";
 
 const personalAccountStore = usePersonalAccountStore();
+const myStore = useMyStore();
 
 const mode = defineModel<SgMode>("mode", { required: true });
 const totalPrice = defineModel<number>("totalPrice", { required: true });
@@ -207,7 +208,7 @@ const negativeBalanceMailLink = computed<string>(() => {
   const mailVars = {
     bcc: mails.join("; "),
     subject: "[24 heures] Ton compte perso est dans le négatif",
-    body: NEGATIVE_CP_BODY_TEMPLATE,
+    body: myStore.loggedUser ? negativeCpBody(myStore.loggedUser) : "",
   };
   return mailLinkForClient(mailVars);
 });
