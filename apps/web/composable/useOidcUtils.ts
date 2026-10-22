@@ -25,8 +25,10 @@ export function useOidcUtils() {
   const doesUserHaveRole = (role: OverbookdOidcRole) =>
     userRoles.value.includes(role);
 
-  const login = () => {
-    return oidc.login("zitadel");
+  // callbackRedirectUrl est validé côté serveur par nuxt-oidc-auth (chemin relatif uniquement)
+  const login = (redirect?: string) => {
+    const params = redirect ? { callbackRedirectUrl: redirect } : undefined;
+    return oidc.login("zitadel", params);
   };
 
   const handleLogout = async () => {

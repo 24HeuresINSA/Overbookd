@@ -14,13 +14,14 @@ export default defineNuxtRouteMiddleware(async (to) => {
     sendFailureNotification(
       "Ta session a expiré, tu vas être redirigé vers la page de connexion.",
     );
-    return useOidcUtils().login();
+    return useOidcUtils().login(to.fullPath);
   }
 
   const isLoggedIn = oidc.loggedIn.value;
 
   if (!isLoggedIn && !isUnauthenticatedPages(to)) {
-    return navigateTo(LOGIN_URL);
+    const query = to.fullPath === HOME_URL ? {} : { redirect: to.fullPath };
+    return navigateTo({ path: LOGIN_URL, query });
   }
 
   if (isLoggedIn) {
