@@ -80,7 +80,7 @@ const copyToClipBoard = () => {
 };
 
 const copyEmailToClipBoard = () => {
-  navigator.clipboard.writeText("cellule.ecoute@24heures.org");
+  navigator.clipboard.writeText("ecoute@24heures.org");
   sendInfoNotification("Mail copié ✅");
 };
 </script>
