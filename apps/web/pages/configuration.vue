@@ -18,7 +18,8 @@
           <p>
             L'inscription des bénévoles est actuellement
             <strong>
-              {{ isVolunteerRegistrationOpen ? "ouverte" : "fermée" }} </strong>.
+              {{ isVolunteerRegistrationOpen ? "ouverte" : "fermée" }} </strong
+            >.
           </p>
           <v-btn
             :model-value="isVolunteerRegistrationOpen"
@@ -135,6 +136,11 @@
           <v-text-field
             v-model="usefulLinks.slack"
             label="Lien du groupe Slack"
+            hide-details
+          />
+          <v-text-field
+            v-model="usefulLinks.ecoute"
+            label="Lien de la cellule écoute"
             hide-details
           />
         </div>

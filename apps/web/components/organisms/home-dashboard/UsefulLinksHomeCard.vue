@@ -15,13 +15,23 @@
         <li>
           Le lien d'
           <a :href="OVERVIEW_URL" target="_blank">
-            <strong> OverView</strong> </a>, la street view des 24 heures de l'INSA.
+            <strong> OverView</strong> </a
+          >, la street view des 24 heures de l'INSA.
+        </li>
+        <li>
+          Tu trouveras
+          <a :href="ECOUTE_URL" target="_blank"> <strong> ICI</strong> </a>, le
+          lien vers le Linktree de la
+          <a href="#" @click.prevent="copyEmailToClipBoard">Cellule Ecoute</a>
+          <v-icon size="small" class="ml-1" @click="copyEmailToClipBoard">
+            mdi-email-outline </v-icon
+          >.
         </li>
         <li v-if="calendarUrl">
           <p>
             Pour ne rater aucun évènement important, tu peux récupérer le lien
             du
-            <a href="#" @click="copyToClipBoard">Google Calendar</a>
+            <a href="#" @click.prevent="copyToClipBoard">Google Calendar</a>
             <v-icon size="small" class="ml-1" @click="copyToClipBoard">
               mdi-content-copy
             </v-icon>
@@ -59,11 +69,19 @@ const calendarUrl = computed<string | undefined>(
 const slackUrl = computed<string | undefined>(
   () => configurationStore.usefulLinks.slack,
 );
+const ECOUTE_URL = computed<string | undefined>(
+  () => configurationStore.usefulLinks.ecoute,
+);
 
 const copyToClipBoard = () => {
   if (!calendarUrl.value) return;
   navigator.clipboard.writeText(calendarUrl.value);
   sendInfoNotification("Lien copié ✅");
+};
+
+const copyEmailToClipBoard = () => {
+  navigator.clipboard.writeText("cellule.ecoute@24heures.org");
+  sendInfoNotification("Mail copié ✅");
 };
 </script>
 

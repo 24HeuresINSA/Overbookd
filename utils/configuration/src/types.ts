@@ -9,6 +9,7 @@ export type Configuration<
 export type UsefulLinksConfigValue = {
   googleCalendar?: string;
   slack?: string;
+  ecoute?: string;
 };
 
 export type RegistrationFormConfigValue = {
