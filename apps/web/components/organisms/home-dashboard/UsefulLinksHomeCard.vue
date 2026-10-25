@@ -20,7 +20,7 @@
         </li>
         <li>
           Tu trouveras
-          <a :href="HELPLINE_URL" target="_blank">
+          <a :href="helplineUrl" target="_blank">
             <strong> ICI</strong> </a
           >, le lien vers le Linktree de la
           <a href="#" @click.prevent="copyEmailToClipBoard">Cellule Ecoute</a>
