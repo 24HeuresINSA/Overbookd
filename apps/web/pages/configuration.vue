@@ -139,7 +139,7 @@
             hide-details
           />
           <v-text-field
-            v-model="usefulLinks.ecoute"
+            v-model="usefulLinks.helpline"
             label="Lien de la cellule écoute"
             hide-details
           />

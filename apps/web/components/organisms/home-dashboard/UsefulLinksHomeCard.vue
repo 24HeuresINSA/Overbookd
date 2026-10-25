@@ -20,8 +20,9 @@
         </li>
         <li>
           Tu trouveras
-          <a :href="ECOUTE_URL" target="_blank"> <strong> ICI</strong> </a>, le
-          lien vers le Linktree de la
+          <a :href="HELPLINE_URL" target="_blank">
+            <strong> ICI</strong> </a
+          >, le lien vers le Linktree de la
           <a href="#" @click.prevent="copyEmailToClipBoard">Cellule Ecoute</a>
           <v-icon size="small" class="ml-1" @click="copyEmailToClipBoard">
             mdi-email-outline </v-icon
@@ -69,8 +70,8 @@ const calendarUrl = computed<string | undefined>(
 const slackUrl = computed<string | undefined>(
   () => configurationStore.usefulLinks.slack,
 );
-const ECOUTE_URL = computed<string | undefined>(
-  () => configurationStore.usefulLinks.ecoute,
+const helplineUrl = computed<string | undefined>(
+  () => configurationStore.usefulLinks.helpline,
 );
 
 const copyToClipBoard = () => {
