@@ -37,6 +37,7 @@ export default defineNuxtConfig({
           rel: "stylesheet",
           href: "https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900&display=swap",
         },
+        { rel: "manifest", href: "/manifest.json" },
       ],
     },
   },
