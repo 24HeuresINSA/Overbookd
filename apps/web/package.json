@@ -24,9 +24,9 @@
     "generate": "nuxi generate",
     "format": "prettier --write \"./**/*.ts\" \"./**/*.vue\"",
     "lint": "eslint . --fix",
-    "version:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
-    "version:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
-    "version:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
+    "version:major": "pnpm version major --no-commit-hooks --no-git-tag-version",
+    "version:minor": "pnpm version minor --no-commit-hooks --no-git-tag-version",
+    "version:patch": "pnpm version patch --no-commit-hooks --no-git-tag-version",
     "start": "nuxi start",
     "test:unit": "vitest --config ../../vitest.config.mts",
     "test:unit:ci": "vitest --config ../../vitest-ci.config.mts --watch=false"
