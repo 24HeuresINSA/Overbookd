@@ -39,9 +39,9 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "prune": "ts-prune --error --ignore 'index.ts|dist'",
-    "version:major": "pnpm version major --no-commit-hooks --no-git-tag-version",
-    "version:minor": "pnpm version minor --no-commit-hooks --no-git-tag-version",
-    "version:patch": "pnpm version patch --no-commit-hooks --no-git-tag-version",
+    "version:major": "pnpm version major --no-commit-hooks --no-git-checks --no-git-tag-version",
+    "version:minor": "pnpm version minor --no-commit-hooks --no-git-checks --no-git-tag-version",
+    "version:patch": "pnpm version patch --no-commit-hooks --no-git-checks --no-git-tag-version",
     "test:unit": "echo 'No tests'",
     "test:unit:ci": "echo 'No tests'"
   },
