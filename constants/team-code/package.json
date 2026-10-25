@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/team-code",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "Gestion des constantes des équipes pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -39,9 +39,9 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint \"src/**/*.ts\" --fix",
     "prune": "ts-prune --error --ignore 'index.ts|dist'",
-    "version:major": "pnpm version major --commit-hooks=false --git-tag-version=false",
-    "version:minor": "pnpm version minor --commit-hooks=false --git-tag-version=false",
-    "version:patch": "pnpm version patch --commit-hooks=false --git-tag-version=false",
+    "version:major": "pnpm version major --no-commit-hooks --no-git-checks --no-git-tag-version",
+    "version:minor": "pnpm version minor --no-commit-hooks --no-git-checks --no-git-tag-version",
+    "version:patch": "pnpm version patch --no-commit-hooks --no-git-checks --no-git-tag-version",
     "test:unit": "echo 'No tests'",
     "test:unit:ci": "echo 'No tests'"
   },

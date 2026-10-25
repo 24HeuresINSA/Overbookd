@@ -1,6 +1,6 @@
 {
   "name": "overbookd",
-  "version": "4.2.2-rc.9",
+  "version": "4.2.2-rc.10",
   "main": "index.js",
   "keywords": [],
   "license": "Apache-2.0",
@@ -33,7 +33,7 @@
     "lint": "pnpm --recursive run lint",
     "prune": "pnpm --recursive run prune",
     "preinstall": "npx only-allow pnpm",
-    "release:candidate": "pnpm version prerelease --preid=rc --commit-hooks=false --git-tag-version=false",
+    "release:candidate": "pnpm version prerelease --preid=rc --no-commit-hooks --no-git-checks --no-git-tag-version",
     "release": "npx commit-and-tag-version",
     "version:bump-dependent": "pnpm --recursive --filter '...^[origin/main]' --filter '![origin/main]' run version:patch",
     "version:major-dependency": "pnpm --recursive --filter '[origin/main]' run version:major",
