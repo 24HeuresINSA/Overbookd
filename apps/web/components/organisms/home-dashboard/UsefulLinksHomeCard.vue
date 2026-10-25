@@ -15,18 +15,16 @@
         <li>
           Le lien d'
           <a :href="OVERVIEW_URL" target="_blank">
-            <strong> OverView</strong> </a
-          >, la street view des 24 heures de l'INSA.
+            <strong> OverView</strong> </a>, la street view des 24 heures de l'INSA.
         </li>
         <li>
           Tu trouveras
-          <a :href="helplineUrl" target="_blank">
-            <strong> ICI</strong> </a
-          >, le lien vers le Linktree de la
+          <a :href="helplineUrl" target="_blank"> <strong> ICI</strong> </a>, le
+          lien vers le Linktree de la
           <a href="#" @click.prevent="copyEmailToClipBoard">Cellule Ecoute</a>
           <v-icon size="small" class="ml-1" @click="copyEmailToClipBoard">
-            mdi-email-outline </v-icon
-          >.
+            mdi-email-outline
+          </v-icon>.
         </li>
         <li v-if="calendarUrl">
           <p>

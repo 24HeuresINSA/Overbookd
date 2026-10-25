@@ -89,7 +89,7 @@ export const useConfigurationStore = defineStore("configuration", {
       return {
         googleCalendar: toOptionalString(links.googleCalendar),
         slack: toOptionalString(links.slack),
-        helpline: toOptionalString(links.helpline)
+        helpline: toOptionalString(links.helpline),
       };
     },
 
