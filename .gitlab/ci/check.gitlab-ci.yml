@@ -73,7 +73,7 @@ overbookd/prune:
         - constants/**/*
     - when: never
   before_script:
-    - npm install -g pnpm@12.14.0
+    - npm install -g pnpm@12.15.0
     - pnpm config set store-dir .pnpm-store
     - pnpm i
   script:
