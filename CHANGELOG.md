@@ -1,3 +1,28 @@
+## [4.3.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.2.1...v4.3.0) (2026-10-25)
+
+### Features
+
+* add filter button FA& fix version commands [#2626](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2626) ([f21d56a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/f21d56a9157cad027120cadb16d5f74079c91f2a))
+* **web:** add bug report button to mobile nav menu [#2813](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2813) ([2414356](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2414356f60b54bcf0d5b278e9bfdd49a1190dcd2))
+* **web:** PWA for Prod, Preprod, CTMA, Dev [#2383](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2383) ([5559554](https://gitlab.com/24-heures-insa/overbookd-mono/commit/55595545f8624ece5683dd547cb7f94373e80069))
+* **web:** redirect to requested page after login [#2753](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2753) ([36706cf](https://gitlab.com/24-heures-insa/overbookd-mono/commit/36706cff6ea80aa406bc55093864904df46c1925))
+
+### Bug Fixes
+
+* **assignment:** add an icon in volunteer list to know if volunteer will be minor at monday before manif event [#2728](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2728) ([5c23c1c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5c23c1c7c1cd6a74fad4f73858f35c374e48a41c))
+* **catalog:** move catalog logic from api to domain [#2239](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2239) ([bab7885](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bab788595a40d47688442df4dc47bcc305ad91e7))
+* disable auto pnpm install at each pnpm command ([4a1088f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/4a1088fdab6a8aded54664f33fc1530b94dd817e)), closes [#2821](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2821)
+* **orga-task:** add P shortcut to open and close volunteer profile [#2717](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2717) ([0833035](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0833035962220a41be333f30206fa96afbe46de5))
+* **web:** add top margin to favorite pages divider in navigation [#2817](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2817) ([c749fe5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c749fe5842757c9f525bac804f1304875f6135a9))
+* **web:** show mobile nav menu above bottom action bar [#2820](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2820) ([6a9cafb](https://gitlab.com/24-heures-insa/overbookd-mono/commit/6a9cafbbc5a8cff7e5c89fb2f95de6702dc46e50))
+* **web:** show transaction chart tooltip above total [#2808](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2808) ([3520606](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3520606851429292708a9ccd5e94da1562cf21d6))
+* **web:** sign negative CP mail with logged SG [#2575](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2575) ([eb1182f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/eb1182f70c227ace7d76d061857fda34bddbb61f))
+
+### CI/CD
+
+* publish npm packages [#2815](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2815) ([1704898](https://gitlab.com/24-heures-insa/overbookd-mono/commit/17048982afce8849213563470819904aabe37e44))
+* **renovate:** update package.json version if an imported package is updated ([0634a96](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0634a96295ec4bee15babf4645d23c47a6667ea8))
+
 ## [4.2.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.2.0...v4.2.1) (2026-10-07)
 
 ### Bug Fixes
