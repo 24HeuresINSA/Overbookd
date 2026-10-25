@@ -7,6 +7,14 @@
       variant="outlined"
       color="primary"
     />
+    <v-btn
+      v-for="team in teamsWithActivities"
+      :key="team.code"
+      :text="`FAs de ${team.name}`" 
+      :to="`${FA_URL}?team=${team.code}`"
+      variant="outlined"
+      color="primary"
+    />
   </div>
   <main class="activity fa">
     <FaFilter v-model="filters" class="activity__filtering" />
@@ -114,7 +122,7 @@ import {
   type Status,
 } from "@overbookd/festival-event-constants";
 import { SlugifyService } from "@overbookd/slugify";
-import { type User, buildUserName } from "@overbookd/user";
+import { type User, type UserPersonalData, buildUserName } from "@overbookd/user";
 import {
   type ActivityFilters,
   type ActivityReviewsFilter,
@@ -149,7 +157,7 @@ const faStore = useFestivalActivityStore();
 const layoutStore = useLayoutStore();
 const teamStore = useTeamStore();
 
-const me = computed<User | undefined>(() => myStore.loggedUser);
+const me = computed<UserPersonalData | undefined>(() => myStore.loggedUser);
 
 const canRemoveActivity = computed<boolean>(() => myStore.can(WRITE_FA));
 const tableHeaders = computed<TableHeaders>(() => {
@@ -172,6 +180,18 @@ const activities = computed<PreviewFestivalActivity[]>(
 );
 
 const loading = ref<boolean>(activities.value.length === 0);
+
+const teamsWithActivities = computed<Team[]>(() => {
+  const activitiesId = activities.value.reduce((teams: Set<string>, activities) => {
+    const { team } = activities;
+    if (team === null) return teams;
+    if (!me.value?.teams.includes(team)) return teams;
+    return teams.add(team);
+  }, new Set<string>());
+  return [...activitiesId]
+    .map((teamCode) => teamStore.getTeamByCode(teamCode))
+    .filter((team): team is Team => !!team);
+});
 
 const getStatusLabel = (status: Status): string =>
   statusLabels.get(status) ?? BROUILLON;
