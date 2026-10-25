@@ -8,8 +8,7 @@
       </p>
       <p>
         Tu peux aussi t'aider en allant voir les FA de l'année dernière sur
-        <a :href="CTMA_URL">cetaitmieuxavant</a>
-        en te connectant avec {{ CTMA_EMAIL }}.
+        <a :href="CTMA_URL">cetaitmieuxavant</a>.
       </p>
     </v-card-subtitle>
     <v-card-text>
@@ -46,7 +45,7 @@ import type {
 } from "@overbookd/festival-event";
 import type { User } from "@overbookd/user";
 import type { Team } from "@overbookd/team";
-import { CTMA_EMAIL, HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
+import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 import { CTMA_URL } from "~/utils/navigation/url.constant";
 
 const faStore = useFestivalActivityStore();

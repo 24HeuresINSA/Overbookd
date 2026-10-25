@@ -8,8 +8,7 @@
       </p>
       <p>
         Tu peux aussi t'aider en allant voir les FT de l'année dernière sur
-        <a :href="CTMA_URL">cetaitmieuxavant</a>
-        en te connectant avec {{ CTMA_EMAIL }}.
+        <a :href="CTMA_URL">cetaitmieuxavant</a>.
       </p>
     </v-card-subtitle>
 
@@ -41,7 +40,7 @@ import { useDebounceFn } from "@vueuse/core";
 import type { Team } from "@overbookd/team";
 import type { User } from "@overbookd/user";
 import type { FestivalTask } from "@overbookd/festival-event";
-import { CTMA_EMAIL, HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
+import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 import { CTMA_URL } from "~/utils/navigation/url.constant";
 
 const ftStore = useFestivalTaskStore();
