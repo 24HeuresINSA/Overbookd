@@ -10,7 +10,7 @@
     <v-btn
       v-for="team in teamsWithActivities"
       :key="team.code"
-      :text="`FAs de ${team.name}`" 
+      :text="`FAs de ${team.name}`"
       :to="`${FA_URL}?team=${team.code}`"
       variant="outlined"
       color="primary"
@@ -122,7 +122,11 @@ import {
   type Status,
 } from "@overbookd/festival-event-constants";
 import { SlugifyService } from "@overbookd/slugify";
-import { type User, type UserPersonalData, buildUserName } from "@overbookd/user";
+import {
+  type User,
+  type UserPersonalData,
+  buildUserName,
+} from "@overbookd/user";
 import {
   type ActivityFilters,
   type ActivityReviewsFilter,
@@ -182,12 +186,15 @@ const activities = computed<PreviewFestivalActivity[]>(
 const loading = ref<boolean>(activities.value.length === 0);
 
 const teamsWithActivities = computed<Team[]>(() => {
-  const activitiesId = activities.value.reduce((teams: Set<string>, activities) => {
-    const { team } = activities;
-    if (team === null) return teams;
-    if (!me.value?.teams.includes(team)) return teams;
-    return teams.add(team);
-  }, new Set<string>());
+  const activitiesId = activities.value.reduce(
+    (teams: Set<string>, activities) => {
+      const { team } = activities;
+      if (team === null) return teams;
+      if (!me.value?.teams.includes(team)) return teams;
+      return teams.add(team);
+    },
+    new Set<string>(),
+  );
   return [...activitiesId]
     .map((teamCode) => teamStore.getTeamByCode(teamCode))
     .filter((team): team is Team => !!team);
