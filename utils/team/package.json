@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/team",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Gestion des équipes pour overbookd",
   "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -50,6 +50,6 @@
   ],
   "engines": {
     "node": "24.22.1",
-    "pnpm": "12.14.0"
+    "pnpm": "12.15.0"
   }
 }
