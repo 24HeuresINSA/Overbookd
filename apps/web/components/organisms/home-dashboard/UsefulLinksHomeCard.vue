@@ -28,8 +28,10 @@
           </v-icon>
           <span v-if="helplineUrl">
             ou accéder au Linktree
-            <a :href="helplineUrl" target="_blank"><strong>ICI</strong></a></span
-          >.
+            <a
+              :href="helplineUrl"
+              target="_blank"
+            ><strong>ICI</strong></a></span>.
         </li>
         <li v-if="calendarUrl">
           <p>
