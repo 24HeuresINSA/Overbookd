@@ -18,13 +18,18 @@
             <strong> OverView</strong> </a>, la street view des 24 heures de l'INSA.
         </li>
         <li>
-          Tu trouveras
-          <a :href="helplineUrl" target="_blank"> <strong> ICI</strong> </a>, le
-          lien vers le Linktree de la
-          <a href="#" @click.prevent="copyEmailToClipBoard">Cellule Ecoute</a>
+          Un problème au sein de l'asso ? Tu peux contacter la cellule écoute
+          par mail
+          <a href="#" @click.prevent="copyEmailToClipBoard">
+            <strong>{{ ECOUTE_EMAIL }}</strong>
+          </a>
           <v-icon size="small" class="ml-1" @click="copyEmailToClipBoard">
-            mdi-email-outline
-          </v-icon>.
+            mdi-content-copy
+          </v-icon>
+          <span v-if="helplineUrl">
+            ou accéder au Linktree
+            <a :href="helplineUrl" target="_blank"><strong>ICI</strong></a></span
+          >.
         </li>
         <li v-if="calendarUrl">
           <p>
@@ -53,6 +58,7 @@ import { USEFUL_LINKS_KEY } from "@overbookd/configuration";
 import { Edition } from "@overbookd/time";
 import { WIKI_URL } from "~/utils/navigation/url.constant";
 import { OVERVIEW_URL } from "~/utils/navigation/url.constant";
+import { ECOUTE_EMAIL } from "~/utils/mail/mail.constant";
 
 const configurationStore = useConfigurationStore();
 
@@ -79,7 +85,7 @@ const copyToClipBoard = () => {
 };
 
 const copyEmailToClipBoard = () => {
-  navigator.clipboard.writeText("ecoute@24heures.org");
+  navigator.clipboard.writeText(ECOUTE_EMAIL);
   sendInfoNotification("Mail copié ✅");
 };
 </script>
