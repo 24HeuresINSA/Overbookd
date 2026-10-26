@@ -1,5 +1,6 @@
 <template>
   <DesktopPageTitle :title="titleMessage" />
+  <AlertListing />
   <v-container fluid class="pa-0">
     <v-row class="home" no-gutters>
       <v-col class="home">
@@ -54,7 +55,6 @@ import { SOFT } from "@overbookd/team-code";
 
 const myStore = useMyStore();
 const me = computed(() => myStore.loggedUser);
-
 const displayedName = computed<string>(() =>
   me.value ? nicknameOrFirstName(me.value) : "",
 );
