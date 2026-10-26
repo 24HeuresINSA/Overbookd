@@ -139,7 +139,7 @@
           />
           <v-text-field
             v-model="usefulLinks.helpline"
-            label="Lien de la cellule écoute"
+            label="Lien du Linktree de la cellule écoute"
             hide-details
           />
         </div>
