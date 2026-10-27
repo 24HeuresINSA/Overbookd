@@ -4,15 +4,15 @@
     color="secondary"
     variant="elevated"
     border="start"
+    density="comfortable"
     prominent
     closable
-    class="px-16"
   >
     <h2 class="summary">{{ alert.summary }}</h2>
     <p class="catch-phrase">
       Cette {{ alert.edition }}ème édition ne peut pas se faire sans toi !
     </p>
-    <p class="details">
+    <p class="desktop-only">
       La cotisation est nécessaire pour devenir adhérent à l'association. Cette
       adhésion te permet d'être couvert par l'assurance de l'association pendant
       les évènements mais aussi d'avoir le droit de votes lors des différentes
@@ -48,12 +48,6 @@ const dismiss = () => emit("dismiss");
 .summary {
   @media only screen and (max-width: $mobile-max-width) {
     font-size: large;
-  }
-}
-
-.details {
-  @media only screen and (max-width: $mobile-max-width) {
-    display: none;
   }
 }
 </style>

@@ -4,14 +4,15 @@
     color="secondary"
     variant="elevated"
     border="start"
+    density="comfortable"
     prominent
     closable
-    class="px-16"
   >
     <h2 class="summary">Tu n'as pas de photo de profil 🥷</h2>
-    <p class="details">
-      C'est pas très pratique pour te reconnaître. Pour en ajouter une, tu peux
-      cliquer sur le petit crayon de ton profil.
+    <p class="catch-phrase">C'est pas très pratique pour te reconnaître.</p>
+    <p class="desktop-only">
+      Pour en ajouter une, tu peux cliquer sur le petit crayon à droite de ton
+      profil.
     </p>
 
     <template #close>
@@ -34,12 +35,6 @@ const dismiss = () => emit("dismiss");
 .summary {
   @media only screen and (max-width: $mobile-max-width) {
     font-size: large;
-  }
-}
-
-.details {
-  @media only screen and (max-width: $mobile-max-width) {
-    display: none;
   }
 }
 </style>
