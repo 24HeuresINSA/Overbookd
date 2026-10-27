@@ -4,13 +4,15 @@
     color="secondary"
     variant="elevated"
     border="start"
+    density="comfortable"
     prominent
     closable
   >
     <h2 class="summary">Tu n'as pas de photo de profil 🥷</h2>
+    <p class="catch-phrase">C'est pas très pratique pour te reconnaître.</p>
     <p class="desktop-only">
-      C'est pas très pratique pour te reconnaître. Pour en ajouter une, tu peux
-      cliquer sur le petit crayon de ton profil.
+      Pour en ajouter une, tu peux cliquer sur le petit crayon à droite de ton
+      profil.
     </p>
 
     <template #close>

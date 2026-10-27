@@ -33,24 +33,22 @@
     <v-window-item v-if="personalAccountAlert">
       <PersonalAccountAlert
         :alert="personalAccountAlert"
-        :class="{ 'px-16': alertCount > 1 }"
+        :class="{ 'pl-14 pr-10': alertCount > 1 }"
         @dismiss="dismiss('personalAccount')"
       />
     </v-window-item>
 
     <v-window-item v-if="contributionAlert">
       <ContributionAlert
-        id="contribution"
         :alert="contributionAlert"
-        :class="{ 'px-16': alertCount > 1 }"
+        :class="{ 'pl-14 pr-10': alertCount > 1 }"
         @dismiss="dismiss('contribution')"
       />
     </v-window-item>
 
     <v-window-item v-if="profilePictureAlert">
       <ProfilePictureAlert
-        id="profile-picture"
-        :class="{ 'px-16': alertCount > 1 }"
+        :class="{ 'pl-14 pr-10': alertCount > 1 }"
         @dismiss="dismiss('profilePicture')"
       />
     </v-window-item>

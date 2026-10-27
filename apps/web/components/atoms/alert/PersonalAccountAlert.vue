@@ -4,17 +4,20 @@
     color="error"
     variant="elevated"
     border="start"
+    density="comfortable"
     prominent
     closable
   >
     <h2 class="summary">{{ alert.summary }}</h2>
+    <p class="catch-phrase">
+      Tu es à <strong>{{ balance }}</strong
+      >, c'est déconné !
+    </p>
     <p class="desktop-only">
-      Tu es à <strong>{{ balance }}</strong>, c'est déconné !
-      <br />
       Les comptes persos ne peuvent exister que si tout le monde joue le jeu en
       restant dans le positif. Sinon ça veut dire que :
-      <strong>
-        Pas d'argent >> Pas de fûts >> Pas de manif >> Pas de manif.
+      <strong
+        >Pas d'argent >> Pas de fûts >> Pas de manif >> Pas de manif.
       </strong>
     </p>
 

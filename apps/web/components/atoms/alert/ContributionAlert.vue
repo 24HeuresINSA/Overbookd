@@ -4,6 +4,7 @@
     color="secondary"
     variant="elevated"
     border="start"
+    density="comfortable"
     prominent
     closable
   >
