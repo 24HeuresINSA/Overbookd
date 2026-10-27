@@ -19,6 +19,7 @@
           <v-text-field
             v-model="search"
             label="Rechercher une animation"
+            autofocus
             hide-details
           />
         </template>

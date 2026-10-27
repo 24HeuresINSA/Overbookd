@@ -14,6 +14,7 @@
             v-model="search"
             label="Chercher un bénévole"
             class="filters__input"
+            autofocus
             clearable
             hide-details
             @click:clear="search = ''"

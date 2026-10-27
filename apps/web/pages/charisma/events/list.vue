@@ -16,6 +16,7 @@
           <v-text-field
             v-model="search"
             label="Rechercher une participation"
+            autofocus
             hide-details
           />
         </template>

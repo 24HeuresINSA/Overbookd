@@ -43,6 +43,7 @@
           v-model="searchFieldModel"
           :label="isTimeline ? 'Nom de la tâche' : 'Nom du bénévole'"
           clear-icon="mdi-close-circle-outline"
+          autofocus
           clearable
           hide-details
         />
