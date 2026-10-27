@@ -9,19 +9,11 @@ import {
 import { matchesInventorySearch } from "./inventory-search.builder.js";
 
 export class GroupInventoryRecord implements InventoryGroupedRecord {
-  quantity: number;
-  gear: CatalogGear;
-  records: LiteInventoryRecord[];
-
   constructor(
-    quantity: number,
-    gear: CatalogGear,
-    records: LiteInventoryRecord[],
-  ) {
-    this.quantity = quantity;
-    this.gear = gear;
-    this.records = records;
-  }
+    public quantity: number,
+    public gear: CatalogGear,
+    public records: LiteInventoryRecord[],
+  ) {}
 
   static fromInventoryRecord(record: InventoryRecord): GroupInventoryRecord {
     const { quantity, gear } = record;

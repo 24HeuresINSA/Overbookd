@@ -2,11 +2,7 @@ import { InventoryRecord } from "./inventory.js";
 import { InventoryRecords } from "./inventory-manager.js";
 
 export class InMemoryInventoryRecords implements InventoryRecords {
-  private records: InventoryRecord[];
-
-  constructor(records: InventoryRecord[] = []) {
-    this.records = records;
-  }
+  constructor(private records: InventoryRecord[] = []) {}
 
   findAll(): Promise<InventoryRecord[]> {
     return Promise.resolve(this.records);
