@@ -42,7 +42,6 @@
     "@overbookd/contribution": "workspace:*",
     "@overbookd/csv": "workspace:*",
     "@overbookd/domain-events": "workspace:*",
-    "@overbookd/event": "workspace:*",
     "@overbookd/festival-event": "workspace:*",
     "@overbookd/festival-event-constants": "workspace:*",
     "@overbookd/geo-location": "workspace:*",

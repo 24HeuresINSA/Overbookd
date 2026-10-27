@@ -2,7 +2,7 @@
   "name": "@overbookd/http",
   "version": "1.3.36",
   "description": "Utilitaire pour les requêtes HTTP",
-  "author": "Club des 24 heures de l'INSA (https: //www.24heures.org/)",
+  "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
   "license": "Apache-2.0",
   "private": true,
