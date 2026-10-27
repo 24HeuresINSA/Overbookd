@@ -1,9 +1,9 @@
 import { NestFactory } from "@nestjs/core";
+import { NestExpressApplication } from "@nestjs/platform-express";
 import { AppModule } from "./app.module";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import basicAuth from "express-basic-auth";
 import { ValidationPipe } from "@nestjs/common";
-import { json, urlencoded } from "body-parser";
 import { RouteLoggerInterceptor } from "./route-logger.interceptor";
 import { HttpExceptionFilter } from "./http-exception.filter";
 import { PeriodErrorFilter } from "./period.filter";
@@ -14,7 +14,12 @@ const SWAGGER_PROTECT_DOMAINS = [
 ];
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    routeConflictPolicy: { duplicate: "error", shadow: "warn" },
+    routeResolutionStrategy: "specificity",
+  });
+  app.useBodyParser("json", { limit: "200kb" });
+  app.useBodyParser("urlencoded", { limit: "200kb", extended: true });
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.useGlobalInterceptors(new RouteLoggerInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter(), new PeriodErrorFilter());
@@ -54,9 +59,6 @@ async function bootstrap() {
       docExpansion: "none",
     },
   });
-
-  app.use(json({ limit: "200kb" }));
-  app.use(urlencoded({ limit: "200kb", extended: true }));
 
   app.enableShutdownHooks();
 
