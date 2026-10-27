@@ -134,17 +134,15 @@ const exportPlanning = async () => {
 @use "./home-dashboard.scss" as *;
 
 .home-card {
-  &__text {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    margin-top: 10px;
-    padding-bottom: 10px;
-  }
-
   &__actions {
     display: flex;
     justify-content: center;
+  }
+
+  &__text span {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
   }
 }
 

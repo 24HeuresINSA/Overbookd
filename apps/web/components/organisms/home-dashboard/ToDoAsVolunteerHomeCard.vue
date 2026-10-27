@@ -72,4 +72,10 @@ const icon = computed<string>(() =>
 li {
   margin-left: 20px;
 }
+
+.home-card__text span {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
 </style>
