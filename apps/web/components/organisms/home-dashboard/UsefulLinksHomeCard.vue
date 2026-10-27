@@ -15,7 +15,8 @@
         <li>
           Le lien d'
           <a :href="OVERVIEW_URL" target="_blank">
-            <strong> OverView</strong> </a>, la street view des 24 heures de l'INSA.
+            <strong> OverView</strong> </a
+          >, la street view des 24 heures de l'INSA.
         </li>
         <li>
           Un problème au sein de l'asso ? Tu peux contacter la cellule écoute
@@ -29,22 +30,19 @@
             class="ml-1"
             @click="copyEcouteEmailToClipBoard"
           />
-          <template v-if="helplineUrl">
+          <span v-if="helplineUrl">
             ou accéder au Linktree
-            <a :href="helplineUrl" target="_blank">
-              <strong><u>ICI</u></strong>
-            </a>
-            .
-          </template>
+            <a :href="helplineUrl" target="_blank"> <strong>ICI</strong></a
+            >.
+          </span>
         </li>
         <li v-if="calendarUrl">
           <p>
             Pour ne rater aucun évènement important, tu peux récupérer le lien
             du
-            <a
-              href="#"
-              @click.prevent="copyCalendarUrlToClipBoard"
-            >Google Calendar</a>
+            <a href="#" @click.prevent="copyCalendarUrlToClipBoard">
+              Google Calendar
+            </a>
             <v-icon
               icon="mdi-content-copy"
               size="small"
