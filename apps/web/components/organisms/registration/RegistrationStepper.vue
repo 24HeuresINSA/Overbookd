@@ -394,7 +394,7 @@ const passwordRules = computed(() =>
     : [],
 );
 const accountStepRules = computed(() => {
-  if (step.value <= 2) return [];
+  if (step.value < 2) return [];
   return [...emailRules.value, ...passwordRules.value];
 });
 
