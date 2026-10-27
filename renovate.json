@@ -109,6 +109,13 @@
       "minimumReleaseAge": "3 days"
     },
     {
+      "description": "Group all devcontainer dependencies",
+      "matchManagers": ["devcontainer"],
+      "addLabels": ["Scope::CI"],
+      "groupName": "Devcontainer dependencies",
+      "groupSlug": "devcontainer-dependencies"
+    },
+    {
       "description": "Group all update of node",
       "matchPackageNames": ["node"],
       "groupName": "node update",
