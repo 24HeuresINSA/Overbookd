@@ -22,7 +22,10 @@
           v-if="canDownloadAndSyncPlanning"
           class="desktop-only"
         />
-        <ToDoAsVolunteerHomeCard class="desktop-only" />
+        <ToDoAsVolunteerHomeCard
+          v-if="shouldDisplayInstructionsForVolunteer"
+          class="desktop-only"
+        />
         <PersonalAccountHomeCard v-if="hasPersonalAccount" />
         <UsefulLinksHomeCard v-if="canViewUsefulLinks" />
       </v-col>
