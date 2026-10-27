@@ -6,10 +6,9 @@
     border="start"
     prominent
     closable
-    class="px-16"
   >
     <h2 class="summary">Tu n'as pas de photo de profil 🥷</h2>
-    <p class="details">
+    <p class="desktop-only">
       C'est pas très pratique pour te reconnaître. Pour en ajouter une, tu peux
       cliquer sur le petit crayon de ton profil.
     </p>
@@ -34,12 +33,6 @@ const dismiss = () => emit("dismiss");
 .summary {
   @media only screen and (max-width: $mobile-max-width) {
     font-size: large;
-  }
-}
-
-.details {
-  @media only screen and (max-width: $mobile-max-width) {
-    display: none;
   }
 }
 </style>
