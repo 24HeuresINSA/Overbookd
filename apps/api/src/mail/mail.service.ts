@@ -182,7 +182,6 @@ export class MailService implements OnApplicationBootstrap {
         from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: "Mail de test de l'API Overbookd",
-        template: "mail-test",
         html: await renderFile(__dirname + "/templates/mail-test.ejs", {
           username,
         }),
@@ -213,7 +212,6 @@ export class MailService implements OnApplicationBootstrap {
         from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: "Réinitialisation de ton mot de passe Overbookd",
-        template: "reset-password",
         html: await renderFile(__dirname + "/templates/reset-password.ejs", {
           firstName,
           resetLink: `https://${process.env.DOMAIN}/reset/${token}`,
@@ -245,7 +243,6 @@ export class MailService implements OnApplicationBootstrap {
         from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: "Bienvenue sur Overbookd !",
-        template: `welcome-${membership.toLowerCase()}`,
         html: await renderFile(
           __dirname + `/templates/welcome-${membership.toLowerCase()}.ejs`,
           {
@@ -276,7 +273,6 @@ export class MailService implements OnApplicationBootstrap {
         from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: "[24h de l'INSA] Bienvenue dans l'équipe !",
-        template: "volunteer-enrolled",
         html: await renderFile(
           __dirname + "/templates/volunteer-enrolled.ejs",
           { firstName },
@@ -309,7 +305,6 @@ export class MailService implements OnApplicationBootstrap {
         from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: `${activity.name} rejetée 🙀`,
-        template: "festival-activity-rejected",
         html: await renderFile(
           __dirname + "/templates/festival-activity-rejected.ejs",
           {
@@ -344,7 +339,6 @@ export class MailService implements OnApplicationBootstrap {
         from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: `[FT] ${task.name} rejetée 🙀`,
-        template: "festival-task-rejected",
         html: await renderFile(
           __dirname + "/templates/festival-task-rejected.ejs",
           {
@@ -378,7 +372,6 @@ export class MailService implements OnApplicationBootstrap {
         from: `"Overbookd" <${process.env.GMAIL_USER}>`,
         to: email,
         subject: `${activity.name} validée 💫`,
-        template: "festival-activity-validated",
         html: await renderFile(
           __dirname + "/templates/festival-activity-validated.ejs",
           {
