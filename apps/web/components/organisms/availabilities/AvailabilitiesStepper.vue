@@ -154,8 +154,7 @@ const calendarDays = computed<DayPresenter[]>(() => {
 });
 
 const cannotValidate = computed<boolean>(() => {
-  const hasNoSelection =
-    availabilityStore.availabilities.selected.length === 0;
+  const hasNoSelection = availabilityStore.availabilities.selected.length === 0;
   const hasError = availabilityStore.availabilities.errors.length > 0;
   return hasNoSelection || hasError;
 });

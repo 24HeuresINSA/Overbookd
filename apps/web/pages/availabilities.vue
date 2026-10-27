@@ -63,9 +63,7 @@ const openedInformations = ref<string[]>(
 );
 
 const volunteerId = computed<number>(() => myStore.loggedUser?.id ?? 0);
-const charisma = computed<number>(
-  () => availabilityStore.currentCharisma ?? 0,
-);
+const charisma = computed<number>(() => availabilityStore.currentCharisma ?? 0);
 const charismaEmoji = computed<string>(() =>
   charisma.value === EVIL_CHARISMA ? EVIL.emoji : COOL.emoji,
 );
