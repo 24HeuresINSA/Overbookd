@@ -15,8 +15,7 @@
         <li>
           Le lien d'
           <a :href="OVERVIEW_URL" target="_blank">
-            <strong> OverView</strong> </a
-          >, la street view des 24 heures de l'INSA.
+            <strong> OverView</strong> </a>, la street view des 24 heures de l'INSA.
         </li>
         <li>
           Un problème au sein de l'asso ? Tu peux contacter la cellule écoute
@@ -34,8 +33,7 @@
             ou accéder au Linktree
             <a :href="helplineUrl" target="_blank">
               <strong>ICI</strong>
-            </a></span
-          >.
+            </a></span>.
         </li>
         <li v-if="calendarUrl">
           <p>
