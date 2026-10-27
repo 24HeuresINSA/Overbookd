@@ -3,10 +3,8 @@
     <template #manager>
       <AvailabilitiesCalendarManager
         :day="day as DayPresenter"
-        :loading
         @previous="propagatePrevious"
         @next="propagateNext"
-        @validate="saveAvailabilities"
       />
     </template>
     <template #header>
@@ -26,7 +24,12 @@
 </template>
 
 <script lang="ts" setup>
-import { Duration, OverDate, Period } from "@overbookd/time";
+import {
+  Duration,
+  OverDate,
+  Period,
+  type IProvidePeriod,
+} from "@overbookd/time";
 import { DayPresenter } from "~/utils/calendar/day.presenter";
 import { ALL_HOURS } from "~/utils/availabilities/availabilities";
 import { Availabilities } from "@overbookd/volunteer-availability";
@@ -42,6 +45,7 @@ const props = defineProps({
 });
 
 const availabilitiesAggregate = ref<Availabilities>(Availabilities.init());
+const initialPeriods = ref<IProvidePeriod[]>([]);
 
 const loading = ref<boolean>(false);
 
@@ -58,10 +62,12 @@ watch(
     day.value = new DayPresenter(eventStartDate.value);
 
     await availabilityStore.fetchVolunteerAvailabilities(volunteerId);
+    const fetchedPeriods = availabilityStore.availabilities.list as Period[];
     availabilitiesAggregate.value = Availabilities.init({
-      selected: availabilityStore.availabilities.list as Period[],
+      selected: fetchedPeriods,
       recorded: [],
     });
+    initialPeriods.value = fetchedPeriods;
     loading.value = false;
   },
   { immediate: true },
@@ -97,14 +103,35 @@ const selectOrUnselectDay = (day: DayPresenter) => {
   });
 };
 
+const arePeriodsEqual = (
+  p1: IProvidePeriod[],
+  p2: IProvidePeriod[],
+): boolean => {
+  if (p1.length !== p2.length) return false;
+  return p1.every((period, index) => {
+    const target = p2.at(index);
+    if (!target) return false;
+    return (
+      new Date(period.start).getTime() === new Date(target.start).getTime() &&
+      new Date(period.end).getTime() === new Date(target.end).getTime()
+    );
+  });
+};
+
+const isDirty = computed<boolean>(
+  () => !arePeriodsEqual(selected.value, initialPeriods.value),
+);
+
 const emit = defineEmits(["validate"]);
 
 const saveAvailabilities = async () => {
+  if (!isDirty.value) return;
   loading.value = true;
   await availabilityStore.overrideVolunteerAvailabilities(
     props.volunteerId,
     selected.value,
   );
+  initialPeriods.value = selected.value;
   emit("validate");
   loading.value = false;
 };
@@ -117,4 +144,9 @@ const propagateNext = () => {
   const next = day.value.date.plus(Duration.ONE_WEEK);
   day.value = new DayPresenter(next);
 };
+
+defineExpose({
+  saveAvailabilities,
+  isDirty,
+});
 </script>

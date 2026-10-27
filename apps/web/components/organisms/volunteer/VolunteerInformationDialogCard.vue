@@ -164,6 +164,7 @@
               text="Enregistrer les informations"
               color="success"
               size="large"
+              :loading="isSaving"
               @click="savePersonalData"
             />
             <v-btn
@@ -178,9 +179,9 @@
         </div>
         <AvailabilitiesSumupCalendar
           v-if="canManageAvailabilities"
+          ref="availabilitiesCalendarRef"
           :volunteer-id="volunteer.id"
           class="availabilities desktop-only"
-          @validate="updateAvailabilities"
         />
       </div>
     </template>
@@ -189,6 +190,7 @@
 
 <script lang="ts" setup>
 import type { Team } from "@overbookd/team";
+import type AvailabilitiesSumupCalendar from "~/components/organisms/availabilities/AvailabilitiesSumupCalendar.vue";
 import {
   AFFECT_VOLUNTEER,
   MANAGE_USERS,
@@ -249,6 +251,10 @@ const email = ref<string>("");
 const newTeams = ref<Team[]>([]);
 const note = ref<string | null>(null);
 const newFriend = ref<User | null>(null);
+const availabilitiesCalendarRef = ref<InstanceType<
+  typeof AvailabilitiesSumupCalendar
+> | null>(null);
+const isSaving = ref<boolean>(false);
 
 const rules = {
   required,
@@ -341,8 +347,6 @@ const removeFriend = async (friend: User) => {
   emit("update-friends");
 };
 
-const updateAvailabilities = () => emit("update-availabilities");
-
 const updatedVolunteer = computed<UserUpdateForm>(() => {
   const trimmedNickname = nickname.value?.trim() || null;
   const trimmedNote = note.value?.trim() || null;
@@ -358,8 +362,20 @@ const updatedVolunteer = computed<UserUpdateForm>(() => {
 });
 
 const savePersonalData = async () => {
-  await userStore.updateUser(volunteerId.value, updatedVolunteer.value);
-  emit("updated");
+  isSaving.value = true;
+  try {
+    await userStore.updateUser(volunteerId.value, updatedVolunteer.value);
+    if (
+      canManageAvailabilities.value &&
+      availabilitiesCalendarRef.value?.isDirty
+    ) {
+      await availabilitiesCalendarRef.value.saveAvailabilities();
+      emit("update-availabilities");
+    }
+    emit("updated");
+  } finally {
+    isSaving.value = false;
+  }
 };
 const deleteOrAnonymizeVolunteer = async () => {
   const shouldAnonymize = await userStore.shouldAnonymizeUser(
