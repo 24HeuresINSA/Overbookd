@@ -1,6 +1,6 @@
 import { PlanningTask } from "@overbookd/http";
 import { updateItemToList } from "@overbookd/list";
-import { JsonStoredTask, StoredTask } from "./storedTask";
+import { JsonStoredTask, StoredTask } from "./stored-task";
 import { Task } from "./task.model";
 
 export type TaskRepository = {
