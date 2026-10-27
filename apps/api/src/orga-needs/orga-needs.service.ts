@@ -330,7 +330,10 @@ export class OrgaNeedsService {
   ): Promise<AssignmentsOverPeriod[]> {
     const assignedTasks = {
       assigned: {
-        where: { assignment: this.periodIncludedCondition(orgaNeedRequest) },
+        where: {
+          ...this.teamIsSearchedCondition(orgaNeedRequest.teams),
+          assignment: this.periodIncludedCondition(orgaNeedRequest),
+        },
         select: { assignment: { select: SELECT_PERIOD } },
       },
     };
