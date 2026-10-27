@@ -1,12 +1,5 @@
 <template>
   <div class="calendar-manager">
-    <v-btn
-      text="Valider les disponibilités"
-      color="success"
-      :disabled="cantValidate"
-      :loading
-      @click="propagateValidation"
-    />
     <div class="arrow-buttons desktop-only">
       <v-btn
         icon="mdi-chevron-left"
@@ -51,25 +44,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  cantValidate: {
-    type: Boolean,
-    default: false,
-  },
-  loading: {
-    type: Boolean,
-    default: false,
-  },
 });
 
-const emit = defineEmits(["previous", "next", "validate"]);
+const emit = defineEmits(["previous", "next"]);
 const propagatePrevious = () => {
   if (!props.disablePrevious) emit("previous");
 };
 const propagateNext = () => {
   if (!props.disableNext) emit("next");
-};
-const propagateValidation = () => {
-  if (!props.cantValidate) emit("validate");
 };
 
 const handleKeydown = (event: KeyboardEvent) => {
