@@ -137,6 +137,11 @@
             label="Lien du groupe Slack"
             hide-details
           />
+          <v-text-field
+            v-model="usefulLinks.helpline"
+            label="Lien du Linktree de la cellule écoute"
+            hide-details
+          />
         </div>
         <v-btn
           text="Enregistrer"

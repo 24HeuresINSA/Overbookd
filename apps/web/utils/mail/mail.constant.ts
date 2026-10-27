@@ -7,3 +7,4 @@ export const LOG_ELEC_EMAIL = "logelec@24heures.org";
 export const SIGNALETIQUE_EMAIL = "signaletique@24heures.org";
 export const BUREAU_EMAIL = "bureau@24heures.org";
 export const DSI_EMAIL = "dsi@24heures.org";
+export const ECOUTE_EMAIL = "ecoute@24heures.org";

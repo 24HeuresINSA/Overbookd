@@ -237,6 +237,7 @@ async function main() {
     value: {
       googleCalendar: "https://calendar.google.com",
       slack: "https://join.slack.com",
+      helpline: "https://linktr.ee/cellule.ecoute",
     },
   };
   await prisma.configuration.upsert({
