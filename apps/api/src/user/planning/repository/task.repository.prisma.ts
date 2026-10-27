@@ -9,7 +9,7 @@ import { IProvidePeriod } from "@overbookd/time";
 import { PrismaService } from "../../../prisma.service";
 import { buildUserName } from "@overbookd/user";
 import { TaskRepository } from "../domain/planning";
-import { JsonStoredTask } from "../domain/storedTask";
+import { JsonStoredTask } from "../domain/stored-task";
 import { JsonValue } from "../../../generated/prisma/internal/prismaNamespace";
 import {
   SELECT_PERIOD,

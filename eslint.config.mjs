@@ -1,14 +1,14 @@
 import unusedImports from "eslint-plugin-unused-imports";
 import pluginVue from "eslint-plugin-vue";
 import pluginSecurity from "eslint-plugin-security";
-import pulginJs from "@eslint/js";
+import pluginJs from "@eslint/js";
 import pluginTs from "typescript-eslint";
 import eslintConfigPrettier from "eslint-config-prettier";
 import vueParser from "vue-eslint-parser";
 import typescriptParser from "@typescript-eslint/parser";
 
 export default pluginTs.config(
-  pulginJs.configs.recommended,
+  pluginJs.configs.recommended,
   ...pluginTs.configs.recommended,
   pluginSecurity.configs["recommended"],
   eslintConfigPrettier,

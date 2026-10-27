@@ -1,7 +1,7 @@
 <template>
   <OverCalendar>
     <template #manager>
-      <AvailabilititesCalendarManager
+      <AvailabilitiesCalendarManager
         :day="day as DayPresenter"
         :loading
         @previous="propagatePrevious"

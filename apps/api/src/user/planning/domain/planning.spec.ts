@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { Planning } from "./planning";
-import { JsonStoredTask } from "./storedTask";
+import { JsonStoredTask } from "./stored-task";
 import { InMemoryTaskRepository } from "./task.repository.inmemory";
 
 const julien = { id: 1, name: "julien" };

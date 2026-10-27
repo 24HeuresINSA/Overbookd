@@ -37,11 +37,11 @@ const days = defineModel<DayPresenter[]>({ required: true });
 const availabilities = computed(() => availabilityStore.availabilities.list);
 const charismaPeriods = computed(() => charismaPeriodStore.all);
 
-const recordedAvailabilitites = computed(
+const recordedAvailabilities = computed(
   () => availabilityStore.availabilities.recorded,
 );
 const isRecorded = (date: Date): boolean => {
-  return recordedAvailabilitites.value.some((recorded) =>
+  return recordedAvailabilities.value.some((recorded) =>
     recorded.isIncluding(date),
   );
 };

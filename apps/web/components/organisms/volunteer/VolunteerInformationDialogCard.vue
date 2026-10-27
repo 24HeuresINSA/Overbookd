@@ -179,7 +179,7 @@
         <AvailabilitiesSumupCalendar
           v-if="canManageAvailabilities"
           :volunteer-id="volunteer.id"
-          class="availabilitites desktop-only"
+          class="availabilities desktop-only"
           @validate="updateAvailabilities"
         />
       </div>
@@ -402,7 +402,7 @@ const isCandidate = (volunteer: UserWithTeams) =>
     flex-direction: column;
     gap: 10px;
   }
-  .availabilitites {
+  .availabilities {
     flex: 2;
   }
 }

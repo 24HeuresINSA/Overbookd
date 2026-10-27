@@ -54,7 +54,7 @@ import { EVIL_CHARISMA, EVIL, COOL } from "~/utils/easter-egg/evil-charisma";
 useHead({ title: "Mes dispos" });
 
 const myStore = useMyStore();
-const availabilitiyStore = useVolunteerAvailabilityStore();
+const availabilityStore = useVolunteerAvailabilityStore();
 const charismaPeriodStore = useCharismaPeriodStore();
 const layoutStore = useLayoutStore();
 
@@ -64,14 +64,14 @@ const openedInformations = ref<string[]>(
 
 const volunteerId = computed<number>(() => myStore.loggedUser?.id ?? 0);
 const charisma = computed<number>(
-  () => availabilitiyStore.currentCharisma ?? 0,
+  () => availabilityStore.currentCharisma ?? 0,
 );
 const charismaEmoji = computed<string>(() =>
   charisma.value === EVIL_CHARISMA ? EVIL.emoji : COOL.emoji,
 );
 
 charismaPeriodStore.fetchCharismaPeriods();
-availabilitiyStore.fetchVolunteerAvailabilities(volunteerId.value);
+availabilityStore.fetchVolunteerAvailabilities(volunteerId.value);
 </script>
 
 <style lang="scss" scoped>

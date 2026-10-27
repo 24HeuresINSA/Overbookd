@@ -1,6 +1,6 @@
 import { PlanningTask } from "@overbookd/http";
 import { TaskRepository } from "./planning";
-import { JsonStoredTask } from "./storedTask";
+import { JsonStoredTask } from "./stored-task";
 import { Period } from "@overbookd/time";
 
 export class InMemoryTaskRepository implements TaskRepository {

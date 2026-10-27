@@ -124,7 +124,7 @@ const LEGEND = [
 ];
 
 const myStore = useMyStore();
-const availabilitiyStore = useVolunteerAvailabilityStore();
+const availabilityStore = useVolunteerAvailabilityStore();
 const layoutStore = useLayoutStore();
 
 const step = ref<number>(1);
@@ -155,8 +155,8 @@ const calendarDays = computed<DayPresenter[]>(() => {
 
 const cannotValidate = computed<boolean>(() => {
   const hasNoSelection =
-    availabilitiyStore.availabilities.selected.length === 0;
-  const hasError = availabilitiyStore.availabilities.errors.length > 0;
+    availabilityStore.availabilities.selected.length === 0;
+  const hasError = availabilityStore.availabilities.errors.length > 0;
   return hasNoSelection || hasError;
 });
 
@@ -210,7 +210,7 @@ const saveAvailabilities = async () => {
   closeValidationDialog();
   if (!myStore.loggedUser) return;
   isSaving.value = true;
-  await availabilitiyStore.updateVolunteerAvailabilities(myStore.loggedUser.id);
+  await availabilityStore.updateVolunteerAvailabilities(myStore.loggedUser.id);
   isSaving.value = false;
 };
 </script>
