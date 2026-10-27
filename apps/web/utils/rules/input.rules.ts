@@ -41,14 +41,17 @@ export function isSpecificNumbers(numbers: number[]) {
 
 export function minLength(minLength: number) {
   return function (value: string | null) {
-    const message = `Taper au moins ${minLength} caracteres`;
+    const message = `Taper au moins ${minLength} caractères`;
     return (value && value.length >= minLength) || message;
   };
 }
 
 export function maxLength(maxLength: number) {
-  return function (value: unknown[] | null) {
-    const message = `Pas plus de ${maxLength}`;
+  return function (value: string | unknown[] | null) {
+    const message =
+      typeof value === "string"
+        ? `Pas plus de ${maxLength} caractères`
+        : `Pas plus de ${maxLength}`;
     return (value && value.length <= maxLength) || !value || message;
   };
 }
