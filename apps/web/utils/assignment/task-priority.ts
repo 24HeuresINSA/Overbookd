@@ -3,4 +3,4 @@ export const TaskPriorities = {
   NON_PRIORITAIRE: "NON PRIORITAIRE",
 };
 
-export type TaskPriority = keyof typeof TaskPriorities;
+export type TaskPriority = (typeof TaskPriorities)[keyof typeof TaskPriorities];

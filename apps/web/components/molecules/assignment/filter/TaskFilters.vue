@@ -8,6 +8,7 @@
       hide-details
       clearable
       @click:clear="search = ''"
+      @update:model-value="updateSearchParam"
     />
 
     <SearchTeams
@@ -18,6 +19,7 @@
       closable-chips
       hide-details
       clearable
+      @update:model-value="updateRequiredTeamsParam"
     />
 
     <SearchTeam
@@ -27,6 +29,7 @@
       density="compact"
       hide-details
       clearable
+      @update:model-value="updateInChargeTeamParam"
     />
 
     <v-combobox
@@ -38,6 +41,7 @@
       clearable
       return-object
       hide-details
+      @update:model-value="updateCategoryParam"
     />
 
     <div class="filters-row">
@@ -49,6 +53,7 @@
         color="primary"
         class="filters-row__switch"
         hide-details
+        @update:model-value="updateHasAssignedFriendsParam"
       />
       <v-switch
         v-else
@@ -58,6 +63,7 @@
         color="primary"
         class="filters-row__switch"
         hide-details
+        @update:model-value="updateCompletedParam"
       />
       <v-switch
         v-model="past"
@@ -66,6 +72,7 @@
         color="primary"
         class="filters-row__switch"
         hide-details
+        @update:model-value="updatePastParam"
       />
     </div>
 
@@ -88,6 +95,17 @@ import {
   TaskPriorities,
   type TaskPriority,
 } from "~/utils/assignment/task-priority";
+import { useDebounceFn } from "@vueuse/core";
+import { updateQueryParams } from "~/utils/http/url-params.utils";
+import {
+  COMPLETED_TASKS_QUERY_PARAM,
+  HAS_ASSIGNED_FRIENDS_QUERY_PARAM,
+  IN_CHARGE_TEAM_QUERY_PARAM,
+  PAST_ASSIGNMENTS_QUERY_PARAM,
+  REQUIRED_TEAMS_QUERY_PARAM,
+  TASK_CATEGORY_QUERY_PARAM,
+  TASK_SEARCH_QUERY_PARAM,
+} from "~/utils/assignment/filters/assignment-filters.constant";
 
 const route = useRoute();
 
@@ -121,6 +139,35 @@ const categoryItems = computed<string[]>(() => [
   ...Object.values(TaskPriorities),
   ...displayableCategories,
 ]);
+
+const updateSearchParam = useDebounceFn((value: string | null) => {
+  updateQueryParams(TASK_SEARCH_QUERY_PARAM, value);
+}, 200);
+const updateRequiredTeamsParam = (teams: Team[]) => {
+  updateQueryParams(
+    REQUIRED_TEAMS_QUERY_PARAM,
+    teams.map(({ code }) => code),
+  );
+};
+const updateInChargeTeamParam = (team: Team | null) => {
+  updateQueryParams(IN_CHARGE_TEAM_QUERY_PARAM, team?.code);
+};
+const updateCategoryParam = (
+  selectedCategory: DisplayableCategory | TaskPriority | undefined,
+) => {
+  updateQueryParams(TASK_CATEGORY_QUERY_PARAM, selectedCategory);
+};
+const updateHasAssignedFriendsParam = (enabled: boolean | null) => {
+  if (isOrgaTask.value) {
+    updateQueryParams(HAS_ASSIGNED_FRIENDS_QUERY_PARAM, enabled);
+  }
+};
+const updatePastParam = (enabled: boolean | null) => {
+  updateQueryParams(PAST_ASSIGNMENTS_QUERY_PARAM, enabled);
+};
+const updateCompletedParam = (enabled: boolean | null) => {
+  updateQueryParams(COMPLETED_TASKS_QUERY_PARAM, enabled);
+};
 
 const counterLabel = computed<string>(() =>
   props.type === "FT"

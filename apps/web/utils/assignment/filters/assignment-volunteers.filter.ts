@@ -21,65 +21,29 @@ export type AssignmentVolunteersFilters = {
 
 export class AssignmentVolunteersFilterBuilder {
   static getFromRouteQuery(query: LocationQuery): AssignmentVolunteersFilters {
-    const search = this.extractQueryParamsValue(
-      query,
-      SEARCH_VOLUNTEER_QUERY_PARAM,
+    const searchVolunteer = stringifyQueryParam(
+      query[SEARCH_VOLUNTEER_QUERY_PARAM],
     );
-    const includedTeam = this.extractQueryParamsValue(
-      query,
-      INCLUDED_TEAMS_QUERY_PARAM,
+    const includedTeams = this.getTeams(
+      stringifyArrayQueryParam(query[INCLUDED_TEAMS_QUERY_PARAM]),
     );
-    const excludedTeam = this.extractQueryParamsValue(
-      query,
-      EXCLUDED_TEAMS_QUERY_PARAM,
+    const excludedTeams = this.getTeams(
+      stringifyArrayQueryParam(query[EXCLUDED_TEAMS_QUERY_PARAM]),
     );
-    const friend = this.extractQueryParamsValue(query, FRIEND_QUERY_PARAM);
+    const friend = stringifyQueryParam(query[FRIEND_QUERY_PARAM]);
 
     return {
-      ...search,
-      ...includedTeam,
-      ...excludedTeam,
-      ...friend,
+      ...(searchVolunteer ? { searchVolunteer } : {}),
+      ...(includedTeams.length ? { includedTeams } : {}),
+      ...(excludedTeams.length ? { excludedTeams } : {}),
+      ...(isFriendFilterKey(friend) ? { friend } : {}),
     };
   }
 
-  private static extractQueryParamsValue(
-    params: LocationQuery,
-    key: keyof AssignmentVolunteersFilters,
-  ): AssignmentVolunteersFilters {
-    switch (key) {
-      case SEARCH_VOLUNTEER_QUERY_PARAM: {
-        const searchString = stringifyQueryParam(params.searchVolunteer);
-        const searchVolunteer = searchString ? searchString : undefined;
-        return searchVolunteer ? { searchVolunteer } : {};
-      }
-      case INCLUDED_TEAMS_QUERY_PARAM: {
-        const includedTeamsString = stringifyArrayQueryParam(
-          params.includedTeams,
-        );
-        const teamStore = useTeamStore();
-        const includedTeams = includedTeamsString
-          .map((teamCode: string) => teamStore.getTeamByCode(teamCode))
-          .filter((team): team is Team => !!team);
-        return includedTeams.length > 0 ? { includedTeams } : {};
-      }
-      case EXCLUDED_TEAMS_QUERY_PARAM: {
-        const excludedTeamsString = stringifyArrayQueryParam(
-          params.excludedTeams,
-        );
-        const teamStore = useTeamStore();
-        const excludedTeams = excludedTeamsString
-          .map((teamCode: string) => teamStore.getTeamByCode(teamCode))
-          .filter((team): team is Team => !!team);
-        return excludedTeams.length > 0 ? { excludedTeams } : {};
-      }
-      case FRIEND_QUERY_PARAM: {
-        const friend = stringifyQueryParam(params.friend) as string | undefined;
-        if (!friend || !isFriendFilterKey(friend)) return {};
-        return friend ? { friend } : {};
-      }
-      default:
-        return {};
-    }
+  private static getTeams(teamCodes: string[]): Team[] {
+    const teamStore = useTeamStore();
+    return teamCodes
+      .map((teamCode) => teamStore.getTeamByCode(teamCode))
+      .filter((team): team is Team => !!team);
   }
 }

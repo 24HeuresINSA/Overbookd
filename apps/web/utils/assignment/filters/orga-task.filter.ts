@@ -15,31 +15,18 @@ export class OrgaTaskFilterBuilder {
   static getFromRouteQuery(query: LocationQuery): OrgaTaskFilters {
     const volunteersFilter =
       AssignmentVolunteersFilterBuilder.getFromRouteQuery(query);
-    const selectedVolunteer = this.extractQueryParamsValue(
-      query,
-      SELECTED_VOLUNTEER_QUERY_PARAM,
+    const selectedVolunteerId = stringifyQueryParam(
+      query[SELECTED_VOLUNTEER_QUERY_PARAM],
     );
+    const selectedVolunteer = selectedVolunteerId
+      ? Number(selectedVolunteerId)
+      : undefined;
 
     return {
       ...volunteersFilter,
-      ...selectedVolunteer,
+      ...(selectedVolunteer !== undefined && !isNaN(selectedVolunteer)
+        ? { selectedVolunteer }
+        : {}),
     };
-  }
-
-  private static extractQueryParamsValue(
-    params: LocationQuery,
-    key: keyof OrgaTaskFilters,
-  ): OrgaTaskFilters {
-    switch (key) {
-      case SELECTED_VOLUNTEER_QUERY_PARAM: {
-        const selectedVolunteer = stringifyQueryParam(params.selectedVolunteer);
-        if (!selectedVolunteer) return {};
-        const selectedVolunteerId = Number(selectedVolunteer);
-        if (isNaN(selectedVolunteerId)) return {};
-        return { selectedVolunteer: selectedVolunteerId };
-      }
-      default:
-        return {};
-    }
   }
 }

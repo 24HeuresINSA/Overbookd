@@ -40,9 +40,9 @@ import type {
 } from "@overbookd/assignment";
 import type { UnassignForm } from "~/utils/assignment/assignment";
 import {
-  TaskOrgaFilterBuilder,
-  type TaskOrgaFilters,
-} from "~/utils/assignment/filters/task-orga.filter";
+  AssignmentVolunteersFilterBuilder,
+  type AssignmentVolunteersFilters,
+} from "~/utils/assignment/filters/assignment-volunteers.filter";
 
 useHead({ title: "Affect Tâche-Orga" });
 
@@ -52,9 +52,11 @@ const assignTaskToVolunteerStore = useAssignTaskToVolunteerStore();
 assignTaskToVolunteerStore.fetchAssignableTasks();
 assignTaskToVolunteerStore.fetchAllTasks();
 
-const filters = ref<TaskOrgaFilters>({});
+const filters = ref<AssignmentVolunteersFilters>({});
 const updateFilters = () => {
-  filters.value = TaskOrgaFilterBuilder.getFromRouteQuery(route.query);
+  filters.value = AssignmentVolunteersFilterBuilder.getFromRouteQuery(
+    route.query,
+  );
 };
 onMounted(() => updateFilters);
 

@@ -58,7 +58,9 @@ import {
   keepMatchingSearchCriteria,
   type Searchable,
 } from "~/utils/search/search.utils";
+import { TaskAssignmentFilterBuilder } from "~/utils/assignment/filters/task-assignment.filter";
 
+const route = useRoute();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 
 const searchedTaskName = ref<string>("");
@@ -67,6 +69,18 @@ const searchedInChargeTeam = ref<Team | undefined>();
 const searchedCategory = ref<DisplayableCategory | TaskPriority | undefined>();
 const hasAssignedFriends = ref<boolean>(false);
 const displayPast = ref<boolean>(false);
+
+const updateFilters = () => {
+  const filters = TaskAssignmentFilterBuilder.getFromRouteQuery(route.query);
+  searchedTaskName.value = filters.search ?? "";
+  searchedRequiredTeams.value = filters.requiredTeams ?? [];
+  searchedInChargeTeam.value = filters.inChargeTeam;
+  searchedCategory.value = filters.category;
+  hasAssignedFriends.value = filters.hasAssignedFriends ?? false;
+  displayPast.value = filters.past ?? false;
+};
+onMounted(updateFilters);
+watch(() => route.query, updateFilters);
 
 const isSideBarClosed = ref<boolean>(false);
 const toggleSideBar = () => {
