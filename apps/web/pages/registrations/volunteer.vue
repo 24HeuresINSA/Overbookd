@@ -41,6 +41,7 @@
                   label="Rechercher un·e candidat·e"
                   class="search-filter"
                   density="compact"
+                  autofocus
                   clearable
                   hide-details
                   @mouseenter="handleMouseEnter"

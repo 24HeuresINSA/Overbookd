@@ -16,6 +16,7 @@
           <v-text-field
             v-model="search"
             label="Chercher un emprunt"
+            autofocus
             hide-details
             clearable
             @click:clear="search = ''"

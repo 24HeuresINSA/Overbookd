@@ -5,6 +5,7 @@
       <v-text-field
         :model-value="search"
         label="Recherche"
+        autofocus
         clearable
         hide-details
         @update:model-value="updateSearchParam"

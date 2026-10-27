@@ -12,7 +12,11 @@
         :mobile="isMobile"
       >
         <template #top>
-          <v-text-field v-model="search" label="Rechercher une transaction" />
+          <v-text-field
+            v-model="search"
+            label="Rechercher une transaction"
+            autofocus
+          />
         </template>
 
         <template #item.type="{ item }">

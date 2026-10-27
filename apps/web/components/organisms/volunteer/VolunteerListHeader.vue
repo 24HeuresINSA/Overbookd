@@ -9,6 +9,7 @@
         class="filters__field"
         hide-details
         clearable
+        autofocus
         @update:model-value="updateSearchParam"
       />
       <SearchTeams

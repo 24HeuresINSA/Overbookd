@@ -20,6 +20,7 @@
           <v-text-field
             v-model="search"
             label="Chercher un lieu"
+            autofocus
             hide-details
           />
         </template>

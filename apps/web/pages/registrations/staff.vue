@@ -23,6 +23,7 @@
                 v-model="searchedCandidate"
                 label="Rechercher un·e candidat·e"
                 class="search-filter"
+                autofocus
                 clearable
                 hide-details
                 @click:clear="searchedCandidate = ''"
