@@ -2,7 +2,7 @@ import type {
   InventoryGroupedRecord,
   InventoryRecordSearchOptions,
   InventoryRecord as Record,
-} from "@overbookd/http";
+} from "@overbookd/logistic";
 import type { InventoryRecord } from "~/domain/inventory/inventory-record";
 import { HttpClient } from "~/utils/http/http-client";
 

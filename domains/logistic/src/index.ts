@@ -36,4 +36,16 @@ export { GearSearchBuilder } from "./catalog/gear/gear-search.builder.js";
 export { CatalogGearManager } from "./catalog/gear/gear-manager.js";
 export type { CatalogGears } from "./catalog/gear/gear-manager.js";
 
+export type {
+  InventoryRecord,
+  LiteInventoryRecord,
+  InventoryGroupedRecord,
+  InventoryRecordSearchOptions,
+} from "./inventory/inventory.js";
+export { toLiteRecord } from "./inventory/inventory.js";
+export { GroupInventoryRecord } from "./inventory/group-inventory-record.js";
+export { matchesInventorySearch } from "./inventory/inventory-search.builder.js";
+export { InventoryManager } from "./inventory/inventory-manager.js";
+export type { InventoryRecords } from "./inventory/inventory-manager.js";
+
 export { LogisticError, GearNotFound } from "./logistic.error.js";
