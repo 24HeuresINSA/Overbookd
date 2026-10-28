@@ -213,7 +213,7 @@ import {
   minDate,
   required,
 } from "~/utils/rules/input.rules";
-import { formatLocalDate, Period, type IProvidePeriod } from "@overbookd/time";
+import { formatLocalDate, Period } from "@overbookd/time";
 import { HARD, PERSONNE } from "@overbookd/team-code";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
 import { PLANNING_URL } from "@overbookd/web-page";
