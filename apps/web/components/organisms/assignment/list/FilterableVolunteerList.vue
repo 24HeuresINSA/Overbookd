@@ -19,10 +19,7 @@
       class="filterable-volunteer-list__text"
     >
       <AssignmentVolunteerFilters
-        v-model:search="filters.searchVolunteer"
-        v-model:included-teams="filters.includedTeams"
-        v-model:excluded-teams="filters.excludedTeams"
-        v-model:friend-filter="filters.friend"
+        v-model="filters"
         v-model:sort="sort"
         :list-length="displayedVolunteers.length"
         class="filters"
@@ -48,37 +45,22 @@
 
 <script lang="ts" setup>
 import { Sort } from "~/utils/sort/sort.utils";
-import {
-  keepMatchingSearchCriteria,
-  type Searchable,
-} from "~/utils/search/search.utils";
-import {
-  type AssignmentVolunteer,
-  isAssignableVolunteer,
-} from "~/utils/assignment/assignment-volunteer";
+import type { AssignmentVolunteer } from "~/utils/assignment/assignment-volunteer";
 import { isOrgaTaskMode } from "~/utils/assignment/mode";
-import {
-  AMIS_DEJA_AFFECTES,
-  AMIS_DISPONIBLES,
-  AUCUN_AMI,
-  type FriendFilterKey,
-} from "~/utils/assignment/filters/friend-filter.utils";
 import { toSearchable } from "~/utils/search/searchable-user.utils";
-import {
-  excludeMembersOf,
-  keepMembersOf,
-} from "~/utils/search/search-team.utils";
 import type { Assignment } from "@overbookd/assignment";
-import type { AssignmentVolunteersFilters } from "~/utils/assignment/filters/assignment-volunteers.filter";
+import { AssignmentVolunteersFilterBuilder } from "~/utils/assignment/filters/assignment-volunteers.filter";
+import { matchAssignmentVolunteersFilters } from "~/utils/assignment/filters/assignment-volunteers.matcher";
+import { useRouteQueryFilters } from "~/utils/http/url-params.utils";
 
 const assignTaskToVolunteerStore = useAssignTaskToVolunteerStore();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 const route = useRoute();
 
+const filters = useRouteQueryFilters((query) =>
+  AssignmentVolunteersFilterBuilder.getFromRouteQuery(query),
+);
 const sort = ref<number>(Sort.NONE);
-const filters = defineModel<AssignmentVolunteersFilters>("filters", {
-  required: true,
-});
 const isOrgaTask = computed<boolean>(() => isOrgaTaskMode(route.path));
 
 const isSideBarClosed = ref<boolean>(false);
@@ -91,30 +73,11 @@ const volunteers = computed<AssignmentVolunteer[]>(() =>
     ? [...assignVolunteerToTaskStore.volunteers.values()]
     : assignTaskToVolunteerStore.assignableVolunteers,
 );
-const searchableVolunteers = computed<Searchable<AssignmentVolunteer>[]>(() =>
-  volunteers.value.map(toSearchable),
-);
 const displayedVolunteers = computed<AssignmentVolunteer[]>(() => {
-  const isPartOfIncludedTeams = keepMembersOf(
-    filters.value.includedTeams || [],
-  );
-  const isNotPartOfExcludedTeams = excludeMembersOf(
-    filters.value.excludedTeams || [],
-  );
-  const hasSimilarName = keepMatchingSearchCriteria(
-    filters.value.searchVolunteer || "",
-  );
-  const isMatchingFriendCondition = filterVolunteerByFriendCondition(
-    filters.value.friend,
-  );
-  const filteredVolunteers = searchableVolunteers.value.filter((volunteer) => {
-    return (
-      isPartOfIncludedTeams(volunteer) &&
-      isNotPartOfExcludedTeams(volunteer) &&
-      hasSimilarName(volunteer) &&
-      isMatchingFriendCondition(volunteer)
-    );
-  });
+  const isMatching = matchAssignmentVolunteersFilters(filters.value);
+  const filteredVolunteers = volunteers.value
+    .map(toSearchable)
+    .filter(isMatching);
   return sortVolunteers(filteredVolunteers);
 });
 const sortVolunteers = (volunteers: AssignmentVolunteer[]) => {
@@ -127,24 +90,6 @@ const sortVolunteers = (volunteers: AssignmentVolunteer[]) => {
       ? charismaDifference
       : durationDifference * order;
   });
-};
-const filterVolunteerByFriendCondition = (
-  friendFilter: FriendFilterKey | undefined,
-): ((volunteer: AssignmentVolunteer) => boolean) => {
-  switch (friendFilter) {
-    case AUCUN_AMI.key:
-      return (volunteer) => !volunteer.friendCount.volunteerCount;
-    case AMIS_DISPONIBLES.key:
-      return (volunteer) =>
-        isAssignableVolunteer(volunteer) &&
-        volunteer.assignableFriendsIds.length > 0;
-    case AMIS_DEJA_AFFECTES.key:
-      return (volunteer) =>
-        isAssignableVolunteer(volunteer) && volunteer.hasFriendAssigned;
-    case undefined:
-    default:
-      return () => true;
-  }
 };
 
 const emit = defineEmits(["select-volunteer"]);

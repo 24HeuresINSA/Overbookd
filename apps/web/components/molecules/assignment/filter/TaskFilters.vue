@@ -1,13 +1,13 @@
 <template>
   <div class="filters">
     <v-text-field
-      v-model="search"
+      v-model="filters.search"
       class="filters__field"
       label="Recherche"
       density="compact"
       hide-details
       clearable
-      @click:clear="search = ''"
+      @click:clear="filters.search = ''"
       @update:model-value="updateSearchParam"
     />
 
@@ -23,7 +23,7 @@
     />
 
     <SearchTeam
-      v-model="inChargeTeam"
+      v-model="filters.inChargeTeam"
       label="Chercher par équipe responsable"
       class="filters__field"
       density="compact"
@@ -33,7 +33,7 @@
     />
 
     <v-combobox
-      v-model="category"
+      v-model="filters.category"
       :items="categoryItems"
       label="Chercher une catégorie"
       class="filters__field"
@@ -47,7 +47,7 @@
     <div class="filters-row">
       <v-switch
         v-if="isOrgaTask"
-        v-model="hasAssignedFriends"
+        v-model="filters.hasAssignedFriends"
         label="Ami·e·s affecté·e·s"
         density="compact"
         color="primary"
@@ -57,7 +57,7 @@
       />
       <v-switch
         v-else
-        v-model="completed"
+        v-model="filters.completed"
         label="FTs completées"
         density="compact"
         color="primary"
@@ -66,7 +66,7 @@
         @update:model-value="updateCompletedParam"
       />
       <v-switch
-        v-model="past"
+        v-model="filters.past"
         label="FTs passées"
         density="compact"
         color="primary"
@@ -106,6 +106,7 @@ import {
   TASK_CATEGORY_QUERY_PARAM,
   TASK_SEARCH_QUERY_PARAM,
 } from "~/utils/assignment/filters/assignment-filters.constant";
+import type { TaskAssignmentFilters } from "~/utils/assignment/filters/task-assignment.filter";
 
 const route = useRoute();
 
@@ -120,18 +121,10 @@ const props = defineProps({
   },
 });
 
-const search = defineModel<string>("search", { default: "" });
-const requiredTeams = defineModel<Team[]>("requiredTeams", {
-  default: () => [],
-});
-const inChargeTeam = defineModel<Team | null>("inChargeTeam");
-const category = defineModel<DisplayableCategory | TaskPriority | undefined>(
-  "category",
-);
-const completed = defineModel<boolean>("completed", { default: false });
-const past = defineModel<boolean>("past", { default: false });
-const hasAssignedFriends = defineModel<boolean>("hasAssignedFriends", {
-  default: false,
+const filters = defineModel<TaskAssignmentFilters>({ required: true });
+const requiredTeams = computed<Team[]>({
+  get: () => filters.value.requiredTeams ?? [],
+  set: (teams) => (filters.value.requiredTeams = teams),
 });
 
 const isOrgaTask = computed<boolean>(() => isOrgaTaskMode(route.path));
@@ -149,7 +142,7 @@ const updateRequiredTeamsParam = (teams: Team[]) => {
     teams.map(({ code }) => code),
   );
 };
-const updateInChargeTeamParam = (team: Team | null) => {
+const updateInChargeTeamParam = (team?: Team | null) => {
   updateQueryParams(IN_CHARGE_TEAM_QUERY_PARAM, team?.code);
 };
 const updateCategoryParam = (
@@ -158,9 +151,7 @@ const updateCategoryParam = (
   updateQueryParams(TASK_CATEGORY_QUERY_PARAM, selectedCategory);
 };
 const updateHasAssignedFriendsParam = (enabled: boolean | null) => {
-  if (isOrgaTask.value) {
-    updateQueryParams(HAS_ASSIGNED_FRIENDS_QUERY_PARAM, enabled);
-  }
+  updateQueryParams(HAS_ASSIGNED_FRIENDS_QUERY_PARAM, enabled);
 };
 const updatePastParam = (enabled: boolean | null) => {
   updateQueryParams(PAST_ASSIGNMENTS_QUERY_PARAM, enabled);

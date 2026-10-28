@@ -19,12 +19,7 @@
       class="filterable-assignment-list__text"
     >
       <TaskFilters
-        v-model:search="searchedTaskName"
-        v-model:required-teams="searchedRequiredTeams"
-        v-model:in-charge-team="searchedInChargeTeam"
-        v-model:category="searchedCategory"
-        v-model:has-assigned-friends="hasAssignedFriends"
-        v-model:past="displayPast"
+        v-model="filters"
         :list-length="filteredAssignments.length"
         class="filters"
       />
@@ -48,39 +43,18 @@
 import type { VolunteerWithAssignmentDuration } from "@overbookd/assignment";
 import type { AssignmentSummaryWithTask } from "@overbookd/http";
 import { SlugifyService } from "@overbookd/slugify";
-import type { Team } from "@overbookd/team";
-import type { DisplayableCategory } from "~/utils/assignment/task-category";
-import {
-  TaskPriorities,
-  type TaskPriority,
-} from "~/utils/assignment/task-priority";
-import {
-  keepMatchingSearchCriteria,
-  type Searchable,
-} from "~/utils/search/search.utils";
 import { TaskAssignmentFilterBuilder } from "~/utils/assignment/filters/task-assignment.filter";
+import {
+  matchTaskAssignmentFilters,
+  type FilterableTask,
+} from "~/utils/assignment/filters/task-assignment.matcher";
+import { useRouteQueryFilters } from "~/utils/http/url-params.utils";
 
-const route = useRoute();
 const assignVolunteerToTaskStore = useAssignVolunteerToTaskStore();
 
-const searchedTaskName = ref<string>("");
-const searchedRequiredTeams = ref<Team[]>([]);
-const searchedInChargeTeam = ref<Team | undefined>();
-const searchedCategory = ref<DisplayableCategory | TaskPriority | undefined>();
-const hasAssignedFriends = ref<boolean>(false);
-const displayPast = ref<boolean>(false);
-
-const updateFilters = () => {
-  const filters = TaskAssignmentFilterBuilder.getFromRouteQuery(route.query);
-  searchedTaskName.value = filters.search ?? "";
-  searchedRequiredTeams.value = filters.requiredTeams ?? [];
-  searchedInChargeTeam.value = filters.inChargeTeam;
-  searchedCategory.value = filters.category;
-  hasAssignedFriends.value = filters.hasAssignedFriends ?? false;
-  displayPast.value = filters.past ?? false;
-};
-onMounted(updateFilters);
-watch(() => route.query, updateFilters);
+const filters = useRouteQueryFilters((query) =>
+  TaskAssignmentFilterBuilder.getFromRouteQuery(query),
+);
 
 const isSideBarClosed = ref<boolean>(false);
 const toggleSideBar = () => {
@@ -92,92 +66,32 @@ const propageteVolunteerAssigned = (volunteerId: number) => {
   emit("volunteer-assigned", volunteerId);
 };
 
-const searchableAssignments = computed<Searchable<AssignmentSummaryWithTask>[]>(
-  () =>
-    assignVolunteerToTaskStore.assignments.map((assignment) => ({
-      ...assignment,
-      searchable: SlugifyService.apply(
-        `${assignment.taskId} ${assignment.task.name}`,
-      ),
-    })),
-);
-const filteredAssignments = computed<AssignmentSummaryWithTask[]>(() =>
-  searchableAssignments.value.filter((assignment) => {
-    return (
-      filterByPastCriterion(displayPast.value)(assignment) &&
-      keepMatchingSearchCriteria(searchedTaskName.value)(assignment) &&
-      filterByRequiredTeams(searchedRequiredTeams.value)(assignment) &&
-      filterByInChargeTeam(searchedInChargeTeam.value)(assignment) &&
-      filterByCategoryOrPriority(searchedCategory.value)(assignment) &&
-      filterByHasAssignedFriends(hasAssignedFriends.value)(assignment)
-    );
-  }),
-);
+const toFilterableTask = ({
+  task,
+  teams,
+  end,
+  taskId,
+}: AssignmentSummaryWithTask): FilterableTask => ({
+  ...task,
+  teams: teams.map(({ team }) => team),
+  end,
+  searchable: SlugifyService.apply(`${taskId} ${task.name}`),
+});
+
+const filteredAssignments = computed<AssignmentSummaryWithTask[]>(() => {
+  const isMatching = matchTaskAssignmentFilters(filters.value);
+  return assignVolunteerToTaskStore.assignments.filter((assignment) =>
+    isMatching(toFilterableTask(assignment)),
+  );
+});
 
 const selectedVolunteer = computed<VolunteerWithAssignmentDuration | null>(
   () => assignVolunteerToTaskStore.selectedVolunteer,
 );
 const shouldShowAssignmentList = computed<boolean>(
-  () => selectedVolunteer !== null && filteredAssignments.value.length > 0,
+  () =>
+    selectedVolunteer.value !== null && filteredAssignments.value.length > 0,
 );
-
-const filterByPastCriterion = (
-  showPast: boolean,
-): ((assignement: AssignmentSummaryWithTask) => boolean) => {
-  return (assignement) => showPast || assignement.end > new Date();
-};
-
-const filterByRequiredTeams = (
-  searchedTeams: Team[],
-): ((assignment: AssignmentSummaryWithTask) => boolean) => {
-  return searchedTeams.length > 0
-    ? (assignment) =>
-        searchedTeams.every((searchedTeam) =>
-          assignment.teams.some(({ team }) => searchedTeam.code === team),
-        )
-    : () => true;
-};
-const filterByInChargeTeam = (
-  searchedInChargeTeam?: Team,
-): ((assignment: AssignmentSummaryWithTask) => boolean) => {
-  return ({ task }) => {
-    return !searchedInChargeTeam?.code
-      ? true
-      : searchedInChargeTeam?.code === task.inChargeTeam;
-  };
-};
-const filterByCategoryOrPriority = (
-  searchedCategory?: DisplayableCategory | TaskPriority,
-): ((assignment: AssignmentSummaryWithTask) => boolean) => {
-  if (!searchedCategory) return () => true;
-  return isTaskPriority(searchedCategory)
-    ? filterByPriority(searchedCategory)
-    : filterByCategory(searchedCategory);
-};
-const isTaskPriority = (
-  category: TaskPriority | DisplayableCategory,
-): category is TaskPriority => {
-  return Object.values(TaskPriorities).includes(category);
-};
-const filterByPriority = (
-  searchedPriority: TaskPriority,
-): ((assignment: AssignmentSummaryWithTask) => boolean) => {
-  const hasPriority = searchedPriority === TaskPriorities.PRIORITAIRE;
-  return ({ task }) => task.topPriority === hasPriority;
-};
-const filterByCategory = (
-  categorySearched: DisplayableCategory,
-): ((assignment: AssignmentSummaryWithTask) => boolean) => {
-  return ({ task }) => {
-    if (categorySearched === "AUCUNE") return task.category === null;
-    return task.category === categorySearched;
-  };
-};
-const filterByHasAssignedFriends = (
-  hasAssignedFriends: boolean,
-): ((assignment: AssignmentSummaryWithTask) => boolean) => {
-  return ({ task }) => !hasAssignedFriends || task.hasFriendsAssigned;
-};
 </script>
 
 <style lang="scss" scoped>

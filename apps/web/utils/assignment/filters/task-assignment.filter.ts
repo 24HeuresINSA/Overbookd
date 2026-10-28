@@ -72,6 +72,6 @@ function isTaskCategory(
   );
 }
 
-function isEnabled(value: LocationQuery[string]): boolean {
+function isEnabled(value?: LocationQuery[string]): boolean {
   return value === null || value === "true";
 }

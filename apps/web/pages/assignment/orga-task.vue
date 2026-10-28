@@ -1,9 +1,6 @@
 <template>
   <div class="assignment">
-    <FilterableVolunteerList
-      v-model:filters="filters"
-      @select-volunteer="selectVolunteer"
-    />
+    <FilterableVolunteerList @select-volunteer="selectVolunteer" />
     <OrgaTaskCalendar
       class="calendar"
       :can-use-calendar-shortcuts="canUseCalendarShortcuts"
@@ -66,10 +63,7 @@ import { buildUserName, type UserPersonalData } from "@overbookd/user";
 import type { Period } from "@overbookd/time";
 import type { UnassignForm } from "~/utils/assignment/assignment";
 import type { BreakEvent } from "~/domain/common/break-events";
-import {
-  OrgaTaskFilterBuilder,
-  type OrgaTaskFilters,
-} from "~/utils/assignment/filters/orga-task.filter";
+import { getSelectedVolunteerFromRouteQuery } from "~/utils/assignment/filters/orga-task.filter";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import { SELECTED_VOLUNTEER_QUERY_PARAM } from "~/utils/assignment/filters/assignment-filters.constant";
 
@@ -132,14 +126,6 @@ const refreshVolunteerData = async (
   ]);
 };
 
-const filters = ref<OrgaTaskFilters>({});
-const updateFilters = () => {
-  filters.value = OrgaTaskFilterBuilder.getFromRouteQuery(route.query);
-  if (filters.value.selectedVolunteer) {
-    refreshVolunteerData(filters.value.selectedVolunteer);
-  }
-};
-
 const handleKeydown = (event: KeyboardEvent) => {
   const target = event.target as HTMLElement;
   if (
@@ -156,8 +142,7 @@ onMounted(async () => {
   window.addEventListener("keydown", handleKeydown);
   await assignVolunteerToTaskStore.fetchVolunteers();
 
-  updateFilters();
-  const volunteerId = filters.value.selectedVolunteer;
+  const volunteerId = getSelectedVolunteerFromRouteQuery(route.query);
   if (!volunteerId) {
     planningStore.clearSelectedVolunteer();
     return;
