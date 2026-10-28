@@ -137,13 +137,17 @@
               v-model="firstName"
               label="Prénom*"
               required
-              :rules="[rules.required]"
+              :rules="[rules.required, rules.nameMaxLength]"
             />
-            <v-text-field v-model="nickname" label="Surnom" />
+            <v-text-field
+              v-model="nickname"
+              label="Surnom"
+              :rules="[rules.nameMaxLength]"
+            />
             <v-text-field
               v-model="lastName"
               label="Nom*"
-              :rules="[rules.required]"
+              :rules="[rules.required, rules.nameMaxLength]"
               required
             />
             <v-text-field
@@ -341,6 +345,7 @@ const rules = {
   insaEmail: isInsaEmail,
   mobilePhone: isMobilePhoneNumber,
   password: passwordRule,
+  nameMaxLength: maxLength(30),
 };
 
 const registerForm = computed<RegisterForm>(() => {
@@ -389,13 +394,16 @@ const passwordRules = computed(() =>
     : [],
 );
 const accountStepRules = computed(() => {
-  if (step.value <= 2) return [];
+  if (step.value < 2) return [];
   return [...emailRules.value, ...passwordRules.value];
 });
 
 const userInfoRules = computed(() => [
   () => step.value < 3 || rules.required(firstName.value),
+  () => step.value < 3 || rules.nameMaxLength(firstName.value),
+  () => step.value < 3 || rules.nameMaxLength(nickname.value),
   () => step.value < 3 || rules.required(lastName.value),
+  () => step.value < 3 || rules.nameMaxLength(lastName.value),
   () => step.value < 3 || rules.required(birthDay.value),
   () => step.value < 3 || rules.birthdayMaxDate(birthDay.value),
   () => step.value < 3 || rules.birthdayMinDate(birthDay.value),
