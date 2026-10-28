@@ -1,4 +1,5 @@
-import type { LocationQueryValue } from "vue-router";
+import type { LocationQuery, LocationQueryValue } from "vue-router";
+import type { Ref } from "vue";
 
 export function stringifyQueryParam(
   param?: LocationQueryValue | LocationQueryValue[],
@@ -35,4 +36,17 @@ export function updateQueryParams(key: string, value: QueryParam) {
     [key]: value === true ? null : value,
   };
   return navigateTo({ path, query });
+}
+
+export function useRouteQueryFilters<T extends object>(
+  parse: (query: LocationQuery) => T,
+): Ref<T> {
+  const route = useRoute();
+  const filters = ref({}) as Ref<T>;
+  const updateFilters = () => {
+    filters.value = parse(route.query);
+  };
+  onMounted(updateFilters);
+  watch(() => route.query, updateFilters);
+  return filters;
 }

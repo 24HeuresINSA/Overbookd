@@ -1,13 +1,13 @@
 <template>
   <div class="filters">
     <v-text-field
-      v-model="search"
+      v-model="filters.searchVolunteer"
       class="filters__field"
       label="Recherche"
       density="compact"
       hide-details
       clearable
-      @click:clear="search = ''"
+      @click:clear="filters.searchVolunteer = ''"
       @update:model-value="updateSearchParam"
     />
     <SearchTeams
@@ -30,7 +30,7 @@
 
     <v-btn-toggle
       v-show="isTaskOrga"
-      v-model="friendFilter"
+      v-model="filters.friend"
       class="friend-filter"
       color="secondary"
       density="compact"
@@ -94,9 +94,11 @@ import { useDebounceFn } from "@vueuse/core";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
 import {
   EXCLUDED_TEAMS_QUERY_PARAM,
+  FRIEND_QUERY_PARAM,
   INCLUDED_TEAMS_QUERY_PARAM,
   SEARCH_VOLUNTEER_QUERY_PARAM,
 } from "~/utils/assignment/filters/assignment-filters.constant";
+import type { AssignmentVolunteersFilters } from "~/utils/assignment/filters/assignment-volunteers.filter";
 
 const route = useRoute();
 
@@ -107,17 +109,16 @@ defineProps({
   },
 });
 
-const search = defineModel<string>("search", { default: "" });
-const includedTeams = defineModel<Team[]>("includedTeams", {
-  default: () => [],
+const filters = defineModel<AssignmentVolunteersFilters>({ required: true });
+const includedTeams = computed<Team[]>({
+  get: () => filters.value.includedTeams ?? [],
+  set: (teams) => (filters.value.includedTeams = teams),
 });
-const excludedTeams = defineModel<Team[]>("excludedTeams", {
-  default: () => [],
+const excludedTeams = computed<Team[]>({
+  get: () => filters.value.excludedTeams ?? [],
+  set: (teams) => (filters.value.excludedTeams = teams),
 });
 const sort = defineModel<number>("sort", { default: Sort.NONE });
-const friendFilter = defineModel<FriendFilterKey | undefined>("friendFilter", {
-  default: undefined,
-});
 
 const isTaskOrga = computed<boolean>(() => !isOrgaTaskMode(route.path));
 
@@ -125,8 +126,7 @@ const updateSort = () => (sort.value = nextSortDirection(sort.value));
 
 const stringify = (label: string) => SlugifyService.apply(label);
 
-const updateSearchParam = useDebounceFn((newSearch: string) => {
-  search.value = newSearch;
+const updateSearchParam = useDebounceFn((newSearch: string | null) => {
   updateQueryParams(SEARCH_VOLUNTEER_QUERY_PARAM, newSearch);
 }, 200);
 const updateIncludedTeamsParam = (teams: Team[]) => {
@@ -140,7 +140,7 @@ const updateExcludedTeamsParam = (teams: Team[]) => {
 const updateFriendFilterParam = (
   friendFilterKey: FriendFilterKey | undefined,
 ) => {
-  updateQueryParams("friend", friendFilterKey);
+  updateQueryParams(FRIEND_QUERY_PARAM, friendFilterKey);
 };
 </script>
 
