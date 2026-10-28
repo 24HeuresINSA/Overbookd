@@ -108,7 +108,7 @@
 
     <v-dialog
       v-model="isResetApprovalsDialogOpen"
-      max-width="600"
+      max-width="600px"
       @after-leave="checkActiveInChargeInstructions"
     >
       <ConfirmationDialogCard
@@ -127,8 +127,9 @@
       </ConfirmationDialogCard>
     </v-dialog>
 
-    <v-dialog v-model="isRemoveInChargeDialogOpen" max-width="600">
+    <v-dialog v-model="isRemoveInChargeDialogOpen" max-width="650px">
       <ConfirmationDialogCard
+        confirm-color="secondary"
         @close="cancelRemoveInCharge"
         @confirm="confirmRemoveInCharge"
       >
@@ -257,7 +258,7 @@ const approveResetAlert = async () => {
   switch (action.type) {
     case ADD_IN_CHARGE:
       await ftStore.initInCharge(action.form);
-      hasInChargeInstructions.value = true;
+      checkActiveInChargeInstructions();
       break;
     case REMOVE_IN_CHARGE:
       await ftStore.clearInCharge();
@@ -383,7 +384,7 @@ const initInCharge = async (form: InitInChargeForm) => {
 
   await ftStore.initInCharge(form);
   closeInitInChargeDialog();
-  hasInChargeInstructions.value = true;
+  checkActiveInChargeInstructions();
 };
 </script>
 
