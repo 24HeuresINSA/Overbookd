@@ -122,7 +122,7 @@
           sûr de vouloir continuer ?
         </template>
         <template #confirm-btn-content>
-          <v-icon left> mdi-plus-circle-outline </v-icon>Continuer
+          <v-icon icon="mdi-plus-circle-outline" left />Continuer
         </template>
       </ConfirmationDialogCard>
     </v-dialog>
@@ -141,8 +141,7 @@
           spécifiques seront supprimé·e·s. Es-tu sûr de vouloir continuer ?
         </template>
         <template #confirm-btn-content>
-          <v-icon left>mdi-trash-can</v-icon>
-          Supprimer
+          <v-icon icon="mdi-trash-can" left />Supprimer
         </template>
       </ConfirmationDialogCard>
     </v-dialog>
