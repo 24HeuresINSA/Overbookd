@@ -137,8 +137,8 @@
           Supprimer les instructions des responsables
         </template>
         <template #content>
-          Les responsables sélectionnés ainsi que leurs instructions spécifiques
-          seront supprimés. Es-tu sûr de vouloir continuer ?
+          Les responsables sélectionné·e·s ainsi que leurs instructions
+          spécifiques seront supprimé·e·s. Es-tu sûr de vouloir continuer ?
         </template>
         <template #confirm-btn-content>
           <v-icon left>mdi-trash-can</v-icon>
