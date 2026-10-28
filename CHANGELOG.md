@@ -1,3 +1,27 @@
+## [4.4.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.3.0...v4.4.0) (2026-10-28)
+
+### Features
+
+* **alerts:** add alerts in home page [#2758](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2758) ([a96b642](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a96b642f42e766cdf9795843a180e590a8ae5a50))
+* **web:** add contact link for Cellule Ecoute on homepage and configuration ([bbb538f](https://gitlab.com/24-heures-insa/overbookd-mono/commit/bbb538f82eccd18348b41e8b8b1c6d68e209f65f)), closes [#2822](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2822)
+
+### Bug Fixes
+
+* **alerts:** remove useless padding when there is only one alert [#2823](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2823) ([592be4e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/592be4efd3fc455359357d66abbd74331885920e))
+* **assignment:** save task filters in URL [#2714](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2714) ([5e8c497](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5e8c49746bb27fdb78d83a7859700fb1c92cb393))
+* some typo errors & clean useless packages ([8870b9b](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8870b9b088aee0f00c43d97cc8d73edb92bc72ad))
+* **useful-links:** remove useless line breaks of helpline infos [#2824](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2824) ([5f30904](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5f30904c9a56c7d4d62eec4a6cf027a4e71d283e))
+* **web:** add autofocus on search fields [#2557](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2557) ([d407a84](https://gitlab.com/24-heures-insa/overbookd-mono/commit/d407a84570e149fef487e27b29ad6e37f5234240))
+* **web:** removed old CTMA login email [#2795](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2795) ([a636383](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a636383d350d801e20c1f147718606c3e1543f44))
+
+### Refactor
+
+* rename commands release:[version] to version:[version] [#2825](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2825) ([469f089](https://gitlab.com/24-heures-insa/overbookd-mono/commit/469f089f3178295fcecee6e0f64d1061f36d5238))
+
+### CI/CD
+
+* **renovate:** config for devcontainer dependencies ([8636b0d](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8636b0d487b2fa8dc93ac0121d34a16c5a3e08cd))
+
 ## [4.3.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.2.1...v4.3.0) (2026-10-25)
 
 ### Features
