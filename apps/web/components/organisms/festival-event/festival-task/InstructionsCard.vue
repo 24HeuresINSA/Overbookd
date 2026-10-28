@@ -111,10 +111,39 @@
       max-width="600"
       @after-leave="checkActiveInChargeInstructions"
     >
-      <ResetApprovalsDialogCard
-        @confirm="approveResetAlert"
+      <ConfirmationDialogCard
         @close="declineResetApprovalsDialog"
-      />
+        @confirm="approveResetAlert"
+      >
+        <template #title>Réinitialiation des validations</template>
+        <template #content>
+          Attention ! Modifier les instructions
+          <strong>réinitialisera les validations déjà effectuées</strong>. Es-tu
+          sûr de vouloir continuer ?
+        </template>
+        <template #confirm-btn-content>
+          <v-icon left> mdi-plus-circle-outline </v-icon>Continuer
+        </template>
+      </ConfirmationDialogCard>
+    </v-dialog>
+
+    <v-dialog v-model="isRemoveInChargeDialogOpen" max-width="600">
+      <ConfirmationDialogCard
+        @close="cancelRemoveInCharge"
+        @confirm="confirmRemoveInCharge"
+      >
+        <template #title>
+          Supprimer les instructions des responsables
+        </template>
+        <template #content>
+          Les responsables sélectionnés ainsi que leurs instructions spécifiques
+          seront supprimés. Es-tu sûr de vouloir continuer ?
+        </template>
+        <template #confirm-btn-content>
+          <v-icon left>mdi-trash-can</v-icon>
+          Supprimer
+        </template>
+      </ConfirmationDialogCard>
     </v-dialog>
   </div>
 </template>
@@ -215,8 +244,13 @@ type ResetApprovalAction =
     };
 const resetApprovalAction = ref<ResetApprovalAction>();
 
-const declineResetApprovalsDialog = () =>
-  (isResetApprovalsDialogOpen.value = false);
+const declineResetApprovalsDialog = () => {
+  isResetApprovalsDialogOpen.value = false;
+  if (resetApprovalAction.value?.type === REMOVE_IN_CHARGE) {
+    checkActiveInChargeInstructions();
+  }
+  resetApprovalAction.value = undefined;
+};
 const approveResetAlert = async () => {
   const action = resetApprovalAction.value;
   if (!action) return;
@@ -227,20 +261,22 @@ const approveResetAlert = async () => {
       break;
     case REMOVE_IN_CHARGE:
       await ftStore.clearInCharge();
+      checkActiveInChargeInstructions();
       break;
     case MODIFY_INSTRUCTIONS:
       await ftStore.updateInstructions(action.instructions);
       break;
   }
   isResetApprovalsDialogOpen.value = false;
+  resetApprovalAction.value = undefined;
 };
 
-const toggleInChargeInstructions = async () => {
-  hasInChargeInstructions.value = !hasInChargeInstructions.value;
-  if (hasInChargeInstructions.value) {
-    if (!isDraft(selectedTask.value)) openInitInChargeDialog();
-    return;
-  }
+const isRemoveInChargeDialogOpen = ref(false);
+const cancelRemoveInCharge = () => {
+  isRemoveInChargeDialogOpen.value = false;
+};
+const confirmRemoveInCharge = async () => {
+  isRemoveInChargeDialogOpen.value = false;
 
   if (shouldResetApprovals.value) {
     resetApprovalAction.value = { type: REMOVE_IN_CHARGE };
@@ -249,6 +285,18 @@ const toggleInChargeInstructions = async () => {
   }
 
   await ftStore.clearInCharge();
+  checkActiveInChargeInstructions();
+};
+
+const toggleInChargeInstructions = async () => {
+  if (!hasInChargeInstructions.value) {
+    hasInChargeInstructions.value = true;
+    if (!isDraft(selectedTask.value)) {
+      openInitInChargeDialog();
+    }
+    return;
+  }
+  isRemoveInChargeDialogOpen.value = true;
 };
 const checkActiveInChargeInstructions = () => {
   const hasVolunteers = instructions.value.inCharge.volunteers.length > 0;
