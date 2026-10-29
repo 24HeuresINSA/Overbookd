@@ -1,5 +1,8 @@
 import { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
-import { Borrow } from "@overbookd/logistic";
+import { Borrow, GearSearchOptions } from "@overbookd/logistic";
+import { IProvidePeriod } from "@overbookd/time";
+
+export type GearDashboardSearchOptions = GearSearchOptions & IProvidePeriod;
 
 export type GearPreview = {
   id: number;

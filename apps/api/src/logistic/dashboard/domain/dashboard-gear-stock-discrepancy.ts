@@ -13,6 +13,7 @@ export class DashboardGearStockDiscrepancy {
 
   static computeMinStockDiscrepancyOn(
     gear: DatabaseDashboardGear,
+    period?: Period,
   ): StockDiscrepancy {
     const activityTimeWindows = gear.festivalActivityInquiries
       .flatMap((inquiry) => inquiry.fa.inquiryTimeWindows)
@@ -33,16 +34,29 @@ export class DashboardGearStockDiscrepancy {
       ...borrowTimeWindows,
     ];
     const mergedTimeWindows = Period.mergeContiguous(timeWindows);
+    const relevantTimeWindows = period
+      ? mergedTimeWindows.flatMap((timeWindow) => {
+          if (!timeWindow.isOverlapping(period)) return [];
+          const start =
+            timeWindow.start > period.start ? timeWindow.start : period.start;
+          const end = timeWindow.end < period.end ? timeWindow.end : period.end;
+          return [Period.init({ start, end })];
+        })
+      : mergedTimeWindows;
 
-    const discrepanciesFromTimeWindows = mergedTimeWindows.map((timeWindow) =>
+    const discrepanciesFromTimeWindows = relevantTimeWindows.map((timeWindow) =>
       DashboardGearStockDiscrepancy.computeStockDiscrepancyByTimeWindowOn(
         gear,
         timeWindow,
       ),
     );
 
-    const inventory = DashboardGearStock.findInventoryQuantity(gear);
-    const discrepanciesFromInventory = { quantity: inventory };
+    const discrepanciesFromInventory = period
+      ? DashboardGearStockDiscrepancy.computeStockDiscrepancyByDateOn(
+          gear,
+          period.start,
+        )
+      : { quantity: DashboardGearStock.findInventoryQuantity(gear) };
 
     const discrepancies = [
       discrepanciesFromInventory,

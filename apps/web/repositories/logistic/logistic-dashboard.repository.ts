@@ -1,11 +1,15 @@
-import { CSV, type GearPreview, type GearWithDetails } from "@overbookd/http";
-import type { GearSearchOptions } from "@overbookd/logistic";
+import {
+  CSV,
+  type GearDashboardSearchOptions,
+  type GearPreview,
+  type GearWithDetails,
+} from "@overbookd/http";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class LogisticDashboardRepository {
   private static readonly basePath = "logistic/dashboard";
 
-  static getPreviews(searchOptions?: GearSearchOptions) {
+  static getPreviews(searchOptions: GearDashboardSearchOptions) {
     return HttpClient.get<GearPreview[]>({
       path: this.basePath,
       params: searchOptions,

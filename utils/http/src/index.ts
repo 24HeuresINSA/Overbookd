@@ -52,6 +52,7 @@ export type {
   GearBorrow,
   GearDetails,
   GearPreview,
+  GearDashboardSearchOptions,
   GearWithDetails,
   Inquiry as GearDetailsInquiry,
 } from "./logistic/dashboard";

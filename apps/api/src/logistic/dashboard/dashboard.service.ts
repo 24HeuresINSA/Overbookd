@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import {
   GearBorrow,
+  GearDashboardSearchOptions,
   GearDetailsInquiry,
   GearPreview,
   GearWithDetails,
 } from "@overbookd/http";
-import { GearSearchOptions } from "@overbookd/logistic";
 import { Period } from "@overbookd/time";
 import { DashboardGearFormat } from "./domain/dashboard-gear-format";
 
@@ -25,7 +25,9 @@ export type GearRequirementForCsv = {
 };
 
 export type DashboardGears = {
-  getSummaries(searchOptions: GearSearchOptions): Promise<GearPreview[]>;
+  getSummaries(
+    searchOptions: GearDashboardSearchOptions,
+  ): Promise<GearPreview[]>;
   getDetails(slug: string, period: Period): Promise<GearWithDetails>;
   getRequirementsForCsv(): Promise<GearRequirementForCsv[]>;
 };
@@ -34,7 +36,9 @@ export type DashboardGears = {
 export class DashboardService {
   constructor(private readonly dashboardGears: DashboardGears) {}
 
-  async getSummaries(searchOptions: GearSearchOptions): Promise<GearPreview[]> {
+  async getSummaries(
+    searchOptions: GearDashboardSearchOptions,
+  ): Promise<GearPreview[]> {
     return this.dashboardGears.getSummaries(searchOptions);
   }
 

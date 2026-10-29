@@ -15,9 +15,12 @@ import { GearRequirementForCsv } from "../dashboard.service";
 export class DashboardGear {
   private constructor() {}
 
-  public static generatePreview(gear: DatabaseDashboardGear): GearPreview {
+  public static generatePreview(
+    gear: DatabaseDashboardGear,
+    period?: Period,
+  ): GearPreview {
     const stockDiscrepancy =
-      DashboardGearStockDiscrepancy.computeMinStockDiscrepancyOn(gear);
+      DashboardGearStockDiscrepancy.computeMinStockDiscrepancyOn(gear, period);
     return {
       id: gear.id,
       name: gear.name,

@@ -24,7 +24,7 @@ import { Permissions } from "../../authentication-zitadel/decorators/permissions
 import { GearPreviewResponseDto } from "./dto/gear-preview.response.dto";
 import { GearWithDetailsResponseDto } from "./dto/gear-details.response.dto";
 import { CSV, GearPreview, GearWithDetails } from "@overbookd/http";
-import { GearSearchRequestDto } from "../common/dto/gear-search.request.dto";
+import { GearDashboardSearchRequestDto } from "./dto/gear-dashboard-search.request.dto";
 import { ApiSwaggerResponse } from "../../api-swagger-response.decorator";
 
 @Controller("logistic/dashboard")
@@ -62,8 +62,20 @@ export class DashboardController {
     type: String,
     description: "Get gears that are owned by team that match name",
   })
+  @ApiQuery({
+    name: "start",
+    required: true,
+    type: Date,
+    description: "Start of the period used to calculate stock discrepancy",
+  })
+  @ApiQuery({
+    name: "end",
+    required: true,
+    type: Date,
+    description: "End of the period used to calculate stock discrepancy",
+  })
   getSummaries(
-    @Query() searchOptions: GearSearchRequestDto,
+    @Query() searchOptions: GearDashboardSearchRequestDto,
   ): Promise<GearPreview[]> {
     return this.dashboardService.getSummaries(searchOptions);
   }

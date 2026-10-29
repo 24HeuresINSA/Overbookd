@@ -59,6 +59,32 @@ describe("Summarize gear as preview", () => {
   });
 });
 
+describe("Summarize gear within a period", () => {
+  it("should exclude discrepancies that start at the period end", () => {
+    const preview = DashboardGear.generatePreview(
+      gearWithTwoInquiriesAndTwoInventoryRecords,
+      Period.init({
+        start: new Date("2024-05-17T08:00+02:00"),
+        end: new Date("2024-05-17T08:15+02:00"),
+      }),
+    );
+
+    expect(preview.stockDiscrepancy).toBe(0);
+  });
+
+  it("should calculate discrepancies that start within the period", () => {
+    const preview = DashboardGear.generatePreview(
+      gearWithTwoInquiriesAndTwoInventoryRecords,
+      Period.init({
+        start: new Date("2024-05-17T08:15+02:00"),
+        end: new Date("2024-05-17T08:30+02:00"),
+      }),
+    );
+
+    expect(preview.stockDiscrepancy).toBe(-25);
+  });
+});
+
 describe("Summarize gear for graph", () => {
   describe.each`
     explaination                                                          | gear                                                          | period              | expectedData

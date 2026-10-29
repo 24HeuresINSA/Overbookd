@@ -61,12 +61,21 @@ const start = ref<Date>(configurationStore.eventStartDate);
 const end = ref<Date>(new Date(start.value.getTime() + FOUR_DAYS_IN_MS));
 
 const loading = ref<boolean>(dashboardStore.previews.length === 0);
+const searchOptions = ref<GearSearchOptions>({});
 const searchGears = (options: GearSearchOptions) => {
-  dashboardStore.fetchPreviews(options).then(() => (loading.value = false));
+  searchOptions.value = options;
+  dashboardStore
+    .fetchPreviews({
+      ...options,
+      start: start.value,
+      end: end.value,
+    })
+    .then(() => (loading.value = false));
 };
 searchGears({});
 
 const updateSelectedGear = () => {
+  searchGears(searchOptions.value);
   if (dashboardStore.selectedGear === undefined) return;
   dashboardStore.fetchDetails(
     dashboardStore.selectedGear.slug,
