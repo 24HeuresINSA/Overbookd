@@ -1,3 +1,11 @@
+## [4.4.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.4.0...v4.4.1) (2026-10-29)
+
+### Bug Fixes
+
+* **ft:** add confirmation dialog before inCharge section removing [#2493](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2493) ([40aaced](https://gitlab.com/24-heures-insa/overbookd-mono/commit/40aacedd2b5ecdf860351b0dde3371e9d1e10da0))
+* **inventory:** move inventory logic from api to domain [#2239](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2239) ([089f730](https://gitlab.com/24-heures-insa/overbookd-mono/commit/089f7303f7b9f5123f33e84975f823377b5cf68e)), closes [#2240](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2240)
+* **registration:** limit name length, prevent continuing without password [#2816](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2816) ([49b3ed1](https://gitlab.com/24-heures-insa/overbookd-mono/commit/49b3ed11e1da86bc581e5f2eeb1a56f0cce96d0f))
+
 ## [4.4.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.3.0...v4.4.0) (2026-10-28)
 
 ### Features
