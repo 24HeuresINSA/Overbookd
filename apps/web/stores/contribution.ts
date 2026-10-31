@@ -1,10 +1,12 @@
 import type {
   Adherent,
   AdherentWithContribution,
+  ContributionType,
   PayContributionForm,
 } from "@overbookd/contribution";
 import type { HttpStringified } from "@overbookd/http";
 import { ContributionRepository } from "~/repositories/contribution.repository";
+import { CONTRIBUTION_TYPE_LABELS } from "~/utils/contribution/contribution.constant";
 import { isHttpError } from "~/utils/http/http-error.utils";
 
 type State = {
@@ -31,29 +33,34 @@ export const useContributionStore = defineStore("contribution", {
       this.validAdherents = res.map(castAdherentWithContributionWithDate);
     },
 
-    async payContribution(adherent: Adherent, amount: number) {
-      const form: PayContributionForm = { adherentId: adherent.id, amount };
+    async payContribution(adherent: Adherent, type: ContributionType) {
+      const form: PayContributionForm = { adherentId: adherent.id, type };
       const res = await ContributionRepository.payContribution(form);
 
       if (isHttpError(res)) return;
-      sendSuccessNotification("La cotisation a été payée 💰");
+      sendSuccessNotification(
+        `${adherent.firstName} a été ajouté·e en tant que ${CONTRIBUTION_TYPE_LABELS[type]} 💰`,
+      );
       this.adherentsOutToDate = this.adherentsOutToDate.filter(
         ({ id }) => id !== adherent.id,
       );
       this.fetchAdherentsWithValidContribution();
     },
 
-    async editContribution(adherent: AdherentWithContribution, amount: number) {
+    async editContribution(
+      adherent: AdherentWithContribution,
+      type: ContributionType,
+    ) {
       const res = await ContributionRepository.editContribution(
         adherent.id,
         adherent.edition,
-        amount,
+        type,
       );
 
       if (isHttpError(res)) return;
       sendSuccessNotification("La cotisation a été modifiée 💰");
       this.validAdherents = this.validAdherents.map((a) =>
-        a.id === adherent.id ? { ...a, amount } : a,
+        a.id === adherent.id ? { ...a, type } : a,
       );
     },
 

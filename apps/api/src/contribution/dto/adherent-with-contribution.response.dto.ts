@@ -1,4 +1,8 @@
-import { AdherentWithContribution } from "@overbookd/contribution";
+import {
+  AdherentWithContribution,
+  contributionTypes,
+  type ContributionType,
+} from "@overbookd/contribution";
 import { ContributionAdherentResponseDto } from "./adherent.response.dto";
 import { ApiProperty } from "@nestjs/swagger";
 
@@ -7,10 +11,10 @@ export class AdherentWithContributionResponseDto
   implements AdherentWithContribution
 {
   @ApiProperty({
-    description: "Contribution amount",
-    type: Number,
+    description: "Contribution type",
+    enum: contributionTypes,
   })
-  amount: number;
+  type: ContributionType;
 
   @ApiProperty({
     description: "Contribution payment date",

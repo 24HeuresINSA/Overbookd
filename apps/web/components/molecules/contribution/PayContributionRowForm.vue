@@ -1,28 +1,19 @@
 <template>
   <div class="payment-form">
-    <MoneyField
-      v-model="amount"
-      :min="MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS"
-      density="compact"
-      class="payment-form__input"
-      hide-label
-      hide-details
-    />
     <v-btn
-      text="Valider le paiement"
+      v-for="{ title, value } in CONTRIBUTION_TYPE_ITEMS"
+      :key="value"
+      :text="title"
       color="primary"
-      :disabled="isAmountInvalid"
       class="payment-form__button"
-      @click="payContribution"
+      @click="payContribution(value)"
     />
   </div>
 </template>
 
 <script lang="ts" setup>
-import {
-  type Adherent,
-  MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS,
-} from "@overbookd/contribution";
+import type { Adherent, ContributionType } from "@overbookd/contribution";
+import { CONTRIBUTION_TYPE_ITEMS } from "~/utils/contribution/contribution.constant";
 
 const contributionStore = useContributionStore();
 
@@ -33,14 +24,8 @@ const { adherent } = defineProps({
   },
 });
 
-const amount = ref<number>(MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS);
-const isAmountInvalid = computed<boolean>(() => {
-  return amount.value < MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS;
-});
-
-const payContribution = () => {
-  if (isAmountInvalid.value) return;
-  contributionStore.payContribution(adherent, amount.value);
+const payContribution = (type: ContributionType) => {
+  contributionStore.payContribution(adherent, type);
 };
 </script>
 

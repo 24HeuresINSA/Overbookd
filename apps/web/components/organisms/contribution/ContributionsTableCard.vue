@@ -45,7 +45,7 @@
         </div>
       </template>
 
-      <template #item.amount="{ item }">
+      <template #item.type="{ item }">
         <PayContributionRowForm
           v-if="displayOutToDateCustomers"
           :adherent="item"
@@ -75,7 +75,7 @@ import { keepMembersOf } from "~/utils/search/search-team.utils";
 import { HARD, CA, VIEUX } from "@overbookd/team-code";
 import { downloadCsv } from "~/utils/file/download.utils";
 import { CSVBuilder } from "@overbookd/csv";
-import { Money } from "@overbookd/money";
+import { CONTRIBUTION_TYPE_LABELS } from "~/utils/contribution/contribution.constant";
 
 const contributionStore = useContributionStore();
 const layoutStore = useLayoutStore();
@@ -91,7 +91,7 @@ const headers: TableHeaders = [
   { title: "Prénom", value: "firstName", sortable: true },
   { title: "Nom", value: "lastName", sortable: true },
   { title: "Surnom", value: "nickname", sortable: true },
-  { title: "Paiement", value: "amount", width: "40%", sortable: true },
+  { title: "Paiement", value: "type", width: "40%", sortable: true },
 ];
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
@@ -151,19 +151,19 @@ const filteredAdherents = computed<(Adherent | AdherentWithContribution)[]>(
 
 const exportAdherentsToCsv = () => {
   if (validLoading.value) return;
-  const adherentsWithAmountInEuros = contributionStore.validAdherents.map(
+  const adherentsWithTypeLabel = contributionStore.validAdherents.map(
     (adherent) => ({
       ...adherent,
-      amount: Money.cents(adherent.amount).inEuros,
+      type: CONTRIBUTION_TYPE_LABELS[adherent.type],
     }),
   );
-  const csv = CSVBuilder.from(adherentsWithAmountInEuros)
-    .select(["firstName", "lastName", "nickname", "amount", "email"])
+  const csv = CSVBuilder.from(adherentsWithTypeLabel)
+    .select(["firstName", "lastName", "nickname", "type", "email"])
     .translate([
       ["firstName", "Prénom"],
       ["lastName", "Nom"],
       ["nickname", "Surnom"],
-      ["amount", "Montant (€)"],
+      ["type", "Type"],
       ["email", "Email"],
     ])
     .build();

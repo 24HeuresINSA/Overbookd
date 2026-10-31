@@ -1,22 +1,21 @@
 <template>
   <div class="payment-form">
-    <MoneyField
-      v-model="amount"
-      :min="MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS"
+    <v-select
+      v-model="type"
+      :items="CONTRIBUTION_TYPE_ITEMS"
       density="compact"
       class="payment-form__input"
-      hide-label
       hide-details
     />
     <v-btn
       text="Modifier"
       color="primary"
-      :disabled="isAmountInvalid"
+      :disabled="type === adherent.type"
       class="payment-form__button"
       @click="editContribution"
     />
     <v-btn
-      text="Supprimer"
+      text="Annuler"
       color="tertiary"
       class="payment-form__button"
       @click="removeContribution"
@@ -25,10 +24,11 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  type AdherentWithContribution,
-  MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS,
+import type {
+  AdherentWithContribution,
+  ContributionType,
 } from "@overbookd/contribution";
+import { CONTRIBUTION_TYPE_ITEMS } from "~/utils/contribution/contribution.constant";
 
 const contributionStore = useContributionStore();
 
@@ -39,15 +39,10 @@ const { adherent } = defineProps({
   },
 });
 
-const amount = ref<number>(adherent.amount);
-
-const isAmountInvalid = computed<boolean>(() => {
-  return amount.value < MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS;
-});
+const type = ref<ContributionType>(adherent.type);
 
 const editContribution = () => {
-  if (isAmountInvalid.value) return;
-  contributionStore.editContribution(adherent, amount.value);
+  contributionStore.editContribution(adherent, type.value);
 };
 const removeContribution = () => {
   contributionStore.removeContribution(adherent);

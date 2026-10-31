@@ -93,7 +93,6 @@ export {
   hasRegistrationFormData,
   hasHttpStringifiedRegistrationFormData,
 } from "./registration";
-export type { EditAmountForm } from "./contribution";
 export { DEFAULT_PREFERENCE } from "./preference";
 export type {
   Preference,

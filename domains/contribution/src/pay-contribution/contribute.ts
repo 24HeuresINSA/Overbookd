@@ -1,4 +1,4 @@
-import { Contribution } from "../contribution.js";
+import { Contribution, ContributionType } from "../contribution.js";
 import { BASE_EDITION_STARTS, Edition } from "@overbookd/time";
 
 const AUGUST = 7;
@@ -11,7 +11,7 @@ export const EXPIRATION_DATE = {
 const EDITION_DURATION_IN_YEAR = 1;
 
 export class Contribute {
-  static now(adherentId: number, amount: number): Contribution {
+  static now(adherentId: number, type: ContributionType): Contribution {
     const edition = Edition.current;
     const paymentDate = new Date();
     const expirationDate = this.calculeExpirationDate(edition);
@@ -19,7 +19,7 @@ export class Contribute {
     return {
       adherentId,
       edition,
-      amount,
+      type,
       paymentDate,
       expirationDate,
     };

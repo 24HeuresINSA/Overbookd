@@ -9,8 +9,7 @@ import {
 } from "./pay-contribution.error.js";
 import { Edition, ONE_YEAR_IN_MS } from "@overbookd/time";
 import { PAY_CONTRIBUTION } from "@overbookd/permission";
-import { Contribution } from "../contribution.js";
-import { INSUFFICIENT_AMOUNT_ERROR_MESSAGE } from "../contribution.error.js";
+import { Contribution, DONATOR, MEMBER } from "../contribution.js";
 
 const lea: Member = {
   id: 1,
@@ -42,21 +41,21 @@ const adherents: Member[] = [lea, noel, tatouin];
 const contributions: Contribution[] = [
   {
     adherentId: lea.id,
-    amount: 100,
+    type: MEMBER,
     edition: 48,
     paymentDate: new Date(2022, 8, 1),
     expirationDate: new Date(2023, 7, 31),
   },
   {
     adherentId: noel.id,
-    amount: 200,
+    type: DONATOR,
     edition: 48,
     paymentDate: new Date(2022, 10, 20),
     expirationDate: new Date(2023, 7, 31),
   },
   {
     adherentId: noel.id,
-    amount: 100,
+    type: MEMBER,
     edition: Edition.current,
     paymentDate: new Date(2023, 9, 12),
     expirationDate: new Date(2024, 7, 31),
@@ -77,18 +76,12 @@ describe("Pay contribution", () => {
     });
 
     describe("when adherent has not already payed his contribution", () => {
-      describe("when adherent try to pay less than 100 cents", () => {
-        it("should indicate that the minimum amount is 100 cents", async () => {
-          const contributionForm = { adherentId: lea.id, amount: 90 };
-          await expect(
-            async () => await payContribution.for(contributionForm),
-          ).rejects.toThrow(INSUFFICIENT_AMOUNT_ERROR_MESSAGE);
-        });
-      });
-
       describe("when non adherent try to pay a contribution", () => {
         it("should indicate that non adherent is not allowed to pay contribution", async () => {
-          const contributionForm = { adherentId: tatouin.id, amount: 100 };
+          const contributionForm = {
+            adherentId: tatouin.id,
+            type: MEMBER,
+          } as const;
           await expect(
             async () => await payContribution.for(contributionForm),
           ).rejects.toThrow(NOT_ALLOWED_TO_PAY_CONTRIBUTION_ERROR_MESSAGE);
@@ -96,19 +89,19 @@ describe("Pay contribution", () => {
       });
 
       describe.each`
-        adherentId | amount
-        ${lea.id}  | ${100}
-        ${lea.id}  | ${150}
+        adherentId | type
+        ${lea.id}  | ${MEMBER}
+        ${lea.id}  | ${DONATOR}
       `(
-        "when adherent #$adherentId try to pay $amount cents",
-        ({ adherentId, amount }) => {
-          const contributionForm = { adherentId, amount };
+        "when adherent #$adherentId try to pay as $type",
+        ({ adherentId, type }) => {
+          const contributionForm = { adherentId, type };
 
-          it(`should pay ${amount} cents`, async () => {
+          it(`should pay as ${type}`, async () => {
             const payedContribution =
               await payContribution.for(contributionForm);
 
-            expect(payedContribution.amount).toBeGreaterThanOrEqual(amount);
+            expect(payedContribution.type).toBe(type);
           });
 
           it("should have expiration date after payment date", async () => {
@@ -151,7 +144,7 @@ describe("Pay contribution", () => {
     });
 
     describe("when adherent has already payed his contribution", () => {
-      const contribution = { adherentId: noel.id, amount: 150 };
+      const contribution = { adherentId: noel.id, type: DONATOR } as const;
 
       it("should indicate that adherent has already payed", async () => {
         await expect(
