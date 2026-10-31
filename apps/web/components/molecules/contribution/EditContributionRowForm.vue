@@ -15,7 +15,7 @@
       @click="editContribution"
     />
     <v-btn
-      text="Annuler"
+      text="Supprimer"
       color="tertiary"
       class="payment-form__button"
       @click="removeContribution"

@@ -58,7 +58,9 @@ export const useContributionStore = defineStore("contribution", {
       );
 
       if (isHttpError(res)) return;
-      sendSuccessNotification("La cotisation a été modifiée 💰");
+      sendSuccessNotification(
+        `La cotisation de ${adherent.firstName} a été modifiée 💰`,
+      );
       this.validAdherents = this.validAdherents.map((a) =>
         a.id === adherent.id ? { ...a, type } : a,
       );
@@ -71,7 +73,9 @@ export const useContributionStore = defineStore("contribution", {
       );
 
       if (isHttpError(res)) return;
-      sendSuccessNotification("La cotisation a été supprimée 💰");
+      sendSuccessNotification(
+        `La cotisation de ${adherent.firstName} a été supprimée 💰`,
+      );
       this.validAdherents = this.validAdherents.filter(
         ({ id }) => id !== adherent.id,
       );
