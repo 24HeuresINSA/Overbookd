@@ -193,7 +193,7 @@ describe("Assign volunteers funnel", () => {
         benevolant,
       ).select(tatouin.volunteer);
     });
-    it("should throw Unavailable and not save anything", async () => {
+    it("should indicate that the candidate isn't available on the assignment period and save nothing", async () => {
       await expect(funnel.assign()).rejects.toThrow(Unavailable);
       expect(assignments.all).toContainEqual(benevolant);
     });
@@ -236,7 +236,6 @@ describe("Assign volunteers funnel", () => {
       let volunteerFunnel: IActAsFunnel;
       const volunteer = lea.volunteer;
       let assignments: InMemoryAssignments;
-      // lea is available during rendreKangoo period (2024-05-23 from 08h to 20h)
       const rendreKangooAvailabilities = new InMemoryAvailabilities(
         new Map([
           [noel.volunteer.id, noel.availabilities],

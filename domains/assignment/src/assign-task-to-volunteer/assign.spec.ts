@@ -127,7 +127,7 @@ describe("Assign volunteers", () => {
   });
 
   describe("when the volunteer is not member of the team they are assigned as", () => {
-    it("should throw WrongTeam and not assign anyone", async () => {
+    it("should indicate that the volunteer can't be assigned as this team and assign no one", async () => {
       const { assignments, assign } = setup();
       await expect(
         assign.volunteers({
@@ -140,7 +140,7 @@ describe("Assign volunteers", () => {
   });
 
   describe("when the volunteer does not exist", () => {
-    it("should throw VolunteerNotFoundError", async () => {
+    it("should indicate that the volunteer doesn't exist", async () => {
       const { assign } = setup();
       await expect(
         assign.volunteers({
@@ -152,7 +152,7 @@ describe("Assign volunteers", () => {
   });
 
   describe("when the volunteer is not available on the assignment period", () => {
-    it("should throw Unavailable", async () => {
+    it("should indicate that the volunteer isn't available on the assignment period", async () => {
       const { assign } = setup();
       await expect(
         assign.volunteers({
@@ -164,7 +164,7 @@ describe("Assign volunteers", () => {
   });
 
   describe("when the volunteer is already assigned on an overlapping period", () => {
-    it("should throw AlreadyAssigned", async () => {
+    it("should indicate that the volunteer is already assigned on an overlapping period", async () => {
       const { assign } = setup();
       await expect(
         assign.volunteers({
@@ -176,7 +176,7 @@ describe("Assign volunteers", () => {
   });
 
   describe("when the volunteer has a break on an overlapping period", () => {
-    it("should throw HasBreak", async () => {
+    it("should indicate that the volunteer has a break on an overlapping period", async () => {
       const { assign } = setup();
       await expect(
         assign.volunteers({
@@ -188,7 +188,7 @@ describe("Assign volunteers", () => {
   });
 
   describe("when one of the volunteers cannot be assigned", () => {
-    it("should not assign anyone", async () => {
+    it("should indicate that no volunteer is assigned when one of them can't be", async () => {
       const { assignments, assign } = setup();
       await expect(
         assign.volunteers({
@@ -204,7 +204,7 @@ describe("Assign volunteers", () => {
   });
 
   describe("when the assignment does not exist", () => {
-    it("should throw", async () => {
+    it("should indicate that the assignment doesn't exist", async () => {
       const { assign } = setup();
       await expect(
         assign.volunteers({
