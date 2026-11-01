@@ -2,12 +2,7 @@ import { Permission } from "@overbookd/permission";
 import { Contribute } from "./contribute.js";
 import { HasAlreadyPayed, NotAllowedToPay } from "./pay-contribution.error.js";
 import { Edition } from "@overbookd/time";
-import {
-  Adherent,
-  Contribution,
-  MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS,
-} from "../contribution.js";
-import { InsufficientAmount } from "../contribution.error.js";
+import { Adherent, Contribution, ContributionType } from "../contribution.js";
 
 type WithPermission = {
   permissions: Permission[];
@@ -16,7 +11,7 @@ type WithPermission = {
 export type Member = Adherent & WithPermission;
 
 export type PayContributionForm = {
-  amount: number;
+  type: ContributionType;
   adherentId: number;
 };
 
@@ -30,10 +25,7 @@ export type PayContributions = {
 export class PayContribution {
   constructor(private readonly contributions: PayContributions) {}
 
-  async for({
-    adherentId,
-    amount,
-  }: PayContributionForm): Promise<Contribution> {
+  async for({ adherentId, type }: PayContributionForm): Promise<Contribution> {
     const edition = Edition.current;
 
     const [isAllowedToPay, hasAlreadyPayed] = await Promise.all([
@@ -43,11 +35,7 @@ export class PayContribution {
     if (!isAllowedToPay) throw new NotAllowedToPay();
     if (hasAlreadyPayed) throw new HasAlreadyPayed();
 
-    if (amount < MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS) {
-      throw new InsufficientAmount();
-    }
-
-    const newContribution = Contribute.now(adherentId, amount);
+    const newContribution = Contribute.now(adherentId, type);
 
     return this.contributions.pay(newContribution);
   }

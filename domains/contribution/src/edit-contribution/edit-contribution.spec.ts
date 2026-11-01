@@ -4,13 +4,10 @@ import {
   EditContribution,
 } from "./edit-contribution.js";
 import { InMemoryEditContributions } from "./edit-contribution.inmemory.js";
-import { Adherent, Contribution } from "../contribution.js";
-import { InsufficientAmount } from "../contribution.error.js";
+import { Adherent, Contribution, DONATOR, MEMBER } from "../contribution.js";
 import { InMemoryAdherents } from "./adherents.inmemory.js";
 import { NotFoundContribution } from "./edit-contribution.error.js";
 
-const VALID_AMOUNT = 500;
-const INVALID_AMOUNT = 90;
 const CURRENT_EDITION = 49;
 
 const noel: Adherent = {
@@ -31,7 +28,7 @@ const lea: Adherent = {
 
 const noelContrib: Contribution = {
   adherentId: 1,
-  amount: 100,
+  type: MEMBER,
   edition: CURRENT_EDITION,
   paymentDate: new Date(2024, 9, 10),
   expirationDate: new Date(2025, 9, 10),
@@ -39,51 +36,37 @@ const noelContrib: Contribution = {
 
 const leaContrib: Contribution = {
   adherentId: 2,
-  amount: 150,
+  type: DONATOR,
   edition: CURRENT_EDITION - 1,
   paymentDate: new Date(2023, 9, 10),
   expirationDate: new Date(2024, 9, 10),
 };
 
 describe("Edit contribution", () => {
-  describe("when editing amount of an existing contribution", () => {
+  describe("when editing type of an existing contribution", async () => {
     const contributions = new InMemoryEditContributions([noelContrib]);
     const adherents = new InMemoryAdherents([noel, lea]);
     const edit = new EditContribution(contributions, adherents);
-    describe("when new amount is at least than 100 cents", async () => {
-      const contribution = await edit.amount(
-        noelContrib.adherentId,
-        noelContrib.edition,
-        VALID_AMOUNT,
-      );
-      it("should update the amount", async () => {
-        expect(contribution.amount).toBe(VALID_AMOUNT);
-      });
-      it("should save the contribution", async () => {
-        expect(contributions.all).toContain(contribution);
-      });
+    const contribution = await edit.type(
+      noelContrib.adherentId,
+      noelContrib.edition,
+      DONATOR,
+    );
+    it("should update the type", () => {
+      expect(contribution.type).toBe(DONATOR);
     });
-    describe("when new amount is less than 100 cents", () => {
-      it("should indicate that the minimum amount is 100 cents", async () => {
-        await expect(
-          async () =>
-            await edit.amount(
-              noelContrib.adherentId,
-              noelContrib.edition,
-              INVALID_AMOUNT,
-            ),
-        ).rejects.toThrow(InsufficientAmount);
-      });
+    it("should save the contribution", () => {
+      expect(contributions.all).toContain(contribution);
     });
   });
 
-  describe("when editing amount of a non-existing contribution", () => {
+  describe("when editing type of a non-existing contribution", () => {
     const contributions = new InMemoryEditContributions();
     const adherents = new InMemoryAdherents([noel, lea]);
     const edit = new EditContribution(contributions, adherents);
     it("should indicate that the contribution does not exist", async () => {
       await expect(
-        async () => await edit.amount(200, CURRENT_EDITION, VALID_AMOUNT),
+        async () => await edit.type(200, CURRENT_EDITION, DONATOR),
       ).rejects.toThrow(NotFoundContribution);
     });
   });
@@ -101,7 +84,7 @@ describe("Edit contribution", () => {
 
       const expectedNoel: AdherentWithContribution = {
         ...noel,
-        amount: noelContrib.amount,
+        type: noelContrib.type,
         paymentDate: noelContrib.paymentDate,
         edition: noelContrib.edition,
       };

@@ -1,15 +1,14 @@
-import {
-  Adherent,
-  Contribution,
-  MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS,
-} from "../contribution.js";
-import { InsufficientAmount } from "../contribution.error.js";
+import { Adherent, Contribution } from "../contribution.js";
 import { NotFoundContribution } from "./edit-contribution.error.js";
 
 export type AdherentWithContribution = Adherent & {
-  amount: Contribution["amount"];
+  type: Contribution["type"];
   paymentDate: Contribution["paymentDate"];
   edition: Contribution["edition"];
+};
+
+export type EditContributionForm = {
+  type: Contribution["type"];
 };
 
 export type EditContributions = {
@@ -37,19 +36,15 @@ export class EditContribution {
     private readonly adherents: Adherents,
   ) {}
 
-  async amount(
+  async type(
     adherentId: Contribution["adherentId"],
     edition: Contribution["edition"],
-    amount: number,
+    type: Contribution["type"],
   ): Promise<Contribution> {
     const contribution = await this.contributions.find(adherentId, edition);
     if (!contribution) throw new NotFoundContribution();
 
-    if (amount < MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS) {
-      throw new InsufficientAmount();
-    }
-
-    return this.contributions.save({ ...contribution, amount });
+    return this.contributions.save({ ...contribution, type });
   }
 
   async findAdherentsWithValidContribution(
@@ -59,10 +54,10 @@ export class EditContribution {
       await this.contributions.findCurrentContributions(edition);
 
     const contributionsWithAdherent = await Promise.all(
-      contributions.map(async ({ adherentId, amount, paymentDate }) => {
+      contributions.map(async ({ adherentId, type, paymentDate }) => {
         const adherent = await this.adherents.find(adherentId);
         if (!adherent) return null;
-        return { amount, paymentDate, edition, ...adherent };
+        return { type, paymentDate, edition, ...adherent };
       }),
     );
 

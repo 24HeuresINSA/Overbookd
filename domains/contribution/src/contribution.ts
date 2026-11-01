@@ -1,4 +1,12 @@
-export const MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS = 100;
+export const MEMBER = "MEMBER";
+export const DONATOR = "DONATOR";
+
+export type ContributionType = typeof MEMBER | typeof DONATOR;
+
+export const contributionTypes: Record<ContributionType, ContributionType> = {
+  MEMBER,
+  DONATOR,
+};
 
 export type ContributionIdentity = {
   adherentId: number;
@@ -6,7 +14,7 @@ export type ContributionIdentity = {
 };
 
 export type Contribution = ContributionIdentity & {
-  amount: number;
+  type: ContributionType;
   paymentDate: Date;
   expirationDate: Date;
 };

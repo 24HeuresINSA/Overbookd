@@ -24,7 +24,7 @@ import { Permissions } from "../authentication-zitadel/decorators/permissions-au
 import { MANAGE_CONTRIBUTIONS } from "@overbookd/permission";
 import { ContributionAdherentResponseDto } from "./dto/adherent.response.dto";
 import { ContributionErrorFilter } from "./contribution.filter";
-import { EditAmountRequestDto } from "./dto/edit-amount.request.dto";
+import { EditContributionRequestDto } from "./dto/edit-contribution.request.dto";
 import { AdherentWithContributionResponseDto } from "./dto/adherent-with-contribution.response.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 
@@ -95,15 +95,15 @@ export class ContributionController {
     type: Number,
   })
   @ApiBody({
-    description: "Contribution with amount to edit",
-    type: EditAmountRequestDto,
+    description: "Contribution with type to edit",
+    type: EditContributionRequestDto,
   })
-  editAmount(
+  edit(
     @Param("adherentId", ParseIntPipe) adherentId: number,
     @Param("edition", ParseIntPipe) edition: number,
-    @Body() { amount }: EditAmountRequestDto,
+    @Body() { type }: EditContributionRequestDto,
   ): Promise<void> {
-    return this.contributionService.edit(adherentId, edition, amount);
+    return this.contributionService.edit(adherentId, edition, type);
   }
 
   @Delete("adherents/:adherentId/editions/:edition")

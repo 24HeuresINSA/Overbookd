@@ -1,5 +1,9 @@
-export type { Adherent, Contribution } from "./contribution.js";
-export { MINIMUM_CONTRIBUTION_AMOUNT_IN_CENTS } from "./contribution.js";
+export type {
+  Adherent,
+  Contribution,
+  ContributionType,
+} from "./contribution.js";
+export { MEMBER, DONATOR, contributionTypes } from "./contribution.js";
 export { ContributionError } from "./contribution.error.js";
 
 // PAY CONTRIBUTION
@@ -9,11 +13,12 @@ export type {
   PayContributions,
 } from "./pay-contribution/pay-contribution.js";
 
-// EDIT AMOUNT
+// EDIT CONTRIBUTION
 export { EditContribution } from "./edit-contribution/edit-contribution.js";
 export type {
   AdherentWithContribution,
   Adherents,
+  EditContributionForm,
   EditContributions,
 } from "./edit-contribution/edit-contribution.js";
 

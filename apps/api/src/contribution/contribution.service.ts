@@ -13,7 +13,7 @@ import { Edition } from "@overbookd/time";
 export class ContributionService {
   constructor(
     private readonly payContribution: PayContribution,
-    private readonly editAmount: EditContribution,
+    private readonly editContribution: EditContribution,
   ) {}
 
   async findAdherentsWithContributionOutToDate(): Promise<Adherent[]> {
@@ -24,7 +24,7 @@ export class ContributionService {
     AdherentWithContribution[]
   > {
     const edition = Edition.current;
-    return this.editAmount.findAdherentsWithValidContribution(edition);
+    return this.editContribution.findAdherentsWithValidContribution(edition);
   }
 
   async pay(contributionData: PayContributionForm): Promise<void> {
@@ -34,15 +34,15 @@ export class ContributionService {
   async edit(
     adherentId: Contribution["adherentId"],
     edition: Contribution["edition"],
-    amount: number,
+    type: Contribution["type"],
   ): Promise<void> {
-    await this.editAmount.amount(adherentId, edition, amount);
+    await this.editContribution.type(adherentId, edition, type);
   }
 
   async remove(
     adherentId: Contribution["adherentId"],
     edition: Contribution["edition"],
   ): Promise<void> {
-    await this.editAmount.remove(adherentId, edition);
+    await this.editContribution.remove(adherentId, edition);
   }
 }
