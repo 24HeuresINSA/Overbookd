@@ -1,11 +1,6 @@
 import { AssignmentBreakPeriods, BreakPeriod } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
-import { SELECT_PERIOD } from "../../../common/query/period.query";
-
-const SELECT_BREAK_PERIOD = {
-  name: true,
-  ...SELECT_PERIOD,
-};
+import { SELECT_BREAK_PERIOD } from "../../../common/query/break-period.query";
 
 export class PrismaBreakPeriods implements AssignmentBreakPeriods {
   constructor(private readonly prisma: PrismaService) {}

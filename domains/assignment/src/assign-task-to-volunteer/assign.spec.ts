@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { CATERING, CONDUCTEUR, CONFIANCE, PERSONNE, VIEUX } from "@overbookd/team-code";
+import {
+  CATERING,
+  CONDUCTEUR,
+  CONFIANCE,
+  PERSONNE,
+  VIEUX,
+} from "@overbookd/team-code";
 import { NO_PREF } from "@overbookd/preference";
 import { IProvidePeriod, Period } from "@overbookd/time";
 import {

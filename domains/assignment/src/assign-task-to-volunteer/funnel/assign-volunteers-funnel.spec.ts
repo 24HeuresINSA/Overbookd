@@ -32,6 +32,7 @@ import {
   maintenanceToilettes,
 } from "./assign-volunteers-funnel.test-utils.js";
 import { CandidateFactory } from "./candidate.js";
+import { Unavailable } from "../../assignment.error.js";
 import { InMemoryAvailabilities } from "./availabilities.inmemory.js";
 import { InMemoryFriends } from "./friends.inmemory.js";
 import { IActAsFunnel } from "./funnel.js";
@@ -56,6 +57,7 @@ describe("Assign volunteers funnel", () => {
       [lea.volunteer.id, lea.availabilities],
       [ontaine.volunteer.id, ontaine.availabilities],
       [tatouin.volunteer.id, tatouin.availabilities],
+      [luce.volunteer.id, luce.availabilities],
       [nathan.volunteer.id, nathan.availabilities],
       [bruce.volunteer.id, bruce.availabilities],
       [amanda.volunteer.id, amanda.availabilities],
@@ -67,6 +69,7 @@ describe("Assign volunteers funnel", () => {
       [lea.volunteer.id, lea.breakPeriods],
       [ontaine.volunteer.id, ontaine.breakPeriods],
       [tatouin.volunteer.id, tatouin.breakPeriods],
+      [luce.volunteer.id, luce.breakPeriods],
       [nathan.volunteer.id, nathan.breakPeriods],
       [bruce.volunteer.id, bruce.breakPeriods],
       [amanda.volunteer.id, amanda.breakPeriods],
@@ -179,6 +182,22 @@ describe("Assign volunteers funnel", () => {
       },
     );
   });
+  describe("when assigning a candidate that is not available on the assignment period", () => {
+    let funnel: IActAsFunnel;
+    let assignments: InMemoryAssignments;
+    beforeAll(async () => {
+      assignments = new InMemoryAssignments(initialAssignments);
+      funnel = await WaitingForVolunteer.init(
+        candidateFactory,
+        assignments,
+        benevolant,
+      ).select(tatouin.volunteer);
+    });
+    it("should throw Unavailable and not save anything", async () => {
+      await expect(funnel.assign()).rejects.toThrow(Unavailable);
+      expect(assignments.all).toContainEqual(benevolant);
+    });
+  });
   describe("when assignment needs two benevoles and one conducteur", () => {
     describe("when selected volunteer is only member of benevole", () => {
       let funnel: IActAsFunnel;
@@ -217,10 +236,34 @@ describe("Assign volunteers funnel", () => {
       let volunteerFunnel: IActAsFunnel;
       const volunteer = lea.volunteer;
       let assignments: InMemoryAssignments;
+      // lea is available during rendreKangoo period (2024-05-23 from 08h to 20h)
+      const rendreKangooAvailabilities = new InMemoryAvailabilities(
+        new Map([
+          [noel.volunteer.id, noel.availabilities],
+          [
+            volunteer.id,
+            [
+              ...lea.availabilities,
+              {
+                start: new Date("2024-05-22T18:00:00+02:00"),
+                end: new Date("2024-05-23T20:00:00+02:00"),
+              },
+            ],
+          ],
+        ]),
+      );
+      const rendreKangooFactory = new CandidateFactory(
+        {
+          planning: inMemoryPlanning,
+          availabilities: rendreKangooAvailabilities,
+          breakPeriods: inMemoryBreakPeriods,
+        },
+        friends,
+      );
       beforeAll(async () => {
         assignments = new InMemoryAssignments(initialAssignments);
         volunteerFunnel = await WaitingForVolunteer.init(
-          candidateFactory,
+          rendreKangooFactory,
           assignments,
           rendreKangoo,
         ).select(volunteer);
@@ -243,7 +286,7 @@ describe("Assign volunteers funnel", () => {
           beforeAll(async () => {
             assignments = new InMemoryAssignments(initialAssignments);
             volunteerFunnel = await WaitingForVolunteer.init(
-              candidateFactory,
+              rendreKangooFactory,
               assignments,
               rendreKangoo,
             ).select(volunteer);

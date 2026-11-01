@@ -6,7 +6,9 @@ export class InMemoryAssignments implements Assignments {
   constructor(private assignments: Assignment[]) {}
 
   findOne(identifier: AssignmentIdentifier): Promise<Assignment> {
-    const assignment = this.find(identifier);
+    const assignmentIndex = this.indexOf(identifier);
+    const assignment =
+      assignmentIndex === -1 ? undefined : this.assignments.at(assignmentIndex);
     if (!assignment) throw new Error("Not Found");
     return Promise.resolve(assignment);
   }
@@ -15,12 +17,7 @@ export class InMemoryAssignments implements Assignments {
     assignment,
     volunteers,
   }: VolunteersForAssignment): Promise<Assignment> {
-    const assignmentIndex = this.assignments.findIndex(
-      ({ taskId, assignmentId, mobilizationId }) =>
-        assignment.taskId === taskId &&
-        assignment.mobilizationId === mobilizationId &&
-        assignment.assignmentId === assignmentId,
-    );
+    const assignmentIndex = this.indexOf(assignment);
     const currentAssignment = this.assignments.at(assignmentIndex);
     if (assignmentIndex === -1 || !currentAssignment) {
       throw new Error("Not Found");
@@ -42,12 +39,7 @@ export class InMemoryAssignments implements Assignments {
     assignment: AssignmentIdentifier,
     assigneeId: number,
   ): Promise<void> {
-    const assignmentIndex = this.assignments.findIndex(
-      ({ taskId, assignmentId, mobilizationId }) =>
-        assignment.taskId === taskId &&
-        assignment.mobilizationId === mobilizationId &&
-        assignment.assignmentId === assignmentId,
-    );
+    const assignmentIndex = this.indexOf(assignment);
     const currentAssignment = this.assignments.at(assignmentIndex);
     if (assignmentIndex === -1 || !currentAssignment) {
       return Promise.resolve();
@@ -71,12 +63,12 @@ export class InMemoryAssignments implements Assignments {
     return this.assignments;
   }
 
-  private find({
+  private indexOf({
     taskId,
     assignmentId,
     mobilizationId,
-  }: AssignmentIdentifier): Assignment | undefined {
-    return this.assignments.find(
+  }: AssignmentIdentifier): number {
+    return this.assignments.findIndex(
       (assignment) =>
         assignment.taskId === taskId &&
         assignment.mobilizationId === mobilizationId &&

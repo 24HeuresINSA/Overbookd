@@ -1,4 +1,6 @@
+import { Period } from "@overbookd/time";
 import { Assignment } from "../assignment.js";
+import { assertCanBeAssignedOn } from "../assignable-on-period.js";
 import { ReadyToStart } from "./startup-funnel.js";
 import { Candidate, isFulfillingDemand } from "./candidate.js";
 import {
@@ -11,6 +13,7 @@ import {
   FunnelError,
   FulfillDemand,
 } from "./funnel.js";
+import { isAssignmentEvent } from "./planning.js";
 import { AssignableVolunteer } from "../assignable-volunteer.js";
 
 type ActiveFunnelInitializer = [Candidate[], FunnelRepositories, Assignment];
@@ -30,6 +33,21 @@ export class AssignVolunteerFunnel
         new FunnelError(
           "Les candidat·e·s ne sont pas toustes affecté·e·s a une équipe",
         ),
+      );
+    }
+    const period = Period.init(this.assignment);
+    for (const candidate of this._candidates) {
+      const { id, as, teams, availabilities, breakPeriods, planning } =
+        candidate.json;
+      assertCanBeAssignedOn(
+        { id, as },
+        {
+          teams,
+          availabilities,
+          assignments: planning.filter(isAssignmentEvent),
+          breakPeriods,
+        },
+        period,
       );
     }
     const { taskId, mobilizationId, assignmentId } = this.assignment;

@@ -29,15 +29,8 @@ export class PrismaAssignments implements AssignmentRepository {
     identifier: AssignmentIdentifier,
     volunteerId: number,
   ): Promise<TaskForCalendar> {
-    const { assignmentId, mobilizationId, taskId } = identifier;
     const assignment = await this.prisma.assignment.findUnique({
-      where: {
-        id_mobilizationId_festivalTaskId: {
-          festivalTaskId: taskId,
-          id: assignmentId,
-          mobilizationId,
-        },
-      },
+      where: uniqueAssignment(identifier),
       select: {
         ...SELECT_PERIOD_WITH_ID,
         festivalTask: {
@@ -109,15 +102,8 @@ export class PrismaAssignments implements AssignmentRepository {
     identifier: AssignmentIdentifier,
     withDetails?: T,
   ): Promise<Assignment<{ withDetails: T }>> {
-    const { assignmentId, mobilizationId, taskId } = identifier;
     const assignment = await this.prisma.assignment.findUnique({
-      where: {
-        id_mobilizationId_festivalTaskId: {
-          festivalTaskId: taskId,
-          id: assignmentId,
-          mobilizationId,
-        },
-      },
+      where: uniqueAssignment(identifier),
       select: SELECT_ASSIGNMENT,
     });
 

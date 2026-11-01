@@ -33,7 +33,7 @@ export class PrismaVolunteers implements Volunteers {
         },
         select: SELECT_VOLUNTEER_WITH_ASSIGNMENTS,
       }),
-      this.prisma.charismaPeriod.findMany({ select: SELECT_CHARISMA_PERIOD }),
+      this.findCharismaPeriods(),
     ]);
     return volunteers
       .map((volunteer) =>
@@ -48,10 +48,16 @@ export class PrismaVolunteers implements Volunteers {
         where: { id: volunteerId, ...IS_NOT_DELETED },
         select: SELECT_VOLUNTEER_WITH_ASSIGNMENTS,
       }),
-      this.prisma.charismaPeriod.findMany({ select: SELECT_CHARISMA_PERIOD }),
+      this.findCharismaPeriods(),
     ]);
     if (!volunteer) throw new VolunteerNotFoundError(volunteerId);
     return toVolunteerWithAssignments(volunteer, charismaPeriods);
+  }
+
+  private findCharismaPeriods() {
+    return this.prisma.charismaPeriod.findMany({
+      select: SELECT_CHARISMA_PERIOD,
+    });
   }
 }
 
