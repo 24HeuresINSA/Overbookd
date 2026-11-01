@@ -16,6 +16,7 @@ export type VolunteerWithAssignmentDuration = VolunteerWithFriendFilter & {
 
 export type Volunteers = {
   findAll(): Promise<VolunteerWithAssignments[]>;
+  findOne(volunteerId: Volunteer["id"]): Promise<VolunteerWithAssignments>;
 };
 
 export class AssignVolunteerToTask {

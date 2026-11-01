@@ -17,6 +17,12 @@ import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";
 export class AssignmentsRepository implements Assignments {
   private static readonly basePath = "assignments";
 
+  async findOne(identifier: AssignmentIdentifier): Promise<Assignment> {
+    const res = await AssignmentsRepository.findOne<Assignment>(identifier);
+    if (isHttpError(res)) throw res;
+    return castWithDate(res);
+  }
+
   async assign(
     volunteersForAssignment: VolunteersForAssignment,
   ): Promise<Assignment> {

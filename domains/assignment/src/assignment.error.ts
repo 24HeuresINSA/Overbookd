@@ -8,6 +8,12 @@ export class TaskNotFoundError extends AssignmentError {
   }
 }
 
+export class VolunteerNotFoundError extends AssignmentError {
+  constructor(volunteerId: number) {
+    super(`Le·a bénévole #${volunteerId} est introuvable`);
+  }
+}
+
 export class WrongTeam extends AssignmentError {
   constructor(volunteerId: number, teamCode: string) {
     super(

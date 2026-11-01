@@ -1,3 +1,5 @@
+import { VolunteerNotFoundError } from "../assignment.error.js";
+import { Volunteer } from "../volunteer.js";
 import {
   VolunteerWithAssignments,
   Volunteers,
@@ -8,5 +10,11 @@ export class InMemoryVolunteers implements Volunteers {
 
   findAll() {
     return Promise.resolve(this.volunteers);
+  }
+
+  findOne(volunteerId: Volunteer["id"]): Promise<VolunteerWithAssignments> {
+    const volunteer = this.volunteers.find(({ id }) => id === volunteerId);
+    if (!volunteer) throw new VolunteerNotFoundError(volunteerId);
+    return Promise.resolve(volunteer);
   }
 }

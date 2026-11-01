@@ -4,7 +4,11 @@ import {
   DatabaseAssigneeWithAssignments,
   SELECT_VOLUNTEER_WITH_ASSIGNMENTS,
 } from "./volunteer.query";
-import { VolunteerWithAssignments, Volunteers } from "@overbookd/assignment";
+import {
+  VolunteerNotFoundError,
+  VolunteerWithAssignments,
+  Volunteers,
+} from "@overbookd/assignment";
 import { getFriendCount } from "../../common/repository/friend.query";
 import { HAS_AVAILABILITIES } from "../../common/repository/availabilities.query";
 import { IS_MEMBER_OF_VOLUNTEER_TEAM } from "../../../common/query/user.query";
@@ -36,6 +40,18 @@ export class PrismaVolunteers implements Volunteers {
         toVolunteerWithAssignments(volunteer, charismaPeriods),
       )
       .sort((a, b) => b.charisma - a.charisma);
+  }
+
+  async findOne(volunteerId: number): Promise<VolunteerWithAssignments> {
+    const [volunteer, charismaPeriods] = await Promise.all([
+      this.prisma.user.findUnique({
+        where: { id: volunteerId, ...IS_NOT_DELETED },
+        select: SELECT_VOLUNTEER_WITH_ASSIGNMENTS,
+      }),
+      this.prisma.charismaPeriod.findMany({ select: SELECT_CHARISMA_PERIOD }),
+    ]);
+    if (!volunteer) throw new VolunteerNotFoundError(volunteerId);
+    return toVolunteerWithAssignments(volunteer, charismaPeriods);
   }
 }
 

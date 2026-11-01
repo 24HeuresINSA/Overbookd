@@ -5,6 +5,12 @@ import { Assignments, VolunteersForAssignment } from "./assignments.js";
 export class InMemoryAssignments implements Assignments {
   constructor(private assignments: Assignment[]) {}
 
+  findOne(identifier: AssignmentIdentifier): Promise<Assignment> {
+    const assignment = this.find(identifier);
+    if (!assignment) throw new Error("Not Found");
+    return Promise.resolve(assignment);
+  }
+
   assign({
     assignment,
     volunteers,
@@ -63,5 +69,18 @@ export class InMemoryAssignments implements Assignments {
 
   get all() {
     return this.assignments;
+  }
+
+  private find({
+    taskId,
+    assignmentId,
+    mobilizationId,
+  }: AssignmentIdentifier): Assignment | undefined {
+    return this.assignments.find(
+      (assignment) =>
+        assignment.taskId === taskId &&
+        assignment.mobilizationId === mobilizationId &&
+        assignment.assignmentId === assignmentId,
+    );
   }
 }

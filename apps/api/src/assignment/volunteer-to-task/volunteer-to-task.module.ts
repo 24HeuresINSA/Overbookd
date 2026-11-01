@@ -46,7 +46,7 @@ import { PrismaAssignmentFriends } from "./repository/assignment-friends.prisma"
       ],
     },
   ],
-  exports: [VolunteerToTaskService],
+  exports: [VolunteerToTaskService, PrismaVolunteers],
   imports: [PrismaModule],
 })
 export class VolunteerToTaskModule {}

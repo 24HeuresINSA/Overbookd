@@ -43,6 +43,7 @@ export { AssignTaskToVolunteer } from "./assign-task-to-volunteer/assign-task-to
 export {
   AssignmentError,
   TaskNotFoundError,
+  VolunteerNotFoundError,
   WrongTeam,
   Unavailable,
   AlreadyAssigned,
@@ -69,6 +70,8 @@ export type {
   Assignments,
   VolunteersForAssignment,
 } from "./assign-task-to-volunteer/repositories/assignments.js";
+export { Assign } from "./assign-task-to-volunteer/assign.js";
+export { Unassign } from "./assign-task-to-volunteer/unassign.js";
 export { AssignWholeTeam } from "./assign-task-to-volunteer/assign-whole-team/assign-whole-team.js";
 export type {
   AssignmentIdentifierWithTeam,
