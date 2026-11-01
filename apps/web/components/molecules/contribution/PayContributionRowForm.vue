@@ -4,7 +4,7 @@
       v-for="{ title, value } in CONTRIBUTION_TYPE_ITEMS"
       :key="value"
       :text="title"
-      color="primary"
+      :color="value === MEMBER ? 'primary' : 'secondary'"
       class="payment-form__button"
       @click="payContribution(value)"
     />
@@ -12,7 +12,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { Adherent, ContributionType } from "@overbookd/contribution";
+import {
+  MEMBER,
+  type Adherent,
+  type ContributionType,
+} from "@overbookd/contribution";
 import { CONTRIBUTION_TYPE_ITEMS } from "~/utils/contribution/contribution.constant";
 
 const contributionStore = useContributionStore();

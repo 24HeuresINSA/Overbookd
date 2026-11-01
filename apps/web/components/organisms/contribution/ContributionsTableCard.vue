@@ -91,7 +91,7 @@ const headers: TableHeaders = [
   { title: "Prénom", value: "firstName", sortable: true },
   { title: "Nom", value: "lastName", sortable: true },
   { title: "Surnom", value: "nickname", sortable: true },
-  { title: "Paiement", value: "type", width: "40%", sortable: true },
+  { title: "Paiement", value: "type", width: "30%", sortable: true },
 ];
 const isMobile = computed<boolean>(() => layoutStore.isMobile);
 
