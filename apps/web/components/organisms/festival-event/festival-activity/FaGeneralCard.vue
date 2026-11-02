@@ -133,10 +133,6 @@ const updatePhotoLink = useDebounceFn((photoLink: string) => {
   faStore.updateGeneral({ photoLink: photoLink || null });
 }, 800);
 const updateCategories = useDebounceFn((categories: string[]) => {
-  const isValid = categories.every((category) =>
-    activityCategories.includes(category),
-  );
-  if (!isValid) return;
   faStore.updateGeneral({ categories });
 }, 800);
 const updateIsFlagship = (isFlagship: boolean | null) => {
