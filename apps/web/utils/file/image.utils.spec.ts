@@ -36,11 +36,14 @@ type CanvasCalls = {
 };
 
 class FakeImage {
+  static failDecode = false;
   naturalWidth = FAKE_FRAME_WIDTH;
   naturalHeight = FAKE_FRAME_HEIGHT;
   src = "";
   decode() {
-    return Promise.resolve();
+    return FakeImage.failDecode
+      ? Promise.reject(new Error("decode failed"))
+      : Promise.resolve();
   }
 }
 
@@ -214,5 +217,15 @@ describe("compressImage", () => {
     const file = makeFile(IMAGE_MAX_SIZE - 1, "animation.gif", GIF_MIME_TYPE);
     const result = await compressImage(file, IMAGE_MAX_SIZE);
     expect(result).toBe(file);
+  });
+
+  it("returns the original file when the image cannot be decoded", async () => {
+    const calls = setupFakeCanvas(true);
+    FakeImage.failDecode = true;
+    const file = makeFile(5 * 1024 * 1024);
+    const result = await compressImage(file, IMAGE_MAX_SIZE);
+    expect(result).toBe(file);
+    expect(calls.toBlob).toEqual([]);
+    FakeImage.failDecode = false;
   });
 });

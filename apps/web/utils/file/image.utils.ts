@@ -14,14 +14,14 @@ const QUALITIES = [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1];
 const ANIMATED_MIME_TYPES = [GIF_MIME_TYPE, WEBP_MIME_TYPE];
 const MIN_FRAME_DURATION_MS = 20;
 
-type EncodeResult = {
-  fitting: Blob | null;
-  smallest: Blob | null;
+type Candidate = {
+  size: number;
+  blob: Blob;
 };
 
-type AnimatedEncodeResult = {
-  fitting: Uint8Array | null;
-  smallest: Uint8Array | null;
+type SearchResult = {
+  fitting: Candidate | null;
+  smallest: Candidate | null;
 };
 
 type AnimatedFrames = {
@@ -30,11 +30,7 @@ type AnimatedFrames = {
   frames: WebPAnimationFrame[];
 };
 
-const NO_ENCODE_RESULT: EncodeResult = { fitting: null, smallest: null };
-const NO_ANIMATED_RESULT: AnimatedEncodeResult = {
-  fitting: null,
-  smallest: null,
-};
+const NO_RESULT: SearchResult = { fitting: null, smallest: null };
 
 export async function compressImage(
   file: File,
@@ -45,13 +41,17 @@ export async function compressImage(
   const animated = await compressAnimatedImage(file, maxSizeInBytes);
   if (animated) return animated;
 
-  const url = URL.createObjectURL(file);
   try {
-    const image = await loadImage(url);
-    const compressed = await compressImageElement(image, file, maxSizeInBytes);
-    return compressed ?? file;
-  } finally {
-    URL.revokeObjectURL(url);
+    const url = URL.createObjectURL(file);
+    try {
+      const image = await loadImage(url);
+      const compressed = await compressStillImage(image, file, maxSizeInBytes);
+      return compressed ?? file;
+    } finally {
+      URL.revokeObjectURL(url);
+    }
+  } catch {
+    return file;
   }
 }
 
@@ -72,30 +72,27 @@ async function compressAnimatedImage(
     if (!track || track.frameCount <= 1) return null;
 
     const firstFrame = await decoder.decode({ frameIndex: 0 });
-    const naturalWidth = firstFrame.image.displayWidth;
-    const naturalHeight = firstFrame.image.displayHeight;
+    const naturalWidth =
+      firstFrame.image.displayWidth || firstFrame.image.codedWidth;
+    const naturalHeight =
+      firstFrame.image.displayHeight || firstFrame.image.codedHeight;
     firstFrame.image.close();
 
     const scales = computeScales(naturalWidth, naturalHeight);
-    const result = await scales.reduce<Promise<AnimatedEncodeResult>>(
-      async (previous, scale) => {
-        const acc = await previous;
-        if (acc.fitting) return acc;
-        return encodeAnimatedAtScale(
-          decoder,
-          track.frameCount,
-          naturalWidth,
-          naturalHeight,
-          scale,
-          maxSizeInBytes,
-          acc.smallest,
-        );
-      },
-      Promise.resolve(NO_ANIMATED_RESULT),
+    const result = await searchScales(scales, (scale, start) =>
+      encodeAnimatedAtScale(
+        decoder,
+        track.frameCount,
+        naturalWidth,
+        naturalHeight,
+        scale,
+        maxSizeInBytes,
+        start,
+      ),
     );
 
-    const bytes = result.fitting ?? result.smallest;
-    return bytes ? animatedWebPFile(bytes, file.name) : null;
+    const best = result.fitting ?? result.smallest;
+    return best ? toFile(best, file.name, WEBP_MIME_TYPE, "webp") : null;
   } catch {
     return null;
   } finally {
@@ -110,8 +107,8 @@ async function encodeAnimatedAtScale(
   naturalHeight: number,
   scale: number,
   maxSizeInBytes: number,
-  smallest: Uint8Array | null,
-): Promise<AnimatedEncodeResult> {
+  start: SearchResult,
+): Promise<SearchResult> {
   const extracted = await extractFrames(
     decoder,
     frameCount,
@@ -119,30 +116,23 @@ async function encodeAnimatedAtScale(
     naturalHeight,
     scale,
   );
-  if (!extracted) return { fitting: null, smallest };
+  if (!extracted) return start;
   const { width, height, frames } = extracted;
 
-  return QUALITIES.reduce<Promise<AnimatedEncodeResult>>(
-    async (previous, quality) => {
-      const acc = await previous;
-      if (acc.fitting) return acc;
-      const bytes = await encodeAnimation(
-        width,
-        height,
-        true,
-        frames.map((frame) => ({
-          ...frame,
-          config: { lossless: 0, quality: Math.round(quality * 100) },
-        })),
-      );
-      if (!bytes) return acc;
-      if (bytes.length <= maxSizeInBytes) {
-        return { fitting: bytes, smallest: acc.smallest };
-      }
-      return { fitting: null, smallest: smallerBytes(bytes, acc.smallest) };
-    },
-    Promise.resolve({ fitting: null, smallest }),
-  );
+  return searchQualities(start, maxSizeInBytes, async (quality) => {
+    const bytes = await encodeAnimation(
+      width,
+      height,
+      true,
+      frames.map((frame) => ({
+        ...frame,
+        config: { lossless: 0, quality: Math.round(quality * 100) },
+      })),
+    );
+    return bytes
+      ? { size: bytes.length, blob: new Blob([bytes.slice()]) }
+      : null;
+  });
 }
 
 async function extractFrames(
@@ -152,8 +142,8 @@ async function extractFrames(
   naturalHeight: number,
   scale: number,
 ): Promise<AnimatedFrames | null> {
-  const width = Math.max(1, Math.round(naturalWidth * scale));
-  const height = Math.max(1, Math.round(naturalHeight * scale));
+  const width = scaledSize(naturalWidth, scale);
+  const height = scaledSize(naturalHeight, scale);
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
   if (!context) return null;
@@ -183,28 +173,7 @@ async function extractFrames(
   return { width, height, frames };
 }
 
-function animatedWebPFile(bytes: Uint8Array, originalName: string): File {
-  const baseName = originalName.replace(/\.[^/.]+$/, "") || "avatar";
-  return new File([bytes.slice()], `${baseName}.webp`, {
-    type: WEBP_MIME_TYPE,
-  });
-}
-
-function smallerBytes(
-  candidate: Uint8Array,
-  current: Uint8Array | null,
-): Uint8Array {
-  return !current || candidate.length < current.length ? candidate : current;
-}
-
-async function loadImage(url: string): Promise<HTMLImageElement> {
-  const image = new Image();
-  image.src = url;
-  await image.decode();
-  return image;
-}
-
-async function compressImageElement(
+async function compressStillImage(
   image: HTMLImageElement,
   originalFile: File,
   maxSizeInBytes: number,
@@ -216,55 +185,52 @@ async function compressImageElement(
   const mimeType = supportsWebP(canvas) ? WEBP_MIME_TYPE : JPEG_MIME_TYPE;
   const scales = computeScales(image.naturalWidth, image.naturalHeight);
 
-  const result = await scales.reduce<Promise<EncodeResult>>(
-    async (previous, scale) => {
-      const acc = await previous;
-      if (acc.fitting) return acc;
-      return encodeAtScale(
-        canvas,
-        context,
-        image,
-        mimeType,
-        scale,
-        maxSizeInBytes,
-        acc.smallest,
-      );
-    },
-    Promise.resolve(NO_ENCODE_RESULT),
+  const result = await searchScales(scales, (scale, start) =>
+    searchQualities(start, maxSizeInBytes, async (quality) => {
+      const width = scaledSize(image.naturalWidth, scale);
+      const height = scaledSize(image.naturalHeight, scale);
+      canvas.width = width;
+      canvas.height = height;
+      drawImageOnCanvas(context, image, mimeType, width, height);
+      const blob = await canvasToBlob(canvas, mimeType, quality);
+      return blob ? { size: blob.size, blob } : null;
+    }),
   );
 
-  const blob = result.fitting ?? result.smallest;
-  return blob ? blobToFile(blob, originalFile.name, mimeType) : null;
+  const best = result.fitting ?? result.smallest;
+  const extension = mimeType === WEBP_MIME_TYPE ? "webp" : "jpg";
+  return best ? toFile(best, originalFile.name, mimeType, extension) : null;
 }
 
-async function encodeAtScale(
-  canvas: HTMLCanvasElement,
-  context: CanvasRenderingContext2D,
-  image: HTMLImageElement,
-  mimeType: string,
-  scale: number,
-  maxSizeInBytes: number,
-  smallest: Blob | null,
-): Promise<EncodeResult> {
-  const width = Math.max(1, Math.round(image.naturalWidth * scale));
-  const height = Math.max(1, Math.round(image.naturalHeight * scale));
-  canvas.width = width;
-  canvas.height = height;
-  drawImageOnCanvas(context, image, mimeType, width, height);
+async function searchScales(
+  scales: number[],
+  encodeScale: (scale: number, start: SearchResult) => Promise<SearchResult>,
+): Promise<SearchResult> {
+  return scales.reduce<Promise<SearchResult>>(async (previous, scale) => {
+    const acc = await previous;
+    if (acc.fitting) return acc;
+    return encodeScale(scale, acc);
+  }, Promise.resolve(NO_RESULT));
+}
 
-  return QUALITIES.reduce<Promise<EncodeResult>>(
-    async (previous, quality) => {
-      const acc = await previous;
-      if (acc.fitting) return acc;
-      const blob = await canvasToBlob(canvas, mimeType, quality);
-      if (!blob) return acc;
-      if (blob.size <= maxSizeInBytes) {
-        return { fitting: blob, smallest: acc.smallest };
-      }
-      return { fitting: null, smallest: smallerBlob(blob, acc.smallest) };
-    },
-    Promise.resolve({ fitting: null, smallest }),
-  );
+async function searchQualities(
+  start: SearchResult,
+  maxSizeInBytes: number,
+  encode: (quality: number) => Promise<Candidate | null>,
+): Promise<SearchResult> {
+  return QUALITIES.reduce<Promise<SearchResult>>(async (previous, quality) => {
+    const acc = await previous;
+    if (acc.fitting) return acc;
+    const candidate = await encode(quality);
+    if (!candidate) return acc;
+    if (candidate.size <= maxSizeInBytes) {
+      return { fitting: candidate, smallest: acc.smallest };
+    }
+    return {
+      fitting: null,
+      smallest: smallerCandidate(candidate, acc.smallest),
+    };
+  }, Promise.resolve(start));
 }
 
 function drawImageOnCanvas(
@@ -283,6 +249,13 @@ function drawImageOnCanvas(
   context.drawImage(image, 0, 0, width, height);
 }
 
+async function loadImage(url: string): Promise<HTMLImageElement> {
+  const image = new Image();
+  image.src = url;
+  await image.decode();
+  return image;
+}
+
 function computeScales(naturalWidth: number, naturalHeight: number): number[] {
   const maxDimension = Math.max(naturalWidth, naturalHeight);
   const firstScale = Math.min(1, MAX_DIMENSION_PX / maxDimension);
@@ -296,7 +269,14 @@ function computeScales(naturalWidth: number, naturalHeight: number): number[] {
   return scales.length > 0 ? scales : [1];
 }
 
-function smallerBlob(candidate: Blob, current: Blob | null): Blob {
+function scaledSize(natural: number, scale: number): number {
+  return Math.max(1, Math.round(natural * scale));
+}
+
+function smallerCandidate(
+  candidate: Candidate,
+  current: Candidate | null,
+): Candidate {
   return !current || candidate.size < current.size ? candidate : current;
 }
 
@@ -314,8 +294,19 @@ function canvasToBlob(
   );
 }
 
-function blobToFile(blob: Blob, originalName: string, mimeType: string): File {
-  const extension = mimeType === WEBP_MIME_TYPE ? "webp" : "jpg";
-  const baseName = originalName.replace(/\.[^/.]+$/, "") || "avatar";
-  return new File([blob], `${baseName}.${extension}`, { type: mimeType });
+function toFile(
+  candidate: Candidate,
+  originalName: string,
+  mimeType: string,
+  extension: string,
+): File {
+  return new File(
+    [candidate.blob],
+    `${fileBaseName(originalName)}.${extension}`,
+    { type: mimeType },
+  );
+}
+
+function fileBaseName(name: string): string {
+  return name.replace(/\.[^/.]+$/, "") || "avatar";
 }
