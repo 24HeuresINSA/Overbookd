@@ -125,4 +125,12 @@ export type { HelpingVolunteerAssignment, HelpingVolunteer } from "./need-help";
 export type { CreatePermissionForm, Permission } from "./permission";
 export type { CreateLocation } from "./location";
 export type { HttpStringified } from "./http-stringified";
-export { IMAGE_MAX_SIZE, IMAGE_EXTENSIONS } from "./image";
+export {
+  PNG_MIME_TYPE,
+  JPEG_MIME_TYPE,
+  WEBP_MIME_TYPE,
+  GIF_MIME_TYPE,
+  IMAGE_MAX_SIZE,
+  IMAGE_EXTENSIONS,
+  PROFILE_PICTURE_MAX_UPLOAD_SIZE,
+} from "./image";
