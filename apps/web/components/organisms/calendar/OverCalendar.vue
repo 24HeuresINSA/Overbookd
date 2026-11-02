@@ -1,10 +1,14 @@
 <template>
   <div
     v-touch="{
-      left: moveToNextWeekOrDay,
-      right: moveToPreviousWeekOrDay,
+      start: startSwipe,
+      move: trackSwipe,
+      end: endSwipe,
+      left: () => canSwipe && moveToNextWeekOrDay(),
+      right: () => canSwipe && moveToPreviousWeekOrDay(),
     }"
     class="calendar-with-manager"
+    @touchcancel="canSwipe = false"
   >
     <slot name="manager">
       <CalendarManager
@@ -173,6 +177,18 @@ const moveToPreviousWeekOrDay = () => {
 };
 const moveToNextWeekOrDay = () => {
   dayModel.value = day.value.date.plus(dayGapDuration.value).date;
+};
+
+const canSwipe = ref<boolean>(false);
+const startSwipe = ({ originalEvent }: { originalEvent: TouchEvent }) => {
+  canSwipe.value = originalEvent.touches.length === 1;
+};
+const trackSwipe = ({ originalEvent }: { originalEvent: TouchEvent }) => {
+  if (originalEvent.touches.length > 1) canSwipe.value = false;
+};
+const endSwipe = ({ originalEvent }: { originalEvent: TouchEvent }) => {
+  // Keep a pinch invalid until a new gesture, even after one finger is lifted.
+  if (originalEvent.touches.length > 0) canSwipe.value = false;
 };
 
 if (publicHolidayStore.all.length === 0) {
