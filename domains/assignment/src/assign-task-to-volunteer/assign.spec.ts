@@ -6,8 +6,6 @@ import {
   PERSONNE,
   VIEUX,
 } from "@overbookd/team-code";
-import { NO_PREF } from "@overbookd/preference";
-import { IProvidePeriod, Period } from "@overbookd/time";
 import {
   AlreadyAssigned,
   HasBreak,
@@ -15,14 +13,10 @@ import {
   VolunteerNotFoundError,
   WrongTeam,
 } from "../assignment.error.js";
-import { BreakPeriod } from "../break-periods/break-periods.js";
-import { defaultFriendCount } from "../friends.js";
-import { VolunteerWithAssignments } from "../assign-volunteer-to-task/assign-volunteer-to-task.js";
-import { InMemoryVolunteers } from "../assign-volunteer-to-task/volunteers.inmemory.js";
 import { Assign } from "./assign.js";
 import { InMemoryAssignments } from "./repositories/assignments.inmemory.js";
-import { InMemoryAvailabilities } from "./funnel/availabilities.inmemory.js";
-import { InMemoryBreakPeriods } from "./funnel/break-periods.inmemory.js";
+import type { VolunteerForAssignment } from "./repositories/volunteers-for-assignment.js";
+import { InMemoryVolunteersForAssignment } from "./repositories/volunteers-for-assignment.inmemory.js";
 import {
   benevolant,
   nettoyerEspaceConcessions,
@@ -44,32 +38,38 @@ const sunday02hTo06h = {
   start: new Date("2024-05-19T02:00:00+02:00"),
   end: new Date("2024-05-19T06:00:00+02:00"),
 };
-const friday09hTo11h = Period.init({
+const friday09hTo11h = {
   start: new Date("2024-05-17T09:00:00+02:00"),
   end: new Date("2024-05-17T11:00:00+02:00"),
-});
+};
 
 const volunteerOf = (
-  partial: Partial<VolunteerWithAssignments> &
-    Pick<VolunteerWithAssignments, "id" | "teams">,
-): VolunteerWithAssignments => ({
-  firstName: "Prénom",
-  lastName: "Nom",
-  charisma: 0,
-  birthDate: new Date("2000-01-01"),
-  assignmentPreference: NO_PREF,
-  friendCount: defaultFriendCount,
+  partial: Partial<VolunteerForAssignment> &
+    Pick<VolunteerForAssignment, "id" | "teams">,
+): VolunteerForAssignment => ({
+  availabilities: [],
   assignments: [],
+  breakPeriods: [],
   ...partial,
 });
 
-const lea = volunteerOf({ id: 2, teams: [PERSONNE, VIEUX, CONDUCTEUR] });
+const lea = volunteerOf({
+  id: 2,
+  teams: [PERSONNE, VIEUX, CONDUCTEUR],
+  availabilities: [friday06hToSunday20h],
+  breakPeriods: [{ name: "Pause", ...sunday02hTo06h }],
+});
 const noel = volunteerOf({
   id: 1,
   teams: [PERSONNE, VIEUX],
+  availabilities: [monday08hToSunday20h],
   assignments: [friday09hTo11h],
 });
-const tatouin = volunteerOf({ id: 4, teams: [PERSONNE, VIEUX, CONDUCTEUR] });
+const tatouin = volunteerOf({
+  id: 4,
+  teams: [PERSONNE, VIEUX, CONDUCTEUR],
+  availabilities: [nextWeek],
+});
 
 describe("Assign volunteers", () => {
   const setup = () => {
@@ -77,25 +77,14 @@ describe("Assign volunteers", () => {
       benevolant,
       nettoyerEspaceConcessions,
     ]);
-    const allVolunteers = new InMemoryVolunteers([lea, noel, tatouin]);
-    const availabilities = new InMemoryAvailabilities(
-      new Map<number, IProvidePeriod[]>([
-        [lea.id, [friday06hToSunday20h]],
-        [noel.id, [monday08hToSunday20h]],
-        [tatouin.id, [nextWeek]],
+    const volunteersForAssignment = new InMemoryVolunteersForAssignment(
+      new Map([
+        [lea.id, lea],
+        [noel.id, noel],
+        [tatouin.id, tatouin],
       ]),
     );
-    const breakPeriods = new InMemoryBreakPeriods(
-      new Map<number, BreakPeriod[]>([
-        [lea.id, [{ name: "Pause", ...sunday02hTo06h }]],
-      ]),
-    );
-    const assign = new Assign(
-      assignments,
-      allVolunteers,
-      availabilities,
-      breakPeriods,
-    );
+    const assign = new Assign(assignments, volunteersForAssignment);
     return { assignments, assign };
   };
 

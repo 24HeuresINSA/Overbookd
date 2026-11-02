@@ -8,9 +8,7 @@ import { PrismaAssignmentStats } from "./repository/assignment-stats.prisma";
 import { DomainEventService } from "../../domain-event/domain-event.service";
 import { DomainEventModule } from "../../domain-event/domain-event.module";
 import { PrismaTeamAssignments } from "./repository/team-assignments.prisma";
-import { PrismaAvailabilities } from "./repository/availabilities.prisma";
-import { PrismaBreakPeriods } from "./repository/break-periods.prisma";
-import { PrismaVolunteers } from "../volunteer-to-task/repository/volunteers.prisma";
+import { PrismaVolunteersForAssignment } from "./repository/volunteers-for-assignment.prisma";
 import { Assign, AssignWholeTeam, Unassign } from "@overbookd/assignment";
 
 @Module({
@@ -36,18 +34,9 @@ import { Assign, AssignWholeTeam, Unassign } from "@overbookd/assignment";
       inject: [PrismaService],
     },
     {
-      provide: PrismaAvailabilities,
-      useFactory: (prisma: PrismaService) => new PrismaAvailabilities(prisma),
-      inject: [PrismaService],
-    },
-    {
-      provide: PrismaBreakPeriods,
-      useFactory: (prisma: PrismaService) => new PrismaBreakPeriods(prisma),
-      inject: [PrismaService],
-    },
-    {
-      provide: PrismaVolunteers,
-      useFactory: (prisma: PrismaService) => new PrismaVolunteers(prisma),
+      provide: PrismaVolunteersForAssignment,
+      useFactory: (prisma: PrismaService) =>
+        new PrismaVolunteersForAssignment(prisma),
       inject: [PrismaService],
     },
     {
@@ -60,16 +49,9 @@ import { Assign, AssignWholeTeam, Unassign } from "@overbookd/assignment";
       provide: Assign,
       useFactory: (
         assignments: PrismaAssignments,
-        allVolunteers: PrismaVolunteers,
-        availabilities: PrismaAvailabilities,
-        breakPeriods: PrismaBreakPeriods,
-      ) => new Assign(assignments, allVolunteers, availabilities, breakPeriods),
-      inject: [
-        PrismaAssignments,
-        PrismaVolunteers,
-        PrismaAvailabilities,
-        PrismaBreakPeriods,
-      ],
+        volunteersForAssignment: PrismaVolunteersForAssignment,
+      ) => new Assign(assignments, volunteersForAssignment),
+      inject: [PrismaAssignments, PrismaVolunteersForAssignment],
     },
     {
       provide: Unassign,

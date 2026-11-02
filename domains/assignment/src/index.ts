@@ -71,6 +71,10 @@ export type {
   Assignments,
   VolunteersForAssignment,
 } from "./assign-task-to-volunteer/repositories/assignments.js";
+export type {
+  VolunteerForAssignment,
+  VolunteersForAssignmentRepository,
+} from "./assign-task-to-volunteer/repositories/volunteers-for-assignment.js";
 export { Assign } from "./assign-task-to-volunteer/assign.js";
 export { Unassign } from "./assign-task-to-volunteer/unassign.js";
 export {
