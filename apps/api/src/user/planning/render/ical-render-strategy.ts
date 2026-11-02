@@ -9,7 +9,7 @@ import { Assignment, Contact, Task } from "../domain/task.model";
 import { RenderStrategy } from "./render-strategy";
 
 export class IcalRenderStrategy implements RenderStrategy {
-  private readonly EMPTY_CALENDAR = `CALSCALE:GREGORIAN\nPRODID:adamgibbons/ics\nMETHOD:PUBLISH\nX-WR-CALNAME:24 Heures de l'INSA - ${Edition.current}e\nX-PUBLISHED-TTL:PT1H\nREFRESH-INTERVAL;VALUE=DURATION:PT1H\nEND:VCALENDAR`;
+  private readonly EMPTY_CALENDAR = `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nCALSCALE:GREGORIAN\r\nPRODID:adamgibbons/ics\r\nMETHOD:PUBLISH\r\nX-WR-CALNAME:24 Heures de l'INSA - ${Edition.current}e\r\nX-PUBLISHED-TTL:PT1H\r\nREFRESH-INTERVAL;VALUE=DURATION:PT1H\r\nEND:VCALENDAR`;
 
   render(tasks: Task[]) {
     if (tasks.length === 0) {
@@ -18,7 +18,7 @@ export class IcalRenderStrategy implements RenderStrategy {
     return new Promise((res, rej) => {
       const events = tasks.map((task) => this.buildIcalEvent(task));
       createEvents(events, (error, value) => {
-        if (error) rej(error);
+        if (error) return rej(error);
         res(value);
       });
     });

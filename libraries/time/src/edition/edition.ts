@@ -1,5 +1,3 @@
-import { ONE_YEAR_IN_MS } from "../duration/duration.constant";
-
 export const BASE_EDITION_STARTS = new Date("2023-09-01");
 
 const BASE_EDITION = 49;
@@ -10,13 +8,18 @@ export class Edition {
   }
 
   private static findEdition(date: Date): number {
-    const dateTimestamp = date.getTime();
-    const baseEditionTimestamp = BASE_EDITION_STARTS.getTime();
-
-    const durationAfterBaseEdition = dateTimestamp - baseEditionTimestamp;
-
-    const durationInYears = durationAfterBaseEdition / ONE_YEAR_IN_MS;
-    const editionsAfterBaseEdition = Math.floor(durationInYears);
+    const currentYear = date.getUTCFullYear();
+    const editionStartThisYear = Date.UTC(
+      currentYear,
+      BASE_EDITION_STARTS.getUTCMonth(),
+      BASE_EDITION_STARTS.getUTCDate(),
+    );
+    const yearsSinceBaseEdition =
+      currentYear - BASE_EDITION_STARTS.getUTCFullYear();
+    const isBeforeEditionStart = date.getTime() < editionStartThisYear;
+    const editionsAfterBaseEdition = isBeforeEditionStart
+      ? yearsSinceBaseEdition - 1
+      : yearsSinceBaseEdition;
 
     return BASE_EDITION + editionsAfterBaseEdition;
   }

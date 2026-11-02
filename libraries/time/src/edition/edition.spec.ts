@@ -3,7 +3,7 @@ import { Edition } from "./edition";
 
 describe("Edition", () => {
   it.each([
-    { date: "2024-08-31T00:00:00.000Z", edition: 49 },
+    { date: "2024-08-31T10:00:00.000Z", edition: 49 },
     { date: "2024-09-01T10:00:00.000Z", edition: 50 },
     { date: "2025-08-28T20:00:00.000Z", edition: 50 },
     { date: "2025-09-01T03:00:00.000Z", edition: 51 },
