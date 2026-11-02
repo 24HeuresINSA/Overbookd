@@ -36,7 +36,17 @@ import { Unavailable } from "../../assignment.error.js";
 import { InMemoryAvailabilities } from "./availabilities.inmemory.js";
 import { InMemoryFriends } from "./friends.inmemory.js";
 import { IActAsFunnel } from "./funnel.js";
-import { InMemoryBreakPeriods } from "./break-periods.inmemory.js";
+import { BreakPeriods } from "./planning.js";
+import { Volunteer } from "../../volunteer.js";
+import { BreakPeriod } from "../../break-periods/break-periods.js";
+
+class InMemoryBreakPeriods implements BreakPeriods {
+  constructor(private breakPeriods: Map<Volunteer["id"], BreakPeriod[]>) {}
+
+  for(volunteer: Volunteer["id"]): Promise<BreakPeriod[]> {
+    return Promise.resolve(this.breakPeriods.get(volunteer) ?? []);
+  }
+}
 
 describe("Assign volunteers funnel", () => {
   const inMemoryPlanning = new InMemoryPlanning(

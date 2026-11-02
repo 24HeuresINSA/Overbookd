@@ -66,7 +66,7 @@ export type {
   Friends,
   BreakPeriods as AssignmentBreakPeriods,
 } from "./assign-task-to-volunteer/funnel/planning.js";
-export { isAssignmentEvent } from "./assign-task-to-volunteer/funnel/planning.js";
+
 export type {
   Assignments,
   VolunteersForAssignment,
@@ -81,7 +81,6 @@ export {
   isAssignableOn,
   assertCanBeAssignedOn,
 } from "./assign-task-to-volunteer/assignable-on-period.js";
-export type { AssignableOnPeriodCheck } from "./assign-task-to-volunteer/assignable-on-period.js";
 export { AssignWholeTeam } from "./assign-task-to-volunteer/assign-whole-team/assign-whole-team.js";
 export type {
   AssignmentIdentifierWithTeam,

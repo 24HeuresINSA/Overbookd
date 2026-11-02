@@ -43,13 +43,6 @@ const friday09hTo11h = {
   end: new Date("2024-05-17T11:00:00+02:00"),
 };
 
-const lea: VolunteerForAssignment = {
-  id: 2,
-  teams: [PERSONNE, VIEUX, CONDUCTEUR],
-  availabilities: [friday06hToSunday20h],
-  assignments: [],
-  breakPeriods: [{ name: "Pause", ...sunday02hTo06h }],
-};
 const noel: VolunteerForAssignment = {
   id: 1,
   teams: [PERSONNE, VIEUX],
@@ -57,8 +50,15 @@ const noel: VolunteerForAssignment = {
   assignments: [friday09hTo11h],
   breakPeriods: [],
 };
+const lea: VolunteerForAssignment = {
+  id: 2,
+  teams: [PERSONNE, VIEUX, CONDUCTEUR],
+  availabilities: [friday06hToSunday20h],
+  assignments: [],
+  breakPeriods: [{ name: "Pause", ...sunday02hTo06h }],
+};
 const tatouin: VolunteerForAssignment = {
-  id: 4,
+  id: 3,
   teams: [PERSONNE, VIEUX, CONDUCTEUR],
   availabilities: [nextWeek],
   assignments: [],
@@ -72,8 +72,8 @@ describe("Assign volunteers", () => {
       nettoyerEspaceConcessions,
     ]);
     const volunteersForAssignment = new InMemoryVolunteersForAssignment([
-      lea,
       noel,
+      lea,
       tatouin,
     ]);
     const assign = new Assign(assignments, volunteersForAssignment);
