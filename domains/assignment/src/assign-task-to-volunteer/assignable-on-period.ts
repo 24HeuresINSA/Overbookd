@@ -8,7 +8,7 @@ import {
 import { retrieveImplicitTeams } from "../candidate-teams.js";
 import { TeamMember } from "./assignment.js";
 
-export type AssignableOnPeriodCheck = {
+type AssignableOnPeriodCheck = {
   teams: string[];
   availabilities: IProvidePeriod[];
   assignments: IProvidePeriod[];
@@ -20,9 +20,9 @@ export function isAssignableOn(
   { availabilities, assignments, breakPeriods }: AssignableOnPeriodCheck,
 ): boolean {
   return (
-    hasAvailabilityCovering(period, availabilities) &&
-    !hasOverlappingAssignment(period, assignments) &&
-    !hasOverlappingBreak(period, breakPeriods)
+    hasIncludedPeriod(period, availabilities) &&
+    !hasOverlappingPeriod(period, assignments) &&
+    !hasOverlappingPeriod(period, breakPeriods)
   );
 }
 
@@ -35,40 +35,24 @@ export function assertCanBeAssignedOn(
   const memberOfTeam = withImplicitTeams.includes(as);
   if (!memberOfTeam) throw new WrongTeam(id, as);
 
-  if (!hasAvailabilityCovering(period, availabilities)) {
+  if (!hasIncludedPeriod(period, availabilities)) {
     throw new Unavailable(id, period);
   }
-  if (hasOverlappingAssignment(period, assignments)) {
+  if (hasOverlappingPeriod(period, assignments)) {
     throw new AlreadyAssigned(id, period);
   }
-  if (hasOverlappingBreak(period, breakPeriods)) {
+  if (hasOverlappingPeriod(period, breakPeriods)) {
     throw new HasBreak(id, period);
   }
 }
 
-function hasAvailabilityCovering(
-  period: Period,
-  availabilities: IProvidePeriod[],
-): boolean {
-  return availabilities.some((availability) =>
-    Period.init(availability).includes(period),
-  );
+function hasIncludedPeriod(period: Period, periods: IProvidePeriod[]): boolean {
+  return periods.some((p) => Period.init(p).includes(period));
 }
 
-function hasOverlappingAssignment(
+function hasOverlappingPeriod(
   period: Period,
-  assignments: IProvidePeriod[],
+  periods: IProvidePeriod[],
 ): boolean {
-  return assignments.some((assigned) =>
-    Period.init(assigned).isOverlapping(period),
-  );
-}
-
-function hasOverlappingBreak(
-  period: Period,
-  breakPeriods: IProvidePeriod[],
-): boolean {
-  return breakPeriods.some((breakPeriod) =>
-    Period.init(breakPeriod).isOverlapping(period),
-  );
+  return periods.some((p) => Period.init(p).isOverlapping(period));
 }
