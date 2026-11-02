@@ -33,6 +33,7 @@
         />
 
         <v-combobox
+          v-show="general.toPublish"
           :model-value="general.categories"
           label="Catégories de l'activité"
           :items="activityCategories"
@@ -132,12 +133,9 @@ const updatePhotoLink = useDebounceFn((photoLink: string) => {
   faStore.updateGeneral({ photoLink: photoLink || null });
 }, 800);
 const updateCategories = (categories: string[]) => {
-  const isValid = categories.every((category) =>
-    activityCategories.includes(category),
-  );
-  if (!isValid) return;
   return faStore.updateGeneral({ categories });
 };
+
 const updateIsFlagship = (isFlagship: boolean | null) => {
   return faStore.updateGeneral({ isFlagship: isFlagship || false });
 };
@@ -172,5 +170,6 @@ watch(selectedActitivtyId, (newId, oldId) => {
   display: flex;
   gap: 10px;
   align-items: center;
+  margin-top: 10px;
 }
 </style>

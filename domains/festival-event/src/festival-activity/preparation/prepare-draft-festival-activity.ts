@@ -52,6 +52,7 @@ export class PrepareDraftFestivalActivity implements Prepare<Draft> {
   updateGeneral(form: PrepareGeneralUpdate): Draft {
     const privateFestivalActivity = {
       toPublish: false,
+      categories: [],
       photoLink: null,
       isFlagship: false,
     };
