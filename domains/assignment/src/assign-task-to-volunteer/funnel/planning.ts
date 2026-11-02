@@ -18,6 +18,12 @@ export type PlanningEvent = IProvidePeriod &
 
 export type AssignmentEvent = Required<PlanningEvent>;
 
+export function isAssignmentEvent(
+  event: PlanningEvent,
+): event is AssignmentEvent {
+  return event.assignmentId !== undefined && event.mobilizationId !== undefined;
+}
+
 export type Planning = {
   for(volunteer: AssignableVolunteer["id"]): Promise<PlanningEvent[]>;
 };

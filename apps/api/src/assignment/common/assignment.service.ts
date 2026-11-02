@@ -1,11 +1,13 @@
 import { Injectable, OnApplicationBootstrap } from "@nestjs/common";
 import {
+  Assign,
   Assignment,
   AssignmentIdentifier,
   Assignments,
   AssignWholeTeam,
   Planning,
   PlanningEvent,
+  Unassign,
   VolunteersForAssignment,
 } from "@overbookd/assignment";
 import {
@@ -39,6 +41,8 @@ export class AssignmentService implements OnApplicationBootstrap {
     private readonly planning: Planning,
     private readonly eventStore: DomainEventService,
     private readonly assignWholeTeam: AssignWholeTeam,
+    private readonly assignVolunteers: Assign,
+    private readonly unassignVolunteer: Unassign,
   ) {}
 
   onApplicationBootstrap(): void {
@@ -77,17 +81,19 @@ export class AssignmentService implements OnApplicationBootstrap {
     return this.planning.for(volunteerId);
   }
 
-  async assign(
-    volunteersForAssignment: VolunteersForAssignment,
-  ): Promise<Assignment> {
-    return this.assignments.assign(volunteersForAssignment);
+  async assign({
+    assignment: identifier,
+    volunteers,
+  }: VolunteersForAssignment): Promise<Assignment> {
+    const assignment = await this.assignments.findOne(identifier, false);
+    return this.assignVolunteers.volunteers(assignment, volunteers);
   }
 
   async unassign(
     assignment: AssignmentIdentifier,
     assigneeId: number,
   ): Promise<void> {
-    return this.assignments.unassign(assignment, assigneeId);
+    return this.unassignVolunteer.volunteer(assignment, assigneeId);
   }
 
   async getAllVolunteersStats(): Promise<VolunteerWithAssignmentStats[]> {

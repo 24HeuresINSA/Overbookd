@@ -1,3 +1,5 @@
+import type { Period } from "@overbookd/time";
+
 export class AssignmentError extends Error {}
 
 export class TaskNotFoundError extends AssignmentError {
@@ -6,10 +8,40 @@ export class TaskNotFoundError extends AssignmentError {
   }
 }
 
+export class VolunteerNotFoundError extends AssignmentError {
+  constructor(volunteerId: number) {
+    super(`Le·a bénévole #${volunteerId} est introuvable`);
+  }
+}
+
 export class WrongTeam extends AssignmentError {
   constructor(volunteerId: number, teamCode: string) {
     super(
-      `La bénévole #${volunteerId} ne peut pas être affecté en tant que ${teamCode}`,
+      `Le·a bénévole #${volunteerId} ne peut pas être affecté·e en tant que ${teamCode}`,
+    );
+  }
+}
+
+export class Unavailable extends AssignmentError {
+  constructor(volunteerId: number, period: Period) {
+    super(
+      `Le·a bénévole #${volunteerId} n'est pas disponible sur la période ${period}`,
+    );
+  }
+}
+
+export class AlreadyAssigned extends AssignmentError {
+  constructor(volunteerId: number, period: Period) {
+    super(
+      `Le·a bénévole #${volunteerId} est déjà affecté sur la période ${period}`,
+    );
+  }
+}
+
+export class HasBreak extends AssignmentError {
+  constructor(volunteerId: number, period: Period) {
+    super(
+      `Le·a bénévole #${volunteerId} est en pause sur la période ${period}`,
     );
   }
 }

@@ -4,8 +4,6 @@ import {
   AssignmentIdentifier,
   BaseAssigneeForDetails,
   VolunteersForAssignment,
-  WrongTeam,
-  retrieveImplicitTeams,
 } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
 import { AssignmentRepository } from "../assignment.service";
@@ -19,14 +17,10 @@ import {
 import { MISSING_ITEM_INDEX } from "@overbookd/list";
 import { TaskForCalendar } from "@overbookd/http";
 import { Period } from "@overbookd/time";
-import {
-  SELECT_TEAM_CODES,
-  SELECT_USER_IDENTIFIER,
-} from "../../../common/query/user.query";
+import { SELECT_USER_IDENTIFIER } from "../../../common/query/user.query";
 import { SELECT_PERIOD_WITH_ID } from "../../../common/query/period.query";
 import { SELECT_CONTACT } from "../../../festival-event/task/common/repository/adherent.query";
 import { SELECT_LOCATION } from "../../../festival-event/common/repository/location.query";
-import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 
 export class PrismaAssignments implements AssignmentRepository {
   constructor(private readonly prisma: PrismaService) {}
@@ -35,15 +29,8 @@ export class PrismaAssignments implements AssignmentRepository {
     identifier: AssignmentIdentifier,
     volunteerId: number,
   ): Promise<TaskForCalendar> {
-    const { assignmentId, mobilizationId, taskId } = identifier;
     const assignment = await this.prisma.assignment.findUnique({
-      where: {
-        id_mobilizationId_festivalTaskId: {
-          festivalTaskId: taskId,
-          id: assignmentId,
-          mobilizationId,
-        },
-      },
+      where: uniqueAssignment(identifier),
       select: {
         ...SELECT_PERIOD_WITH_ID,
         festivalTask: {
@@ -110,15 +97,8 @@ export class PrismaAssignments implements AssignmentRepository {
     identifier: AssignmentIdentifier,
     withDetails: T,
   ): Promise<Assignment<{ withDetails: T }>> {
-    const { assignmentId, mobilizationId, taskId } = identifier;
     const assignment = await this.prisma.assignment.findUnique({
-      where: {
-        id_mobilizationId_festivalTaskId: {
-          festivalTaskId: taskId,
-          id: assignmentId,
-          mobilizationId,
-        },
-      },
+      where: uniqueAssignment(identifier),
       select: SELECT_ASSIGNMENT,
     });
 
@@ -134,17 +114,6 @@ export class PrismaAssignments implements AssignmentRepository {
     assignment: identifier,
     volunteers,
   }: VolunteersForAssignment): Promise<Assignment> {
-    for (const { id, as } of volunteers) {
-      const volunteer = await this.prisma.user.findUnique({
-        where: { id, ...IS_NOT_DELETED },
-        select: SELECT_TEAM_CODES,
-      });
-      const withImplicitTeams = retrieveImplicitTeams(
-        volunteer.teams.map(({ teamCode }) => teamCode),
-      );
-      const memberOfTeam = withImplicitTeams.includes(as);
-      if (!memberOfTeam) throw new WrongTeam(id, as);
-    }
     const upsert = updateAssigneesOnAssignment(volunteers, identifier);
     const assignment = await this.prisma.assignment.update({
       where: uniqueAssignment(identifier),

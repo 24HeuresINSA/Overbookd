@@ -6,6 +6,7 @@ import { IProvidePeriod, Period } from "@overbookd/time";
 import { Category, Status } from "@overbookd/festival-event-constants";
 import {
   countAssigneesInTeam,
+  isAssignableOn,
   retrieveImplicitTeams,
 } from "@overbookd/assignment";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
@@ -79,21 +80,14 @@ export class PrismaAvailableAssignments implements AvailableAssignments {
     });
 
     return assignments
-      .filter((assignment) => {
-        const assignmentPeriod = Period.init(assignment);
-
-        const isAvailable = volunteer.availabilities.some((availability) =>
-          Period.init(availability).includes(assignmentPeriod),
-        );
-        const isAssigned = volunteer.assigned.some(({ assignment }) =>
-          Period.init(assignment).isOverlapping(assignmentPeriod),
-        );
-        const isInBreakPeriod = volunteer.breaks.some((breakPeriod) =>
-          Period.init(breakPeriod).isOverlapping(assignmentPeriod),
-        );
-
-        return isAvailable && !isAssigned && !isInBreakPeriod;
-      })
+      .filter((assignment) =>
+        isAssignableOn(Period.init(assignment), {
+          teams: extendedTeams,
+          availabilities: volunteer.availabilities,
+          assignments: volunteer.assigned.map(({ assignment }) => assignment),
+          breakPeriods: volunteer.breaks,
+        }),
+      )
       .map(toAssignmentSummaryWithTask)
       .filter(({ teams }) => teams.length > 0);
   }
