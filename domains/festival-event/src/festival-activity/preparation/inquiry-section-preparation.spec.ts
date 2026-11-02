@@ -25,7 +25,7 @@ import {
   MAGASIN,
   LOCAL_24H,
   PARKING_EIFFEL,
-} from "../../common/inquiry-request.js";
+} from "@overbookd/festival-event-constants";
 import {
   AlreadyInitialized,
   CantRemoveLastRequest,

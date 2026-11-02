@@ -95,7 +95,7 @@
 
 <script lang="ts" setup>
 import { CSVBuilder } from "@overbookd/csv";
-import { drives, type Drive } from "@overbookd/festival-event";
+import { drives, type Drive } from "@overbookd/festival-event-constants";
 import type {
   ActivityGearSearchOptions,
   PreviewForLogistic,

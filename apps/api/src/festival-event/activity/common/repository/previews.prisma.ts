@@ -1,4 +1,5 @@
-import { Drive, PreviewFestivalActivity } from "@overbookd/festival-event";
+import { PreviewFestivalActivity } from "@overbookd/festival-event";
+import { Drive } from "@overbookd/festival-event-constants";
 import {
   ActivityGearSearchOptions,
   PreviewForCommunication,

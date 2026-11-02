@@ -1,10 +1,10 @@
 import {
   BaseInquiryRequest,
-  Drive,
   FestivalActivity,
   SignageCatalogItem,
   TimeWindow,
 } from "@overbookd/festival-event";
+import { Drive } from "@overbookd/festival-event-constants";
 import { IProvidePeriod } from "@overbookd/time";
 import { AddInquiryRequestForm } from "./common.js";
 
