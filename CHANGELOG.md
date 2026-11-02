@@ -1,3 +1,9 @@
+## [4.4.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.4.1...v4.4.2) (2026-11-02)
+
+### Bug Fixes
+
+* **contribution:** replace amount by type MEMBER or DONATOR [#2836](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2836) ([58a5bc3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/58a5bc32265ae685abfcca45a571c9dbcd424848))
+
 ## [4.4.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.4.0...v4.4.1) (2026-10-29)
 
 ### Bug Fixes
