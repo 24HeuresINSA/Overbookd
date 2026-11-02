@@ -1,4 +1,6 @@
+import { GIFEncoder, applyPalette, quantize } from "gifenc";
 import {
+  GIF_MIME_TYPE,
   IMAGE_MAX_SIZE,
   JPEG_MIME_TYPE,
   WEBP_MIME_TYPE,
@@ -9,19 +11,34 @@ const MIN_DIMENSION_PX = 32;
 const SCALE_FACTOR = 0.75;
 const MAX_SCALE_STEPS = 20;
 const QUALITIES = [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1];
+const ANIMATED_MIME_TYPES = [GIF_MIME_TYPE, WEBP_MIME_TYPE];
+const MAX_GIF_COLORS = 256;
+const MIN_FRAME_DELAY_MS = 20;
 
 type EncodeResult = {
   fitting: Blob | null;
   smallest: Blob | null;
 };
 
+type AnimatedEncodeResult = {
+  fitting: Uint8Array<ArrayBuffer> | null;
+  smallest: Uint8Array<ArrayBuffer> | null;
+};
+
 const NO_ENCODE_RESULT: EncodeResult = { fitting: null, smallest: null };
+const NO_ANIMATED_RESULT: AnimatedEncodeResult = {
+  fitting: null,
+  smallest: null,
+};
 
 export async function compressImage(
   file: File,
   maxSizeInBytes: number = IMAGE_MAX_SIZE,
 ): Promise<File> {
   if (file.size <= maxSizeInBytes) return file;
+
+  const animated = await compressAnimatedImage(file, maxSizeInBytes);
+  if (animated) return animated;
 
   const url = URL.createObjectURL(file);
   try {
@@ -31,6 +48,110 @@ export async function compressImage(
   } finally {
     URL.revokeObjectURL(url);
   }
+}
+
+async function compressAnimatedImage(
+  file: File,
+  maxSizeInBytes: number,
+): Promise<File | null> {
+  if (typeof ImageDecoder === "undefined") return null;
+  if (!ANIMATED_MIME_TYPES.includes(file.type)) return null;
+
+  const decoder = new ImageDecoder({
+    data: await file.arrayBuffer(),
+    type: file.type,
+  });
+  try {
+    await decoder.tracks.ready;
+    const track = decoder.tracks[0];
+    if (!track || track.frameCount <= 1) return null;
+
+    const firstFrame = await decoder.decode({ frameIndex: 0 });
+    const naturalWidth = firstFrame.image.displayWidth;
+    const naturalHeight = firstFrame.image.displayHeight;
+    firstFrame.image.close();
+
+    const scales = computeScales(naturalWidth, naturalHeight);
+    const result = await scales.reduce<Promise<AnimatedEncodeResult>>(
+      async (previous, scale) => {
+        const acc = await previous;
+        if (acc.fitting) return acc;
+        const bytes = await encodeAnimatedGif(
+          decoder,
+          track.frameCount,
+          naturalWidth,
+          naturalHeight,
+          scale,
+        );
+        if (!bytes) return acc;
+        if (bytes.length <= maxSizeInBytes) {
+          return { fitting: bytes, smallest: acc.smallest };
+        }
+        return { fitting: null, smallest: smallerBytes(bytes, acc.smallest) };
+      },
+      Promise.resolve(NO_ANIMATED_RESULT),
+    );
+
+    const bytes = result.fitting ?? result.smallest;
+    return bytes ? animatedGifFile(bytes, file.name) : null;
+  } catch {
+    return null;
+  } finally {
+    decoder.close();
+  }
+}
+
+async function encodeAnimatedGif(
+  decoder: ImageDecoder,
+  frameCount: number,
+  naturalWidth: number,
+  naturalHeight: number,
+  scale: number,
+): Promise<Uint8Array<ArrayBuffer> | null> {
+  const width = Math.max(1, Math.round(naturalWidth * scale));
+  const height = Math.max(1, Math.round(naturalHeight * scale));
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+  if (!context) return null;
+  canvas.width = width;
+  canvas.height = height;
+
+  const gif = GIFEncoder();
+  const frameIndexes = Array.from({ length: frameCount }, (_, index) => index);
+  await frameIndexes.reduce<Promise<void>>(async (previous, frameIndex) => {
+    await previous;
+    const { image: videoFrame } = await decoder.decode({ frameIndex });
+    context.clearRect(0, 0, width, height);
+    context.drawImage(videoFrame, 0, 0, width, height);
+    const { data } = context.getImageData(0, 0, width, height);
+    const palette = quantize(data, MAX_GIF_COLORS);
+    gif.writeFrame(applyPalette(data, palette), width, height, {
+      palette,
+      delay: Math.max(
+        MIN_FRAME_DELAY_MS,
+        Math.round((videoFrame.duration ?? 0) / 1000),
+      ),
+    });
+    videoFrame.close();
+  }, Promise.resolve());
+
+  gif.finish();
+  return gif.bytes();
+}
+
+function animatedGifFile(
+  bytes: Uint8Array<ArrayBuffer>,
+  originalName: string,
+): File {
+  const baseName = originalName.replace(/\.[^/.]+$/, "") || "avatar";
+  return new File([bytes], `${baseName}.gif`, { type: GIF_MIME_TYPE });
+}
+
+function smallerBytes(
+  candidate: Uint8Array<ArrayBuffer>,
+  current: Uint8Array<ArrayBuffer> | null,
+): Uint8Array<ArrayBuffer> {
+  return !current || candidate.length < current.length ? candidate : current;
 }
 
 async function loadImage(url: string): Promise<HTMLImageElement> {
@@ -105,7 +226,7 @@ async function encodeAtScale(
 
 function drawImageOnCanvas(
   context: CanvasRenderingContext2D,
-  image: HTMLImageElement,
+  image: CanvasImageSource,
   mimeType: string,
   width: number,
   height: number,

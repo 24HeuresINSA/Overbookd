@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  GIF_MIME_TYPE,
   IMAGE_MAX_SIZE,
   JPEG_MIME_TYPE,
   WEBP_MIME_TYPE,
@@ -7,6 +8,9 @@ import {
 import { compressImage } from "./image.utils";
 
 const BASE_BLOB_SIZE = 1_000_000;
+const FAKE_FRAME_DURATION_US = 100_000;
+const FAKE_FRAME_WIDTH = 4000;
+const FAKE_FRAME_HEIGHT = 3000;
 
 type CanvasCalls = {
   toBlob: Array<{ mimeType: string; quality: number }>;
@@ -15,12 +19,32 @@ type CanvasCalls = {
 };
 
 class FakeImage {
-  naturalWidth = 4000;
-  naturalHeight = 3000;
+  naturalWidth = FAKE_FRAME_WIDTH;
+  naturalHeight = FAKE_FRAME_HEIGHT;
   src = "";
   decode() {
     return Promise.resolve();
   }
+}
+
+class FakeVideoFrame {
+  duration = FAKE_FRAME_DURATION_US;
+  displayWidth = FAKE_FRAME_WIDTH;
+  displayHeight = FAKE_FRAME_HEIGHT;
+  close() {}
+}
+
+class FakeImageDecoder {
+  static frameCount = 3;
+  tracks = {
+    ready: Promise.resolve(),
+    length: 1,
+    0: { frameCount: FakeImageDecoder.frameCount },
+  };
+  async decode() {
+    return { image: new FakeVideoFrame(), complete: true };
+  }
+  close() {}
 }
 
 function makeFile(size: number, name = "photo.png", type = "image/png"): File {
@@ -46,6 +70,9 @@ function setupFakeCanvas(webpSupported: boolean): CanvasCalls {
               drawImage: (...args: unknown[]) => {
                 calls.drawImage.push(args);
               },
+              getImageData: (_x: number, _y: number, w: number, h: number) => ({
+                data: new Uint8ClampedArray(w * h * 4),
+              }),
             }),
             toBlob: (
               callback: (blob: Blob | null) => void,
@@ -116,5 +143,57 @@ describe("compressImage", () => {
     expect(result.name).toBe("avatar.jpg");
     expect(calls.fillRectCount).toBeGreaterThan(0);
     expect(calls.toBlob[0]?.mimeType).toBe(JPEG_MIME_TYPE);
+  });
+
+  it("keeps an animated gif animated by re-encoding every frame as gif", async () => {
+    vi.stubGlobal("ImageDecoder", FakeImageDecoder);
+    FakeImageDecoder.frameCount = 3;
+    const calls = setupFakeCanvas(true);
+    const result = await compressImage(
+      makeFile(5 * 1024 * 1024, "animation.gif", GIF_MIME_TYPE),
+      IMAGE_MAX_SIZE,
+    );
+
+    expect(result.type).toBe(GIF_MIME_TYPE);
+    expect(result.name).toBe("animation.gif");
+    expect(result.size).toBeLessThanOrEqual(IMAGE_MAX_SIZE);
+    expect(await result.slice(0, 6).text()).toBe("GIF89a");
+    expect(calls.drawImage).toHaveLength(3);
+    expect(calls.toBlob).toEqual([]);
+  });
+
+  it("keeps an animated webp animated by re-encoding it as gif", async () => {
+    vi.stubGlobal("ImageDecoder", FakeImageDecoder);
+    FakeImageDecoder.frameCount = 2;
+    setupFakeCanvas(true);
+    const result = await compressImage(
+      makeFile(5 * 1024 * 1024, "animation.webp", WEBP_MIME_TYPE),
+      IMAGE_MAX_SIZE,
+    );
+
+    expect(result.type).toBe(GIF_MIME_TYPE);
+    expect(result.name).toBe("animation.gif");
+    expect(await result.slice(0, 6).text()).toBe("GIF89a");
+  });
+
+  it("uses the static path when the image has a single frame", async () => {
+    vi.stubGlobal("ImageDecoder", FakeImageDecoder);
+    FakeImageDecoder.frameCount = 1;
+    const calls = setupFakeCanvas(true);
+    const result = await compressImage(
+      makeFile(5 * 1024 * 1024, "static.webp", WEBP_MIME_TYPE),
+      IMAGE_MAX_SIZE,
+    );
+
+    expect(result.type).toBe(WEBP_MIME_TYPE);
+    expect(result.name).toBe("static.webp");
+    expect(calls.toBlob.length).toBeGreaterThan(0);
+  });
+
+  it("returns the original animated file when it already fits under the limit", async () => {
+    vi.stubGlobal("ImageDecoder", FakeImageDecoder);
+    const file = makeFile(IMAGE_MAX_SIZE - 1, "animation.gif", GIF_MIME_TYPE);
+    const result = await compressImage(file, IMAGE_MAX_SIZE);
+    expect(result).toBe(file);
   });
 });
