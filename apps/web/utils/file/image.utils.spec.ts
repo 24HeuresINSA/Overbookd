@@ -121,7 +121,7 @@ afterEach(() => {
 });
 
 describe("compressImage", () => {
-  it("returns the original file when it already fits under the limit", async () => {
+  it("should return the original file when it already fits under the limit", async () => {
     const calls = setupFakeCanvas(true);
     const file = makeFile(IMAGE_MAX_SIZE - 1);
     const result = await compressImage(file, IMAGE_MAX_SIZE);
@@ -129,7 +129,7 @@ describe("compressImage", () => {
     expect(calls.toBlob).toEqual([]);
   });
 
-  it("compresses an oversized image under the limit as webp", async () => {
+  it("should compress an oversized image under the limit as webp", async () => {
     const calls = setupFakeCanvas(true);
     const result = await compressImage(
       makeFile(5 * 1024 * 1024),
@@ -145,14 +145,14 @@ describe("compressImage", () => {
     expect(calls.drawImage[0]?.slice(1)).toEqual([0, 0, 2048, 1536]);
   });
 
-  it("falls back to the smallest blob when nothing fits under the limit", async () => {
+  it("should fall back to the smallest blob when nothing fits under the limit", async () => {
     setupFakeCanvas(true);
     const result = await compressImage(makeFile(5 * 1024 * 1024), 100);
     expect(result.size).toBe(Math.round(BASE_BLOB_SIZE * 0.1));
     expect(result.type).toBe(WEBP_MIME_TYPE);
   });
 
-  it("encodes as jpeg with a white background when webp is not supported", async () => {
+  it("should encode as jpeg with a white background when webp is not supported", async () => {
     const calls = setupFakeCanvas(false);
     const result = await compressImage(
       makeFile(5 * 1024 * 1024, "avatar.jpeg", JPEG_MIME_TYPE),
@@ -165,7 +165,7 @@ describe("compressImage", () => {
     expect(calls.toBlob[0]?.mimeType).toBe(JPEG_MIME_TYPE);
   });
 
-  it("keeps an animated gif animated by re-encoding every frame as animated webp", async () => {
+  it("should keep an animated gif animated by re-encoding every frame as animated webp", async () => {
     vi.stubGlobal("ImageDecoder", FakeImageDecoder);
     FakeImageDecoder.frameCount = 3;
     const calls = setupFakeCanvas(true);
@@ -183,7 +183,7 @@ describe("compressImage", () => {
     expect(calls.toBlob).toEqual([]);
   });
 
-  it("keeps an animated webp animated by re-encoding it as animated webp", async () => {
+  it("should keep an animated webp animated by re-encoding it as animated webp", async () => {
     vi.stubGlobal("ImageDecoder", FakeImageDecoder);
     FakeImageDecoder.frameCount = 2;
     setupFakeCanvas(true);
@@ -198,7 +198,7 @@ describe("compressImage", () => {
     expect(await result.slice(8, 12).text()).toBe("WEBP");
   });
 
-  it("uses the static path when the image has a single frame", async () => {
+  it("should use the static path when the image has a single frame", async () => {
     vi.stubGlobal("ImageDecoder", FakeImageDecoder);
     FakeImageDecoder.frameCount = 1;
     const calls = setupFakeCanvas(true);
@@ -212,14 +212,14 @@ describe("compressImage", () => {
     expect(calls.toBlob.length).toBeGreaterThan(0);
   });
 
-  it("returns the original animated file when it already fits under the limit", async () => {
+  it("should return the original animated file when it already fits under the limit", async () => {
     vi.stubGlobal("ImageDecoder", FakeImageDecoder);
     const file = makeFile(IMAGE_MAX_SIZE - 1, "animation.gif", GIF_MIME_TYPE);
     const result = await compressImage(file, IMAGE_MAX_SIZE);
     expect(result).toBe(file);
   });
 
-  it("returns the original file when the image cannot be decoded", async () => {
+  it("should return the original file when the image cannot be decoded", async () => {
     const calls = setupFakeCanvas(true);
     FakeImage.failDecode = true;
     const file = makeFile(5 * 1024 * 1024);
