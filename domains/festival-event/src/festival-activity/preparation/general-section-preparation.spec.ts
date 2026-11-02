@@ -62,8 +62,8 @@ describe("General section of festival activity preparation", () => {
     ${"isFlagship"}                                              | ${escapeGame.general.name} | ${escapeGame.id} | ${{ isFlagship: false }}                                                                                                                                         | ${escapeGame.general.name}      | ${escapeGame.general.description} | ${escapeGame.general.categories}    | ${escapeGame.general.toPublish} | ${escapeGame.general.photoLink}   | ${false}                         | ${escapeGame.general.timeWindows}
     ${"isFlagship"}                                              | ${justDance.general.name}  | ${justDance.id}  | ${{ isFlagship: true }}                                                                                                                                          | ${justDance.general.name}       | ${justDance.general.description}  | ${justDance.general.categories}     | ${justDance.general.toPublish}  | ${justDance.general.photoLink}    | ${true}                          | ${justDance.general.timeWindows}
     ${"name and description"}                                    | ${escapeGame.general.name} | ${escapeGame.id} | ${{ name: "Nuit de la Qlture", description: "Montre comment tu es culturé" }}                                                                                    | ${"Nuit de la Qlture"}          | ${"Montre comment tu es culturé"} | ${escapeGame.general.categories}    | ${escapeGame.general.toPublish} | ${escapeGame.general.photoLink}   | ${escapeGame.general.isFlagship} | ${escapeGame.general.timeWindows}
-    ${"toPublish and categories"}                                | ${justDance.general.name}  | ${justDance.id}  | ${{ toPublish: false, categories: ["Culture", "Orga"] }}                                                                                                         | ${justDance.general.name}       | ${justDance.general.description}  | ${["Culture", "Orga"]}              | ${false}                        | ${null}                           | ${false}                         | ${justDance.general.timeWindows}
-    ${"name, description and categories"}                        | ${pcSecurite.general.name} | ${pcSecurite.id} | ${{ name: "Poste de Contrôle Sécurité", description: "Safety fi(r)st !", categories: ["securite"] }}                                                             | ${"Poste de Contrôle Sécurité"} | ${"Safety fi(r)st !"}             | ${["securite"]}                     | ${pcSecurite.general.toPublish} | ${pcSecurite.general.photoLink}   | ${pcSecurite.general.isFlagship} | ${pcSecurite.general.timeWindows}
+    ${"toPublish and categories"}                                | ${justDance.general.name}  | ${justDance.id}  | ${{ toPublish: false, categories: ["Culture", "Orga"] }}                                                                                                         | ${justDance.general.name}       | ${justDance.general.description}  | ${[]}                                | ${false}                        | ${null}                           | ${false}                         | ${justDance.general.timeWindows}
+    ${"name, description and categories"}                        | ${pcSecurite.general.name} | ${pcSecurite.id} | ${{ name: "Poste de Contrôle Sécurité", description: "Safety fi(r)st !", categories: ["securite"] }}                                                             | ${"Poste de Contrôle Sécurité"} | ${"Safety fi(r)st !"}             | ${[]}                                | ${pcSecurite.general.toPublish} | ${pcSecurite.general.photoLink}   | ${pcSecurite.general.isFlagship} | ${pcSecurite.general.timeWindows}
     ${"categories, isFlagship and photoLink"}                    | ${escapeGame.general.name} | ${escapeGame.id} | ${{ categories: ["Sport", "Enfant"], photoLink: "https://pinterest.com/12345", isFlagship: false }}                                                              | ${escapeGame.general.name}      | ${escapeGame.general.description} | ${["Sport", "Enfant"]}              | ${escapeGame.general.toPublish} | ${"https://pinterest.com/12345"}  | ${false}                         | ${escapeGame.general.timeWindows}
     ${"toPublish, isFlagship, categories and photoLink"}         | ${pcSecurite.general.name} | ${pcSecurite.id} | ${{ toPublish: true, isFlagship: true, categories: ["securite", "tour de controle"], photoLink: "https://pinterest.com/45721" }}                                 | ${pcSecurite.general.name}      | ${pcSecurite.general.description} | ${["securite", "tour de controle"]} | ${true}                         | ${"https://pinterest.com/45721"}  | ${true}                          | ${pcSecurite.general.timeWindows}
     ${"name, description, categories, isFlagship and photoLink"} | ${escapeGame.general.name} | ${escapeGame.id} | ${{ name: "Lancer de haches", description: "Réveille le Viking", categories: ["Sport", "Enfant"], photoLink: "https://pinterest.com/12345", isFlagship: false }} | ${"Lancer de haches"}           | ${"Réveille le Viking"}           | ${["Sport", "Enfant"]}              | ${escapeGame.general.toPublish} | ${"https://pinterest.com/12345"}  | ${false}                         | ${escapeGame.general.timeWindows}
@@ -118,7 +118,7 @@ describe("General section of festival activity preparation", () => {
       ${escapeGame.id} | ${escapeGame.general.name}
       ${justDance.id}  | ${justDance.general.name}
     `(
-      "should reset $activityName photolink and isFlagship",
+      "should reset $activityName categories, photoLink and isFlagship",
       async ({ activityId }) => {
         const update = { toPublish: false };
 
@@ -127,9 +127,9 @@ describe("General section of festival activity preparation", () => {
           update,
         );
 
+        expect(general.categories).toEqual([]);
         expect(general.isFlagship).toBe(false);
         expect(general.photoLink).toBe(null);
-        expect(general.isFlagship).toBe(false);
       },
     );
   });

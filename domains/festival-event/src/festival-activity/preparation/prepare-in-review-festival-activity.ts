@@ -126,7 +126,7 @@ class General {
         name,
         description,
         toPublish: false,
-        categories,
+        categories: [],
         isFlagship: false,
         photoLink: null,
       };
