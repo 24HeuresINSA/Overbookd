@@ -29,19 +29,13 @@ export class PrismaVolunteers implements Volunteers {
         },
         select: SELECT_VOLUNTEER_WITH_ASSIGNMENTS,
       }),
-      this.findCharismaPeriods(),
+      this.prisma.charismaPeriod.findMany({ select: SELECT_CHARISMA_PERIOD }),
     ]);
     return volunteers
       .map((volunteer) =>
         toVolunteerWithAssignments(volunteer, charismaPeriods),
       )
       .sort((a, b) => b.charisma - a.charisma);
-  }
-
-  private findCharismaPeriods() {
-    return this.prisma.charismaPeriod.findMany({
-      select: SELECT_CHARISMA_PERIOD,
-    });
   }
 }
 

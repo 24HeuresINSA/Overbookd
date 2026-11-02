@@ -43,33 +43,27 @@ const friday09hTo11h = {
   end: new Date("2024-05-17T11:00:00+02:00"),
 };
 
-const volunteerOf = (
-  partial: Partial<VolunteerForAssignment> &
-    Pick<VolunteerForAssignment, "id" | "teams">,
-): VolunteerForAssignment => ({
-  availabilities: [],
-  assignments: [],
-  breakPeriods: [],
-  ...partial,
-});
-
-const lea = volunteerOf({
+const lea: VolunteerForAssignment = {
   id: 2,
   teams: [PERSONNE, VIEUX, CONDUCTEUR],
   availabilities: [friday06hToSunday20h],
+  assignments: [],
   breakPeriods: [{ name: "Pause", ...sunday02hTo06h }],
-});
-const noel = volunteerOf({
+};
+const noel: VolunteerForAssignment = {
   id: 1,
   teams: [PERSONNE, VIEUX],
   availabilities: [monday08hToSunday20h],
   assignments: [friday09hTo11h],
-});
-const tatouin = volunteerOf({
+  breakPeriods: [],
+};
+const tatouin: VolunteerForAssignment = {
   id: 4,
   teams: [PERSONNE, VIEUX, CONDUCTEUR],
   availabilities: [nextWeek],
-});
+  assignments: [],
+  breakPeriods: [],
+};
 
 describe("Assign volunteers", () => {
   const setup = () => {
@@ -77,13 +71,11 @@ describe("Assign volunteers", () => {
       benevolant,
       nettoyerEspaceConcessions,
     ]);
-    const volunteersForAssignment = new InMemoryVolunteersForAssignment(
-      new Map([
-        [lea.id, lea],
-        [noel.id, noel],
-        [tatouin.id, tatouin],
-      ]),
-    );
+    const volunteersForAssignment = new InMemoryVolunteersForAssignment([
+      lea,
+      noel,
+      tatouin,
+    ]);
     const assign = new Assign(assignments, volunteersForAssignment);
     return { assignments, assign };
   };
