@@ -7,8 +7,11 @@ import { Line } from "vue-chartjs";
 import type { OrgaNeedDetails } from "@overbookd/http";
 import type { ChartData, Dataset } from "~/utils/chartjs-graph";
 import type { ActiveElement, ChartEvent } from "chart.js";
+import { useTheme } from "vuetify";
 
 const orgaNeedStore = useOrgaNeedStore();
+const theme = useTheme();
+
 const emit = defineEmits(["select:details"]);
 
 const COMMON_DATASET_OPTIONS = {
@@ -76,8 +79,8 @@ const max = computed<number>(() => {
 });
 
 const options = computed(() => {
-  const textColor = "rgb(var(--v-theme-on-surface))";
-  const gridColor = "rgba(var(--v-theme-on-surface), 0.1)";
+  const textColor = theme.current.value.colors["on-surface"];
+  const gridColor = `${textColor}1A`;
 
   return {
     responsive: true,

@@ -37,6 +37,7 @@
 
 <script lang="ts" setup>
 import { Bar } from "vue-chartjs";
+import { useTheme } from "vuetify";
 import type {
   ChartData,
   ChartOptions,
@@ -83,6 +84,7 @@ useHead({ title: "Statistiques des FA" });
 
 const router = useRouter();
 const route = useRoute();
+const theme = useTheme();
 const myStore = useMyStore();
 const statsStore = useFestivalEventStatsStore();
 const teamStore = useTeamStore();
@@ -200,8 +202,8 @@ const maxTotal = computed<number>(() =>
   ),
 );
 const options = computed<ChartOptions<"bar">>(() => {
-  const textColor = "rgb(var(--v-theme-on-surface))";
-  const gridColor = "rgba(var(--v-theme-on-surface), 0.1)";
+  const textColor = theme.current.value.colors["on-surface"];
+  const gridColor = `${textColor}1A`;
 
   return {
     responsive: true,

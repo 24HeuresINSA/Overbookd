@@ -5,8 +5,6 @@ import { AssignmentModule } from "./assignment/assignment.module";
 import { CharismaPeriodModule } from "./charisma-period/charisma-period.module";
 import { ConfigurationModule } from "./configuration/configuration.module";
 import { FriendModule } from "./friend/friend.module";
-import { HashingUtilsModule } from "./hashing-utils/hashing-utils.module";
-import { HashingUtilsService } from "./hashing-utils/hashing-utils.service";
 import { NeedHelpModule } from "./need-help/need-help.module";
 import { OrgaNeedsModule } from "./orga-needs/orga-needs.module";
 import { PermissionModule } from "./permission/permission.module";
@@ -55,7 +53,6 @@ import { LiveNotificationModule } from "./live-notification/live-notification.mo
       },
     }),
     UserModule,
-    HashingUtilsModule,
     TeamModule,
     TransactionModule,
     FestivalActivityModule,
@@ -90,7 +87,6 @@ import { LiveNotificationModule } from "./live-notification/live-notification.mo
   controllers: [AppController],
   providers: [
     AppService,
-    HashingUtilsService,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuardCustom,
