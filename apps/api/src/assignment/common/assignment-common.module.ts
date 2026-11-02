@@ -11,7 +11,6 @@ import { PrismaTeamAssignments } from "./repository/team-assignments.prisma";
 import { PrismaAvailabilities } from "./repository/availabilities.prisma";
 import { PrismaBreakPeriods } from "./repository/break-periods.prisma";
 import { PrismaVolunteers } from "../volunteer-to-task/repository/volunteers.prisma";
-import { VolunteerToTaskModule } from "../volunteer-to-task/volunteer-to-task.module";
 import { Assign, AssignWholeTeam, Unassign } from "@overbookd/assignment";
 
 @Module({
@@ -44,6 +43,11 @@ import { Assign, AssignWholeTeam, Unassign } from "@overbookd/assignment";
     {
       provide: PrismaBreakPeriods,
       useFactory: (prisma: PrismaService) => new PrismaBreakPeriods(prisma),
+      inject: [PrismaService],
+    },
+    {
+      provide: PrismaVolunteers,
+      useFactory: (prisma: PrismaService) => new PrismaVolunteers(prisma),
       inject: [PrismaService],
     },
     {
@@ -104,6 +108,6 @@ import { Assign, AssignWholeTeam, Unassign } from "@overbookd/assignment";
     },
   ],
   exports: [AssignmentService],
-  imports: [PrismaModule, DomainEventModule, VolunteerToTaskModule],
+  imports: [PrismaModule, DomainEventModule],
 })
 export class AssignmentCommonModule {}
