@@ -56,7 +56,8 @@ import {
   signageTypes,
 } from "@overbookd/signa";
 import type { SignageWithPotentialImage } from "~/utils/logistic/signage";
-import { IMAGE_EXTENSIONS } from "@overbookd/http";
+import { IMAGE_EXTENSIONS, IMAGE_MAX_SIZE } from "@overbookd/http";
+import { compressImage } from "~/utils/file/image.utils";
 
 const catalogSignageStore = useCatalogSignageStore();
 
@@ -117,15 +118,21 @@ const upsertSignage = () => {
 
   return catalogSignageStore.createSignage(signage);
 };
-const updateImage = () => {
+const updateImage = async () => {
   const image = uploadedImage.value;
   if (!image) return;
 
   const signageId = props.signage.id || catalogSignageStore.signage?.id;
   if (signageId === undefined) return;
 
+  const compressedImage = await compressImage(image, IMAGE_MAX_SIZE);
+  if (compressedImage !== image) {
+    const maxSizeInKo = Math.round(IMAGE_MAX_SIZE / 1024);
+    sendInfoNotification("L'image a été compressée 🗜️");
+  }
+
   const signaImageForm = new FormData();
-  signaImageForm.append("file", image, image.name);
+  signaImageForm.append("file", compressedImage, compressedImage.name);
   return catalogSignageStore.uploadSignageImage(signageId, signaImageForm);
 };
 </script>

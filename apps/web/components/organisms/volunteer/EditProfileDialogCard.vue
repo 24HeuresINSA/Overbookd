@@ -18,7 +18,7 @@
             />
             <v-file-input
               v-model="profilePicture"
-              :rules="[isSupportedImageFile, isProfilePictureSizeWithinLimit]"
+              :rules="[isSupportedImageFile, isImageSizeWithinLimit]"
               label="Changer la photo"
               prepend-icon=""
               prepend-inner-icon="mdi-camera"
@@ -153,7 +153,7 @@ import { assignmentPreferenceDetailedLabels } from "~/utils/assignment/preferenc
 import {
   required,
   isMobilePhoneNumber,
-  isProfilePictureSizeWithinLimit,
+  isImageSizeWithinLimit,
   isSupportedImageFile,
   minDate,
   maxDate,

@@ -1,8 +1,4 @@
-import {
-  IMAGE_MAX_SIZE,
-  IMAGE_EXTENSIONS,
-  PROFILE_PICTURE_MAX_UPLOAD_SIZE,
-} from "@overbookd/http";
+import { IMAGE_EXTENSIONS, IMAGE_MAX_UPLOAD_SIZE } from "@overbookd/http";
 import { SPECIAL_CHARS_REGEX_PATTERN } from "@overbookd/registration";
 import {
   isMobilePhoneNumberValid,
@@ -123,21 +119,12 @@ export function required(value: unknown) {
 }
 
 export function isImageSizeWithinLimit(value?: File | null): true | string {
-  const message = `Moins de ${Math.round(IMAGE_MAX_SIZE / 1024)} Ko s'il te plaît 🙏`;
-  return !value || value.size < IMAGE_MAX_SIZE || message;
+  const maxSizeInMo = Math.round(IMAGE_MAX_UPLOAD_SIZE / (1024 * 1024));
+  const message = `Moins de ${maxSizeInMo} Mo s'il te plaît 🙏`;
+  return !value || value.size < IMAGE_MAX_UPLOAD_SIZE || message;
 }
 
 export function isSupportedImageFile(value?: File | null): true | string {
   const message = "Seulement des images (png, jpeg, webp ou gif)";
   return !value || IMAGE_EXTENSIONS.includes(value.type) || message;
-}
-
-export function isProfilePictureSizeWithinLimit(
-  value?: File | null,
-): true | string {
-  const maxSizeInMo = Math.round(
-    PROFILE_PICTURE_MAX_UPLOAD_SIZE / (1024 * 1024),
-  );
-  const message = `Moins de ${maxSizeInMo} Mo s'il te plaît 🙏`;
-  return !value || value.size < PROFILE_PICTURE_MAX_UPLOAD_SIZE || message;
 }
