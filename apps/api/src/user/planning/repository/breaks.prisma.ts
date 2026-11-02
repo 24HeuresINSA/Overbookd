@@ -1,6 +1,11 @@
 import { Breaks, BreakPeriod } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
-import { SELECT_BREAK_PERIOD } from "../../../common/query/break-period.query";
+import { SELECT_PERIOD } from "../../../common/query/period.query";
+
+const SELECT_BREAK_PERIOD = {
+  name: true,
+  ...SELECT_PERIOD,
+};
 
 export class PrismaBreaks implements Breaks {
   constructor(private readonly prisma: PrismaService) {}

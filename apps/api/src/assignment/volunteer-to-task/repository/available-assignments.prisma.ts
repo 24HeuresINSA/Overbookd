@@ -2,7 +2,6 @@ import { AssignmentSummaryWithTask } from "@overbookd/http";
 import { AvailableAssignments } from "../volunteer-to-task.service";
 import { PrismaService } from "../../../prisma.service";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
-import { SELECT_BREAK_PERIOD } from "../../../common/query/break-period.query";
 import { IProvidePeriod, Period } from "@overbookd/time";
 import { Category, Status } from "@overbookd/festival-event-constants";
 import {
@@ -42,7 +41,7 @@ export class PrismaAvailableAssignments implements AvailableAssignments {
         ...SELECT_TEAM_CODES,
         availabilities: { select: SELECT_PERIOD },
         assigned: { select: { assignment: { select: SELECT_PERIOD } } },
-        breaks: { select: SELECT_BREAK_PERIOD },
+        breaks: { select: SELECT_PERIOD },
       },
     });
 

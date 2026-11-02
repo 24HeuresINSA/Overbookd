@@ -55,7 +55,7 @@ const lea: VolunteerForAssignment = {
   teams: [PERSONNE, VIEUX, CONDUCTEUR],
   availabilities: [friday06hToSunday20h],
   assignments: [],
-  breakPeriods: [{ name: "Pause", ...sunday02hTo06h }],
+  breakPeriods: [sunday02hTo06h],
 };
 const tatouin: VolunteerForAssignment = {
   id: 3,

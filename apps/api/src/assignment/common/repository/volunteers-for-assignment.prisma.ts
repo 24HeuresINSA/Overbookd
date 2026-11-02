@@ -5,7 +5,6 @@ import {
 } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
 import { SELECT_PERIOD } from "../../../common/query/period.query";
-import { SELECT_BREAK_PERIOD } from "../../../common/query/break-period.query";
 import { SELECT_TEAM_CODES } from "../../../common/query/user.query";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
 
@@ -20,7 +19,7 @@ export class PrismaVolunteersForAssignment implements VolunteersForAssignmentRep
         ...SELECT_TEAM_CODES,
         availabilities: { select: SELECT_PERIOD },
         assigned: { select: { assignment: { select: SELECT_PERIOD } } },
-        breaks: { select: SELECT_BREAK_PERIOD },
+        breaks: { select: SELECT_PERIOD },
       },
     });
     if (!volunteer) throw new VolunteerNotFoundError(volunteerId);

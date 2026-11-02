@@ -6,14 +6,13 @@ import {
   WrongTeam,
 } from "../assignment.error.js";
 import { retrieveImplicitTeams } from "../candidate-teams.js";
-import { BreakPeriod } from "../break-periods/break-periods.js";
 import { TeamMember } from "./assignment.js";
 
 export type AssignableOnPeriodCheck = {
   teams: string[];
   availabilities: IProvidePeriod[];
   assignments: IProvidePeriod[];
-  breakPeriods: BreakPeriod[];
+  breakPeriods: IProvidePeriod[];
 };
 
 export function isAssignableOn(
@@ -67,7 +66,7 @@ function hasOverlappingAssignment(
 
 function hasOverlappingBreak(
   period: Period,
-  breakPeriods: BreakPeriod[],
+  breakPeriods: IProvidePeriod[],
 ): boolean {
   return breakPeriods.some((breakPeriod) =>
     Period.init(breakPeriod).isOverlapping(period),

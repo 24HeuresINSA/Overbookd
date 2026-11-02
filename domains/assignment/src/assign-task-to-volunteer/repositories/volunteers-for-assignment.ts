@@ -1,5 +1,4 @@
 import { IProvidePeriod } from "@overbookd/time";
-import { BreakPeriod } from "../../break-periods/break-periods.js";
 import { Volunteer } from "../../volunteer.js";
 
 export type VolunteerForAssignment = {
@@ -7,7 +6,7 @@ export type VolunteerForAssignment = {
   teams: string[];
   availabilities: IProvidePeriod[];
   assignments: IProvidePeriod[];
-  breakPeriods: BreakPeriod[];
+  breakPeriods: IProvidePeriod[];
 };
 
 export type VolunteersForAssignmentRepository = {
