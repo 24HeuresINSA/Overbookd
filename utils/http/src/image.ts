@@ -8,6 +8,7 @@ export const IMAGE_EXTENSIONS = [
   WEBP_MIME_TYPE,
   GIF_MIME_TYPE,
 ];
+export const ANIMATED_MIME_TYPES = [GIF_MIME_TYPE, WEBP_MIME_TYPE];
 
 export const IMAGE_MAX_UPLOAD_SIZE = 10 * 1024 * 1024;
 export const IMAGE_MAX_SIZE = 512 * 1024;

@@ -1,6 +1,6 @@
 import { encodeAnimation, type WebPAnimationFrame } from "wasm-webp";
 import {
-  GIF_MIME_TYPE,
+  ANIMATED_MIME_TYPES,
   IMAGE_MAX_SIZE,
   JPEG_MIME_TYPE,
   WEBP_MIME_TYPE,
@@ -11,7 +11,6 @@ const MIN_DIMENSION_PX = 32;
 const SCALE_FACTOR = 0.75;
 const MAX_SCALE_STEPS = 20;
 const QUALITIES = [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1];
-const ANIMATED_MIME_TYPES = [GIF_MIME_TYPE, WEBP_MIME_TYPE];
 const MIN_FRAME_DURATION_MS = 20;
 
 type Candidate = {
