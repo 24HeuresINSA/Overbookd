@@ -18,7 +18,7 @@
       <v-list-item v-bind="itemProps">
         <template #prepend>
           <UserAvatar
-            :picture="item.profilePicture ?? undefined"
+            :picture="item.raw.profilePicture ?? undefined"
             class="mr-3"
           />
         </template>
@@ -28,7 +28,7 @@
       <v-chip v-bind="chipProps">
         <template #prepend>
           <UserAvatar
-            :picture="item.profilePicture ?? undefined"
+            :picture="item.raw.profilePicture ?? undefined"
             :size="20"
             class="mr-2"
           />

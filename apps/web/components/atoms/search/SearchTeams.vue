@@ -21,7 +21,7 @@
   >
     <template #selection="{ item }">
       <TeamChip
-        :team="item.code"
+        :team="item.raw.code"
         :closable="closableChips"
         with-name
         show-hidden

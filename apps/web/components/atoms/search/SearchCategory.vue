@@ -14,7 +14,11 @@
     @update:search="searchCategory"
   >
     <template #item="{ props, item }">
-      <v-list-item v-bind="props" :title="item.name" :subtitle="item.path" />
+      <v-list-item
+        v-bind="props"
+        :title="item.raw.name"
+        :subtitle="item.raw.path"
+      />
     </template>
   </v-autocomplete>
 </template>
