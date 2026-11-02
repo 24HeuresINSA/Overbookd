@@ -14,7 +14,7 @@ export class Contribute {
   static now(adherentId: number, type: ContributionType): Contribution {
     const edition = Edition.current;
     const paymentDate = new Date();
-    const expirationDate = this.calculeExpirationDate(edition);
+    const expirationDate = this.calculateExpirationDate(edition);
 
     return {
       adherentId,
@@ -25,7 +25,7 @@ export class Contribute {
     };
   }
 
-  private static calculeExpirationDate(edition: number): Date {
+  private static calculateExpirationDate(edition: number): Date {
     const editionsSinceBaseEdition = edition - Edition.on(BASE_EDITION_STARTS);
     const baseEditionYear = BASE_EDITION_STARTS.getFullYear();
     const currentEditionStartYear = baseEditionYear + editionsSinceBaseEdition;

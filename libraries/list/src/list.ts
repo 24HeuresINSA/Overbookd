@@ -3,19 +3,33 @@ export function updateItemToList<T>(
   index: number,
   newValue: T,
 ): T[] {
-  if (index < 0) return updateItemToList(list, list.length + index, newValue);
+  if (index < 0) {
+    const normalizedIndex = list.length + index;
+    if (normalizedIndex < 0) return [...list];
+    return updateItemToList(list, normalizedIndex, newValue);
+  }
   return [...list.slice(0, index), newValue, ...list.slice(index + 1)];
 }
 
 export function removeItemAtIndex<T>(list: T[], index: number): T[] {
-  if (index < 0) return removeItemAtIndex(list, list.length + index);
+  if (index < 0) {
+    const normalizedIndex = list.length + index;
+    if (normalizedIndex < 0) return [...list];
+    return removeItemAtIndex(list, normalizedIndex);
+  }
   return [...list.slice(0, index), ...list.slice(index + 1)];
 }
 
 export function moveAtFirstIndex<T>(list: T[], index: number): T[] {
-  const item = list.at(index);
-  if (!item) return list;
-  return [item, ...list.slice(0, index), ...list.slice(index + 1)];
+  const normalizedIndex = index < 0 ? list.length + index : index;
+  if (normalizedIndex < 0 || normalizedIndex >= list.length) return list;
+
+  const [item] = list.slice(normalizedIndex, normalizedIndex + 1);
+  return [
+    item,
+    ...list.slice(0, normalizedIndex),
+    ...list.slice(normalizedIndex + 1),
+  ];
 }
 
 export type WithAtLeastOneItem<T> = [T, ...T[]];

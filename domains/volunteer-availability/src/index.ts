@@ -1,4 +1,4 @@
-export * from "./volunteer-availability.registery.js";
+export * from "./volunteer-availability.registry.js";
 export * from "./period-orchestrator.js";
 export * from "./volunteer-availability.js";
 export * from "./shift.constant.js";

@@ -1,5 +1,5 @@
 <template>
-  <Line :data="courbs" :options="options" class="vuetify-card chart" />
+  <Line :data="chartData" :options="options" class="vuetify-card chart" />
 </template>
 
 <script lang="ts" setup>
@@ -7,12 +7,8 @@ import { Line } from "vue-chartjs";
 import type { OrgaNeedDetails } from "@overbookd/http";
 import type { ChartData, Dataset } from "~/utils/chartjs-graph";
 import type { ActiveElement, ChartEvent } from "chart.js";
-import { useTheme } from "vuetify";
-import { hexToRGBA } from "~/utils/hex-to-rgba.utils";
 
 const orgaNeedStore = useOrgaNeedStore();
-const theme = useTheme();
-
 const emit = defineEmits(["select:details"]);
 
 const COMMON_DATASET_OPTIONS = {
@@ -53,7 +49,7 @@ const requestedVolunteers = computed<Dataset>(() => ({
   ...COMMON_DATASET_OPTIONS,
 }));
 
-const courbs = computed<ChartData>(() => ({
+const chartData = computed<ChartData>(() => ({
   labels: labels.value,
   datasets: [
     requestedVolunteers.value,
@@ -63,7 +59,7 @@ const courbs = computed<ChartData>(() => ({
 }));
 
 const max = computed<number>(() => {
-  const TOP_MARGING = 1.05;
+  const TOP_MARGIN = 1.05;
   const STEP = 50;
 
   const assigned = assignedVolunteers.value.data;
@@ -75,13 +71,13 @@ const max = computed<number>(() => {
   const demands = requestedVolunteers.value.data;
 
   const maxVolunteers = Math.max(...demands, ...stackedAvailable);
-  const steps = Math.ceil((maxVolunteers * TOP_MARGING) / STEP);
+  const steps = Math.ceil((maxVolunteers * TOP_MARGIN) / STEP);
   return steps * STEP;
 });
 
 const options = computed(() => {
-  const textColor = theme.global.current.value.colors["on-surface"];
-  const gridColor = hexToRGBA(textColor, 0.1);
+  const textColor = "rgb(var(--v-theme-on-surface))";
+  const gridColor = "rgba(var(--v-theme-on-surface), 0.1)";
 
   return {
     responsive: true,

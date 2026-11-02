@@ -59,7 +59,7 @@ export const useCharismaEventStore = defineStore("charisma-event", {
       );
 
       const index = this._findParticipationIndex(slug, eventDate, participant);
-      if (index === undefined) return;
+      if (index === -1) return;
       this.allParticipations = updateItemToList(
         this.allParticipations,
         index,
@@ -80,7 +80,7 @@ export const useCharismaEventStore = defineStore("charisma-event", {
       );
 
       const index = this._findParticipationIndex(slug, eventDate, participant);
-      if (index === undefined) return;
+      if (index === -1) return;
       this.allParticipations.splice(index, 1);
     },
 
@@ -88,7 +88,7 @@ export const useCharismaEventStore = defineStore("charisma-event", {
       slug: string,
       eventDate: string,
       participant: User,
-    ): number | undefined {
+    ): number {
       return this.allParticipations.findIndex(
         (p) =>
           p.slug === slug &&

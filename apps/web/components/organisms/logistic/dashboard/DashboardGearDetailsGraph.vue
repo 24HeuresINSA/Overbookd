@@ -1,5 +1,5 @@
 <template>
-  <Line :data="courbs" :options="options" />
+  <Line :data="chartData" :options="options" />
 </template>
 
 <script lang="ts" setup>
@@ -25,7 +25,7 @@ const DATASET_OPTIONS = {
   pointHitRadius: 10,
 };
 
-const courbs = ref<ChartData>({
+const chartData = ref<ChartData>({
   labels: [],
   datasets: [],
 });
@@ -109,7 +109,7 @@ watch(details, () => {
     ? [...defaultDatasets, consumed.value]
     : defaultDatasets;
 
-  courbs.value = {
+  chartData.value = {
     labels: labels.value,
     datasets,
   };

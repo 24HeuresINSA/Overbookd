@@ -1,31 +1,31 @@
 import { beforeEach, describe, it, expect } from "vitest";
 import { Availability } from "./volunteer-availability.js";
-import { AvailabilityRegistery } from "./volunteer-availability.registery.js";
+import { AvailabilityRegistry } from "./volunteer-availability.registry.js";
 
-describe("Volunteer availability registery", () => {
+describe("Volunteer availability registry", () => {
   describe("Add volunteer availability period", () => {
     describe("when volunteer doesn't have any availability", () => {
       it("should add a new availability", () => {
-        const availabilityRegistery = AvailabilityRegistery.init();
+        const availabilityRegistry = AvailabilityRegistry.init();
         const period = {
           start: new Date("2023-05-12 01:00+02:00"),
           end: new Date("2023-05-12 05:00+02:00"),
         };
-        availabilityRegistery.addPeriod(period);
-        expect(availabilityRegistery.availabilities).toHaveLength(1);
-        expect(availabilityRegistery.availabilities).toContainEqual(
+        availabilityRegistry.addPeriod(period);
+        expect(availabilityRegistry.availabilities).toHaveLength(1);
+        expect(availabilityRegistry.availabilities).toContainEqual(
           Availability.fromPeriod(period),
         );
       });
     });
     describe("when volunteer has already one availability", () => {
-      let availabilityRegistery: AvailabilityRegistery;
+      let availabilityRegistry: AvailabilityRegistry;
       const existingPeriod = {
         start: new Date("2023-05-12 01:00+02:00"),
         end: new Date("2023-05-12 05:00+02:00"),
       };
       beforeEach(() => {
-        availabilityRegistery = AvailabilityRegistery.fromAvailabilities([
+        availabilityRegistry = AvailabilityRegistry.fromAvailabilities([
           Availability.fromPeriod(existingPeriod),
         ]);
       });
@@ -35,11 +35,11 @@ describe("Volunteer availability registery", () => {
             start: new Date("2023-05-12 10:00+02:00"),
             end: new Date("2023-05-12 16:00+02:00"),
           };
-          availabilityRegistery.addPeriod(addingPeriod);
-          expect(availabilityRegistery.availabilities).toContainEqual(
+          availabilityRegistry.addPeriod(addingPeriod);
+          expect(availabilityRegistry.availabilities).toContainEqual(
             Availability.fromPeriod(existingPeriod),
           );
-          expect(availabilityRegistery.availabilities).toContainEqual(
+          expect(availabilityRegistry.availabilities).toContainEqual(
             Availability.fromPeriod(addingPeriod),
           );
         });
@@ -50,13 +50,13 @@ describe("Volunteer availability registery", () => {
             start: new Date("2023-05-12 05:00+02:00"),
             end: new Date("2023-05-12 16:00+02:00"),
           };
-          availabilityRegistery.addPeriod(addingPeriod);
-          expect(availabilityRegistery.availabilities).toHaveLength(1);
+          availabilityRegistry.addPeriod(addingPeriod);
+          expect(availabilityRegistry.availabilities).toHaveLength(1);
         });
       });
     });
     describe("when volunteer has several availabilities", () => {
-      let availabilityRegistery: AvailabilityRegistery;
+      let availabilityRegistry: AvailabilityRegistry;
       let existingAvailabilities: Availability[] = [];
       beforeEach(() => {
         const fridayPartyShiftPeriod = {
@@ -84,7 +84,7 @@ describe("Volunteer availability registery", () => {
         existingAvailabilities = availabilityPeriods.map(
           Availability.fromPeriod,
         );
-        availabilityRegistery = AvailabilityRegistery.fromAvailabilities(
+        availabilityRegistry = AvailabilityRegistry.fromAvailabilities(
           existingAvailabilities,
         );
       });
@@ -94,8 +94,8 @@ describe("Volunteer availability registery", () => {
             start: new Date("2023-05-12 12:00+02:00"),
             end: new Date("2023-05-12 18:00+02:00"),
           };
-          availabilityRegistery.addPeriod(addingPeriod);
-          expect(availabilityRegistery.availabilities).toContainEqual(
+          availabilityRegistry.addPeriod(addingPeriod);
+          expect(availabilityRegistry.availabilities).toContainEqual(
             Availability.fromPeriod(addingPeriod),
           );
         });
@@ -106,8 +106,8 @@ describe("Volunteer availability registery", () => {
             start: new Date("2023-05-13 00:00+02:00"),
             end: new Date("2023-05-13 01:00+02:00"),
           };
-          availabilityRegistery.addPeriod(addingPeriod);
-          expect(availabilityRegistery.availabilities).toContainEqual(
+          availabilityRegistry.addPeriod(addingPeriod);
+          expect(availabilityRegistry.availabilities).toContainEqual(
             Availability.fromPeriod({
               start: existingAvailabilities[0].start,
               end: addingPeriod.end,
@@ -121,11 +121,11 @@ describe("Volunteer availability registery", () => {
             start: new Date("2023-05-12 23:00+02:00"),
             end: new Date("2023-05-13 15:00+02:00"),
           };
-          availabilityRegistery.addPeriod(addingPeriod);
-          expect(availabilityRegistery.availabilities).toHaveLength(
+          availabilityRegistry.addPeriod(addingPeriod);
+          expect(availabilityRegistry.availabilities).toHaveLength(
             existingAvailabilities.length - 1,
           );
-          expect(availabilityRegistery.availabilities).toContainEqual(
+          expect(availabilityRegistry.availabilities).toContainEqual(
             Availability.fromPeriod({
               start: existingAvailabilities[0].start,
               end: existingAvailabilities[1].end,
@@ -139,9 +139,9 @@ describe("Volunteer availability registery", () => {
             start: new Date("2023-05-12 22:00+02:00"),
             end: new Date("2023-05-15 01:00+02:00"),
           };
-          availabilityRegistery.addPeriod(addingPeriod);
-          expect(availabilityRegistery.availabilities).toHaveLength(1);
-          expect(availabilityRegistery.availabilities).toContainEqual(
+          availabilityRegistry.addPeriod(addingPeriod);
+          expect(availabilityRegistry.availabilities).toHaveLength(1);
+          expect(availabilityRegistry.availabilities).toContainEqual(
             Availability.fromPeriod({
               start: existingAvailabilities[0].start,
               end: existingAvailabilities[3].end,
