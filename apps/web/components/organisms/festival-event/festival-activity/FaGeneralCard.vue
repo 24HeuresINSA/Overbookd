@@ -132,9 +132,10 @@ const updateDescription = useDebounceFn((description?: string) => {
 const updatePhotoLink = useDebounceFn((photoLink: string) => {
   faStore.updateGeneral({ photoLink: photoLink || null });
 }, 800);
-const updateCategories = useDebounceFn((categories: string[]) => {
-  faStore.updateGeneral({ categories });
-}, 800);
+const updateCategories = (categories: string[]) => {
+  return faStore.updateGeneral({ categories });
+};
+
 const updateIsFlagship = (isFlagship: boolean | null) => {
   return faStore.updateGeneral({ isFlagship: isFlagship || false });
 };
@@ -169,5 +170,6 @@ watch(selectedActitivtyId, (newId, oldId) => {
   display: flex;
   gap: 10px;
   align-items: center;
+  margin-top: 10px;
 }
 </style>
