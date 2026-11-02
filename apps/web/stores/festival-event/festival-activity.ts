@@ -44,7 +44,7 @@ import {
 } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import type { AddInquiryRequestForm } from "@overbookd/http";
 import { isHttpError } from "~/utils/http/http-error.utils";
-import { updateItemToList } from "@overbookd/list";
+import { replaceExistingPreview } from "~/utils/festival-event/preview.utils";
 
 const repo = FestivalActivityRepository;
 
@@ -99,25 +99,16 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
 
     updatePreviousPreview(activity: Reviewable) {
       const preview = previewOfActivity(activity);
-      const index = this.activities.forAll.findIndex(
-        ({ id }) => id === activity.id,
-      );
-      this.activities.forAll = updateItemToList(
+      this.activities.forAll = replaceExistingPreview(
         this.activities.forAll,
-        index,
         preview,
       );
     },
 
     updateMyPreview(activity: Reviewable) {
       const preview = previewOfActivity(activity);
-      const index = this.activities.mine.findIndex(
-        ({ id }) => id === activity.id,
-      );
-      if (index === -1) return;
-      this.activities.mine = updateItemToList(
+      this.activities.mine = replaceExistingPreview(
         this.activities.mine,
-        index,
         preview,
       );
     },

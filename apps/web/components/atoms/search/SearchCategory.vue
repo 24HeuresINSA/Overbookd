@@ -11,14 +11,10 @@
     clearable
     return-object
     no-data-text="Aucune categorie correspondante"
-    @update:search-input="searchCategory"
+    @update:search="searchCategory"
   >
     <template #item="{ props, item }">
-      <v-list-item
-        v-bind="props"
-        :title="item.raw.name"
-        :subtitle="item.raw.path"
-      />
+      <v-list-item v-bind="props" :title="item.name" :subtitle="item.path" />
     </template>
   </v-autocomplete>
 </template>
