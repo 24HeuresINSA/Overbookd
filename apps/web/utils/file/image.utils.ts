@@ -1,7 +1,7 @@
 import { encodeAnimation, type WebPAnimationFrame } from "wasm-webp";
 import {
   ANIMATED_MIME_TYPES,
-  IMAGE_MAX_SIZE,
+  API_IMAGE_MAX_SIZE,
   JPEG_MIME_TYPE,
   WEBP_MIME_TYPE,
 } from "@overbookd/http";
@@ -33,7 +33,7 @@ const NO_RESULT: SearchResult = { fitting: null, smallest: null };
 
 export async function compressImage(
   file: File,
-  maxSizeInBytes: number = IMAGE_MAX_SIZE,
+  maxSizeInBytes: number = API_IMAGE_MAX_SIZE,
 ): Promise<File> {
   if (file.size <= maxSizeInBytes) return file;
 

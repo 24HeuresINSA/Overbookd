@@ -137,7 +137,7 @@
 import { useObjectUrl } from "@vueuse/core";
 import {
   IMAGE_EXTENSIONS,
-  IMAGE_MAX_SIZE,
+  ZITADEL_IMAGE_MAX_SIZE,
   type Preference,
 } from "@overbookd/http";
 import {
@@ -240,9 +240,9 @@ const save = async () => {
 
   const image = profilePicture.value;
   if (image) {
-    const compressedImage = await compressImage(image, IMAGE_MAX_SIZE);
+    const compressedImage = await compressImage(image, ZITADEL_IMAGE_MAX_SIZE);
     if (compressedImage !== image) {
-      const maxSizeInKo = Math.round(IMAGE_MAX_SIZE / 1024);
+      const maxSizeInKo = Math.round(ZITADEL_IMAGE_MAX_SIZE / 1024);
       sendInfoNotification(
         `Ta photo a été compressée pour respecter la limite de ${maxSizeInKo} Ko 🗜️`,
       );

@@ -1,6 +1,6 @@
 import { BadRequestException } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { IMAGE_EXTENSIONS, IMAGE_MAX_SIZE } from "@overbookd/http";
+import { API_IMAGE_MAX_SIZE, IMAGE_EXTENSIONS } from "@overbookd/http";
 import { randomUUID } from "crypto";
 import { diskStorage } from "multer";
 import { join } from "path";
@@ -16,7 +16,7 @@ export const ImageInterceptor = (fieldName: string) =>
         callback(null, `${uuid}.${extension}`);
       },
     }),
-    limits: { fileSize: IMAGE_MAX_SIZE },
+    limits: { fileSize: API_IMAGE_MAX_SIZE },
     fileFilter: (_req, file, callback) => {
       const isImage = IMAGE_EXTENSIONS.includes(file.mimetype);
       if (!isImage)

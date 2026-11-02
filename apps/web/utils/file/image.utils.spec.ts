@@ -1,10 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import {
-  GIF_MIME_TYPE,
-  IMAGE_MAX_SIZE,
-  JPEG_MIME_TYPE,
-  WEBP_MIME_TYPE,
-} from "@overbookd/http";
+import { GIF_MIME_TYPE, JPEG_MIME_TYPE, WEBP_MIME_TYPE } from "@overbookd/http";
 import { compressImage } from "./image.utils";
 
 vi.mock("wasm-webp", () => ({
@@ -24,6 +19,7 @@ vi.mock("wasm-webp", () => ({
   ),
 }));
 
+const IMAGE_MAX_SIZE = 512 * 1024;
 const BASE_BLOB_SIZE = 1_000_000;
 const FAKE_FRAME_DURATION_US = 100_000;
 const FAKE_FRAME_WIDTH = 4000;

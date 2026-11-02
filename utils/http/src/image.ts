@@ -11,4 +11,5 @@ export const IMAGE_EXTENSIONS = [
 export const ANIMATED_MIME_TYPES = [GIF_MIME_TYPE, WEBP_MIME_TYPE];
 
 export const IMAGE_MAX_UPLOAD_SIZE = 20 * 1024 * 1024;
-export const IMAGE_MAX_SIZE = 512 * 1024;
+export const ZITADEL_IMAGE_MAX_SIZE = 512 * 1024;
+export const API_IMAGE_MAX_SIZE = 2 * 1024 * 1024;

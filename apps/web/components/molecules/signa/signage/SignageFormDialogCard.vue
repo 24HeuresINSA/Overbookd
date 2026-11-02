@@ -56,7 +56,7 @@ import {
   signageTypes,
 } from "@overbookd/signa";
 import type { SignageWithPotentialImage } from "~/utils/logistic/signage";
-import { IMAGE_EXTENSIONS, IMAGE_MAX_SIZE } from "@overbookd/http";
+import { API_IMAGE_MAX_SIZE, IMAGE_EXTENSIONS } from "@overbookd/http";
 import { compressImage } from "~/utils/file/image.utils";
 
 const catalogSignageStore = useCatalogSignageStore();
@@ -125,9 +125,13 @@ const updateImage = async () => {
   const signageId = props.signage.id || catalogSignageStore.signage?.id;
   if (signageId === undefined) return;
 
-  const compressedImage = await compressImage(image, IMAGE_MAX_SIZE);
-  if (compressedImage !== image)
-    sendInfoNotification("L'image a été compressée 🗜️");
+  const compressedImage = await compressImage(image, API_IMAGE_MAX_SIZE);
+  if (compressedImage !== image) {
+    const maxSizeInKo = Math.round(API_IMAGE_MAX_SIZE / (1024 * 1024));
+    sendInfoNotification(
+      `L'image a été compressée pour respecter la limite de ${maxSizeInKo} Mo 🗜️`,
+    );
+  }
 
   const signaImageForm = new FormData();
   signaImageForm.append("file", compressedImage, compressedImage.name);
