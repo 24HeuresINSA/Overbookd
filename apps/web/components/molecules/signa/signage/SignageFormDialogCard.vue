@@ -129,7 +129,6 @@ const updateImage = async () => {
   if (compressedImage !== image)
     sendInfoNotification("L'image a été compressée 🗜️");
 
-
   const signaImageForm = new FormData();
   signaImageForm.append("file", compressedImage, compressedImage.name);
   return catalogSignageStore.uploadSignageImage(signageId, signaImageForm);
