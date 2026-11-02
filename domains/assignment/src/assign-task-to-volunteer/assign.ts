@@ -1,12 +1,9 @@
 import { Period } from "@overbookd/time";
 import { Volunteers } from "../assign-volunteer-to-task/assign-volunteer-to-task.js";
-import { Assignment } from "./assignment.js";
+import { Assignment, TeamMember } from "./assignment.js";
 import { assertCanBeAssignedOn } from "./assignable-on-period.js";
 import { Availabilities, BreakPeriods } from "./funnel/planning.js";
-import {
-  Assignments,
-  VolunteersForAssignment,
-} from "./repositories/assignments.js";
+import { Assignments } from "./repositories/assignments.js";
 
 export class Assign {
   constructor(
@@ -16,11 +13,10 @@ export class Assign {
     private readonly breakPeriods: BreakPeriods,
   ) {}
 
-  async volunteers({
-    assignment: identifier,
-    volunteers,
-  }: VolunteersForAssignment): Promise<Assignment> {
-    const assignment = await this.assignments.findOne(identifier);
+  async volunteers(
+    assignment: Assignment,
+    volunteers: TeamMember[],
+  ): Promise<Assignment> {
     const period = Period.init(assignment);
 
     for (const volunteer of volunteers) {
@@ -43,6 +39,6 @@ export class Assign {
       );
     }
 
-    return this.assignments.assign({ assignment: identifier, volunteers });
+    return this.assignments.assign({ assignment, volunteers });
   }
 }

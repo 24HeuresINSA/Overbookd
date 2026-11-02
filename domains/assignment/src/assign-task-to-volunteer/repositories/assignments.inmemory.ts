@@ -5,14 +5,6 @@ import { Assignments, VolunteersForAssignment } from "./assignments.js";
 export class InMemoryAssignments implements Assignments {
   constructor(private assignments: Assignment[]) {}
 
-  findOne(identifier: AssignmentIdentifier): Promise<Assignment> {
-    const assignmentIndex = this.indexOf(identifier);
-    const assignment =
-      assignmentIndex === -1 ? undefined : this.assignments.at(assignmentIndex);
-    if (!assignment) throw new Error("Not Found");
-    return Promise.resolve(assignment);
-  }
-
   assign({
     assignment,
     volunteers,

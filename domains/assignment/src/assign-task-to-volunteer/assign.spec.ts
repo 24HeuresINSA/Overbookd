@@ -105,10 +105,9 @@ describe("Assign volunteers", () => {
   describe("when the volunteer can be assigned", () => {
     it("should assign the volunteer as team member on the assignment", async () => {
       const { assignments, assign } = setup();
-      const result = await assign.volunteers({
-        assignment: benevolant,
-        volunteers: [{ id: lea.id, as: PERSONNE }],
-      });
+      const result = await assign.volunteers(benevolant, [
+        { id: lea.id, as: PERSONNE },
+      ]);
       const expectedAssignee = { id: lea.id, as: PERSONNE };
       expect(result.assignees).toContainEqual(expectedAssignee);
       expect(assigneesOf(assignments, benevolant.taskId)).toContainEqual(
@@ -118,10 +117,9 @@ describe("Assign volunteers", () => {
 
     it("should allow assigning on an implicit team", async () => {
       const { assign } = setup();
-      const result = await assign.volunteers({
-        assignment: benevolant,
-        volunteers: [{ id: lea.id, as: CONFIANCE }],
-      });
+      const result = await assign.volunteers(benevolant, [
+        { id: lea.id, as: CONFIANCE },
+      ]);
       expect(result.assignees).toContainEqual({ id: lea.id, as: CONFIANCE });
     });
   });
@@ -130,10 +128,7 @@ describe("Assign volunteers", () => {
     it("should indicate that the volunteer can't be assigned as this team and assign no one", async () => {
       const { assignments, assign } = setup();
       await expect(
-        assign.volunteers({
-          assignment: benevolant,
-          volunteers: [{ id: lea.id, as: CATERING }],
-        }),
+        assign.volunteers(benevolant, [{ id: lea.id, as: CATERING }]),
       ).rejects.toThrow(WrongTeam);
       expect(assigneesOf(assignments, benevolant.taskId)).toEqual([]);
     });
@@ -143,10 +138,7 @@ describe("Assign volunteers", () => {
     it("should indicate that the volunteer doesn't exist", async () => {
       const { assign } = setup();
       await expect(
-        assign.volunteers({
-          assignment: benevolant,
-          volunteers: [{ id: 999, as: PERSONNE }],
-        }),
+        assign.volunteers(benevolant, [{ id: 999, as: PERSONNE }]),
       ).rejects.toThrow(VolunteerNotFoundError);
     });
   });
@@ -155,10 +147,7 @@ describe("Assign volunteers", () => {
     it("should indicate that the volunteer isn't available on the assignment period", async () => {
       const { assign } = setup();
       await expect(
-        assign.volunteers({
-          assignment: benevolant,
-          volunteers: [{ id: tatouin.id, as: PERSONNE }],
-        }),
+        assign.volunteers(benevolant, [{ id: tatouin.id, as: PERSONNE }]),
       ).rejects.toThrow(Unavailable);
     });
   });
@@ -167,10 +156,7 @@ describe("Assign volunteers", () => {
     it("should indicate that the volunteer is already assigned on an overlapping period", async () => {
       const { assign } = setup();
       await expect(
-        assign.volunteers({
-          assignment: benevolant,
-          volunteers: [{ id: noel.id, as: PERSONNE }],
-        }),
+        assign.volunteers(benevolant, [{ id: noel.id, as: PERSONNE }]),
       ).rejects.toThrow(AlreadyAssigned);
     });
   });
@@ -179,10 +165,9 @@ describe("Assign volunteers", () => {
     it("should indicate that the volunteer has a break on an overlapping period", async () => {
       const { assign } = setup();
       await expect(
-        assign.volunteers({
-          assignment: nettoyerEspaceConcessions,
-          volunteers: [{ id: lea.id, as: PERSONNE }],
-        }),
+        assign.volunteers(nettoyerEspaceConcessions, [
+          { id: lea.id, as: PERSONNE },
+        ]),
       ).rejects.toThrow(HasBreak);
     });
   });
@@ -191,31 +176,12 @@ describe("Assign volunteers", () => {
     it("should indicate that no volunteer is assigned when one of them can't be", async () => {
       const { assignments, assign } = setup();
       await expect(
-        assign.volunteers({
-          assignment: benevolant,
-          volunteers: [
-            { id: lea.id, as: PERSONNE },
-            { id: tatouin.id, as: PERSONNE },
-          ],
-        }),
+        assign.volunteers(benevolant, [
+          { id: lea.id, as: PERSONNE },
+          { id: tatouin.id, as: PERSONNE },
+        ]),
       ).rejects.toThrow(Unavailable);
       expect(assigneesOf(assignments, benevolant.taskId)).toEqual([]);
-    });
-  });
-
-  describe("when the assignment does not exist", () => {
-    it("should indicate that the assignment doesn't exist", async () => {
-      const { assign } = setup();
-      await expect(
-        assign.volunteers({
-          assignment: {
-            taskId: 999,
-            mobilizationId: "unknown",
-            assignmentId: "unknown",
-          },
-          volunteers: [{ id: lea.id, as: PERSONNE }],
-        }),
-      ).rejects.toThrow("Not Found");
     });
   });
 });

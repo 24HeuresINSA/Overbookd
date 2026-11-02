@@ -81,10 +81,12 @@ export class AssignmentService implements OnApplicationBootstrap {
     return this.planning.for(volunteerId);
   }
 
-  async assign(
-    volunteersForAssignment: VolunteersForAssignment,
-  ): Promise<Assignment> {
-    return this.assignVolunteers.volunteers(volunteersForAssignment);
+  async assign({
+    assignment: identifier,
+    volunteers,
+  }: VolunteersForAssignment): Promise<Assignment> {
+    const assignment = await this.assignments.findOne(identifier, false);
+    return this.assignVolunteers.volunteers(assignment, volunteers);
   }
 
   async unassign(

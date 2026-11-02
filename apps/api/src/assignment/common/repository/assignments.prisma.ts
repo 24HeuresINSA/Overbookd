@@ -93,14 +93,9 @@ export class PrismaAssignments implements AssignmentRepository {
     };
   }
 
-  async findOne(identifier: AssignmentIdentifier): Promise<Assignment>;
   async findOne<T extends boolean>(
     identifier: AssignmentIdentifier,
     withDetails: T,
-  ): Promise<Assignment<{ withDetails: T }>>;
-  async findOne<T extends boolean>(
-    identifier: AssignmentIdentifier,
-    withDetails?: T,
   ): Promise<Assignment<{ withDetails: T }>> {
     const assignment = await this.prisma.assignment.findUnique({
       where: uniqueAssignment(identifier),
@@ -120,13 +115,13 @@ export class PrismaAssignments implements AssignmentRepository {
     volunteers,
   }: VolunteersForAssignment): Promise<Assignment> {
     const upsert = updateAssigneesOnAssignment(volunteers, identifier);
-    const updatedAssignment = await this.prisma.assignment.update({
+    const assignment = await this.prisma.assignment.update({
       where: uniqueAssignment(identifier),
       data: { assignees: { upsert } },
       select: SELECT_ASSIGNMENT,
     });
 
-    return toAssignment(updatedAssignment, identifier);
+    return toAssignment(assignment, identifier);
   }
 
   async unassign(
