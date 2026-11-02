@@ -86,10 +86,9 @@
 import {
   type InquiryRequest,
   type InquiryOwner,
-  type Drive,
-  drives,
   type TimeWindow,
 } from "@overbookd/festival-event";
+import { drives, type Drive } from "@overbookd/festival-event-constants";
 import { slugifiedFilter } from "~/utils/search/search.utils";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 import { isNumber, min } from "~/utils/rules/input.rules";

@@ -4,7 +4,7 @@ import {
   PreviewForLogistic,
 } from "@overbookd/http";
 import { BasePreviewForDashboardResponseDto } from "./base-preview-for-dashboard.response.dto";
-import { Drive, drives } from "@overbookd/festival-event";
+import { drives, Drive } from "@overbookd/festival-event-constants";
 
 class GearInquiryDto implements ActivityGearInquiryForPreview {
   @ApiProperty({ description: "Gear slug", type: String })

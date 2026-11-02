@@ -37,7 +37,7 @@ import { Review } from "./review.js";
 import { InMemoryFestivalTasksForReview } from "./festival-tasks-for-review.inmemory.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
 import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
-import { LOCAL_24H, MAGASIN } from "../../common/inquiry-request.js";
+import { LOCAL_24H, MAGASIN } from "@overbookd/festival-event-constants";
 import { getFactory } from "../festival-task.factory.js";
 import { ShouldAssignDrive } from "../../common/review.error.js";
 import { AlreadyApproved } from "../../common/review.error.js";

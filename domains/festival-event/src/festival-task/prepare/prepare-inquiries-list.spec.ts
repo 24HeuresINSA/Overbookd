@@ -16,7 +16,7 @@ import { InMemoryVolunteerConflicts } from "../volunteer-conflicts.inmemory.js";
 import { FestivalTaskTranslator } from "../volunteer-conflicts.js";
 import { onlyApprovedByMatos } from "../festival-task.fake.js";
 import { isDraft } from "../../festival-event.js";
-import { PARKING_EIFFEL } from "../../common/inquiry-request.js";
+import { PARKING_EIFFEL } from "@overbookd/festival-event-constants";
 import {
   AssignDriveInDraft,
   InquiryAlreadyExists,

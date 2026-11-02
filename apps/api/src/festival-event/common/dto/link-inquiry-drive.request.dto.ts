@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Drive, drives } from "@overbookd/festival-event";
+import { drives, Drive } from "@overbookd/festival-event-constants";
 import { IsEnum } from "class-validator";
 
 export class LinkInquiryDriveRequestDto {

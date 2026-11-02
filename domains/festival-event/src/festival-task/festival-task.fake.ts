@@ -1,4 +1,4 @@
-import { BACKLINE, MAGASIN } from "../common/inquiry-request.js";
+import { BACKLINE, MAGASIN } from "@overbookd/festival-event-constants";
 import {
   escapeGame,
   humaGrass,

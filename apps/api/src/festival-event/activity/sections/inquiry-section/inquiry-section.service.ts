@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import {
-  Drive,
   FestivalActivity,
   InquiryRequest,
   PrepareFestivalActivity,
   TimeWindow,
 } from "@overbookd/festival-event";
+import { Drive } from "@overbookd/festival-event-constants";
 import {
   InitInquiryRequest,
   AddInquiryRequestForm,

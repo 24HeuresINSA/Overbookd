@@ -12,7 +12,7 @@ import {
   LOCAL_24H,
   MAGASIN,
   PARKING_EIFFEL,
-} from "../../common/inquiry-request.js";
+} from "@overbookd/festival-event-constants";
 import {
   afficheJustDanceA2,
   bacheBienvenue10m,
