@@ -10,5 +10,5 @@ export const IMAGE_EXTENSIONS = [
 ];
 export const ANIMATED_MIME_TYPES = [GIF_MIME_TYPE, WEBP_MIME_TYPE];
 
-export const IMAGE_MAX_UPLOAD_SIZE = 10 * 1024 * 1024;
+export const IMAGE_MAX_UPLOAD_SIZE = 20 * 1024 * 1024;
 export const IMAGE_MAX_SIZE = 512 * 1024;

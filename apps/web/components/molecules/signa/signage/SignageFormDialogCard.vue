@@ -126,10 +126,9 @@ const updateImage = async () => {
   if (signageId === undefined) return;
 
   const compressedImage = await compressImage(image, IMAGE_MAX_SIZE);
-  if (compressedImage !== image) {
-    const maxSizeInKo = Math.round(IMAGE_MAX_SIZE / 1024);
+  if (compressedImage !== image)
     sendInfoNotification("L'image a été compressée 🗜️");
-  }
+
 
   const signaImageForm = new FormData();
   signaImageForm.append("file", compressedImage, compressedImage.name);
