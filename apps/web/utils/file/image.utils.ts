@@ -1,4 +1,4 @@
-import { GIFEncoder, applyPalette, quantize } from "gifenc";
+import { encodeAnimation, type WebPAnimationFrame } from "wasm-webp";
 import {
   GIF_MIME_TYPE,
   IMAGE_MAX_SIZE,
@@ -12,8 +12,7 @@ const SCALE_FACTOR = 0.75;
 const MAX_SCALE_STEPS = 20;
 const QUALITIES = [0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1];
 const ANIMATED_MIME_TYPES = [GIF_MIME_TYPE, WEBP_MIME_TYPE];
-const MAX_GIF_COLORS = 256;
-const MIN_FRAME_DELAY_MS = 20;
+const MIN_FRAME_DURATION_MS = 20;
 
 type EncodeResult = {
   fitting: Blob | null;
@@ -21,8 +20,14 @@ type EncodeResult = {
 };
 
 type AnimatedEncodeResult = {
-  fitting: Uint8Array<ArrayBuffer> | null;
-  smallest: Uint8Array<ArrayBuffer> | null;
+  fitting: Uint8Array | null;
+  smallest: Uint8Array | null;
+};
+
+type AnimatedFrames = {
+  width: number;
+  height: number;
+  frames: WebPAnimationFrame[];
 };
 
 const NO_ENCODE_RESULT: EncodeResult = { fitting: null, smallest: null };
@@ -76,24 +81,21 @@ async function compressAnimatedImage(
       async (previous, scale) => {
         const acc = await previous;
         if (acc.fitting) return acc;
-        const bytes = await encodeAnimatedGif(
+        return encodeAnimatedAtScale(
           decoder,
           track.frameCount,
           naturalWidth,
           naturalHeight,
           scale,
+          maxSizeInBytes,
+          acc.smallest,
         );
-        if (!bytes) return acc;
-        if (bytes.length <= maxSizeInBytes) {
-          return { fitting: bytes, smallest: acc.smallest };
-        }
-        return { fitting: null, smallest: smallerBytes(bytes, acc.smallest) };
       },
       Promise.resolve(NO_ANIMATED_RESULT),
     );
 
     const bytes = result.fitting ?? result.smallest;
-    return bytes ? animatedGifFile(bytes, file.name) : null;
+    return bytes ? animatedWebPFile(bytes, file.name) : null;
   } catch {
     return null;
   } finally {
@@ -101,13 +103,55 @@ async function compressAnimatedImage(
   }
 }
 
-async function encodeAnimatedGif(
+async function encodeAnimatedAtScale(
   decoder: ImageDecoder,
   frameCount: number,
   naturalWidth: number,
   naturalHeight: number,
   scale: number,
-): Promise<Uint8Array<ArrayBuffer> | null> {
+  maxSizeInBytes: number,
+  smallest: Uint8Array | null,
+): Promise<AnimatedEncodeResult> {
+  const extracted = await extractFrames(
+    decoder,
+    frameCount,
+    naturalWidth,
+    naturalHeight,
+    scale,
+  );
+  if (!extracted) return { fitting: null, smallest };
+  const { width, height, frames } = extracted;
+
+  return QUALITIES.reduce<Promise<AnimatedEncodeResult>>(
+    async (previous, quality) => {
+      const acc = await previous;
+      if (acc.fitting) return acc;
+      const bytes = await encodeAnimation(
+        width,
+        height,
+        true,
+        frames.map((frame) => ({
+          ...frame,
+          config: { lossless: 0, quality: Math.round(quality * 100) },
+        })),
+      );
+      if (!bytes) return acc;
+      if (bytes.length <= maxSizeInBytes) {
+        return { fitting: bytes, smallest: acc.smallest };
+      }
+      return { fitting: null, smallest: smallerBytes(bytes, acc.smallest) };
+    },
+    Promise.resolve({ fitting: null, smallest }),
+  );
+}
+
+async function extractFrames(
+  decoder: ImageDecoder,
+  frameCount: number,
+  naturalWidth: number,
+  naturalHeight: number,
+  scale: number,
+): Promise<AnimatedFrames | null> {
   const width = Math.max(1, Math.round(naturalWidth * scale));
   const height = Math.max(1, Math.round(naturalHeight * scale));
   const canvas = document.createElement("canvas");
@@ -116,41 +160,40 @@ async function encodeAnimatedGif(
   canvas.width = width;
   canvas.height = height;
 
-  const gif = GIFEncoder();
   const frameIndexes = Array.from({ length: frameCount }, (_, index) => index);
-  await frameIndexes.reduce<Promise<void>>(async (previous, frameIndex) => {
-    await previous;
-    const { image: videoFrame } = await decoder.decode({ frameIndex });
-    context.clearRect(0, 0, width, height);
-    context.drawImage(videoFrame, 0, 0, width, height);
-    const { data } = context.getImageData(0, 0, width, height);
-    const palette = quantize(data, MAX_GIF_COLORS);
-    gif.writeFrame(applyPalette(data, palette), width, height, {
-      palette,
-      delay: Math.max(
-        MIN_FRAME_DELAY_MS,
-        Math.round((videoFrame.duration ?? 0) / 1000),
-      ),
-    });
-    videoFrame.close();
-  }, Promise.resolve());
-
-  gif.finish();
-  return gif.bytes();
+  const frames = await frameIndexes.reduce<Promise<WebPAnimationFrame[]>>(
+    async (previous, frameIndex) => {
+      const acc = await previous;
+      const { image: videoFrame } = await decoder.decode({ frameIndex });
+      context.clearRect(0, 0, width, height);
+      context.drawImage(videoFrame, 0, 0, width, height);
+      const { data } = context.getImageData(0, 0, width, height);
+      const frame: WebPAnimationFrame = {
+        data: new Uint8Array(data.buffer),
+        duration: Math.max(
+          MIN_FRAME_DURATION_MS,
+          Math.round((videoFrame.duration ?? 0) / 1000),
+        ),
+      };
+      videoFrame.close();
+      return [...acc, frame];
+    },
+    Promise.resolve([]),
+  );
+  return { width, height, frames };
 }
 
-function animatedGifFile(
-  bytes: Uint8Array<ArrayBuffer>,
-  originalName: string,
-): File {
+function animatedWebPFile(bytes: Uint8Array, originalName: string): File {
   const baseName = originalName.replace(/\.[^/.]+$/, "") || "avatar";
-  return new File([bytes], `${baseName}.gif`, { type: GIF_MIME_TYPE });
+  return new File([bytes.slice()], `${baseName}.webp`, {
+    type: WEBP_MIME_TYPE,
+  });
 }
 
 function smallerBytes(
-  candidate: Uint8Array<ArrayBuffer>,
-  current: Uint8Array<ArrayBuffer> | null,
-): Uint8Array<ArrayBuffer> {
+  candidate: Uint8Array,
+  current: Uint8Array | null,
+): Uint8Array {
   return !current || candidate.length < current.length ? candidate : current;
 }
 

@@ -7,6 +7,23 @@ import {
 } from "@overbookd/http";
 import { compressImage } from "./image.utils";
 
+vi.mock("wasm-webp", () => ({
+  encodeAnimation: vi.fn(
+    async (
+      _width: number,
+      _height: number,
+      _hasAlpha: boolean,
+      frames: Array<{ config?: { quality: number } }>,
+    ) => {
+      const quality = frames[0]?.config?.quality ?? 100;
+      const bytes = new Uint8Array(Math.round(1_000_000 * (quality / 100)));
+      bytes.set([0x52, 0x49, 0x46, 0x46], 0);
+      bytes.set([0x57, 0x45, 0x42, 0x50], 8);
+      return bytes;
+    },
+  ),
+}));
+
 const BASE_BLOB_SIZE = 1_000_000;
 const FAKE_FRAME_DURATION_US = 100_000;
 const FAKE_FRAME_WIDTH = 4000;
@@ -145,7 +162,7 @@ describe("compressImage", () => {
     expect(calls.toBlob[0]?.mimeType).toBe(JPEG_MIME_TYPE);
   });
 
-  it("keeps an animated gif animated by re-encoding every frame as gif", async () => {
+  it("keeps an animated gif animated by re-encoding every frame as animated webp", async () => {
     vi.stubGlobal("ImageDecoder", FakeImageDecoder);
     FakeImageDecoder.frameCount = 3;
     const calls = setupFakeCanvas(true);
@@ -154,15 +171,16 @@ describe("compressImage", () => {
       IMAGE_MAX_SIZE,
     );
 
-    expect(result.type).toBe(GIF_MIME_TYPE);
-    expect(result.name).toBe("animation.gif");
+    expect(result.type).toBe(WEBP_MIME_TYPE);
+    expect(result.name).toBe("animation.webp");
     expect(result.size).toBeLessThanOrEqual(IMAGE_MAX_SIZE);
-    expect(await result.slice(0, 6).text()).toBe("GIF89a");
+    expect(await result.slice(0, 4).text()).toBe("RIFF");
+    expect(await result.slice(8, 12).text()).toBe("WEBP");
     expect(calls.drawImage).toHaveLength(3);
     expect(calls.toBlob).toEqual([]);
   });
 
-  it("keeps an animated webp animated by re-encoding it as gif", async () => {
+  it("keeps an animated webp animated by re-encoding it as animated webp", async () => {
     vi.stubGlobal("ImageDecoder", FakeImageDecoder);
     FakeImageDecoder.frameCount = 2;
     setupFakeCanvas(true);
@@ -171,9 +189,10 @@ describe("compressImage", () => {
       IMAGE_MAX_SIZE,
     );
 
-    expect(result.type).toBe(GIF_MIME_TYPE);
-    expect(result.name).toBe("animation.gif");
-    expect(await result.slice(0, 6).text()).toBe("GIF89a");
+    expect(result.type).toBe(WEBP_MIME_TYPE);
+    expect(result.name).toBe("animation.webp");
+    expect(await result.slice(0, 4).text()).toBe("RIFF");
+    expect(await result.slice(8, 12).text()).toBe("WEBP");
   });
 
   it("uses the static path when the image has a single frame", async () => {
