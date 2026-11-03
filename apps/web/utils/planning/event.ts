@@ -5,7 +5,8 @@ import type {
 } from "@overbookd/assignment";
 import type { PlanningTask } from "@overbookd/http";
 import { FT_URL } from "@overbookd/web-page";
-import { PINK, getColorByStatus } from "~/domain/common/status-color";
+import { getColorByStatus } from "~/domain/common/status-color";
+import { BLUE_24 } from "~/utils/vuetify/theme/common";
 import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import { createCalendarEvent, type CalendarEvent } from "../calendar/event";
 import type { BreakEvent } from "~/domain/common/break-events";
@@ -51,8 +52,8 @@ export function getAssignmentColor({
   isNamelyAssigned,
 }: AssignmentEvent) {
   const isReadyToAssign = task.status === READY_TO_ASSIGN;
-  return isReadyToAssign && isNamelyAssigned
-    ? PINK
+  return isReadyToAssign && !isNamelyAssigned
+    ? BLUE_24
     : getColorByStatus(task.status);
 }
 

@@ -1,4 +1,5 @@
 import { CETAITMIEUXAVANT, PREPROD } from "~/utils/navigation/url.constant";
+import { BLUE_24 } from "~/utils/vuetify/theme/common";
 
 export default defineEventHandler((event) => {
   const host = getRequestHost(event);
@@ -22,7 +23,7 @@ export default defineEventHandler((event) => {
     description: "Organisation du festival des 24h de l’INSA",
     start_url: "/",
     lang: "fr",
-    theme_color: "#41C5E5",
+    theme_color: BLUE_24,
     display: "standalone",
     icons: [
       {
