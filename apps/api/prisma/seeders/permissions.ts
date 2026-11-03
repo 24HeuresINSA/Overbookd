@@ -48,6 +48,7 @@ import {
   VIEW_MULTI_PLANNING,
   VIEW_USEFUL_LINKS,
   MUST_SIGN_VOLUNTEER_CHARTER,
+  VIEW_VOTES,
 } from "@overbookd/permission";
 
 export const permissions = [
@@ -531,6 +532,15 @@ export const permissions = [
     teams: {
       createMany: {
         data: [{ teamCode: "soft" }],
+      },
+    },
+  },
+  {
+    name: VIEW_VOTES,
+    description: "Peut voir les votes",
+    teams: {
+      createMany: {
+        data: [{ teamCode: "hard" }, { teamCode: "vieux" }],
       },
     },
   },

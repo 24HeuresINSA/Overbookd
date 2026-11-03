@@ -11,6 +11,7 @@ export const AVAILABILITIES_URL = "/availabilities";
 export const PLANNING_URL = "/planning";
 export const MULTI_PLANNING_URL = "/multi-planning";
 export const VOLUNTEER_CHARTER_URL = "/volunteer-charter";
+export const VOTES_URL = "/votes";
 
 export const FA_URL = "/fa";
 export const FT_URL = "/ft";
@@ -78,6 +79,7 @@ export const pagesURL = [
   TIMELINE_URL,
   NEED_HELP_URL,
   VOLUNTEER_CHARTER_URL,
+  VOTES_URL,
 ] as const;
 
 export type PageURL = (typeof pagesURL)[number];

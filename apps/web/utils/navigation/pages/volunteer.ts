@@ -4,6 +4,7 @@ import {
   VIEW_MULTI_PLANNING,
   VIEW_PLANNING,
   VIEW_VOLUNTEER,
+  VIEW_VOTES,
 } from "@overbookd/permission";
 import {
   AVAILABILITIES_URL,
@@ -13,6 +14,7 @@ import {
   SHARED_MEALS_URL,
   VOLUNTEERS_URL,
   SHARED_MEALS_HISTORY_URL,
+  VOTES_URL,
 } from "@overbookd/web-page";
 import type { HiddenPage, Page, PageInSummary } from "./summary-pages";
 
@@ -129,6 +131,18 @@ const MULTI_PLANNING_PAGE: PageInSummary = {
   keywords: ["multi-planning", "calendrier", "taches", "affectation"],
 };
 
+const VOTES_PAGE: PageInSummary = {
+  icon: "mdi-vote",
+  title: "Votes",
+  permission: VIEW_VOTES,
+  to: VOTES_URL,
+  description: "Permet de voir les votes",
+  mobileSupport: true,
+  canBeFavorite: true,
+  hasParam: false,
+  keywords: ["votes", "voter", "sondage"],
+};
+
 export const VOLUNTEER_SUMMARY_PAGES: PageInSummary[] = [
   MY_PERSONAL_ACCOUNT_PAGE,
   SHARED_MEALS_PAGE,
@@ -136,6 +150,7 @@ export const VOLUNTEER_SUMMARY_PAGES: PageInSummary[] = [
   AVAILABILITIES_PAGE,
   MY_PLANNING_PAGE,
   MULTI_PLANNING_PAGE,
+  VOTES_PAGE,
 ];
 
 export const VOLUNTEER_PAGES: Page[] = [
