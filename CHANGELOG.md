@@ -1,3 +1,20 @@
+## [4.5.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.4.2...v4.5.0) (2026-11-03)
+
+### Features
+
+* **votes:** add empty page ([c989de5](https://gitlab.com/24-heures-insa/overbookd-mono/commit/c989de541ad05aa37b8cf403d790eebb4959f443)), closes [#2827](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2827)
+* **web:** compress profile picture in browser [#1660](https://gitlab.com/24-heures-insa/overbookd-mono/issues/1660) ([e76ca20](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e76ca2008a7841b0598d3ba59cf2acff12ec8ebe))
+
+### Bug Fixes
+
+* **assignment:** prevent volunteer from being assigned when not available for the task's period [#2704](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2704) ([b287cfe](https://gitlab.com/24-heures-insa/overbookd-mono/commit/b287cfe57ed0c72ee9706ce4d92e7c40738f2cc7))
+* **festival-activity:** clear categories when unpublished [#2839](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2839) ([5a9a9ea](https://gitlab.com/24-heures-insa/overbookd-mono/commit/5a9a9eac6975cb6de3a363e55edc500a75c4cc09))
+* some naming, add missing tests & remove useless package ([8af9f89](https://gitlab.com/24-heures-insa/overbookd-mono/commit/8af9f89ac3d0e42c2d450b475eb101e2373a09db))
+
+### Refactor
+
+* **festival-event:** move drive locations to constants [#2838](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2838) ([7c675b3](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7c675b374f2b74cba42a4ace35b1851eabcfcbe4))
+
 ## [4.4.2](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.4.1...v4.4.2) (2026-11-02)
 
 ### Bug Fixes
