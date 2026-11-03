@@ -12,6 +12,7 @@ const RED = "red";
 export const ORANGE = "orange";
 const GREEN = "green";
 export const PURPLE = "#673ab7";
+export const PINK = "#ff4ac6";
 
 export type StatusColor =
   typeof GREY | typeof RED | typeof ORANGE | typeof GREEN | typeof PURPLE;
@@ -25,5 +26,5 @@ const statusColors = new Map<FestivalEvent["status"], StatusColor>([
 ]);
 
 export function getColorByStatus(status: FestivalEvent["status"]): StatusColor {
-  return statusColors.get(status) || "grey";
+  return statusColors.get(status) || GREY;
 }

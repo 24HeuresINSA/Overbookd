@@ -39,8 +39,12 @@ import type {
   AssignmentEvent,
   VolunteerWithAssignmentDuration,
 } from "@overbookd/assignment";
-import type { AssignmentStats, PlanningTask } from "@overbookd/http";
-import { PURPLE, getColorByStatus } from "~/domain/common/status-color";
+import type {
+  AssignmentStats,
+  AssignmentSummaryWithTask,
+  PlanningTask,
+} from "@overbookd/http";
+import { getColorByStatus } from "~/domain/common/status-color";
 import {
   toCalendarBreak,
   type BreakEvent,
@@ -50,7 +54,10 @@ import { buildUserNameWithNickname } from "@overbookd/user";
 import type { CalendarEventWithIdentifier } from "~/utils/assignment/calendar-event";
 import { FT_URL } from "@overbookd/web-page";
 import type { SelectableCategory } from "~/utils/assignment/task-category";
-import { shouldBeHighlighted } from "~/utils/planning/event";
+import {
+  getAssignmentColor,
+  shouldBeHighlighted,
+} from "~/utils/planning/event";
 
 const planningStore = usePlanningStore();
 const configurationStore = useConfigurationStore();
@@ -79,7 +86,7 @@ const calendarMarker = ref<Date>(new Date());
 const eventStartDate = computed<Date>(() => configurationStore.eventStartDate);
 onMounted(() => (calendarMarker.value = eventStartDate.value));
 
-const hoverAssignment = computed<AssignmentEvent | null>(
+const hoverAssignment = computed<AssignmentSummaryWithTask | null>(
   () => assignVolunteerToTaskStore.hoverAssignment,
 );
 watch(hoverAssignment, () => {
@@ -88,7 +95,10 @@ watch(hoverAssignment, () => {
 
 const alreadyAssignedEvents = computed<CalendarEvent[]>(() =>
   assignVolunteerToTaskStore.alreadyAssignedAssignments.map((assignment) => {
-    const event = formatAssignmentForCalendar(assignment, PURPLE);
+    const event = formatAssignmentForCalendar(
+      assignment,
+      getAssignmentColor(assignment),
+    );
     const selected = shouldBeHighlighted(
       selectedCategory.value,
       assignment.task,
@@ -143,7 +153,7 @@ const selectEvent = (event: CalendarEventWithIdentifier | CalendarEvent) => {
 const selectPeriod = (period: Period) => emit("ask-for-break", period);
 
 const formatAssignmentForCalendar = (
-  assignment: AssignmentEvent,
+  assignment: AssignmentEvent | AssignmentSummaryWithTask,
   color?: string,
 ): CalendarEventWithIdentifier => {
   return createCalendarEvent({

@@ -6,10 +6,9 @@ import { IProvidePeriod, Period } from "@overbookd/time";
 import { SELECT_USER_WITH_TEAM_CODES } from "../../../common/query/user.query";
 import { AssignmentEvent } from "@overbookd/assignment";
 import { IS_NOT_DELETED } from "../../../common/query/not-deleted.query";
-import { SELECT_PLANNING_EVENT } from "../../../assignment/common/repository/planning.query";
+import { selectPlanningEventFor } from "../../../assignment/common/repository/planning.query";
 import { toPlanningEventFromAssignment } from "../../../assignment/common/repository/planning.prisma";
 import { UserWithTeams } from "@overbookd/user";
-import { friendAssigneesCount } from "../../../assignment/common/repository/assignment.query";
 
 export class PrismaPlanningVolunteers implements PlanningVolunteers {
   constructor(private readonly prisma: PrismaService) {}
@@ -51,10 +50,7 @@ export class PrismaPlanningVolunteers implements PlanningVolunteers {
         assignees: { some: { userId: volunteerId } },
         festivalTask: IS_NOT_DELETED,
       },
-      select: {
-        ...SELECT_PLANNING_EVENT,
-        ...friendAssigneesCount(volunteerId),
-      },
+      select: selectPlanningEventFor(volunteerId),
     });
 
     return assignments.map(toPlanningEventFromAssignment);

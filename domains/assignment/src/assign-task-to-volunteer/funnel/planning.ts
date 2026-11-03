@@ -16,7 +16,9 @@ export type PlanningEvent = IProvidePeriod &
     task: PlanningEventTask;
   };
 
-export type AssignmentEvent = Required<PlanningEvent>;
+export type AssignmentEvent = Required<PlanningEvent> & {
+  isNamelyAssigned: boolean;
+};
 
 export function isAssignmentEvent(
   event: PlanningEvent,
