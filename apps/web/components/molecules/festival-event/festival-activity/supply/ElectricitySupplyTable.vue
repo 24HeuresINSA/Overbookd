@@ -54,9 +54,9 @@
 <script lang="ts" setup>
 import type {
   ElectricitySupply,
-  ElectricityConnection,
   PrepareElectricitySupplyCreation,
 } from "@overbookd/festival-event";
+import type { ElectricityConnection } from "@overbookd/festival-event-constants";
 import { electricityConnectionLabels } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import type { TableHeaders } from "~/utils/vuetify/component-props";
 

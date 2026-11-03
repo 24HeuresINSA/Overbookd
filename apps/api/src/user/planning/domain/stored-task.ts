@@ -52,7 +52,7 @@ export class StoredTask {
 
   canMergeWith(task: StoredTask): boolean {
     const isSameTask = task.isSameTask(this.storedTask);
-    const hasMergeablePeriods = this.period.isMergableWith(task.period);
+    const hasMergeablePeriods = this.period.isMergeableWith(task.period);
     return isSameTask && hasMergeablePeriods;
   }
 

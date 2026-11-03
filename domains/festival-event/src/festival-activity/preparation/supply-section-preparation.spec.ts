@@ -15,7 +15,7 @@ import {
   P17_16A_TETRA,
   P17_32A_TETRA,
   PC16_Prise_classique,
-} from "../sections/supply.js";
+} from "@overbookd/festival-event-constants";
 import { PrepareElectricitySupplyUpdate } from "./prepare-festival-activity.model.js";
 import { PrepareError } from "./prepare-in-review-festival-activity.js";
 import { nintendoSwitchSupply } from "../festival-activity.fake.js";

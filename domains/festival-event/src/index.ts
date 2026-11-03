@@ -33,17 +33,17 @@ export type { TimeWindow } from "./common/time-window.js";
 //  FESTIVAL ACTIVITY MODULE
 //  **********************
 export type {
-  Draft,
-  Reviewable,
-  InReview,
-  Validated,
-  Refused,
+  Draft as FestivalActivityDraft,
+  Reviewable as FestivalActivityReviewable,
+  InReview as FestivalActivityInReview,
+  Validated as FestivalActivityValidated,
+  Refused as FestivalActivityRefused,
   FestivalActivity,
   CreateFestivalActivityForm,
   KeyEvent as FestivalActivityKeyEvent,
-  PreviewDraft,
-  PreviewReviewable,
-  PreviewFestivalActivity,
+  PreviewDraft as PreviewFestivalActivityDraft,
+  PreviewReviewable as PreviewFestivalActivityReviewable,
+  Preview as PreviewFestivalActivity,
   FestivalTaskChild,
 } from "./festival-activity/festival-activity.js";
 export { FestivalActivityError } from "./festival-activity/festival-activity.error.js";
@@ -59,23 +59,7 @@ export type {
   WithInquiries,
 } from "./festival-activity/sections/inquiry.js";
 
-export type {
-  ElectricitySupply,
-  ElectricityConnection,
-} from "./festival-activity/sections/supply.js";
-export {
-  PC16_Prise_classique,
-  P17_16A_MONO,
-  P17_16A_TRI,
-  P17_16A_TETRA,
-  P17_32A_MONO,
-  P17_32A_TRI,
-  P17_32A_TETRA,
-  P17_63A_MONO,
-  P17_63A_TRI,
-  P17_63A_TETRA,
-  P17_125A_TETRA,
-} from "./festival-activity/sections/supply.js";
+export type { ElectricitySupply } from "./festival-activity/sections/supply.js";
 
 export type { Public as PublicGeneral } from "./festival-activity/sections/general.js";
 export type {

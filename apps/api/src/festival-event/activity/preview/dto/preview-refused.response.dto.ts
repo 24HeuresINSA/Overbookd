@@ -1,10 +1,16 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { PreviewReviewable, RefusedReviews } from "@overbookd/festival-event";
+import {
+  PreviewFestivalActivityReviewable,
+  RefusedReviews,
+} from "@overbookd/festival-event";
 import { REFUSED } from "@overbookd/festival-event-constants";
 import { ActivityRefusedReviewsResponseDto } from "../../review/dto/reviews.response.dto";
 import { ReviewablePreviewBaseResponseDto } from "./base-preview.response.dto";
 
-type RefusedPreview = Extract<PreviewReviewable, { status: typeof REFUSED }>;
+type RefusedPreview = Extract<
+  PreviewFestivalActivityReviewable,
+  { status: typeof REFUSED }
+>;
 
 export class RefusedPreviewFestivalActivityResponseDto
   extends ReviewablePreviewBaseResponseDto

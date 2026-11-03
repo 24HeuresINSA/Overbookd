@@ -209,8 +209,8 @@ function toAssigneeForDetails(
   const friends = allFriendsAssigned.reduce(
     (friends: BaseAssigneeForDetails[], friend) => {
       const friendIndex = friends.findIndex(({ id }) => friend.id === id);
-      const isAlredyListed = friendIndex !== MISSING_ITEM_INDEX;
-      if (isAlredyListed) return friends;
+      const isAlreadyListed = friendIndex !== MISSING_ITEM_INDEX;
+      if (isAlreadyListed) return friends;
 
       return [...friends, friend];
     },

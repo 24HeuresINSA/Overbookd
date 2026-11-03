@@ -1,7 +1,7 @@
 import {
-  type Draft,
+  type FestivalActivityDraft,
   type FestivalActivity,
-  type PreviewDraft,
+  type PreviewFestivalActivityDraft,
   type PreviewFestivalActivity,
   type ReviewStatus,
   type Reviewer,
@@ -61,7 +61,7 @@ export function castPreviewForCommunicationWithDate(
 
 function isHttpDraft(
   festivalActivity: HttpStringified<FestivalActivity>,
-): festivalActivity is HttpStringified<Draft> {
+): festivalActivity is HttpStringified<FestivalActivityDraft> {
   return festivalActivity.status === DRAFT;
 }
 
@@ -92,7 +92,7 @@ export function getActivityReviewerStatus(
 
 export function isDraftPreview(
   activity: PreviewFestivalActivity,
-): activity is PreviewDraft {
+): activity is PreviewFestivalActivityDraft {
   return activity.status === DRAFT;
 }
 

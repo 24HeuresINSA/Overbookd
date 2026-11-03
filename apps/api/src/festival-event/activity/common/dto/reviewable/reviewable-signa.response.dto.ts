@@ -1,10 +1,14 @@
 import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
-import { Location, Reviewable, Signage } from "@overbookd/festival-event";
+import {
+  Location,
+  FestivalActivityReviewable,
+  Signage,
+} from "@overbookd/festival-event";
 import { LocationResponseDto } from "../../../../common/dto/location.response.dto";
 import { LinkedSignageResponseDto } from "../signage.response.dto";
 import { UnlinkedSignageResponseDto } from "../signage.response.dto";
 
-type Signa = Reviewable["signa"];
+type Signa = FestivalActivityReviewable["signa"];
 export class SignaResponseDto implements Signa {
   @ApiProperty({ required: true, type: LocationResponseDto })
   location: Location;

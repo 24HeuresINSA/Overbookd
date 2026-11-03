@@ -3,7 +3,7 @@ import { updateItemToList } from "@overbookd/list";
 import { Availability } from "./volunteer-availability.js";
 import { AvailabilityError } from "./volunteer-availability.error.js";
 
-export class AvailabilityRegistery {
+export class AvailabilityRegistry {
   private _availabilities: Availability[] = [];
 
   private constructor(availabilities: Availability[]) {
@@ -12,12 +12,12 @@ export class AvailabilityRegistery {
 
   static fromAvailabilities(
     availabilities: Availability[],
-  ): AvailabilityRegistery {
-    return new AvailabilityRegistery(availabilities);
+  ): AvailabilityRegistry {
+    return new AvailabilityRegistry(availabilities);
   }
 
-  static init(): AvailabilityRegistery {
-    return new AvailabilityRegistery([]);
+  static init(): AvailabilityRegistry {
+    return new AvailabilityRegistry([]);
   }
 
   addPeriod(period: IProvidePeriod) {
@@ -40,7 +40,7 @@ export class AvailabilityRegistery {
       return availabilities;
     return this.mergeAvailabilities(
       availabilities.reduce(
-        AvailabilityRegistery.reduceToMergedAvailabilities,
+        AvailabilityRegistry.reduceToMergedAvailabilities,
         [] as Availability[],
       ),
     );
@@ -50,7 +50,7 @@ export class AvailabilityRegistery {
     availabilities: Availability[],
   ): boolean {
     return availabilities.some(
-      AvailabilityRegistery.isMergeableFromOneOf(availabilities),
+      AvailabilityRegistry.isMergeableFromOneOf(availabilities),
     );
   }
 
@@ -59,7 +59,7 @@ export class AvailabilityRegistery {
     availability: Availability,
   ): Availability[] {
     const mergeableAvailabilityIndex = availabilities.findIndex(
-      AvailabilityRegistery.isAvailabilityMergeableToOther(availability),
+      AvailabilityRegistry.isAvailabilityMergeableToOther(availability),
     );
     if (mergeableAvailabilityIndex === -1) {
       return [...availabilities, availability];
@@ -122,7 +122,7 @@ export class AvailabilityRegistery {
       availabilities
         .slice(startIndex + 1)
         .some(
-          AvailabilityRegistery.isAvailabilityMergeableToOther(availability),
+          AvailabilityRegistry.isAvailabilityMergeableToOther(availability),
         );
   }
 }

@@ -1,9 +1,12 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Adherent, PreviewDraft } from "@overbookd/festival-event";
+import {
+  Adherent,
+  PreviewFestivalActivityDraft,
+} from "@overbookd/festival-event";
 import { DRAFT } from "@overbookd/festival-event-constants";
 import { AdherentResponseDto } from "../../../common/dto/adherent.response.dto";
 
-export class DraftPreviewFestivalActivityResponseDto implements PreviewDraft {
+export class DraftPreviewFestivalActivityResponseDto implements PreviewFestivalActivityDraft {
   @ApiProperty({
     description: "The festival activity id",
     type: Number,

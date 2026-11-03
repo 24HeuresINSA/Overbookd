@@ -6,7 +6,7 @@ import {
 } from "@overbookd/festival-event-constants";
 import { FestivalActivity, Draft, Reviewable } from "../festival-activity.js";
 import {
-  PreviewFestivalActivity,
+  Preview,
   PreviewDraft,
   PreviewReviewable,
 } from "../festival-activity.js";
@@ -19,7 +19,7 @@ import { isDraft } from "../../festival-event.js";
 export class InMemoryPrepareFestivalActivityRepository implements PrepareFestivalActivityRepository {
   constructor(private festivalActivities: FestivalActivity[] = []) {}
 
-  findAll(): Promise<PreviewFestivalActivity[]> {
+  findAll(): Promise<Preview[]> {
     return Promise.resolve(this.festivalActivities.map(generatePreview));
   }
 
@@ -50,7 +50,7 @@ export class InMemoryPrepareFestivalActivityRepository implements PrepareFestiva
 
 function generatePreview<T extends FestivalActivity>(
   festivalActivity: T,
-): PreviewFestivalActivity {
+): Preview {
   return isDraft<FestivalActivity>(festivalActivity)
     ? generateDraftPreview(festivalActivity)
     : generateInReviewPreview(festivalActivity);

@@ -1,5 +1,5 @@
 import type {
-  Reviewable,
+  FestivalActivityReviewable,
   InquiryWithRequests,
   PublicGeneral,
   FestivalActivityKeyEvent as KeyEvent,
@@ -9,13 +9,13 @@ import { castTimeWindowWithDate } from "../cast-time-windows";
 import { withAtLeastOneTimeWindowWithDate } from "../cast-time-windows";
 
 function isPublic(
-  general: HttpStringified<Reviewable["general"]>,
+  general: HttpStringified<FestivalActivityReviewable["general"]>,
 ): general is HttpStringified<PublicGeneral> {
   return general.toPublish === true;
 }
 
 function hasRequests(
-  inquiry: HttpStringified<Reviewable["inquiry"]>,
+  inquiry: HttpStringified<FestivalActivityReviewable["inquiry"]>,
 ): inquiry is HttpStringified<InquiryWithRequests> {
   const { barriers, electricity, gears } = inquiry;
   const requests = barriers.length + electricity.length + gears.length;
@@ -23,7 +23,9 @@ function hasRequests(
 }
 
 export class CastReviewable {
-  static withDate(reviewable: HttpStringified<Reviewable>): Reviewable {
+  static withDate(
+    reviewable: HttpStringified<FestivalActivityReviewable>,
+  ): FestivalActivityReviewable {
     return {
       ...reviewable,
       general: this.generalWithDate(reviewable.general),
@@ -34,8 +36,8 @@ export class CastReviewable {
   }
 
   private static generalWithDate(
-    general: HttpStringified<Reviewable["general"]>,
-  ): Reviewable["general"] {
+    general: HttpStringified<FestivalActivityReviewable["general"]>,
+  ): FestivalActivityReviewable["general"] {
     if (isPublic(general)) {
       return withAtLeastOneTimeWindowWithDate(general);
     }
@@ -45,8 +47,8 @@ export class CastReviewable {
   }
 
   private static inquiryWithDate(
-    inquiry: HttpStringified<Reviewable["inquiry"]>,
-  ): Reviewable["inquiry"] {
+    inquiry: HttpStringified<FestivalActivityReviewable["inquiry"]>,
+  ): FestivalActivityReviewable["inquiry"] {
     if (hasRequests(inquiry)) {
       return withAtLeastOneTimeWindowWithDate(inquiry);
     }
@@ -56,8 +58,8 @@ export class CastReviewable {
   }
 
   private static feedbacksWithDate(
-    feedbacks: HttpStringified<Reviewable["feedbacks"]>,
-  ): Reviewable["feedbacks"] {
+    feedbacks: HttpStringified<FestivalActivityReviewable["feedbacks"]>,
+  ): FestivalActivityReviewable["feedbacks"] {
     return feedbacks.map((feedback) => ({
       ...feedback,
       publishedAt: new Date(feedback.publishedAt),

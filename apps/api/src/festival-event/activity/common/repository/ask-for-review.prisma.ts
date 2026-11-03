@@ -1,7 +1,7 @@
 import { PrismaService } from "../../../../prisma.service";
 import {
   FestivalActivity,
-  Reviewable,
+  FestivalActivityReviewable,
   AskForReviewFestivalActivityRepository,
   isDraft,
   FestivalActivityError,
@@ -25,7 +25,9 @@ export class PrismaAskForReview implements AskForReviewFestivalActivityRepositor
     return FestivalActivityBuilder.fromDatabase(activity).festivalActivity;
   }
 
-  async save(activity: Reviewable): Promise<Reviewable> {
+  async save(
+    activity: FestivalActivityReviewable,
+  ): Promise<FestivalActivityReviewable> {
     const updated = await this.prisma.festivalActivity.update({
       where: buildFestivalActivityCondition(activity.id),
       select: SELECT_FESTIVAL_ACTIVITY,

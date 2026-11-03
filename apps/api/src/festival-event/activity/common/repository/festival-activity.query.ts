@@ -1,9 +1,9 @@
 import { Prisma } from "../../../../generated/prisma/client";
 import {
-  Draft,
+  FestivalActivityDraft,
   Feedback,
   FestivalActivity,
-  Reviewable,
+  FestivalActivityReviewable,
   ReviewStatus,
   Reviewer,
   TimeWindow,
@@ -171,7 +171,7 @@ export const SELECT_FESTIVAL_ACTIVITY = {
 };
 
 export class FestivalActivityQueryBuilder {
-  static create(activity: Draft) {
+  static create(activity: FestivalActivityDraft) {
     return {
       ...databaseFestivalActivityWithoutListsMapping(activity),
       generalTimeWindows: {
@@ -234,7 +234,7 @@ export class FestivalActivityQueryBuilder {
     };
   }
 
-  static askForReview(activity: Reviewable) {
+  static askForReview(activity: FestivalActivityReviewable) {
     const reviews = this.upsertReviews(activity);
     const events = this.upsertHistory(activity);
     return {
@@ -381,7 +381,7 @@ export class FestivalActivityQueryBuilder {
     };
   }
 
-  private static upsertReviews(activity: Reviewable) {
+  private static upsertReviews(activity: FestivalActivityReviewable) {
     const reviews = Object.entries(activity.reviews)
       .filter((_entry): _entry is [Reviewer<"FA">, ReviewStatus<"FA">] => true)
       .map(([team, status]) => ({ team, status }));

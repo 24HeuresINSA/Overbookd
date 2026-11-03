@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Draft } from "@overbookd/festival-event";
+import { FestivalActivityDraft } from "@overbookd/festival-event";
 
-export type Security = Draft["security"];
+export type Security = FestivalActivityDraft["security"];
 export class SecurityDto implements Security {
   @ApiProperty({
     description: "Describe safety features for this festival activity",

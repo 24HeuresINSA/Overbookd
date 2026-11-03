@@ -1,10 +1,19 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Reviewable, TimeWindow } from "@overbookd/festival-event";
+import {
+  FestivalActivityReviewable,
+  TimeWindow,
+} from "@overbookd/festival-event";
 import { WithAtLeastOneItem } from "@overbookd/list";
 import { TimeWindowResponseDto } from "../../../../common/dto/time-window.response.dto";
 
-type PublicGeneral = Extract<Reviewable["general"], { toPublish: true }>;
-type PrivateGeneral = Extract<Reviewable["general"], { toPublish: false }>;
+type PublicGeneral = Extract<
+  FestivalActivityReviewable["general"],
+  { toPublish: true }
+>;
+type PrivateGeneral = Extract<
+  FestivalActivityReviewable["general"],
+  { toPublish: false }
+>;
 
 export class PublicReviewableGeneralResponseDto implements PublicGeneral {
   @ApiProperty({ required: true })

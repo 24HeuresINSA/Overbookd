@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import {
-  Draft,
+  FestivalActivityDraft,
   InquiryWithPotentialRequests,
   Feedback,
   FestivalActivityKeyEvent as KeyEvent,
@@ -16,7 +16,7 @@ import { SupplyDto, Supply } from "./draft-supply.response.dto";
 import { InquiryDto } from "./draft-inquiry.response.dto";
 import { FestivalTaskResponseDto } from "../festival-task.response.dto";
 
-export class DraftFestivalActivityResponseDto implements Draft {
+export class DraftFestivalActivityResponseDto implements FestivalActivityDraft {
   @ApiProperty()
   id: number;
 
@@ -78,5 +78,5 @@ export class DraftFestivalActivityResponseDto implements Draft {
     isArray: true,
     type: FestivalTaskResponseDto,
   })
-  tasks: Draft["tasks"];
+  tasks: FestivalActivityDraft["tasks"];
 }

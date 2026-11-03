@@ -13,6 +13,5 @@ allowBuilds:
   '@prisma/client': true
   '@prisma/engines': true
   '@scarf/scarf': false
-  bcrypt: true
   esbuild: true
   prisma: true

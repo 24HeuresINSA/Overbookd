@@ -1,9 +1,6 @@
 import { InquiryOwner } from "../sections/inquiry.js";
-import {
-  ElectricityConnection,
-  ElectricitySupply,
-  Supply,
-} from "../sections/supply.js";
+import { ElectricityConnection } from "@overbookd/festival-event-constants";
+import { ElectricitySupply, Supply } from "../sections/supply.js";
 import { Signage, SignageCatalogItem, SignageType } from "../sections/signa.js";
 import { Location } from "../../common/location.js";
 import { BaseInquiryRequest } from "../../common/inquiry-request.js";

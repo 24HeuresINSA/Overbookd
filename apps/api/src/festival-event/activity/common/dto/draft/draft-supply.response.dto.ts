@@ -1,8 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Draft, ElectricitySupply } from "@overbookd/festival-event";
+import {
+  FestivalActivityDraft,
+  ElectricitySupply,
+} from "@overbookd/festival-event";
 import { ElectricitySupplyResponseDto } from "../electricity-supply.response.dto";
 
-export type Supply = Draft["supply"];
+export type Supply = FestivalActivityDraft["supply"];
 export class SupplyDto implements Supply {
   @ApiProperty({
     isArray: true,

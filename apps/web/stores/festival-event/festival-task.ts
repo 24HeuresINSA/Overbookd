@@ -41,8 +41,8 @@ import {
   castAssignmentWithDate,
 } from "~/utils/assignment/assignment";
 import { isHttpError } from "~/utils/http/http-error.utils";
-import { updateItemToList } from "@overbookd/list";
 import { FestivalActivityRepository } from "~/repositories/festival-event/festival-activity.repository";
+import { replaceExistingPreview } from "~/utils/festival-event/preview.utils";
 
 const repo = FestivalTaskRepository;
 
@@ -123,15 +123,12 @@ export const useFestivalTaskStore = defineStore("festival-task", {
 
     updatePreviousPreview(task: FestivalTaskReviewable) {
       const preview = previewOfTask(task);
-      const index = this.tasks.forAll.findIndex(({ id }) => id === task.id);
-      this.tasks.forAll = updateItemToList(this.tasks.forAll, index, preview);
+      this.tasks.forAll = replaceExistingPreview(this.tasks.forAll, preview);
     },
 
     updateMyPreview(task: FestivalTaskReviewable) {
       const preview = previewOfTask(task);
-      const index = this.tasks.mine.findIndex(({ id }) => id === task.id);
-      if (index === -1) return;
-      this.tasks.mine = updateItemToList(this.tasks.mine, index, preview);
+      this.tasks.mine = replaceExistingPreview(this.tasks.mine, preview);
     },
 
     updateSelectedTaskStatus(task: FestivalTaskReviewable) {

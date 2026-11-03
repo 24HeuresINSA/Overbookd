@@ -1,8 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Draft, TimeWindow } from "@overbookd/festival-event";
+import { FestivalActivityDraft, TimeWindow } from "@overbookd/festival-event";
 import { TimeWindowResponseDto } from "../../../../common/dto/time-window.response.dto";
 
-export type General = Draft["general"];
+export type General = FestivalActivityDraft["general"];
 export class GeneralDto implements General {
   @ApiProperty({
     description: "Festival activity name",

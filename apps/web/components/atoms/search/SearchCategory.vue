@@ -11,7 +11,7 @@
     clearable
     return-object
     no-data-text="Aucune categorie correspondante"
-    @update:search-input="searchCategory"
+    @update:search="searchCategory"
   >
     <template #item="{ props, item }">
       <v-list-item

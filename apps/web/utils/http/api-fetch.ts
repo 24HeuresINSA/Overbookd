@@ -1,6 +1,6 @@
 import type { HttpStringified } from "@overbookd/http";
 import { CSV, ICAL, JSON as JSON_TYPE, PDF } from "@overbookd/http";
-import { useOidcUtils } from "~/composable/useOidcUtils";
+import { useOidcUtils } from "../../composable/useOidcUtils";
 
 type MethodWithBody = "POST" | "PUT" | "PATCH";
 type MethodWithoutBody = "GET" | "DELETE";
@@ -81,11 +81,30 @@ async function handleFetchError(
 ): Promise<Error> {
   if (res.status === 440) useOidcUtils().login();
 
-  const error = await res.json();
+  const responseBody = await res.text();
+  let responseMessage: string | undefined;
+  if (responseBody) {
+    try {
+      const error: unknown = JSON.parse(responseBody);
+      if (typeof error === "object" && error !== null && "message" in error) {
+        const { message } = error;
+        if (typeof message === "string") {
+          responseMessage = message;
+        } else if (
+          Array.isArray(message) &&
+          message.every((item) => typeof item === "string")
+        ) {
+          responseMessage = message.join(", ");
+        }
+      }
+    } catch (error) {
+      if (!(error instanceof SyntaxError)) throw error;
+    }
+  }
   const isServerError = res.status >= 500 && res.status < 600;
   const message = isServerError
     ? serverErrorMessage
-    : error.message || res.statusText;
+    : responseMessage || res.statusText;
 
   sendFailureNotification(message);
   return new Error(message);

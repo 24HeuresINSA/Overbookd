@@ -36,7 +36,7 @@ type Action =
 
 export type KeyEvent = {
   action: Action;
-  by: PreviewFestivalActivity["adherent"];
+  by: Preview["adherent"];
   at: Date;
   description: string;
 };
@@ -125,7 +125,7 @@ export type PreviewDraft = PreviewBase & {
   team: Draft["inCharge"]["team"];
 };
 
-export type PreviewFestivalActivity = PreviewReviewable | PreviewDraft;
+export type Preview = PreviewReviewable | PreviewDraft;
 
 export type FestivalTaskChild = {
   id: number;

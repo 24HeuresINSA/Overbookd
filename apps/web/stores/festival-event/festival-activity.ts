@@ -18,9 +18,9 @@ import {
   type InquiryRequest,
   type AssignDrive,
   defaultDraft,
-  type Draft,
+  type FestivalActivityDraft,
   previewOfActivity,
-  type Reviewable,
+  type FestivalActivityReviewable,
   getNameFromReviewer,
 } from "@overbookd/festival-event";
 import type {
@@ -44,7 +44,7 @@ import {
 } from "~/utils/festival-event/festival-activity/festival-activity.utils";
 import type { AddInquiryRequestForm } from "@overbookd/http";
 import { isHttpError } from "~/utils/http/http-error.utils";
-import { updateItemToList } from "@overbookd/list";
+import { replaceExistingPreview } from "~/utils/festival-event/preview.utils";
 
 const repo = FestivalActivityRepository;
 
@@ -88,7 +88,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       this.activities.mine = res;
     },
 
-    addActivityToPreviews(activity: Draft) {
+    addActivityToPreviews(activity: FestivalActivityDraft) {
       const exists = this.activities.forAll.some(
         ({ id }) => activity.id === id,
       );
@@ -97,32 +97,23 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       this.activities.forAll = [...this.activities.forAll, preview];
     },
 
-    updatePreviousPreview(activity: Reviewable) {
+    updatePreviousPreview(activity: FestivalActivityReviewable) {
       const preview = previewOfActivity(activity);
-      const index = this.activities.forAll.findIndex(
-        ({ id }) => id === activity.id,
-      );
-      this.activities.forAll = updateItemToList(
+      this.activities.forAll = replaceExistingPreview(
         this.activities.forAll,
-        index,
         preview,
       );
     },
 
-    updateMyPreview(activity: Reviewable) {
+    updateMyPreview(activity: FestivalActivityReviewable) {
       const preview = previewOfActivity(activity);
-      const index = this.activities.mine.findIndex(
-        ({ id }) => id === activity.id,
-      );
-      if (index === -1) return;
-      this.activities.mine = updateItemToList(
+      this.activities.mine = replaceExistingPreview(
         this.activities.mine,
-        index,
         preview,
       );
     },
 
-    updateSelectedActivityStatus(activity: Reviewable) {
+    updateSelectedActivityStatus(activity: FestivalActivityReviewable) {
       if (this.selectedActivity.id !== activity.id) return;
       this.selectedActivity = {
         ...this.selectedActivity,

@@ -37,6 +37,7 @@
 
 <script lang="ts" setup>
 import { Bar } from "vue-chartjs";
+import { useTheme } from "vuetify";
 import type {
   ChartData,
   ChartOptions,
@@ -44,7 +45,6 @@ import type {
   ActiveElement,
 } from "chart.js";
 import type { Statistics } from "@overbookd/http";
-import { useTheme } from "vuetify";
 import type { FestivalActivity, FestivalTask } from "@overbookd/festival-event";
 import {
   DRAFT,
@@ -67,7 +67,6 @@ import {
   type FestivalEventStatus,
   isFestivalActivityStatus,
 } from "~/utils/festival-event/festival-event.utils";
-import { hexToRGBA } from "~/utils/hex-to-rgba.utils";
 import { FA_URL, FT_URL } from "@overbookd/web-page";
 import { CTMA_URL } from "~/utils/navigation/url.constant";
 import { READ_FA, READ_FT } from "@overbookd/permission";
@@ -83,9 +82,9 @@ import { Edition } from "@overbookd/time";
 
 useHead({ title: "Statistiques des FA" });
 
-const theme = useTheme();
 const router = useRouter();
 const route = useRoute();
+const theme = useTheme();
 const myStore = useMyStore();
 const statsStore = useFestivalEventStatsStore();
 const teamStore = useTeamStore();
@@ -203,8 +202,8 @@ const maxTotal = computed<number>(() =>
   ),
 );
 const options = computed<ChartOptions<"bar">>(() => {
-  const textColor = theme.global.current.value.colors["on-surface"];
-  const gridColor = hexToRGBA(textColor, 0.1);
+  const textColor = theme.current.value.colors["on-surface"];
+  const gridColor = `${textColor}1A`;
 
   return {
     responsive: true,
