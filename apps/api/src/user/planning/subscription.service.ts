@@ -11,7 +11,7 @@ export class SubscriptionService {
 
   async subscribe(volunteerId: number): Promise<PlanningSubscription> {
     const secret = await this.secretService.generateSecret(volunteerId);
-    const link = `webcal://${process.env.DOMAIN}/api/planning/subscribe/${secret}`;
+    const link = `webcal://${process.env.DOMAIN}/ob-api/planning/subscribe/${secret}`;
     return { link };
   }
 }
