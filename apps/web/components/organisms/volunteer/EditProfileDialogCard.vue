@@ -135,7 +135,11 @@
 
 <script lang="ts" setup>
 import { useObjectUrl } from "@vueuse/core";
-import { IMAGE_EXTENSIONS, type Preference } from "@overbookd/http";
+import {
+  IMAGE_EXTENSIONS,
+  ZITADEL_IMAGE_MAX_SIZE,
+  type Preference,
+} from "@overbookd/http";
 import {
   assignmentPreferences,
   NO_PREF,
@@ -155,6 +159,7 @@ import {
   maxDate,
   maxLength,
 } from "~/utils/rules/input.rules";
+import { compressImage } from "~/utils/file/image.utils";
 
 const myStore = useMyStore();
 const preferenceStore = usePreferenceStore();
@@ -235,8 +240,15 @@ const save = async () => {
 
   const image = profilePicture.value;
   if (image) {
+    const compressedImage = await compressImage(image, ZITADEL_IMAGE_MAX_SIZE);
+    if (compressedImage !== image) {
+      const maxSizeInKo = Math.round(ZITADEL_IMAGE_MAX_SIZE / 1024);
+      sendInfoNotification(
+        `Ta photo a été compressée pour respecter la limite de ${maxSizeInKo} Ko 🗜️`,
+      );
+    }
     const profilePictureForm = new FormData();
-    profilePictureForm.append("file", image, image.name);
+    profilePictureForm.append("file", compressedImage, compressedImage.name);
     await myStore.updateMyProfilePicture(profilePictureForm);
   }
 

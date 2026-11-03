@@ -1,7 +1,15 @@
-export const IMAGE_MAX_SIZE = 512 * 1024;
+export const PNG_MIME_TYPE = "image/png";
+export const JPEG_MIME_TYPE = "image/jpeg";
+export const WEBP_MIME_TYPE = "image/webp";
+export const GIF_MIME_TYPE = "image/gif";
 export const IMAGE_EXTENSIONS = [
-  "image/png",
-  "image/jpeg",
-  "image/webp",
-  "image/gif",
+  PNG_MIME_TYPE,
+  JPEG_MIME_TYPE,
+  WEBP_MIME_TYPE,
+  GIF_MIME_TYPE,
 ];
+export const ANIMATED_MIME_TYPES = [GIF_MIME_TYPE, WEBP_MIME_TYPE];
+
+export const IMAGE_MAX_UPLOAD_SIZE = 20 * 1024 * 1024;
+export const ZITADEL_IMAGE_MAX_SIZE = 512 * 1024;
+export const API_IMAGE_MAX_SIZE = 2 * 1024 * 1024;
