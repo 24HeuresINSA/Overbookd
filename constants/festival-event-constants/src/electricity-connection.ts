@@ -10,7 +10,7 @@ export const P17_63A_TRI = "P17_63A_TRI";
 export const P17_63A_TETRA = "P17_63A_TETRA";
 export const P17_125A_TETRA = "P17_125A_TETRA";
 
-export const supplyConnections = [
+export const electricityConnections = [
   PC16_Prise_classique,
   P17_16A_MONO,
   P17_16A_TRI,
@@ -23,3 +23,5 @@ export const supplyConnections = [
   P17_63A_TETRA,
   P17_125A_TETRA,
 ] as const;
+
+export type ElectricityConnection = (typeof electricityConnections)[number];

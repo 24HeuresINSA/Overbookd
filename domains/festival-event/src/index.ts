@@ -59,10 +59,7 @@ export type {
   WithInquiries,
 } from "./festival-activity/sections/inquiry.js";
 
-export type {
-  ElectricitySupply,
-  ElectricityConnection,
-} from "./festival-activity/sections/supply.js";
+export type { ElectricitySupply } from "./festival-activity/sections/supply.js";
 
 export type { Public as PublicGeneral } from "./festival-activity/sections/general.js";
 export type {

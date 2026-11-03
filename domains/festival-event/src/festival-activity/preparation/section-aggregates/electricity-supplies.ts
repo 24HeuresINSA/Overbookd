@@ -6,10 +6,8 @@ import {
   PrepareElectricitySupplyCreation,
   PrepareElectricitySupplyUpdate,
 } from "../prepare-festival-activity.model.js";
-import {
-  ElectricityConnection,
-  ElectricitySupply,
-} from "../../sections/supply.js";
+import { ElectricitySupply } from "../../sections/supply.js";
+import { ElectricityConnection } from "@overbookd/festival-event-constants";
 import { updateItemToList } from "@overbookd/list";
 import { SlugifyService } from "@overbookd/slugify";
 

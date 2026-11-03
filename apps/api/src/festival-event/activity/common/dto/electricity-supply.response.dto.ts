@@ -1,10 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
+import type { ElectricitySupply } from "@overbookd/festival-event";
 import {
+  electricityConnections,
   ElectricityConnection,
-  ElectricitySupply,
-} from "@overbookd/festival-event";
-import {
-  supplyConnections,
   PC16_Prise_classique,
 } from "@overbookd/festival-event-constants";
 
@@ -13,7 +11,7 @@ export class ElectricitySupplyResponseDto implements ElectricitySupply {
   id: string;
 
   @ApiProperty({
-    enum: supplyConnections,
+    enum: electricityConnections,
     example: PC16_Prise_classique,
   })
   connection: ElectricityConnection;

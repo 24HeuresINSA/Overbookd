@@ -1,14 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
-import {
-  ElectricityConnection,
-  PrepareElectricitySupplyCreation,
-} from "@overbookd/festival-event";
+import { PrepareElectricitySupplyCreation } from "@overbookd/festival-event";
 import { IsEnum, IsOptional, IsPositive, IsString } from "class-validator";
-import { supplyConnections } from "@overbookd/festival-event-constants";
+import {
+  electricityConnections,
+  ElectricityConnection,
+} from "@overbookd/festival-event-constants";
 
 export class AddElectricitySupplyRequestDto implements PrepareElectricitySupplyCreation {
-  @ApiProperty({ required: true, enum: supplyConnections })
-  @IsEnum(supplyConnections, {
+  @ApiProperty({ required: true, enum: electricityConnections })
+  @IsEnum(electricityConnections, {
     message: () => "Le type de connexion est invalide",
   })
   connection: ElectricityConnection;

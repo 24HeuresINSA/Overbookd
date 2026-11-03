@@ -88,5 +88,6 @@ export {
   P17_63A_TRI,
   P17_63A_TETRA,
   P17_125A_TETRA,
-  supplyConnections,
-} from "./supply";
+  electricityConnections,
+} from "./electricity-connection";
+export type { ElectricityConnection } from "./electricity-connection";
