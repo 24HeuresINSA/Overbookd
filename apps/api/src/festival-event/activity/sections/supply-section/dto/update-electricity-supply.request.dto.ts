@@ -10,7 +10,7 @@ import {
   IsString,
   ValidateIf,
 } from "class-validator";
-import { connections } from "./connections";
+import { supplyConnections } from "@overbookd/festival-event-constants";
 
 export type UpdateElectricitySupplyRequest = Omit<
   PrepareElectricitySupplyUpdate,
@@ -18,9 +18,11 @@ export type UpdateElectricitySupplyRequest = Omit<
 >;
 
 export class UpdateElectricitySupplyRequestDto implements UpdateElectricitySupplyRequest {
-  @ApiProperty({ required: false, enum: connections })
+  @ApiProperty({ required: false, enum: supplyConnections })
   @IsOptional()
-  @IsEnum(connections, { message: () => "Le type de connexion est invalide" })
+  @IsEnum(supplyConnections, {
+    message: () => "Le type de connexion est invalide",
+  })
   connection?: ElectricityConnection;
 
   @ApiProperty({ required: false, example: "Lampe" })

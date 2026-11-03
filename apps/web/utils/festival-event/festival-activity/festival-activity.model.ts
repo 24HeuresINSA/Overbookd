@@ -1,6 +1,8 @@
 import {
   type ElectricityConnection,
   type FestivalActivity,
+} from "@overbookd/festival-event";
+import {
   P17_125A_TETRA,
   P17_16A_MONO,
   P17_16A_TETRA,
@@ -12,7 +14,7 @@ import {
   P17_63A_TETRA,
   P17_63A_TRI,
   PC16_Prise_classique,
-} from "@overbookd/festival-event";
+} from "@overbookd/festival-event-constants";
 import {
   DRAFT,
   IN_REVIEW,

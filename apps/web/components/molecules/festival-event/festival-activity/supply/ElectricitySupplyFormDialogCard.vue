@@ -62,11 +62,11 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  type ElectricityConnection,
-  type ElectricitySupply,
-  PC16_Prise_classique,
+import type {
+  ElectricityConnection,
+  ElectricitySupply,
 } from "@overbookd/festival-event";
+import { PC16_Prise_classique } from "@overbookd/festival-event-constants";
 import {
   electricityConnectionLabels,
   type ElectricityConnectionWithLabel,

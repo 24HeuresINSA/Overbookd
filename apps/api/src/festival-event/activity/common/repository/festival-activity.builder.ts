@@ -1,13 +1,13 @@
 import {
-  Draft,
+  FestivalActivityDraft,
   FestivalActivity,
   FestivalActivityWithoutStatus,
-  Reviewable,
+  FestivalActivityReviewable,
   ReviewableSpecification,
   InquiryRequest,
-  PreviewDraft,
+  PreviewFestivalActivityDraft,
   PreviewFestivalActivity,
-  PreviewReviewable,
+  PreviewFestivalActivityReviewable,
   ReviewStatus,
   Reviewer,
   isValidatedReviews,
@@ -239,8 +239,12 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
 }
 
 class ReviewableBuilder
-  extends FestivalActivityBuilder<Reviewable>
-  implements VisualizeFestivalActivity<Reviewable, PreviewReviewable>
+  extends FestivalActivityBuilder<FestivalActivityReviewable>
+  implements
+    VisualizeFestivalActivity<
+      FestivalActivityReviewable,
+      PreviewFestivalActivityReviewable
+    >
 {
   static init(activityWithoutStatus: FestivalActivityWithoutStatus) {
     if (!ReviewableSpecification.isSatisfiedBy(activityWithoutStatus)) {
@@ -270,7 +274,7 @@ class ReviewableBuilder
     });
   }
 
-  get preview(): PreviewReviewable {
+  get preview(): PreviewFestivalActivityReviewable {
     const supply = this.activity.supply;
     const base = {
       id: this.activity.id,
@@ -297,8 +301,12 @@ class ReviewableBuilder
 }
 
 export class DraftBuilder
-  extends FestivalActivityBuilder<Draft>
-  implements VisualizeFestivalActivity<Draft, PreviewDraft>
+  extends FestivalActivityBuilder<FestivalActivityDraft>
+  implements
+    VisualizeFestivalActivity<
+      FestivalActivityDraft,
+      PreviewFestivalActivityDraft
+    >
 {
   static init(activityWithoutStatus: FestivalActivityWithoutStatus) {
     return new DraftBuilder({ ...activityWithoutStatus, status: DRAFT });
@@ -306,7 +314,10 @@ export class DraftBuilder
 
   static fromDatabase(
     activityData: DatabaseFestivalActivity,
-  ): VisualizeFestivalActivity<Draft, PreviewDraft> {
+  ): VisualizeFestivalActivity<
+    FestivalActivityDraft,
+    PreviewFestivalActivityDraft
+  > {
     const activityWithoutStatus = this.buildActivityWithoutStatus(activityData);
     return this.init(activityWithoutStatus);
   }

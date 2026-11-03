@@ -1,6 +1,6 @@
 import {
   CreateFestivalActivityRepository,
-  Draft,
+  FestivalActivityDraft,
 } from "@overbookd/festival-event";
 import { PrismaService } from "../../../../prisma.service";
 import {
@@ -11,7 +11,9 @@ import { DraftBuilder } from "./festival-activity.builder";
 
 export class PrismaCreateFestivalActivities implements CreateFestivalActivityRepository {
   constructor(private readonly prisma: PrismaService) {}
-  async create(activity: Draft): Promise<Draft> {
+  async create(
+    activity: FestivalActivityDraft,
+  ): Promise<FestivalActivityDraft> {
     const saved = await this.prisma.festivalActivity.create({
       select: SELECT_FESTIVAL_ACTIVITY,
       data: FestivalActivityQueryBuilder.create(activity),

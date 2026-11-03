@@ -1,9 +1,9 @@
 import type { Event } from "@overbookd/event";
 import {
   Adherent,
-  Draft,
-  Refused,
-  Reviewable,
+  FestivalActivityDraft as Draft,
+  FestivalActivityRefused as Refused,
+  FestivalActivityReviewable as Reviewable,
 } from "@overbookd/festival-event";
 
 export const FESTIVAL_ACTIVITY_CREATED = "festival-activity-created";

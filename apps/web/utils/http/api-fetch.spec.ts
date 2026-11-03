@@ -17,7 +17,7 @@ describe("apiFetch error handling", () => {
     notifyFailure.mockReset();
   });
 
-  it("uses the configured message for non-JSON server errors", async () => {
+  it("should use the configured message for non-JSON server errors", async () => {
     vi.stubGlobal("sendFailureNotification", notifyFailure);
     vi.stubGlobal(
       "fetch",
@@ -39,7 +39,7 @@ describe("apiFetch error handling", () => {
     expect(notifyFailure).toHaveBeenCalledWith("Server unavailable");
   });
 
-  it("uses a JSON API message for client errors", async () => {
+  it("should use a JSON API message for client errors", async () => {
     vi.stubGlobal("sendFailureNotification", notifyFailure);
     vi.stubGlobal(
       "fetch",
@@ -60,7 +60,7 @@ describe("apiFetch error handling", () => {
     expect(notifyFailure).toHaveBeenCalledWith("Invalid request");
   });
 
-  it("falls back to the HTTP status text for malformed client error bodies", async () => {
+  it("should fall back to the HTTP status text for malformed client error bodies", async () => {
     vi.stubGlobal("sendFailureNotification", notifyFailure);
     vi.stubGlobal(
       "fetch",

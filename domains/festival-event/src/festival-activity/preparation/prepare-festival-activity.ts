@@ -19,7 +19,7 @@ import {
   PrepareSupplyUpdate,
 } from "./prepare-festival-activity.model.js";
 import { FestivalActivity } from "../festival-activity.js";
-import { PreviewFestivalActivity } from "../festival-activity.js";
+import { Preview } from "../festival-activity.js";
 import { ElectricitySupply } from "../sections/supply.js";
 import { Signage } from "../sections/signa.js";
 import { Contractor } from "../sections/in-charge.js";
@@ -30,7 +30,7 @@ import { PrepareDraftFestivalActivity } from "./prepare-draft-festival-activity.
 import { isDraft } from "../../festival-event.js";
 
 export type PrepareFestivalActivityRepository = {
-  findAll(): Promise<PreviewFestivalActivity[]>;
+  findAll(): Promise<Preview[]>;
   findById(id: FestivalActivity["id"]): Promise<FestivalActivity | null>;
   save(activity: FestivalActivity): Promise<FestivalActivity>;
 };
@@ -79,7 +79,7 @@ export class PrepareFestivalActivity {
     private readonly festivalActivities: PrepareFestivalActivityRepository,
   ) {}
 
-  findAll(): Promise<PreviewFestivalActivity[]> {
+  findAll(): Promise<Preview[]> {
     return this.festivalActivities.findAll();
   }
 

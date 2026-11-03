@@ -1,9 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Adherent, Contractor, Draft } from "@overbookd/festival-event";
+import {
+  Adherent,
+  Contractor,
+  FestivalActivityDraft,
+} from "@overbookd/festival-event";
 import { AdherentResponseDto } from "../../../../common/dto/adherent.response.dto";
 import { ContractorResponseDto } from "../contractor.response.dto";
 
-export type InCharge = Draft["inCharge"];
+export type InCharge = FestivalActivityDraft["inCharge"];
 export class InChargeDto implements InCharge {
   @ApiProperty({
     description: "Adherent in charge of this festival activity",

@@ -4,11 +4,13 @@ import {
   PrepareElectricitySupplyCreation,
 } from "@overbookd/festival-event";
 import { IsEnum, IsOptional, IsPositive, IsString } from "class-validator";
-import { connections } from "./connections";
+import { supplyConnections } from "@overbookd/festival-event-constants";
 
 export class AddElectricitySupplyRequestDto implements PrepareElectricitySupplyCreation {
-  @ApiProperty({ required: true, enum: connections })
-  @IsEnum(connections, { message: () => "Le type de connexion est invalide" })
+  @ApiProperty({ required: true, enum: supplyConnections })
+  @IsEnum(supplyConnections, {
+    message: () => "Le type de connexion est invalide",
+  })
   connection: ElectricityConnection;
 
   @ApiProperty({ required: true, example: "Lampe" })

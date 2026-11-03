@@ -1,11 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { PreviewReviewable, ValidatedReviews } from "@overbookd/festival-event";
+import {
+  PreviewFestivalActivityReviewable,
+  ValidatedReviews,
+} from "@overbookd/festival-event";
 import { VALIDATED } from "@overbookd/festival-event-constants";
 import { ActivityValidatedReviewsResponseDto } from "../../review/dto/reviews.response.dto";
 import { ReviewablePreviewBaseResponseDto } from "./base-preview.response.dto";
 
 type ValidatedPreview = Extract<
-  PreviewReviewable,
+  PreviewFestivalActivityReviewable,
   { status: typeof VALIDATED }
 >;
 

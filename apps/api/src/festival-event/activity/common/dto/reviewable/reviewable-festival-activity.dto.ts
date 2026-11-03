@@ -1,13 +1,13 @@
 import { ApiProperty, getSchemaPath } from "@nestjs/swagger";
 import {
   Feedback,
-  InReview,
+  FestivalActivityInReview,
   InReviewReviews,
   FestivalActivityKeyEvent as KeyEvent,
-  Refused,
+  FestivalActivityRefused,
   RefusedReviews,
-  Reviewable,
-  Validated,
+  FestivalActivityReviewable,
+  FestivalActivityValidated,
   ValidatedReviews,
 } from "@overbookd/festival-event";
 import {
@@ -35,7 +35,7 @@ import { FestivalTaskResponseDto } from "../festival-task.response.dto";
 
 class ReviewableBaseResponseDto {
   @ApiProperty({ required: true })
-  id: Reviewable["id"];
+  id: FestivalActivityReviewable["id"];
 
   @ApiProperty({
     required: true,
@@ -44,22 +44,22 @@ class ReviewableBaseResponseDto {
       { $ref: getSchemaPath(PrivateReviewableGeneralResponseDto) },
     ],
   })
-  general: Reviewable["general"];
+  general: FestivalActivityReviewable["general"];
 
   @ApiProperty({ required: true, type: InChargeResponseDto })
-  inCharge: Reviewable["inCharge"];
+  inCharge: FestivalActivityReviewable["inCharge"];
 
   @ApiProperty({ required: true, type: SignaResponseDto })
-  signa: Reviewable["signa"];
+  signa: FestivalActivityReviewable["signa"];
 
   @ApiProperty({ required: true, type: SecurityResponseDto })
-  security: Reviewable["security"];
+  security: FestivalActivityReviewable["security"];
 
   @ApiProperty({ required: true, type: SupplyResponseDto })
-  supply: Reviewable["supply"];
+  supply: FestivalActivityReviewable["supply"];
 
   @ApiProperty({ required: true, type: ReviewableInquiryResponseDto })
-  inquiry: Reviewable["inquiry"];
+  inquiry: FestivalActivityReviewable["inquiry"];
 
   @ApiProperty({ required: true, isArray: true, type: FeedbackResponseDto })
   feedbacks: Feedback[];
@@ -76,12 +76,12 @@ class ReviewableBaseResponseDto {
     isArray: true,
     type: FestivalTaskResponseDto,
   })
-  tasks: Reviewable["tasks"];
+  tasks: FestivalActivityReviewable["tasks"];
 }
 
 export class RefusedFestivalActivityResponseDto
   extends ReviewableBaseResponseDto
-  implements Refused
+  implements FestivalActivityRefused
 {
   @ApiProperty({ required: true, example: REFUSED })
   status: typeof REFUSED;
@@ -91,7 +91,7 @@ export class RefusedFestivalActivityResponseDto
 }
 export class InReviewFestivalActivityResponseDto
   extends ReviewableBaseResponseDto
-  implements InReview
+  implements FestivalActivityInReview
 {
   @ApiProperty({ required: true, example: IN_REVIEW })
   status: typeof IN_REVIEW;
@@ -102,7 +102,7 @@ export class InReviewFestivalActivityResponseDto
 
 export class ValidatedFestivalActivityResponseDto
   extends ReviewableBaseResponseDto
-  implements Validated
+  implements FestivalActivityValidated
 {
   @ApiProperty({ required: true, example: VALIDATED })
   status: typeof VALIDATED;

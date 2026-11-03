@@ -1,9 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Draft, Signage, Location } from "@overbookd/festival-event";
+import {
+  FestivalActivityDraft,
+  Signage,
+  Location,
+} from "@overbookd/festival-event";
 import { UnlinkedSignageResponseDto } from "../signage.response.dto";
 import { LocationResponseDto } from "../../../../common/dto/location.response.dto";
 
-export type Signa = Draft["signa"];
+export type Signa = FestivalActivityDraft["signa"];
 export class SignaDto implements Signa {
   @ApiProperty({
     description: "Define where this festival activity take place",

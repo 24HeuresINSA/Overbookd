@@ -1,6 +1,6 @@
 import {
   FestivalActivity,
-  PreviewFestivalActivity,
+  Preview,
   Draft,
   PreviewDraft,
   InReview,
@@ -16,7 +16,7 @@ type FestivalActivityOf<Status extends FestivalActivity["status"]> = Extract<
   { status: Status }
 >;
 type PreviewOf<Status extends FestivalActivity["status"]> = Extract<
-  PreviewFestivalActivity,
+  Preview,
   { status: Status }
 >;
 type ToPreview<Status extends FestivalActivity["status"]> = (

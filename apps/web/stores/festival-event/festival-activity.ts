@@ -18,9 +18,9 @@ import {
   type InquiryRequest,
   type AssignDrive,
   defaultDraft,
-  type Draft,
+  type FestivalActivityDraft,
   previewOfActivity,
-  type Reviewable,
+  type FestivalActivityReviewable,
   getNameFromReviewer,
 } from "@overbookd/festival-event";
 import type {
@@ -88,7 +88,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       this.activities.mine = res;
     },
 
-    addActivityToPreviews(activity: Draft) {
+    addActivityToPreviews(activity: FestivalActivityDraft) {
       const exists = this.activities.forAll.some(
         ({ id }) => activity.id === id,
       );
@@ -97,7 +97,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       this.activities.forAll = [...this.activities.forAll, preview];
     },
 
-    updatePreviousPreview(activity: Reviewable) {
+    updatePreviousPreview(activity: FestivalActivityReviewable) {
       const preview = previewOfActivity(activity);
       this.activities.forAll = replaceExistingPreview(
         this.activities.forAll,
@@ -105,7 +105,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       );
     },
 
-    updateMyPreview(activity: Reviewable) {
+    updateMyPreview(activity: FestivalActivityReviewable) {
       const preview = previewOfActivity(activity);
       this.activities.mine = replaceExistingPreview(
         this.activities.mine,
@@ -113,7 +113,7 @@ export const useFestivalActivityStore = defineStore("festival-activity", {
       );
     },
 
-    updateSelectedActivityStatus(activity: Reviewable) {
+    updateSelectedActivityStatus(activity: FestivalActivityReviewable) {
       if (this.selectedActivity.id !== activity.id) return;
       this.selectedActivity = {
         ...this.selectedActivity,

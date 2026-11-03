@@ -16,7 +16,10 @@ import {
   ApiBody,
   ApiParam,
 } from "@nestjs/swagger";
-import { FestivalActivity, Refused } from "@overbookd/festival-event";
+import {
+  FestivalActivity,
+  FestivalActivityRefused,
+} from "@overbookd/festival-event";
 import { WRITE_FA, VALIDATE_FA } from "@overbookd/permission";
 import { Permissions } from "../../../authentication-zitadel/decorators/permissions-auth.decorator";
 import { DraftFestivalActivityResponseDto } from "../common/dto/draft/draft-festival-activity.response.dto";
@@ -183,7 +186,7 @@ export class FestivalActivityReviewController {
     @Param("faId", ParseIntPipe) faId: FestivalActivity["id"],
     @AuthenticatedUser() user: RequestHydratedUser,
     @Body() reject: RejectActivityRequestDto,
-  ): Promise<Refused> {
+  ): Promise<FestivalActivityRefused> {
     return this.reviewService.reject(faId, user, reject);
   }
 }

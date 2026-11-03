@@ -5,7 +5,7 @@ import {
   REFUSED,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
-import { PreviewFestivalActivity } from "../festival-activity/festival-activity.js";
+import { Preview as PreviewFestivalActivity } from "../festival-activity/festival-activity.js";
 import { Feedback } from "../common/feedback.js";
 import { TimeWindow } from "../common/time-window.js";
 import { InquiryRequest } from "../common/inquiry-request.js";
@@ -24,7 +24,7 @@ import {
   ValidatedReviews,
 } from "../common/review.js";
 import { Adherent } from "../common/adherent.js";
-import { type Category } from "@overbookd/festival-event-constants";
+import { Category } from "@overbookd/festival-event-constants";
 
 export type FestivalActivity = {
   id: PreviewFestivalActivity["id"];

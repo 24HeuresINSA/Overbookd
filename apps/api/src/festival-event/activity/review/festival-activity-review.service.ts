@@ -4,8 +4,8 @@ import {
   AskForReview,
   FestivalActivity,
   PrepareFestivalActivity,
-  Refused,
-  Reviewable,
+  FestivalActivityRefused,
+  FestivalActivityReviewable,
   Reviewer,
   Reviewing,
 } from "@overbookd/festival-event";
@@ -52,7 +52,7 @@ export class FestivalActivityReviewService {
     faId: FestivalActivity["id"],
     user: RequestHydratedUser,
     team: Reviewer<"FA">,
-  ): Promise<Reviewable> {
+  ): Promise<FestivalActivityReviewable> {
     checkMembership(user, team);
 
     const approver = await this.adherents.find(user.id);
@@ -68,7 +68,7 @@ export class FestivalActivityReviewService {
     faId: number,
     user: RequestHydratedUser,
     rejection: ReviewRejection<"FA">,
-  ): Promise<Refused> {
+  ): Promise<FestivalActivityRefused> {
     checkMembership(user, rejection.team);
 
     const rejector = await this.adherents.find(user.id);

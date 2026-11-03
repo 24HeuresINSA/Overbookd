@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { FestivalActivity as FestivalActivityEvents } from "@overbookd/domain-events";
 import type {
   CreateFestivalActivity,
-  Draft,
+  FestivalActivityDraft,
   FestivalActivity,
   PrepareFestivalActivity,
 } from "@overbookd/festival-event";
@@ -32,7 +32,7 @@ export class FestivalActivityOverviewService {
     return activity;
   }
 
-  async create(name: string, authorId: number): Promise<Draft> {
+  async create(name: string, authorId: number): Promise<FestivalActivityDraft> {
     const author = await this.adherents.find(authorId);
     const activity = await this.creation.create({
       author,

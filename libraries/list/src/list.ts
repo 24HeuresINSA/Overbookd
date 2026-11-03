@@ -1,28 +1,33 @@
+function normalizeIndex(length: number, index: number): number {
+  return index < 0 ? length + index : index;
+}
+
 export function updateItemToList<T>(
   list: T[] | readonly T[],
   index: number,
   newValue: T,
 ): T[] {
-  if (index < 0) {
-    const normalizedIndex = list.length + index;
-    if (normalizedIndex < 0) return [...list];
-    return updateItemToList(list, normalizedIndex, newValue);
-  }
-  return [...list.slice(0, index), newValue, ...list.slice(index + 1)];
+  const normalizedIndex = normalizeIndex(list.length, index);
+  if (normalizedIndex < 0) return [...list];
+  return [
+    ...list.slice(0, normalizedIndex),
+    newValue,
+    ...list.slice(normalizedIndex + 1),
+  ];
 }
 
 export function removeItemAtIndex<T>(list: T[], index: number): T[] {
-  if (index < 0) {
-    const normalizedIndex = list.length + index;
-    if (normalizedIndex < 0) return [...list];
-    return removeItemAtIndex(list, normalizedIndex);
-  }
-  return [...list.slice(0, index), ...list.slice(index + 1)];
+  const normalizedIndex = normalizeIndex(list.length, index);
+  if (normalizedIndex < 0) return [...list];
+  return [
+    ...list.slice(0, normalizedIndex),
+    ...list.slice(normalizedIndex + 1),
+  ];
 }
 
 export function moveAtFirstIndex<T>(list: T[], index: number): T[] {
-  const normalizedIndex = index < 0 ? list.length + index : index;
-  if (normalizedIndex < 0 || normalizedIndex >= list.length) return list;
+  const normalizedIndex = normalizeIndex(list.length, index);
+  if (normalizedIndex < 0 || normalizedIndex >= list.length) return [...list];
 
   const [item] = list.slice(normalizedIndex, normalizedIndex + 1);
   return [

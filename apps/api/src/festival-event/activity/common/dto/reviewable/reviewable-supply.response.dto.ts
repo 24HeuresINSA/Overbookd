@@ -1,8 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { ElectricitySupply, Reviewable } from "@overbookd/festival-event";
+import {
+  ElectricitySupply,
+  FestivalActivityReviewable,
+} from "@overbookd/festival-event";
 import { ElectricitySupplyResponseDto } from "../electricity-supply.response.dto";
 
-type Supply = Reviewable["supply"];
+type Supply = FestivalActivityReviewable["supply"];
 export class SupplyResponseDto implements Supply {
   @ApiProperty({
     required: true,

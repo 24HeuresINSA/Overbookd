@@ -1,9 +1,14 @@
-import type { Draft, FestivalActivity } from "@overbookd/festival-event";
+import type {
+  FestivalActivityDraft,
+  FestivalActivity,
+} from "@overbookd/festival-event";
 import type { HttpStringified } from "@overbookd/http";
 import { castTimeWindowWithDate } from "../cast-time-windows";
 
 export class CastDraft {
-  static withDate(draft: HttpStringified<Draft>): Draft {
+  static withDate(
+    draft: HttpStringified<FestivalActivityDraft>,
+  ): FestivalActivityDraft {
     return {
       ...draft,
       general: this.generalWithDate(draft.general),
@@ -14,24 +19,24 @@ export class CastDraft {
   }
 
   private static generalWithDate(
-    general: HttpStringified<Draft["general"]>,
-  ): Draft["general"] {
+    general: HttpStringified<FestivalActivityDraft["general"]>,
+  ): FestivalActivityDraft["general"] {
     const timeWindows = general.timeWindows.map(castTimeWindowWithDate);
 
     return { ...general, timeWindows };
   }
 
   private static inquiryWithDate(
-    inquiry: HttpStringified<Draft["inquiry"]>,
-  ): Draft["inquiry"] {
+    inquiry: HttpStringified<FestivalActivityDraft["inquiry"]>,
+  ): FestivalActivityDraft["inquiry"] {
     const timeWindows = inquiry.timeWindows.map(castTimeWindowWithDate);
 
     return { ...inquiry, timeWindows };
   }
 
   private static feedbacksWithDate(
-    feedbacks: HttpStringified<Draft["feedbacks"]>,
-  ): Draft["feedbacks"] {
+    feedbacks: HttpStringified<FestivalActivityDraft["feedbacks"]>,
+  ): FestivalActivityDraft["feedbacks"] {
     return feedbacks.map((feedback) => ({
       ...feedback,
       publishedAt: new Date(feedback.publishedAt),

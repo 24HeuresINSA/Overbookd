@@ -1,10 +1,10 @@
 import { AFFICHE, BACHE, PANNEAU } from "./sections/signa.js";
+import type { ElectricitySupply } from "./sections/supply.js";
 import {
-  ElectricitySupply,
   P17_16A_TETRA,
   P17_32A_TETRA,
   PC16_Prise_classique,
-} from "./sections/supply.js";
+} from "@overbookd/festival-event-constants";
 import { Signage } from "./sections/signa.js";
 import { Contractor } from "./sections/in-charge.js";
 
