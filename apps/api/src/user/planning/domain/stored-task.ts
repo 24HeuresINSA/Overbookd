@@ -1,5 +1,5 @@
+import { groupAssigneesByPeriod } from "@overbookd/assignment";
 import { IProvidePeriod, Period } from "@overbookd/time";
-import { groupAssigneesByPeriod } from "../../../assignment/common/assignees-by-period";
 import { Assignment, Task, Volunteer } from "./task.model";
 
 type Assignee = Volunteer & { period: IProvidePeriod };

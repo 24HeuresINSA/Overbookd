@@ -4,8 +4,8 @@ import {
   AssignmentIdentifier,
   BaseAssigneeForDetails,
   VolunteersForAssignment,
+  groupAssigneesByPeriod,
 } from "@overbookd/assignment";
-import { groupAssigneesByPeriod } from "../assignees-by-period";
 import { PrismaService } from "../../../prisma.service";
 import { AssignmentRepository } from "../assignment.service";
 import {
