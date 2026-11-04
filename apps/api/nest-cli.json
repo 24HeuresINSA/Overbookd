@@ -15,17 +15,17 @@
     "assets": [
       {
         "include": "**/*.ejs",
-        "outDir": "dist/src",
+        "outDir": "dist",
         "watchAssets": true
       },
       {
         "include": "../fonts",
-        "outDir": "dist/fonts",
+        "outDir": "dist",
         "watchAssets": true
       },
       {
         "include": "../assets",
-        "outDir": "dist/assets",
+        "outDir": "dist",
         "watchAssets": true
       }
     ]
