@@ -8,7 +8,7 @@ import { PrismaService } from "../../../prisma.service";
 import { IProvidePeriod } from "@overbookd/time";
 import { SELECT_PERIOD_WITH_ID } from "../../../common/query/period.query";
 import { EXISTS_AND_NOT_READY_TO_ASSIGN } from "./task.query";
-import { SELECT_PLANNING_EVENT, SELECT_TASK } from "./planning.query";
+import { selectPlanningEventFor, SELECT_TASK } from "./planning.query";
 import { friendAssigneesCount } from "./assignment.query";
 
 type DatabaseAssignment = IProvidePeriod & {
@@ -16,6 +16,7 @@ type DatabaseAssignment = IProvidePeriod & {
   mobilizationId: string;
   festivalTask: Omit<PlanningEventTask, "hasFriendsAssigned">;
   _count: { assignees: number };
+  assignees: { teamCode: string | null }[];
 };
 
 type DatabaseMobilization = IProvidePeriod & {
@@ -31,10 +32,7 @@ export class PrismaPlanning implements Planning {
     const [dbAssignments, dbMobilizations] = await Promise.all([
       this.prisma.assignment.findMany({
         where: { assignees: { some: { userId: volunteerId } } },
-        select: {
-          ...SELECT_PLANNING_EVENT,
-          ...friendAssigneesCount(volunteerId),
-        },
+        select: selectPlanningEventFor(volunteerId),
       }),
       this.prisma.festivalTaskMobilization.findMany({
         where: {
@@ -58,13 +56,15 @@ export class PrismaPlanning implements Planning {
 export function toPlanningEventFromAssignment(
   assignment: DatabaseAssignment,
 ): AssignmentEvent {
-  const { start, end, id, mobilizationId, festivalTask, _count } = assignment;
+  const { start, end, id, mobilizationId, festivalTask, _count, assignees } =
+    assignment;
   return {
     start,
     end,
     task: { ...festivalTask, hasFriendsAssigned: _count.assignees > 0 },
     mobilizationId,
     assignmentId: id,
+    isNamelyAssigned: assignees.some(({ teamCode }) => teamCode === null),
   };
 }
 

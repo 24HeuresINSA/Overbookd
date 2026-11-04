@@ -25,5 +25,5 @@ const statusColors = new Map<FestivalEvent["status"], StatusColor>([
 ]);
 
 export function getColorByStatus(status: FestivalEvent["status"]): StatusColor {
-  return statusColors.get(status) || "grey";
+  return statusColors.get(status) || GREY;
 }

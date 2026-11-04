@@ -27,7 +27,7 @@ type State = {
   selectedVolunteerFriends: AssignmentFriend[];
   assignments: AssignmentSummaryWithTask[];
   alreadyAssignedAssignments: AssignmentEvent[];
-  hoverAssignment: AssignmentEvent | null;
+  hoverAssignment: AssignmentSummaryWithTask | null;
   assignmentDetails: Assignment<{ withDetails: true }> | null;
 };
 
@@ -111,7 +111,7 @@ export const useAssignVolunteerToTaskStore = defineStore(
         this.fetchPotentialAssignmentsFor(this.selectedVolunteer.id);
       },
 
-      setHoverAssignment(assignment: AssignmentEvent | null) {
+      setHoverAssignment(assignment: AssignmentSummaryWithTask | null) {
         this.hoverAssignment = assignment;
       },
 

@@ -6,6 +6,8 @@ import type {
 import type { PlanningTask } from "@overbookd/http";
 import { FT_URL } from "@overbookd/web-page";
 import { getColorByStatus } from "~/domain/common/status-color";
+import { BLUE_24 } from "~/utils/vuetify/theme/common";
+import { READY_TO_ASSIGN } from "@overbookd/festival-event-constants";
 import { createCalendarEvent, type CalendarEvent } from "../calendar/event";
 import type { BreakEvent } from "~/domain/common/break-events";
 import {
@@ -39,10 +41,20 @@ export function toCalendarAssignment(
     start,
     end,
     name: `[${task.id}] ${task.name}`,
-    color: getColorByStatus(task.status),
+    color: getAssignmentColor(assignment),
     identifier,
     kind: ASSIGNMENT,
   });
+}
+
+export function getAssignmentColor({
+  task,
+  isNamelyAssigned,
+}: AssignmentEvent) {
+  const isReadyToAssign = task.status === READY_TO_ASSIGN;
+  return isReadyToAssign && !isNamelyAssigned
+    ? BLUE_24
+    : getColorByStatus(task.status);
 }
 
 export function toCalendarTask(permissions: {

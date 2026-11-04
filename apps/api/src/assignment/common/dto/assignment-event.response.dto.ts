@@ -15,4 +15,7 @@ export class AssignmentEventResponseDto
 
   @ApiProperty({ type: String, required: false })
   mobilizationId: AssignmentEvent["mobilizationId"];
+
+  @ApiProperty({ type: Boolean })
+  isNamelyAssigned: AssignmentEvent["isNamelyAssigned"];
 }

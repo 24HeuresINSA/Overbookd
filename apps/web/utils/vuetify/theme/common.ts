@@ -1,4 +1,4 @@
-const BLUE_24 = "#41C5E5";
+export const BLUE_24 = "#41C5E5";
 const YELLOW_24 = "#FFCB29";
 const RED_24 = "#ED1D45";
 

@@ -32,7 +32,7 @@ import {
   PAY_CONTRIBUTION,
 } from "@overbookd/permission";
 import { AssignmentEvent } from "@overbookd/assignment";
-import { SELECT_PLANNING_EVENT } from "../assignment/common/repository/planning.query";
+import { selectPlanningEventFor } from "../assignment/common/repository/planning.query";
 import { toPlanningEventFromAssignment } from "../assignment/common/repository/planning.prisma";
 import { SELECT_TRANSACTIONS_FOR_BALANCE } from "../common/query/transaction.query";
 import { Balance } from "@overbookd/personal-account";
@@ -45,7 +45,6 @@ import {
 import { extractTeamCodes } from "../team/team.utils";
 import { Charisma } from "@overbookd/charisma";
 import { ADMIN, INVITE, PERSONNE } from "@overbookd/team-code";
-import { friendAssigneesCount } from "../assignment/common/repository/assignment.query";
 import { OverbookdOidcRole, oidcRoles } from "@overbookd/oidc";
 import { ZitadelService } from "./zitadel.service";
 import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
@@ -271,10 +270,7 @@ export class UserService {
         assignees: { some: { userId: volunteerId } },
         festivalTask: IS_NOT_DELETED,
       },
-      select: {
-        ...SELECT_PLANNING_EVENT,
-        ...friendAssigneesCount(volunteerId),
-      },
+      select: selectPlanningEventFor(volunteerId),
     });
 
     return assignments.map(toPlanningEventFromAssignment);
