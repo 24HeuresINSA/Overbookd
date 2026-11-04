@@ -20,6 +20,7 @@ import { TaskForCalendar } from "@overbookd/http";
 import { Period } from "@overbookd/time";
 import { SELECT_USER_IDENTIFIER } from "../../../common/query/user.query";
 import {
+  overlapPeriodCondition,
   SELECT_PERIOD,
   SELECT_PERIOD_WITH_ID,
 } from "../../../common/query/period.query";
@@ -35,32 +36,32 @@ export class PrismaAssignments implements AssignmentRepository {
   ): Promise<TaskForCalendar> {
     const assignment = await this.prisma.assignment.findUnique({
       where: uniqueAssignment(identifier),
+      select: SELECT_PERIOD_WITH_ID,
+    });
+    const { id: assignmentId, start, end } = assignment;
+    const festivalTask = await this.prisma.festivalTask.findUnique({
+      where: { id: identifier.taskId },
       select: {
-        ...SELECT_PERIOD_WITH_ID,
-        festivalTask: {
+        id: true,
+        name: true,
+        status: true,
+        globalInstruction: true,
+        inChargeInstruction: true,
+        inChargeVolunteers: {
+          select: { volunteerId: true },
+          where: { volunteerId },
+        },
+        appointment: { select: SELECT_LOCATION },
+        contacts: { select: { contact: { select: SELECT_CONTACT } } },
+        assignees: {
+          where: { assignment: overlapPeriodCondition({ start, end }) },
           select: {
-            id: true,
-            name: true,
-            status: true,
-            globalInstruction: true,
-            inChargeInstruction: true,
-            inChargeVolunteers: {
-              select: { volunteerId: true },
-              where: { volunteerId },
-            },
-            appointment: { select: SELECT_LOCATION },
-            contacts: { select: { contact: { select: SELECT_CONTACT } } },
-            assignees: {
-              select: {
-                personalData: { select: SELECT_USER_IDENTIFIER },
-                assignment: { select: SELECT_PERIOD },
-              },
-            },
+            personalData: { select: SELECT_USER_IDENTIFIER },
+            assignment: { select: SELECT_PERIOD },
           },
         },
       },
     });
-    const { start, end, festivalTask } = assignment;
     const {
       id,
       name,
@@ -91,7 +92,7 @@ export class PrismaAssignments implements AssignmentRepository {
       globalInstruction,
       inChargeInstruction:
         inChargeVolunteers.length > 0 ? inChargeInstruction : null,
-      timeWindow: { id: assignment.id, start, end },
+      timeWindow: { id: assignmentId, start, end },
     };
   }
 
