@@ -60,13 +60,20 @@
           </li>
         </ul>
       </div>
-      <div class="contacts">
+      <div class="assignees">
         <h3>Bénévoles affectés sur le créneau</h3>
-        <ul>
-          <li v-for="user in selectedTask.assignees" :key="user.id">
-            {{ buildUserNameWithNickname(user) }}
-          </li>
-        </ul>
+        <div
+          v-for="assigneesByPeriod in selectedTask.assignees"
+          :key="assigneesByPeriod.period.start.getTime()"
+          class="assignees__period"
+        >
+          <h4>{{ formatPeriodHours(assigneesByPeriod.period) }}</h4>
+          <ul class="assignees__volunteers">
+            <li v-for="user in assigneesByPeriod.volunteers" :key="user.id">
+              {{ buildUserNameWithNickname(user) }}
+            </li>
+          </ul>
+        </div>
       </div>
       <div class="instructions">
         <h3>Instructions</h3>
@@ -96,7 +103,11 @@ import {
 import type { TaskForCalendar } from "@overbookd/http";
 import { READ_FT } from "@overbookd/permission";
 import { formatPhoneNumber } from "@overbookd/registration";
-import { formatDateToHumanReadable } from "@overbookd/time";
+import {
+  formatDateToHumanReadable,
+  formatDateWithHoursAndMinutesOnly,
+  type IProvidePeriod,
+} from "@overbookd/time";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import { FT_URL } from "@overbookd/web-page";
 import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
@@ -119,6 +130,9 @@ const openAssignmentInNewTab = () => {
 
 const formatTimeWindowForCalendar = ({ start, end }: TimeWindow) =>
   `${formatDateToHumanReadable(start)} - ${formatDateToHumanReadable(end)}`;
+
+const formatPeriodHours = ({ start, end }: IProvidePeriod) =>
+  `${formatDateWithHoursAndMinutesOnly(start)} - ${formatDateWithHoursAndMinutesOnly(end)}`;
 
 const retrieveGeo = (geoLocation: GeoLocation): Coordinate => {
   const location = LocationFactory.create(geoLocation);
@@ -176,12 +190,25 @@ if (locationStore.all.length === 0) locationStore.fetchAllLocations();
 }
 
 .assignees {
-  &__assignee-team {
-    margin-left: 4px;
+  padding-top: 2rem;
+
+  &__period {
+    h4 {
+      margin-bottom: 4px;
+    }
   }
-  &__actions {
-    display: flex;
-    gap: 5px;
+
+  &__volunteers {
+    padding-left: 2rem;
+    column-count: 3;
+
+    @media screen and (max-width: $mobile-max-width) {
+      column-count: 2;
+    }
+
+    li {
+      break-inside: avoid;
+    }
   }
 }
 

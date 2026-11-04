@@ -5,6 +5,7 @@ import {
   BaseAssigneeForDetails,
   VolunteersForAssignment,
 } from "@overbookd/assignment";
+import { groupAssigneesByPeriod } from "../assignees-by-period";
 import { PrismaService } from "../../../prisma.service";
 import { AssignmentRepository } from "../assignment.service";
 import {
@@ -18,7 +19,10 @@ import { MISSING_ITEM_INDEX } from "@overbookd/list";
 import { TaskForCalendar } from "@overbookd/http";
 import { Period } from "@overbookd/time";
 import { SELECT_USER_IDENTIFIER } from "../../../common/query/user.query";
-import { SELECT_PERIOD_WITH_ID } from "../../../common/query/period.query";
+import {
+  SELECT_PERIOD,
+  SELECT_PERIOD_WITH_ID,
+} from "../../../common/query/period.query";
 import { SELECT_CONTACT } from "../../../festival-event/task/common/repository/adherent.query";
 import { SELECT_LOCATION } from "../../../festival-event/common/repository/location.query";
 
@@ -49,7 +53,7 @@ export class PrismaAssignments implements AssignmentRepository {
             assignees: {
               select: {
                 personalData: { select: SELECT_USER_IDENTIFIER },
-                assignment: true,
+                assignment: { select: SELECT_PERIOD },
               },
             },
           },
@@ -68,16 +72,14 @@ export class PrismaAssignments implements AssignmentRepository {
       inChargeVolunteers,
       inChargeInstruction,
     } = festivalTask;
-    const assignmentPeriod = Period.init({ start, end });
-    const uniqueAssignees = new Set(
-      assignees
-        .filter((assignee) =>
-          Period.init({
-            start: assignee.assignment.start,
-            end: assignee.assignment.end,
-          }).isOverlapping(assignmentPeriod),
-        )
-        .map(({ personalData }) => personalData),
+    const assigneesOnPeriod = assignees.map(
+      ({ personalData, assignment: assigneeAssignment }) => ({
+        volunteer: personalData,
+        period: {
+          start: assigneeAssignment.start,
+          end: assigneeAssignment.end,
+        },
+      }),
     );
     return {
       id,
@@ -85,7 +87,7 @@ export class PrismaAssignments implements AssignmentRepository {
       status,
       appointment,
       contacts: contacts.map(({ contact }) => contact),
-      assignees: Array.from(uniqueAssignees),
+      assignees: groupAssigneesByPeriod({ start, end }, assigneesOnPeriod),
       globalInstruction,
       inChargeInstruction:
         inChargeVolunteers.length > 0 ? inChargeInstruction : null,
