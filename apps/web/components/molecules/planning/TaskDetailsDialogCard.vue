@@ -69,8 +69,21 @@
         >
           <h4>{{ formatPeriodHours(assigneesByPeriod.period) }}</h4>
           <ul class="assignees__volunteers">
-            <li v-for="user in assigneesByPeriod.volunteers" :key="user.id">
-              {{ buildUserNameWithNickname(user) }}
+            <li
+              v-for="(user, index) in assigneesByPeriod.volunteers.slice(
+                0,
+                MAX_DISPLAYED_VOLUNTEERS,
+              )"
+              :key="user.id"
+            >
+              {{
+                shouldDisplayEllipsis(
+                  index,
+                  assigneesByPeriod.volunteers.length,
+                )
+                  ? "..."
+                  : buildUserNameWithNickname(user)
+              }}
             </li>
           </ul>
         </div>
@@ -133,6 +146,12 @@ const formatTimeWindowForCalendar = ({ start, end }: TimeWindow) =>
 
 const formatPeriodHours = ({ start, end }: IProvidePeriod) =>
   `${formatDateWithHoursAndMinutesOnly(start)} - ${formatDateWithHoursAndMinutesOnly(end)}`;
+
+const MAX_DISPLAYED_VOLUNTEERS = 20;
+
+const shouldDisplayEllipsis = (index: number, volunteersCount: number) =>
+  index === MAX_DISPLAYED_VOLUNTEERS - 1 &&
+  volunteersCount > MAX_DISPLAYED_VOLUNTEERS;
 
 const retrieveGeo = (geoLocation: GeoLocation): Coordinate => {
   const location = LocationFactory.create(geoLocation);
@@ -208,6 +227,7 @@ if (locationStore.all.length === 0) locationStore.fetchAllLocations();
 
     li {
       break-inside: avoid;
+      overflow-wrap: anywhere;
     }
   }
 }
