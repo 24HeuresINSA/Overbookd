@@ -38,7 +38,6 @@ export class PrismaAssignments implements AssignmentRepository {
       where: uniqueAssignment(identifier),
       select: SELECT_PERIOD_WITH_ID,
     });
-    const { id: assignmentId, start, end } = assignment;
     const festivalTask = await this.prisma.festivalTask.findUnique({
       where: { id: identifier.taskId },
       select: {
@@ -54,7 +53,7 @@ export class PrismaAssignments implements AssignmentRepository {
         appointment: { select: SELECT_LOCATION },
         contacts: { select: { contact: { select: SELECT_CONTACT } } },
         assignees: {
-          where: { assignment: overlapPeriodCondition({ start, end }) },
+          where: { assignment: overlapPeriodCondition(assignment) },
           select: {
             personalData: { select: SELECT_USER_IDENTIFIER },
             assignment: { select: SELECT_PERIOD },
@@ -88,11 +87,11 @@ export class PrismaAssignments implements AssignmentRepository {
       status,
       appointment,
       contacts: contacts.map(({ contact }) => contact),
-      assignees: groupAssigneesByPeriod({ start, end }, assigneesOnPeriod),
+      assignees: groupAssigneesByPeriod(assignment, assigneesOnPeriod),
       globalInstruction,
       inChargeInstruction:
         inChargeVolunteers.length > 0 ? inChargeInstruction : null,
-      timeWindow: { id: assignmentId, start, end },
+      timeWindow: assignment,
     };
   }
 
