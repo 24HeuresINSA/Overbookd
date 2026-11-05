@@ -7,6 +7,8 @@ packages:
   - '!**/dist/**'
 minimumReleaseAge: 0
 verifyDepsBeforeRun: false
+overrides:
+  '@types/pdfmake': 0.3.3
 allowBuilds:
   '@nestjs/core': true
   '@parcel/watcher': true

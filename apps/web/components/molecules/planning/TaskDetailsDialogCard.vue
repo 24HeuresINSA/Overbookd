@@ -49,6 +49,20 @@
           </v-chip>
         </div>
       </div>
+      <div class="instructions">
+        <h3>Instructions</h3>
+        <div
+          v-html-safe="selectedTask.globalInstruction"
+          class="instructions__text"
+        />
+      </div>
+      <div v-if="selectedTask.inChargeInstruction" class="instructions">
+        <h3>Instructions pour les responsables</h3>
+        <div
+          v-html-safe="selectedTask.inChargeInstruction"
+          class="instructions__text"
+        />
+      </div>
       <div class="contacts">
         <h3>
           {{ pluralize("Orga", selectedTask.contacts.length) }} à contacter
@@ -69,38 +83,11 @@
         >
           <h4>{{ formatPeriodHours(assigneesByPeriod.period) }}</h4>
           <ul class="assignees__volunteers">
-            <li
-              v-for="(user, index) in assigneesByPeriod.volunteers.slice(
-                0,
-                MAX_DISPLAYED_VOLUNTEERS,
-              )"
-              :key="user.id"
-            >
-              {{
-                shouldDisplayEllipsis(
-                  index,
-                  assigneesByPeriod.volunteers.length,
-                )
-                  ? "..."
-                  : buildUserNameWithNickname(user)
-              }}
+            <li v-for="user in assigneesByPeriod.volunteers" :key="user.id">
+              {{ buildUserNameWithNickname(user) }}
             </li>
           </ul>
         </div>
-      </div>
-      <div class="instructions">
-        <h3>Instructions</h3>
-        <div
-          v-html-safe="selectedTask.globalInstruction"
-          class="instructions__text"
-        />
-      </div>
-      <div v-if="selectedTask.inChargeInstruction" class="instructions">
-        <h3>Instructions pour les responsables</h3>
-        <div
-          v-html-safe="selectedTask.inChargeInstruction"
-          class="instructions__text"
-        />
       </div>
     </template>
   </DialogCard>
@@ -146,12 +133,6 @@ const formatTimeWindowForCalendar = ({ start, end }: TimeWindow) =>
 
 const formatPeriodHours = ({ start, end }: IProvidePeriod) =>
   `${formatDateWithHoursAndMinutesOnly(start)} - ${formatDateWithHoursAndMinutesOnly(end)}`;
-
-const MAX_DISPLAYED_VOLUNTEERS = 20;
-
-const shouldDisplayEllipsis = (index: number, volunteersCount: number) =>
-  index === MAX_DISPLAYED_VOLUNTEERS - 1 &&
-  volunteersCount > MAX_DISPLAYED_VOLUNTEERS;
 
 const retrieveGeo = (geoLocation: GeoLocation): Coordinate => {
   const location = LocationFactory.create(geoLocation);
