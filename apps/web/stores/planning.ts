@@ -195,6 +195,10 @@ export const usePlanningStore = defineStore("planning", {
       this.selectedCalendarTask = {
         ...res,
         timeWindow: castPeriodWithDate(res.timeWindow),
+        assignees: res.assignees.map(({ period, volunteers }) => ({
+          period: castPeriodWithDate(period),
+          volunteers,
+        })),
       };
     },
 

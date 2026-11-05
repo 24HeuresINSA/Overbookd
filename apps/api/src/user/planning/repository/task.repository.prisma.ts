@@ -99,8 +99,20 @@ export class PrismaTaskRepository implements TaskRepository {
       orderBy: { start: "asc" },
     });
 
+    const assignmentsByTaskId = allAssignments.reduce(
+      (byTaskId, assignment) => {
+        const taskAssignments = byTaskId.get(assignment.festivalTaskId) ?? [];
+        byTaskId.set(assignment.festivalTaskId, [
+          ...taskAssignments,
+          assignment,
+        ]);
+        return byTaskId;
+      },
+      new Map<number, DatabaseAssignmentWithAssignees[]>(),
+    );
+
     return volunteerAssignments.map((assignment) =>
-      toTask(assignment, allAssignments),
+      toTask(assignment, assignmentsByTaskId),
     );
   }
 
@@ -182,7 +194,7 @@ export class PrismaTaskRepository implements TaskRepository {
 
 function toTask(
   { start, end, festivalTask }: DatabaseAssignmentWithTask,
-  assignments: DatabaseAssignmentWithAssignees[],
+  assignmentsByTaskId: Map<number, DatabaseAssignmentWithAssignees[]>,
 ): JsonStoredTask {
   const contacts = festivalTask.contacts.map(({ contact }) => ({
     id: contact.id,
@@ -194,15 +206,14 @@ function toTask(
       ? `<hr>${festivalTask.globalInstruction}`
       : `<hr>${festivalTask.globalInstruction}<hr><h3>Instructions responsables :</h3>${festivalTask.inChargeInstruction}`;
 
-  const assignees = assignments
-    .filter(({ festivalTaskId }) => festivalTaskId === festivalTask.id)
-    .flatMap(({ start, end, assignees }) => {
-      return assignees.map(({ personalData }) => ({
-        period: { start, end },
-        id: personalData.id,
-        name: buildUserName(personalData),
-      }));
-    });
+  const taskAssignments = assignmentsByTaskId.get(festivalTask.id) ?? [];
+  const assignees = taskAssignments.flatMap(({ start, end, assignees }) => {
+    return assignees.map(({ personalData }) => ({
+      period: { start, end },
+      id: personalData.id,
+      name: buildUserName(personalData),
+    }));
+  });
 
   const { appointment } = festivalTask;
 

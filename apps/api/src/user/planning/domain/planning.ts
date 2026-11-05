@@ -24,9 +24,9 @@ export class Planning {
         volunteerId,
         after,
       );
-    const groupedTasks = tasks.reduce(
+    const groupedTasks = tasks.reduce<StoredTask[]>(
       (groupedTasks, task) => this.groupTasks(groupedTasks, task),
-      [] as StoredTask[],
+      [],
     );
     return groupedTasks.map((storedTask) => storedTask.toTask(volunteerId));
   }

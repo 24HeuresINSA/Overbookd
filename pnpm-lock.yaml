@@ -162,6 +162,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  '@types/pdfmake': 0.3.3
+
 importers:
 
   .:
@@ -2723,9 +2726,6 @@ packages:
 
   '@types/pdfkit@0.17.7':
     resolution: {integrity: sha512-VMOZDWw7HtNtLbjIuHIhVArm9PlV0gxpz32jAl1IuXWlIgbr1lKFoTsrtvEzY8a9BIpQJEE5DwNPKD50otTs6g==}
-
-  '@types/pdfmake@0.2.13':
-    resolution: {integrity: sha512-QzOwk3dMTZOwVbDZNHGIQcpwBgprp1y1vzRBmR+p+vMtCZo00G1CN+YhNebkygtmaGjdzvyXJVOHMEuTbvhJ8A==}
 
   '@types/pdfmake@0.3.3':
     resolution: {integrity: sha512-ufbceB4Q3dKpmFUMKEbZvJcfLi8+C5b1+rTFVG6urtkS3FHwaTQH6NCh/iEEDINlApCxH/W3/rsq99pP5E9/JA==}
@@ -9677,7 +9677,7 @@ snapshots:
   '@types/html-to-pdfmake@2.4.5':
     dependencies:
       '@types/jsdom': 30.0.0
-      '@types/pdfmake': 0.2.13
+      '@types/pdfmake': 0.3.3
 
   '@types/http-cache-semantics@4.2.0': {}
 
@@ -9720,11 +9720,6 @@ snapshots:
   '@types/pdfkit@0.17.7':
     dependencies:
       '@types/node': 26.6.5
-
-  '@types/pdfmake@0.2.13':
-    dependencies:
-      '@types/node': 26.6.5
-      '@types/pdfkit': 0.17.7
 
   '@types/pdfmake@0.3.3':
     dependencies:

@@ -109,6 +109,16 @@
       "minimumReleaseAge": "3 days"
     },
     {
+      "description": "Group all pnpm workspace overrides",
+      "matchFileNames": ["pnpm-workspace.yaml"],
+      "addLabels": ["Scope::Config"],
+      "groupName": "Pnpm overrides",
+      "groupSlug": "pnpm-overrides",
+      "matchDatasources": ["npm"],
+      "versioning": "npm",
+      "minimumReleaseAge": "3 days"
+    },
+    {
       "description": "Group all devcontainer dependencies",
       "matchManagers": ["devcontainer"],
       "addLabels": ["Scope::CI"],

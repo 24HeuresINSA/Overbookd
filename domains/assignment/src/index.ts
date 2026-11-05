@@ -83,6 +83,7 @@ export type {
   TeamAssignments,
 } from "./assign-task-to-volunteer/assign-whole-team/assign-whole-team.js";
 export { countAssigneesInTeam } from "./count-assignees-in-team.js";
+export { groupAssigneesByPeriod } from "./assignees-by-period.js";
 export { AssignVolunteerFunnel } from "./assign-task-to-volunteer/funnel/assign-volunteer-funnel.js";
 export { ReadyToStart } from "./assign-task-to-volunteer/funnel/startup-funnel.js";
 export type { IActAsFunnel } from "./assign-task-to-volunteer/funnel/funnel.js";

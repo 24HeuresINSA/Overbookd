@@ -12,7 +12,7 @@
       />
     </template>
     <template #content>
-      <div class="assignment-details__content">
+      <div class="assignment-content">
         <div class="assignment-metadata">
           <v-chip
             color="primary"
@@ -48,39 +48,46 @@
             </span>
           </v-chip>
         </div>
-      </div>
-      <div class="contacts">
-        <h3>
-          {{ pluralize("Orga", selectedTask.contacts.length) }} à contacter
-        </h3>
-        <ul>
-          <li v-for="contact in selectedTask.contacts" :key="contact.id">
-            {{ buildUserNameWithNickname(contact) }} -
-            {{ formatPhoneNumber(contact.phoneNumber) }}
-          </li>
-        </ul>
-      </div>
-      <div class="contacts">
-        <h3>Bénévoles affectés sur le créneau</h3>
-        <ul>
-          <li v-for="user in selectedTask.assignees" :key="user.id">
-            {{ buildUserNameWithNickname(user) }}
-          </li>
-        </ul>
-      </div>
-      <div class="instructions">
-        <h3>Instructions</h3>
-        <div
-          v-html-safe="selectedTask.globalInstruction"
-          class="instructions__text"
-        />
-      </div>
-      <div v-if="selectedTask.inChargeInstruction" class="instructions">
-        <h3>Instructions pour les responsables</h3>
-        <div
-          v-html-safe="selectedTask.inChargeInstruction"
-          class="instructions__text"
-        />
+        <div class="instructions">
+          <h3>Instructions</h3>
+          <div
+            v-html-safe="selectedTask.globalInstruction"
+            class="instructions__text"
+          />
+        </div>
+        <div v-if="selectedTask.inChargeInstruction" class="instructions">
+          <h3>Instructions pour les responsables</h3>
+          <div
+            v-html-safe="selectedTask.inChargeInstruction"
+            class="instructions__text"
+          />
+        </div>
+        <div class="contacts">
+          <h3>
+            {{ pluralize("Orga", selectedTask.contacts.length) }} à contacter
+          </h3>
+          <ul>
+            <li v-for="contact in selectedTask.contacts" :key="contact.id">
+              {{ buildUserNameWithNickname(contact) }} -
+              {{ formatPhoneNumber(contact.phoneNumber) }}
+            </li>
+          </ul>
+        </div>
+        <div class="assignees">
+          <h3>Bénévoles affectés sur le créneau</h3>
+          <div
+            v-for="assigneesByPeriod in selectedTask.assignees"
+            :key="assigneesByPeriod.period.start.getTime()"
+            class="assignees__period"
+          >
+            <h4>{{ formatPeriodHours(assigneesByPeriod.period) }}</h4>
+            <ul class="assignees__volunteers">
+              <li v-for="user in assigneesByPeriod.volunteers" :key="user.id">
+                {{ buildUserNameWithNickname(user) }}
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </template>
   </DialogCard>
@@ -96,7 +103,11 @@ import {
 import type { TaskForCalendar } from "@overbookd/http";
 import { READ_FT } from "@overbookd/permission";
 import { formatPhoneNumber } from "@overbookd/registration";
-import { formatDateToHumanReadable } from "@overbookd/time";
+import {
+  formatDateToHumanReadable,
+  formatDateWithHoursAndMinutesOnly,
+  type IProvidePeriod,
+} from "@overbookd/time";
 import { buildUserNameWithNickname } from "@overbookd/user";
 import { FT_URL } from "@overbookd/web-page";
 import { openPageWithIdInNewTab } from "~/utils/navigation/router.utils";
@@ -119,6 +130,9 @@ const openAssignmentInNewTab = () => {
 
 const formatTimeWindowForCalendar = ({ start, end }: TimeWindow) =>
   `${formatDateToHumanReadable(start)} - ${formatDateToHumanReadable(end)}`;
+
+const formatPeriodHours = ({ start, end }: IProvidePeriod) =>
+  `${formatDateWithHoursAndMinutesOnly(start)} - ${formatDateWithHoursAndMinutesOnly(end)}`;
 
 const retrieveGeo = (geoLocation: GeoLocation): Coordinate => {
   const location = LocationFactory.create(geoLocation);
@@ -145,6 +159,12 @@ if (locationStore.all.length === 0) locationStore.fetchAllLocations();
 </script>
 
 <style lang="scss" scoped>
+.assignment-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
 .assignment-metadata {
   display: flex;
   justify-content: center;
@@ -155,45 +175,14 @@ if (locationStore.all.length === 0) locationStore.fetchAllLocations();
     .v-icon {
       margin-right: 5px;
     }
-  }
-}
 
-.assignment-details {
-  &__content {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    h2 {
-      margin-bottom: 5px;
-    }
-    .friend-list {
-      display: flex;
-      gap: 5px;
-      flex-wrap: wrap;
-      margin: 4px 0;
+    :deep(.v-chip__content) {
+      white-space: normal;
     }
   }
-}
-
-.assignees {
-  &__assignee-team {
-    margin-left: 4px;
-  }
-  &__actions {
-    display: flex;
-    gap: 5px;
-  }
-}
-
-.volunteer-list {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
 }
 
 .instructions {
-  padding-top: 2rem;
-
   &__text {
     margin-left: 1rem;
   }
@@ -210,10 +199,40 @@ if (locationStore.all.length === 0) locationStore.fetchAllLocations();
 }
 
 .contacts {
-  padding-top: 2rem;
-
   > ul {
     padding-left: 2rem;
   }
+}
+
+.assignees {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  &__period {
+    h4 {
+      margin-bottom: 4px;
+    }
+  }
+
+  &__volunteers {
+    padding-left: 2rem;
+    column-count: 3;
+
+    @media screen and (max-width: $mobile-max-width) {
+      column-count: 1;
+    }
+
+    li {
+      break-inside: avoid;
+      overflow-wrap: anywhere;
+    }
+  }
+}
+
+.volunteer-list {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
 }
 </style>

@@ -4,6 +4,7 @@ import {
   AssignmentIdentifier,
   BaseAssigneeForDetails,
   VolunteersForAssignment,
+  groupAssigneesByPeriod,
 } from "@overbookd/assignment";
 import { PrismaService } from "../../../prisma.service";
 import { AssignmentRepository } from "../assignment.service";
@@ -18,7 +19,11 @@ import { MISSING_ITEM_INDEX } from "@overbookd/list";
 import { TaskForCalendar } from "@overbookd/http";
 import { Period } from "@overbookd/time";
 import { SELECT_USER_IDENTIFIER } from "../../../common/query/user.query";
-import { SELECT_PERIOD_WITH_ID } from "../../../common/query/period.query";
+import {
+  overlapPeriodCondition,
+  SELECT_PERIOD,
+  SELECT_PERIOD_WITH_ID,
+} from "../../../common/query/period.query";
 import { SELECT_CONTACT } from "../../../festival-event/task/common/repository/adherent.query";
 import { SELECT_LOCATION } from "../../../festival-event/common/repository/location.query";
 
@@ -31,32 +36,31 @@ export class PrismaAssignments implements AssignmentRepository {
   ): Promise<TaskForCalendar> {
     const assignment = await this.prisma.assignment.findUnique({
       where: uniqueAssignment(identifier),
+      select: SELECT_PERIOD_WITH_ID,
+    });
+    const festivalTask = await this.prisma.festivalTask.findUnique({
+      where: { id: identifier.taskId },
       select: {
-        ...SELECT_PERIOD_WITH_ID,
-        festivalTask: {
+        id: true,
+        name: true,
+        status: true,
+        globalInstruction: true,
+        inChargeInstruction: true,
+        inChargeVolunteers: {
+          select: { volunteerId: true },
+          where: { volunteerId },
+        },
+        appointment: { select: SELECT_LOCATION },
+        contacts: { select: { contact: { select: SELECT_CONTACT } } },
+        assignees: {
+          where: { assignment: overlapPeriodCondition(assignment) },
           select: {
-            id: true,
-            name: true,
-            status: true,
-            globalInstruction: true,
-            inChargeInstruction: true,
-            inChargeVolunteers: {
-              select: { volunteerId: true },
-              where: { volunteerId },
-            },
-            appointment: { select: SELECT_LOCATION },
-            contacts: { select: { contact: { select: SELECT_CONTACT } } },
-            assignees: {
-              select: {
-                personalData: { select: SELECT_USER_IDENTIFIER },
-                assignment: true,
-              },
-            },
+            personalData: { select: SELECT_USER_IDENTIFIER },
+            assignment: { select: SELECT_PERIOD },
           },
         },
       },
     });
-    const { start, end, festivalTask } = assignment;
     const {
       id,
       name,
@@ -68,16 +72,14 @@ export class PrismaAssignments implements AssignmentRepository {
       inChargeVolunteers,
       inChargeInstruction,
     } = festivalTask;
-    const assignmentPeriod = Period.init({ start, end });
-    const uniqueAssignees = new Set(
-      assignees
-        .filter((assignee) =>
-          Period.init({
-            start: assignee.assignment.start,
-            end: assignee.assignment.end,
-          }).isOverlapping(assignmentPeriod),
-        )
-        .map(({ personalData }) => personalData),
+    const assigneesOnPeriod = assignees.map(
+      ({ personalData, assignment: assigneeAssignment }) => ({
+        volunteer: personalData,
+        period: {
+          start: assigneeAssignment.start,
+          end: assigneeAssignment.end,
+        },
+      }),
     );
     return {
       id,
@@ -85,11 +87,11 @@ export class PrismaAssignments implements AssignmentRepository {
       status,
       appointment,
       contacts: contacts.map(({ contact }) => contact),
-      assignees: Array.from(uniqueAssignees),
+      assignees: groupAssigneesByPeriod(assignment, assigneesOnPeriod),
       globalInstruction,
       inChargeInstruction:
         inChargeVolunteers.length > 0 ? inChargeInstruction : null,
-      timeWindow: { id: assignment.id, start, end },
+      timeWindow: assignment,
     };
   }
 

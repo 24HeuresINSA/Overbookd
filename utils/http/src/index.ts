@@ -57,7 +57,11 @@ export type {
 } from "./logistic/dashboard";
 
 // PLANNING
-export type { PlanningTask, TaskForCalendar } from "./planning/task";
+export type {
+  PlanningTask,
+  TaskForCalendar,
+  AssigneesByPeriod,
+} from "./planning/task";
 export type { CreateBreakPeriodForm } from "./planning/break-periods";
 export type {
   VolunteerForPlanningLeaflet,
