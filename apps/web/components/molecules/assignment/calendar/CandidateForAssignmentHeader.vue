@@ -87,7 +87,7 @@ const canChangeCandidate = computed<boolean>(
 );
 
 const funnelCandidate = computed<IDefineCandidate | undefined>(() => {
-  return funnel.candidates.find((candidate) => candidate.id === candidate.id);
+  return funnel.candidates.find(({ id }) => id === candidate.id);
 });
 const assignableTeams = computed<string[]>(() => {
   if (!funnelCandidate.value) return [];
