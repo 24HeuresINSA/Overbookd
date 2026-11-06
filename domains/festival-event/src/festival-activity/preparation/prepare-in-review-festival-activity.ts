@@ -1,9 +1,7 @@
 import {
   APPROVED,
   IN_REVIEW,
-  NOT_ASKING_TO_REVIEW,
   REFUSED,
-  REVIEWING,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
 import { InitInquiry, Prepare } from "./prepare-festival-activity.js";
@@ -193,10 +191,7 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
 
     if (!isSwitchingPrivacy) return { ...this.activity, general };
 
-    const reviews: Reviewable["reviews"] = {
-      ...this.activity.reviews,
-      communication: general.toPublish ? REVIEWING : NOT_ASKING_TO_REVIEW,
-    };
+    const reviews: Reviewable["reviews"] = this.activity.reviews;
 
     if (isValidatedReviews(reviews)) {
       return { ...this.activity, general, reviews, status: VALIDATED };

@@ -13,7 +13,8 @@ import {
   pcSecurite,
   qgOrga,
   approvedByHumain,
-  approvedByCommunication,
+  publicApprovedByCommunication,
+  privateApprovedByCommunication,
   validatedBySecu,
   publicApprovedByHumain,
 } from "./preparation.test-utils.js";
@@ -23,10 +24,7 @@ import {
   sunday14hToSunday18h,
 } from "../festival-activity.fake.js";
 import { isDraft } from "../../festival-event.js";
-import {
-  NOT_ASKING_TO_REVIEW,
-  REVIEWING,
-} from "@overbookd/festival-event-constants";
+import { REVIEWING } from "@overbookd/festival-event-constants";
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -40,7 +38,8 @@ describe("General section of festival activity preparation", () => {
       baladeEnPoney,
       qgOrga,
       approvedByHumain,
-      approvedByCommunication,
+      publicApprovedByCommunication,
+      privateApprovedByCommunication,
       validatedBySecu,
       publicApprovedByHumain,
     ]);
@@ -100,7 +99,7 @@ describe("General section of festival activity preparation", () => {
 
   describe("when setting a public activity as private", () => {
     describe("when activity is in review", () => {
-      it("should remove communication from reviewers", async () => {
+      it("should keep communication in reviewers", async () => {
         const update = { toPublish: false };
 
         const activity = await prepareFestivalActivity.updateGeneralSection(
@@ -109,7 +108,7 @@ describe("General section of festival activity preparation", () => {
         );
         if (isDraft(activity)) throw new Error("Activity should not be draft");
 
-        expect(activity.reviews.communication).toBe(NOT_ASKING_TO_REVIEW);
+        expect(activity.reviews.communication).toBe(REVIEWING);
       });
     });
 
@@ -338,8 +337,9 @@ describe("General section of festival activity preparation", () => {
   });
 
   describe.each`
-    activityName                            | activityId                    | toAdd                   | timeWindow                                        | update
-    ${approvedByCommunication.general.name} | ${approvedByCommunication.id} | ${sunday14hToSunday18h} | ${approvedByCommunication.general.timeWindows[0]} | ${{ description: "Awsome" }}
+    activityName                                   | activityId                           | toAdd                   | timeWindow                                               | update
+    ${publicApprovedByCommunication.general.name}  | ${publicApprovedByCommunication.id}  | ${sunday14hToSunday18h} | ${publicApprovedByCommunication.general.timeWindows[0]}  | ${{ description: "Awsome" }}
+    ${privateApprovedByCommunication.general.name} | ${privateApprovedByCommunication.id} | ${sunday14hToSunday18h} | ${privateApprovedByCommunication.general.timeWindows[0]} | ${{ description: "Awsome" }}
   `(
     "when $activityName was already validated by communication",
     ({ activityId, toAdd, timeWindow, update }) => {
@@ -434,28 +434,17 @@ describe("General section of festival activity preparation", () => {
       });
     },
   );
-  describe("when trying to update 'description'", () => {
-    describe("when public activity is only validated by humain", () => {
-      it("should be able to update general information", async () => {
-        const update = { description: "An updated description" };
+  describe("when only humain already approved the activity", () => {
+    it("should allow updating general information regardless of its visibility", async () => {
+      const update = { description: "An updated description" };
+
+      for (const activity of [approvedByHumain, publicApprovedByHumain]) {
         const { general } = await prepareFestivalActivity.updateGeneralSection(
-          publicApprovedByHumain.id,
+          activity.id,
           update,
         );
         expect(general.description).toBe(update.description);
-      });
-    });
-    describe("when private activity is already validated by humain", () => {
-      it("should indicate that general section is locked", async () => {
-        const update = { description: "An updated description" };
-        await expect(
-          async () =>
-            await prepareFestivalActivity.updateGeneralSection(
-              approvedByHumain.id,
-              update,
-            ),
-        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
-      });
+      }
     });
   });
 });
