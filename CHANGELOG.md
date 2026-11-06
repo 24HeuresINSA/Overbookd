@@ -1,3 +1,15 @@
+## [4.6.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.5.0...v4.6.0) (2026-11-06)
+
+### Features
+
+* **planning:** display namely assigned tasks in pink [#2667](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2667) ([a8348a8](https://gitlab.com/24-heures-insa/overbookd-mono/commit/a8348a807344e235575148b87d8235f8dc9fcaab))
+* **web:** display volunteers assigned by period in planning task details [#2726](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2726) ([689297c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/689297ccb548a9f5ccf37f167d66728808d9bb95))
+
+### Bug Fixes
+
+* **api:** correct planning subscription URL with new api path [#2840](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2840) ([579eb3e](https://gitlab.com/24-heures-insa/overbookd-mono/commit/579eb3ed35d2b858c31f3387822c15a4e53c6c01))
+* **task-orga:** display each candidate's own teams in the funnel [#2724](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2724) ([0abe33c](https://gitlab.com/24-heures-insa/overbookd-mono/commit/0abe33ceaed3a84af1efb7f6b1f1d384f688efaf))
+
 ## [4.5.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.4.2...v4.5.0) (2026-11-03)
 
 ### Features
