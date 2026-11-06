@@ -3,7 +3,6 @@ import {
   APPROVED,
   DRAFT,
   IN_REVIEW,
-  NOT_ASKING_TO_REVIEW,
   REFUSED,
   REJECTED,
   REVIEWING,
@@ -230,7 +229,7 @@ function defaultInReview(id: number, name: string): InReview {
       matos: REVIEWING,
       elec: REVIEWING,
       barrieres: REVIEWING,
-      communication: NOT_ASKING_TO_REVIEW,
+      communication: REVIEWING,
     },
     feedbacks: [],
     history: [
@@ -284,7 +283,7 @@ function defaultValidated(id: number, name: string): Validated {
       matos: APPROVED,
       elec: APPROVED,
       barrieres: APPROVED,
-      communication: NOT_ASKING_TO_REVIEW,
+      communication: APPROVED,
     },
     feedbacks: [],
     history: [
@@ -344,7 +343,7 @@ function defaultRefused(id: number, name: string): Refused {
       matos: REVIEWING,
       elec: REJECTED,
       barrieres: REVIEWING,
-      communication: NOT_ASKING_TO_REVIEW,
+      communication: REVIEWING,
     },
     feedbacks: [],
     history: [

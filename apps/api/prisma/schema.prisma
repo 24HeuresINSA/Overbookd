@@ -510,7 +510,6 @@ enum FestivalActivityReviewer {
 
 enum FestivalActivityReviewStatus {
   REVIEWING
-  NOT_ASKING_TO_REVIEW
   APPROVED
   REJECTED
 

@@ -68,7 +68,7 @@ function isHttpDraft(
 export function getActivityReviewerStatus(
   festivalActivity: FestivalActivity,
   reviewer: string,
-): ReviewStatus<"FA"> {
+): ReviewStatus<"FA"> | typeof NOT_ASKING_TO_REVIEW {
   if (isDraft(festivalActivity)) return NOT_ASKING_TO_REVIEW;
   switch (reviewer) {
     case HUMAIN:
@@ -99,7 +99,7 @@ export function isDraftPreview(
 export function getPreviewReviewStatus(
   preview: PreviewFestivalActivity,
   reviewer: string,
-): ReviewStatus<"FA"> {
+): ReviewStatus<"FA"> | typeof NOT_ASKING_TO_REVIEW {
   if (isDraftPreview(preview)) return NOT_ASKING_TO_REVIEW;
 
   switch (reviewer) {
@@ -129,7 +129,6 @@ export function findActivityReviewerStatusByString(
     case REJECTED:
     case APPROVED:
     case REVIEWING:
-    case NOT_ASKING_TO_REVIEW:
       return status;
     default:
       return undefined;

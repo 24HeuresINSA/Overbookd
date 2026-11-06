@@ -215,9 +215,7 @@ const myActivityReviewers = computed<Team[]>(() => {
 
   return reviewers.value.filter(({ code }) => {
     if (!isActivityReviewer(code)) return false;
-    const isReviewer = myStore.isMemberOf(code);
-    const shouldReview = activity.reviews[`${code}`] !== NOT_ASKING_TO_REVIEW;
-    return isReviewer && shouldReview;
+    return myStore.isMemberOf(code);
   });
 });
 const myTaskReviewers = computed<Team[]>(() => {

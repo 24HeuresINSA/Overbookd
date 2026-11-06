@@ -9,14 +9,12 @@ import {
 } from "@overbookd/festival-event";
 import {
   APPROVED,
-  NOT_ASKING_TO_REVIEW,
   REJECTED,
   REVIEWING,
   VALIDATED,
 } from "@overbookd/festival-event-constants";
 
 const validatedReviewStatus: ApprovalReviewStatus<"FA">[] = [
-  NOT_ASKING_TO_REVIEW,
   APPROVED,
 ];
 const inReviewReviewStatus: ReviewingStatus<"FA">[] = [
@@ -136,7 +134,7 @@ export class ActivityValidatedReviewsResponseDto implements ValidatedReviews<"FA
   @ApiProperty({
     required: true,
     enum: validatedReviewStatus,
-    example: NOT_ASKING_TO_REVIEW,
+    example: APPROVED,
     description: "Communication reviewing status",
   })
   communication: ApprovalReviewStatus<"FA">;
