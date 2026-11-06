@@ -378,15 +378,22 @@ describe("General section of festival activity preparation", () => {
         });
       });
       describe("when trying to update general information", () => {
-        it("should indicate that general section is locked", async () => {
-          await expect(
-            async () =>
+        if (activityId === publicApprovedByCommunication.id) {
+          it("should lock general information when publication is requested", async () => {
+            await expect(
+              prepareFestivalActivity.updateGeneralSection(activityId, update),
+            ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+          });
+        } else {
+          it("should allow updating general information without a publication request", async () => {
+            const { general } =
               await prepareFestivalActivity.updateGeneralSection(
                 activityId,
                 update,
-              ),
-          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
-        });
+              );
+            expect(general.description).toBe(update.description);
+          });
+        }
       });
     },
   );
@@ -435,16 +442,21 @@ describe("General section of festival activity preparation", () => {
     },
   );
   describe("when only humain already approved the activity", () => {
-    it("should allow updating general information regardless of its visibility", async () => {
+    it("should allow updating general information when publication is requested", async () => {
       const update = { description: "An updated description" };
 
-      for (const activity of [approvedByHumain, publicApprovedByHumain]) {
-        const { general } = await prepareFestivalActivity.updateGeneralSection(
-          activity.id,
-          update,
-        );
-        expect(general.description).toBe(update.description);
-      }
+      const { general } = await prepareFestivalActivity.updateGeneralSection(
+        publicApprovedByHumain.id,
+        update,
+      );
+      expect(general.description).toBe(update.description);
+    });
+    it("should lock general information without a publication request", async () => {
+      await expect(
+        prepareFestivalActivity.updateGeneralSection(approvedByHumain.id, {
+          description: "An updated description",
+        }),
+      ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
     });
   });
 });
