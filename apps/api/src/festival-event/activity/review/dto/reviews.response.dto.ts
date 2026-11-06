@@ -14,9 +14,7 @@ import {
   VALIDATED,
 } from "@overbookd/festival-event-constants";
 
-const validatedReviewStatus: ApprovalReviewStatus<"FA">[] = [
-  APPROVED,
-];
+const validatedReviewStatus: ApprovalReviewStatus<"FA">[] = [APPROVED];
 const inReviewReviewStatus: ReviewingStatus<"FA">[] = [
   ...validatedReviewStatus,
   REVIEWING,
