@@ -179,7 +179,7 @@
         </div>
         <AvailabilitiesSumupCalendar
           v-if="canManageAvailabilities"
-          v-model="availabilities as Availabilities"
+          v-model="availabilities"
           :loading="isLoading"
           class="availabilities desktop-only"
         />
@@ -275,7 +275,7 @@ const note = ref<string | null>(null);
 const newTeams = ref<Team[]>([]);
 const newFriend = ref<User | null>(null);
 
-const availabilities = ref<Availabilities>(Availabilities.init());
+const availabilities = shallowRef<Availabilities>(Availabilities.init());
 const savedAvailabilities = ref<Period[]>([]);
 
 const canManageUsers = computed<boolean>(() => myStore.can(MANAGE_USERS));
