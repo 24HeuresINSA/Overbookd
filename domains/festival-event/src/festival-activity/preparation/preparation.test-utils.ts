@@ -153,9 +153,17 @@ export const publicApprovedByHumain = factory
   .withReviews({ humain: APPROVED })
   .build();
 
-export const approvedByCommunication = factory
+export const publicApprovedByCommunication = factory
   .inReview("Validée par l'équipe communication")
   .asPublic()
+  .withGeneral({
+    timeWindows: [friday12hToFriday14h, saturday11hToSaturday15h],
+  })
+  .withReviews({ communication: APPROVED })
+  .build();
+
+export const privateApprovedByCommunication = factory
+  .inReview("Activité privée validée par l'équipe communication")
   .withGeneral({
     timeWindows: [friday12hToFriday14h, saturday11hToSaturday15h],
   })

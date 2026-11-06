@@ -1,7 +1,6 @@
 import {
   APPROVED,
   IN_REVIEW,
-  NOT_ASKING_TO_REVIEW,
   REFUSED,
   REJECTED,
   VALIDATED,
@@ -23,7 +22,6 @@ import {
 } from "./reviewing.error.js";
 import {
   AlreadyApproved,
-  NotAskingToReview,
   ShouldAssignDrive,
 } from "../../common/review.error.js";
 import { Adherent } from "../../common/adherent.js";
@@ -61,9 +59,6 @@ export class Reviewing {
     if (this.isAlreadyApprovedBy(festivalActivity, team)) {
       throw new AlreadyApproved(faId, team, "FA");
     }
-    if (this.isNotAskingToReview(festivalActivity, team)) {
-      throw new NotAskingToReview(faId, team, "FA");
-    }
     if (isInquiryOwner(team)) {
       this.checkInquiryDriveAssignment(festivalActivity, team);
     }
@@ -86,9 +81,6 @@ export class Reviewing {
     const festivalActivity = await this.festivalActivities.findById(faId);
     if (!festivalActivity) throw new FestivalActivityNotFound(faId);
     if (isDraft(festivalActivity)) throw new InDraft(faId);
-    if (this.isNotAskingToReview(festivalActivity, team)) {
-      throw new NotAskingToReview(faId, team, "FA");
-    }
     if (this.isAlreadyRejectedBy(festivalActivity, team)) {
       throw new AlreadyRejected(faId, team);
     }
@@ -175,14 +167,6 @@ export class Reviewing {
   ) {
     const teamReview = getTeamReview(festivalActivity.reviews, team);
     return teamReview === REJECTED;
-  }
-
-  private isNotAskingToReview(
-    festivalActivity: Reviewable,
-    team: Reviewer<"FA">,
-  ) {
-    const teamReview = getTeamReview(festivalActivity.reviews, team);
-    return teamReview === NOT_ASKING_TO_REVIEW;
   }
 }
 

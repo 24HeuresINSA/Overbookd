@@ -27,7 +27,7 @@ import {
   APPROVED,
   REJECTED,
   COMMENTED,
-  NOT_ASKING_TO_REVIEW,
+  REVIEWING,
 } from "@overbookd/festival-event-constants";
 import {
   BARRIERES,
@@ -225,7 +225,7 @@ export class FestivalActivityBuilder<T extends FestivalActivity> {
     reviewer: Reviewer<"FA">,
   ): ReviewStatus<"FA"> {
     const review = reviews.find((review) => review.team === reviewer);
-    return review?.status ?? NOT_ASKING_TO_REVIEW;
+    return review?.status ?? REVIEWING;
   }
 
   private static formatHistory(history: DatabaseKeyEvent[]): KeyEvent[] {

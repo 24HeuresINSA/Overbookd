@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it } from "vitest";
 import {
   DRAFT,
   IN_REVIEW,
-  NOT_ASKING_TO_REVIEW,
   READY_TO_REVIEW,
   REVIEWING,
 } from "@overbookd/festival-event-constants";
@@ -92,7 +91,7 @@ describe("Festival Activity - ask for review", () => {
       describe("reviews", () => {
         it.each`
           team             | status
-          ${COMMUNICATION} | ${NOT_ASKING_TO_REVIEW}
+          ${COMMUNICATION} | ${REVIEWING}
           ${HUMAIN}        | ${REVIEWING}
           ${SIGNA}         | ${REVIEWING}
           ${SECU}          | ${REVIEWING}

@@ -32,7 +32,6 @@ import { Reviewing } from "./reviewing.js";
 import { AlreadyRejected, ShouldLinkCatalogItem } from "./reviewing.error.js";
 import {
   AlreadyApproved,
-  NotAskingToReview,
   ShouldAssignDrive,
 } from "../../common/review.error.js";
 import { InMemoryReviewingFestivalActivities } from "./reviewing-festival-activities.inmemory.js";
@@ -102,6 +101,7 @@ const privateWithAllApprovedExceptSecurity = factory
   .inReview("Private all approved except security")
   .withReviews({
     humain: APPROVED,
+    communication: APPROVED,
     matos: APPROVED,
     elec: APPROVED,
     barrieres: APPROVED,
@@ -213,11 +213,13 @@ describe("Approve festival activity", () => {
     });
   });
   describe("when approving a private festival activity as communication", () => {
-    it("should indicate that communication is not asking to review it", async () => {
-      await expect(
-        async () =>
-          await reviewing.approve(privateActivity.id, COMMUNICATION, george),
-      ).rejects.toThrow(NotAskingToReview);
+    it("should approve the activity for communication", async () => {
+      const activity = await reviewing.approve(
+        privateActivity.id,
+        COMMUNICATION,
+        george,
+      );
+      expect(activity.reviews.communication).toBe(APPROVED);
     });
   });
   describe.each`
@@ -353,15 +355,14 @@ describe("Reject festival activity", () => {
   });
 
   describe("when rejecting a private festival activity as communication", () => {
-    it("should indicate that communication is not asking to review it", async () => {
-      await expect(
-        async () =>
-          await reviewing.reject(privateActivity.id, {
-            team: COMMUNICATION,
-            rejector: george,
-            reason: "Il faut une meilleure description",
-          }),
-      ).rejects.toThrow(NotAskingToReview);
+    it("should reject the activity for communication", async () => {
+      const activity = await reviewing.reject(privateActivity.id, {
+        team: COMMUNICATION,
+        rejector: george,
+        reason: "Il faut une meilleure description",
+      });
+      expect(activity.reviews.communication).toBe(REJECTED);
+      expect(activity.status).toBe(REFUSED);
     });
   });
 

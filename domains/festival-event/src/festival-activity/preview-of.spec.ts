@@ -2,7 +2,6 @@ import {
   APPROVED,
   DRAFT,
   IN_REVIEW,
-  NOT_ASKING_TO_REVIEW,
   REFUSED,
   REJECTED,
   REVIEWING,
@@ -74,7 +73,7 @@ describe("Transform a festival activity to its preview", () => {
       team: PLAIZIR,
       reviews: {
         humain: REVIEWING,
-        communication: NOT_ASKING_TO_REVIEW,
+        communication: REVIEWING,
         matos: REVIEWING,
         barrieres: APPROVED,
         elec: REVIEWING,
@@ -128,7 +127,7 @@ describe("Transform a festival activity to its preview", () => {
       team: PLAIZIR,
       reviews: {
         humain: APPROVED,
-        communication: NOT_ASKING_TO_REVIEW,
+        communication: APPROVED,
         matos: APPROVED,
         barrieres: APPROVED,
         elec: APPROVED,
@@ -182,7 +181,7 @@ describe("Transform a festival activity to its preview", () => {
       team: PLAIZIR,
       reviews: {
         humain: REVIEWING,
-        communication: NOT_ASKING_TO_REVIEW,
+        communication: REVIEWING,
         matos: REVIEWING,
         barrieres: APPROVED,
         elec: REJECTED,

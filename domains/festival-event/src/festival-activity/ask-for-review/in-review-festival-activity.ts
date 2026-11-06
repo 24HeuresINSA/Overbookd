@@ -1,6 +1,5 @@
 import {
   IN_REVIEW,
-  NOT_ASKING_TO_REVIEW,
   REJECTED,
   REVIEWING,
 } from "@overbookd/festival-event-constants";
@@ -20,28 +19,13 @@ import { ActivityInChargeSpecification } from "./specifications/in-charge-sectio
 import { ActivitySignaSpecification } from "./specifications/signa-section-specification.js";
 import { ActivityInquirySpecification } from "./specifications/inquiry-section-specification.js";
 import { ReadyForReviewError } from "../../common/ready-for-review.error.js";
-import {
-  Reviewer,
-  PrivateActivityReviewer,
-  PublicActivityReviewer,
-} from "../../common/review.js";
+import { Reviewer, ActivityReviewer } from "../../common/review.js";
 import { FestivalActivityKeyEvents } from "../festival-activity.event.js";
 import { Adherent } from "../../common/adherent.js";
 
-type MandatoryReviews<T extends Reviewer<"FA">> = Record<T, typeof REVIEWING> &
-  Record<Exclude<Reviewer<"FA">, T>, typeof NOT_ASKING_TO_REVIEW>;
+type MandatoryReviews<T extends Reviewer<"FA">> = Record<T, typeof REVIEWING>;
 
-const PRIVATE_ACTIVITY_REVIEWS: MandatoryReviews<PrivateActivityReviewer> = {
-  communication: NOT_ASKING_TO_REVIEW,
-  humain: REVIEWING,
-  signa: REVIEWING,
-  secu: REVIEWING,
-  matos: REVIEWING,
-  elec: REVIEWING,
-  barrieres: REVIEWING,
-};
-
-const PUBLIC_ACTIVITY_REVIEWS: MandatoryReviews<PublicActivityReviewer> = {
+const ACTIVITY_REVIEWS: MandatoryReviews<ActivityReviewer> = {
   communication: REVIEWING,
   humain: REVIEWING,
   signa: REVIEWING,
@@ -116,11 +100,6 @@ export class InReviewFestivalActivity implements InReview {
       throw ReviewableSpecification.generateError(activity);
     }
 
-    const isPublic = activity.general.toPublish;
-    const reviews = isPublic
-      ? PUBLIC_ACTIVITY_REVIEWS
-      : PRIVATE_ACTIVITY_REVIEWS;
-
     const history = [
       ...activity.history,
       FestivalActivityKeyEvents.readyToReview(instigator),
@@ -134,7 +113,7 @@ export class InReviewFestivalActivity implements InReview {
       activity.security,
       activity.supply,
       activity.inquiry,
-      reviews,
+      ACTIVITY_REVIEWS,
       activity.feedbacks,
       history,
       activity.tasks,
