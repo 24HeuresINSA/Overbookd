@@ -16,10 +16,7 @@ import {
 } from "@overbookd/domain-events";
 import { nicknameOrName, Profile } from "@overbookd/user";
 import { Membership } from "@overbookd/registration";
-import {
-  APPROVED,
-  REJECTED,
-} from "@overbookd/festival-event-constants";
+import { APPROVED, REJECTED } from "@overbookd/festival-event-constants";
 import { createTransport, SendMailOptions } from "nodemailer";
 import { renderFile } from "ejs";
 import { PrismaMembers } from "./repository/members.prisma";
