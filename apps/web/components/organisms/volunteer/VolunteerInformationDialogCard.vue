@@ -164,7 +164,7 @@
               text="Enregistrer les informations"
               color="success"
               size="large"
-              :loading="isSaving"
+              :loading="isLoading"
               @click="savePersonalData"
             />
             <v-btn
@@ -180,7 +180,7 @@
         <AvailabilitiesSumupCalendar
           v-if="canManageAvailabilities"
           v-model="availabilities as Availabilities"
-          :volunteer-id="volunteer.id"
+          :loading="isLoading"
           class="availabilities desktop-only"
         />
       </div>
@@ -213,7 +213,7 @@ import {
   minDate,
   required,
 } from "~/utils/rules/input.rules";
-import { formatLocalDate, Period } from "@overbookd/time";
+import { formatLocalDate, type IProvidePeriod, Period } from "@overbookd/time";
 import { HARD, PERSONNE } from "@overbookd/team-code";
 import { assignmentPreferenceLabels } from "~/utils/assignment/preference";
 import { PLANNING_URL } from "@overbookd/web-page";
@@ -244,14 +244,15 @@ const { volunteer } = defineProps({
   },
 });
 
-const nickname = ref<string | null>(null);
-const birthDay = ref<string>("");
-const phoneNumber = ref<string>("");
-const email = ref<string>("");
-const newTeams = ref<Team[]>([]);
-const note = ref<string | null>(null);
-const newFriend = ref<User | null>(null);
-const isSaving = ref<boolean>(false);
+const emit = defineEmits([
+  "close",
+  "update-teams",
+  "update-friends",
+  "update-availabilities",
+  "updated",
+  "delete",
+  "anonymize",
+]);
 
 const rules = {
   required,
@@ -264,9 +265,19 @@ const rules = {
   maxDate: maxDate(),
 };
 
-const selectedVolunteerFriends = computed<UserWithTeams[]>(
-  () => userStore.selectedUserFriends,
-);
+const isLoading = ref<boolean>(false);
+
+const nickname = ref<string | null>(null);
+const birthDay = ref<string>("");
+const phoneNumber = ref<string>("");
+const email = ref<string>("");
+const note = ref<string | null>(null);
+const newTeams = ref<Team[]>([]);
+const newFriend = ref<User | null>(null);
+
+const availabilities = ref<Availabilities>(Availabilities.init());
+const savedAvailabilities = ref<Period[]>([]);
+
 const canManageUsers = computed<boolean>(() => myStore.can(MANAGE_USERS));
 const canViewPlanning = computed<boolean>(() => myStore.can(VIEW_PLANNING));
 const canManageAvailabilities = computed<boolean>(() =>
@@ -281,14 +292,19 @@ const assignmentPreferenceLabel = computed<string>(() => {
   if (!assignment) return assignmentPreferenceLabels.NO_PREF;
   return assignmentPreferenceLabels[assignment];
 });
-
 const shouldDisplayMinorHint = computed<boolean>(
   () =>
     myStore.can(AFFECT_VOLUNTEER) &&
     willBeMinorAtEvent(new Date(birthDay.value)),
 );
 
-const updateVolunteerInformations = async () => {
+const selectedVolunteerFriends = computed<UserWithTeams[]>(
+  () => userStore.selectedUserFriends,
+);
+const isCandidate = (volunteer: UserWithTeams) =>
+  !volunteer.teams.includes(PERSONNE);
+
+const fillVolunteerInformations = async () => {
   nickname.value = volunteer.nickname ?? null;
   birthDay.value = formatLocalDate(volunteer.birthDate);
   phoneNumber.value = volunteer.phoneNumber ?? "";
@@ -296,43 +312,42 @@ const updateVolunteerInformations = async () => {
   note.value = volunteer.note ?? null;
   await userStore.fetchSelectedUserFriends();
 };
+const fetchAvailabilities = async () => {
+  if (!canManageAvailabilities.value) return;
+  availabilityStore.clearVolunteerAvailabilities();
+  await availabilityStore.fetchVolunteerAvailabilities(volunteer.id);
+  const fetchedPeriods = availabilityStore.availabilities.list as Period[];
+  availabilities.value = Availabilities.init({ selected: fetchedPeriods });
+  savedAvailabilities.value = fetchedPeriods;
+};
 
-watch(volunteer, async () => await updateVolunteerInformations(), {
-  immediate: true,
-});
-
-const emit = defineEmits([
-  "close",
-  "update-teams",
-  "update-friends",
-  "update-availabilities",
-  "updated",
-  "delete",
-  "anonymize",
-]);
-
-const close = () => emit("close");
+watch(
+  () => volunteer,
+  async () => {
+    isLoading.value = true;
+    await Promise.all([fillVolunteerInformations(), fetchAvailabilities()]);
+    isLoading.value = false;
+  },
+  { immediate: true },
+);
 
 const hasNotNewTeamToAdd = computed<boolean>(() => newTeams.value.length === 0);
 const addTeams = async () => {
   if (hasNotNewTeamToAdd.value) return;
   const teams = newTeams.value.map((team) => team.code);
   await userStore.addTeamsToUser(volunteer.id, teams);
-  await updateVolunteerInformations();
+  await fillVolunteerInformations();
   newTeams.value = [];
   emit("update-teams");
 };
-
 const removeTeam = async (team: string) => {
   await userStore.removeTeamFromUser(volunteer.id, team);
-  await updateVolunteerInformations();
+  await fillVolunteerInformations();
   emit("update-teams");
 };
 
 const sendFriendRequest = async () => {
-  if (newFriend.value === null || volunteer.id === newFriend.value.id) {
-    return;
-  }
+  if (newFriend.value === null || volunteer.id === newFriend.value.id) return;
   await userStore.addFriendToUser(volunteer.id, newFriend.value);
   newFriend.value = null;
   emit("update-friends");
@@ -342,54 +357,70 @@ const removeFriend = async (friend: User) => {
   emit("update-friends");
 };
 
-const updatedVolunteer = computed<UserUpdateForm>(() => {
-  const trimmedNickname = nickname.value?.trim() || null;
-  const trimmedNote = note.value?.trim() || null;
-  return {
-    firstName: volunteer.firstName,
-    lastName: volunteer.lastName,
-    nickname: trimmedNickname,
-    birthDate: new Date(birthDay.value),
-    phoneNumber: formatPhoneNumberToInternational(phoneNumber.value),
-    email: email.value.trim(),
-    note: trimmedNote,
-  };
+const trimOrNull = (value?: string | null): string | null =>
+  value?.trim() || null;
+
+const updatedVolunteer = computed<UserUpdateForm>(() => ({
+  firstName: volunteer.firstName,
+  lastName: volunteer.lastName,
+  nickname: trimOrNull(nickname.value),
+  birthDate: new Date(birthDay.value),
+  phoneNumber: formatPhoneNumberToInternational(phoneNumber.value),
+  email: email.value.trim(),
+  note: trimOrNull(note.value),
+}));
+const isUserInformationUnchanged = computed<boolean>(() => {
+  const updated = updatedVolunteer.value;
+  return (
+    updated.nickname === trimOrNull(volunteer.nickname) &&
+    birthDay.value === formatLocalDate(volunteer.birthDate) &&
+    updated.phoneNumber === volunteer.phoneNumber &&
+    updated.email === volunteer.email &&
+    updated.note === trimOrNull(volunteer.note)
+  );
 });
 
-const availabilities = ref<Availabilities>(Availabilities.init());
-const selected = computed<Period[]>(
-  () => availabilities.value.list as Period[],
-);
+const isSamePeriod = (first: IProvidePeriod, second: IProvidePeriod) =>
+  first.start.getTime() === second.start.getTime() &&
+  first.end.getTime() === second.end.getTime();
+const isAvailabilitiesUnchanged = computed<boolean>(() => {
+  const saved = savedAvailabilities.value;
+  const selected = availabilities.value.selected;
+  if (saved.length !== selected.length) return false;
+  return saved.every((savedPeriod) =>
+    selected.some((selectedPeriod) =>
+      isSamePeriod(savedPeriod, selectedPeriod),
+    ),
+  );
+});
 
-const isUnchanged = computed<boolean>(
-  () => availabilities.value.selected.length === 0,
-);
+const saveUserInformation = async () => {
+  if (isUserInformationUnchanged.value) return;
+  await userStore.updateUser(volunteer.id, updatedVolunteer.value);
+};
 const saveAvailabilities = async () => {
-  if (isUnchanged.value) return;
+  if (!canManageAvailabilities.value || isAvailabilitiesUnchanged.value) return;
   await availabilityStore.overrideVolunteerAvailabilities(
     volunteer.id,
-    selected.value,
+    availabilities.value.selected as Period[],
   );
-  initialPeriods.value = selected.value;
+  emit("update-availabilities");
 };
 const savePersonalData = async () => {
-  isSaving.value = true;
+  isLoading.value = true;
   try {
-    await userStore.updateUser(volunteer.id, updatedVolunteer.value);
-    if (canManageAvailabilities.value && !isUnchanged.value) {
-      await saveAvailabilities();
-      emit("update-availabilities");
-    }
+    await Promise.all([saveUserInformation(), saveAvailabilities()]);
     emit("updated");
   } finally {
-    isSaving.value = false;
+    isLoading.value = false;
   }
 };
+
+const close = () => emit("close");
 const deleteOrAnonymizeVolunteer = async () => {
   const shouldAnonymize = await userStore.shouldAnonymizeUser(volunteer.id);
   emit(shouldAnonymize ? "anonymize" : "delete");
 };
-
 const sendEmail = () => {
   window.location.href = formatEmailLink(volunteer.email);
 };
@@ -399,9 +430,6 @@ const callPhoneNumber = () => {
 const openCalendar = (volunteerId: number) => {
   window.open(`${PLANNING_URL}/${volunteerId}`);
 };
-
-const isCandidate = (volunteer: UserWithTeams) =>
-  !volunteer.teams.includes(PERSONNE);
 </script>
 
 <style lang="scss" scoped>
