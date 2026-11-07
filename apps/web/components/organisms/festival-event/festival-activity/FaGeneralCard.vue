@@ -2,7 +2,7 @@
   <div>
     <v-card>
       <v-card-title>Général</v-card-title>
-      
+
       <v-card-subtitle>
         Si tu as des questions, n'hésite pas à contacter
         <a :href="`mailto:${contact}`"> {{ contact }} </a>.

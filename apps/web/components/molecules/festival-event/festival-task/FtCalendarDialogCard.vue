@@ -10,32 +10,32 @@
       >
         <template #additional-actions>
           <div class="d-flex gc-4 flex-wrap justify-center">
-          <v-switch
-            v-model="displayActivityEvents"
-            color="primary"
-            label="Animations"
-            class="my-n2"
-          />
-          <v-switch
-            v-model="displayInquiryEvents"
-            color="secondary"
-            label="Matos"
-            class="my-n2"
-          />
-          <v-switch
-            v-if="!isReadyToAssign(selectedTask)"
-            v-model="displayMobilizationOrAssignmentEvents"
-            color="tertiary"
-            label="Mobilisations"
-            class="my-n2"
-          />
-          <v-switch
-            v-else
-            v-model="displayMobilizationOrAssignmentEvents"
-            :color="READY_TO_ASSIGN_COLOR"
-            label="Affectations"
-            class="my-n2"
-          />
+            <v-switch
+              v-model="displayActivityEvents"
+              color="primary"
+              label="Animations"
+              class="my-n2"
+            />
+            <v-switch
+              v-model="displayInquiryEvents"
+              color="secondary"
+              label="Matos"
+              class="my-n2"
+            />
+            <v-switch
+              v-if="!isReadyToAssign(selectedTask)"
+              v-model="displayMobilizationOrAssignmentEvents"
+              color="tertiary"
+              label="Mobilisations"
+              class="my-n2"
+            />
+            <v-switch
+              v-else
+              v-model="displayMobilizationOrAssignmentEvents"
+              :color="READY_TO_ASSIGN_COLOR"
+              label="Affectations"
+              class="my-n2"
+            />
           </div>
         </template>
       </OverCalendar>

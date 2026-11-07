@@ -1,5 +1,5 @@
 <template>
-  <DialogCard  @close="close">
+  <DialogCard @close="close">
     <template #title>
       <v-icon icon="mdi-link-variant" class="mr-2" />
       {{ edit ? "Modifier le lien" : "Ajouter un lien" }}
