@@ -42,7 +42,7 @@
                       variant="text"
                       density="comfortable"
                       :color="button.isActive?.() ? 'primary' : undefined"
-                      :disabled="button.isDisabled?.()"
+                      :disabled="readonly || button.isDisabled?.()"
                       icon
                       rounded
                       @click="button.onClick"
