@@ -1,5 +1,5 @@
 <template>
-  <div v-html-safe="content" class="tiptap" />
+  <div v-html-safe="content" class="rich-viewer" />
 </template>
 
 <script lang="ts" setup>
@@ -11,4 +11,8 @@ defineProps({
 });
 </script>
 
-<style lang="scss" src="~/assets/tiptap.scss" />
+<style scoped>
+.rich-viewer :deep(ul), .rich-viewer :deep(ol) {
+    padding-left: 1.5em;
+}
+</style>

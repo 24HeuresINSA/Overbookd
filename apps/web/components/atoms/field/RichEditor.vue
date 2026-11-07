@@ -317,8 +317,6 @@ const removeLink = () => {
 };
 </script>
 
-<style lang="scss" src="~/assets/tiptap.scss" />
-
 <style lang="scss" scoped>
 .v-field {
   border-radius: $field-border-radius;
@@ -346,6 +344,14 @@ const removeLink = () => {
 
 .editor :deep(.tiptap) {
   height: 100%;
+  display: flow-root;
+  outline: none;
+  padding-top: 10px;
+
+  ul,
+  ol {
+    padding-left: 1.5em;
+  }
 }
 
 .raw-markdown-editor :deep(.v-field__outline) {
