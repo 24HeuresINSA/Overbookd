@@ -12,7 +12,8 @@ defineProps({
 </script>
 
 <style scoped>
-.rich-viewer :deep(ul), .rich-viewer :deep(ol) {
-    padding-left: 1.5em;
+.rich-viewer :deep(ul),
+.rich-viewer :deep(ol) {
+  padding-left: 1.5em;
 }
 </style>
