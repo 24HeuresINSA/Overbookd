@@ -48,18 +48,18 @@
             </span>
           </v-chip>
         </div>
-        <div class="instructions">
+        <div>
           <h3>Instructions</h3>
-          <div
-            v-html-safe="selectedTask.globalInstruction"
-            class="instructions__text"
+          <RichViewer
+            :content="selectedTask.globalInstruction"
+            class="instructions"
           />
         </div>
-        <div v-if="selectedTask.inChargeInstruction" class="instructions">
+        <div v-if="selectedTask.inChargeInstruction">
           <h3>Instructions pour les responsables</h3>
-          <div
-            v-html-safe="selectedTask.inChargeInstruction"
-            class="instructions__text"
+          <RichViewer
+            :content="selectedTask.inChargeInstruction"
+            class="instructions"
           />
         </div>
         <div class="contacts">
@@ -183,19 +183,7 @@ if (locationStore.all.length === 0) locationStore.fetchAllLocations();
 }
 
 .instructions {
-  &__text {
-    margin-left: 1rem;
-  }
-  :deep(h1) {
-    font-size: x-large;
-  }
-  :deep(h2) {
-    font-size: large;
-  }
-  :deep(ul),
-  :deep(ol) {
-    padding-left: 2rem;
-  }
+  margin-left: 1rem;
 }
 
 .contacts {
