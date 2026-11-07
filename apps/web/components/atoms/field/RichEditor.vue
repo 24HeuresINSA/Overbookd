@@ -125,8 +125,14 @@ const content = defineModel<string>({ required: false });
 
 const focused = ref<boolean>(false);
 
+const fixLineBreaks = (htmlContent: string) =>
+  htmlContent.replace(/<p><\/p>/g, "<p><br></p>");
+
+const normalizeEmptyParagraphs = (htmlContent: string) =>
+  htmlContent.replace(/<p>\s*<br\s*\/?>\s*<\/p>/g, "<p></p>");
+
 const editor = useEditor({
-  content: content.value ?? "",
+  content: normalizeEmptyParagraphs(content.value ?? ""),
   editable: !readonly,
   extensions: [
     StarterKit.configure({
@@ -135,7 +141,7 @@ const editor = useEditor({
     }),
   ],
   onUpdate: ({ editor }) => {
-    content.value = editor.getHTML();
+    content.value = fixLineBreaks(editor.getHTML());
   },
   onFocus: () => {
     focused.value = true;
@@ -162,8 +168,11 @@ watch(content, (newContent) => {
   const editorInstance = editor.value;
   if (!editorInstance) return;
   const currentContent = editorInstance.getHTML();
-  if ((newContent ?? "") === currentContent) return;
-  editorInstance.commands.setContent(newContent ?? "", { emitUpdate: false });
+  const normalizedNewContent = normalizeEmptyParagraphs(newContent ?? "");
+  if (normalizedNewContent === currentContent) return;
+  editorInstance.commands.setContent(normalizedNewContent, {
+    emitUpdate: false,
+  });
 });
 
 type ToolbarButton = {
@@ -308,6 +317,8 @@ const removeLink = () => {
 };
 </script>
 
+<style lang="scss" src="~/assets/tiptap.scss" />
+
 <style lang="scss" scoped>
 .v-field {
   border-radius: $field-border-radius;
@@ -341,5 +352,3 @@ const removeLink = () => {
   --v-field-border-width: 0;
 }
 </style>
-
-<style lang="scss" src="~/assets/tiptap.scss" />
