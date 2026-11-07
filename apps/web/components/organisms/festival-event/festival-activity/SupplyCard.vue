@@ -8,7 +8,7 @@
       Pour plus de renseignement, vois avec la Log Elec via
       <a :href="`mailto:${LOG_ELEC_EMAIL}`"> {{ LOG_ELEC_EMAIL }} </a>.
     </v-card-subtitle>
-    <v-card-text>
+    <v-card-text class="d-flex flex-column ga-4">
       <ElectricitySupplyTable
         :supplies="supply.electricity"
         @add="addElectricitySupply"
@@ -18,6 +18,7 @@
       <v-text-field
         :model-value="supply.water"
         label="Besoin en eau"
+        hide-details
         @update:model-value="updateWaterSupply"
       />
     </v-card-text>

@@ -1,0 +1,13 @@
+.tiptap {
+  display: flow-root;
+  outline: none;
+
+  > *:first-child {
+    margin-top: 0.5em;
+  }
+
+  ul,
+  ol {
+    padding-left: 1.5em;
+  }
+}

@@ -33,7 +33,6 @@
           <h3>Description organisateur·rice</h3>
           <RichEditor
             v-model="staffRegistrationFormDescription"
-            scope="staff-description"
           />
           <div class="description-actions">
             <v-btn
@@ -52,7 +51,6 @@
             <h3>Description bénévole</h3>
             <RichEditor
               v-model="volunteerRegistrationFormDescription"
-              scope="volunteer-description"
             />
             <div class="description-actions">
               <v-btn

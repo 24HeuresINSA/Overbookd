@@ -84,6 +84,17 @@ export function isInsaEmail(value: string | null) {
   return (value && insaEmailPattern.test(value)) || "Pas d'adresse insa 🙏";
 }
 
+export function isUrl(value: string | null) {
+  const message = "Lien non valide";
+  if (!value) return message;
+  try {
+    const url = new URL(value);
+    return ["http:", "https:"].includes(url.protocol) || message;
+  } catch {
+    return message;
+  }
+}
+
 export function isMobilePhoneNumber(value: string | null) {
   const message = "Numéro de téléphone mobile non valable";
   if (!value) return message;

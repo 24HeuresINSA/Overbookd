@@ -2,11 +2,12 @@
   <div>
     <v-card>
       <v-card-title>Instructions</v-card-title>
-      <v-card-text>
+      <v-card-text class="d-flex flex-column ga-3">
         <SearchLocation
           :model-value="instructions.appointment"
           label="Lieu de rendez-vous"
           :disabled="disabled"
+          hide-details
           @update:model-value="updateAppointment($event?.id)"
         />
 
@@ -24,22 +25,28 @@
         <v-switch
           :model-value="hasInChargeInstructions"
           :disabled="disabled"
-          label="Ajouter des instructions spécifiques pour le.s responsable.s de la tâche"
+          label="Ajouter des instructions spécifiques pour le·s responsable·s de la tâche"
           color="primary"
+          class="my-n2"
           hide-details
           @update:model-value="toggleInChargeInstructions"
         />
-        <div v-show="hasInChargeInstructions">
+        <div
+          v-show="hasInChargeInstructions"
+          :class="{ 'd-flex': hasInChargeInstructions }"
+          class="flex-column ga-3"
+        >
           <SearchUsers
             v-model="instructions.inCharge.volunteers"
             label="Responsables de la tâche"
             :disabled="disabled"
             closable-chips
+            hide-details
             @add="addInChargeVolunteer"
             @remove="removeInChargeVolunteer"
           />
 
-          <v-label>Instructions pour le.s responsable.s de la tâche</v-label>
+          <v-label>Instructions pour le·s responsable·s de la tâche</v-label>
           <InstructionsEditor
             :model-value="inChargeInstruction"
             scope="in-charge-instruction"
@@ -138,7 +145,7 @@
         </template>
         <template #content>
           Les responsables sélectionné·e·s ainsi que leurs instructions
-          spécifiques seront supprimé·e·s. Es-tu sûr de vouloir continuer ?
+          spécifiques seront supprimées. Es-tu sûr de vouloir continuer ?
         </template>
         <template #confirm-btn-content>
           <v-icon icon="mdi-trash-can" left />Supprimer
@@ -391,9 +398,6 @@ const initInCharge = async (form: InitInChargeForm) => {
 .contact-form {
   display: flex;
   align-items: center;
-  gap: 1em;
-  margin-top: 20px;
-  margin-bottom: 0;
   gap: 1em;
   &__fields {
     width: 100%;

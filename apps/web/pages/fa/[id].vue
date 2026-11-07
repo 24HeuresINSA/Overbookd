@@ -151,9 +151,6 @@ $side-nav-width: calc(350px + $sidebar-margin);
 }
 
 .container {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
   padding-left: 20px;
   overflow-y: auto;
 }
@@ -165,7 +162,7 @@ $side-nav-width: calc(350px + $sidebar-margin);
 article {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
   flex-grow: 1;
 }
 
