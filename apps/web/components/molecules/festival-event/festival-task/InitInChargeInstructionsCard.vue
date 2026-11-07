@@ -9,18 +9,15 @@
 
     <template #content>
       <div class="d-flex flex-column ga-3">
-      <SearchUsers
-        v-model="volunteers"
-        label="Responsable(s) de la tâche"
-        closable-chips
-        hide-details
-      />
+        <SearchUsers
+          v-model="volunteers"
+          label="Responsable(s) de la tâche"
+          closable-chips
+          hide-details
+        />
 
-      <v-label>Instructions pour le·s responsable·s de la tâche</v-label>
-      <RichEditor
-        v-model="instruction"
-        hide-details
-      />
+        <v-label>Instructions pour le·s responsable·s de la tâche</v-label>
+        <RichEditor v-model="instruction" hide-details />
       </div>
     </template>
 

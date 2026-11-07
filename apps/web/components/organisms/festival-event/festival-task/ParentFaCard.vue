@@ -4,55 +4,55 @@
 
     <v-card-text class="d-flex flex-column ga-3">
       <div>
-      <NuxtLink :to="`${FA_URL}/${activity.id}`" class="activity">
-        <v-chip-group id="status">
-          <v-chip :class="activity.status.toLowerCase()">
-            {{ activity.id }}
-          </v-chip>
-        </v-chip-group>
-        <h2 class="festival-activity__name">{{ activity.name }}</h2>
-        <v-icon icon="mdi-open-in-new" />
-      </NuxtLink>
+        <NuxtLink :to="`${FA_URL}/${activity.id}`" class="activity">
+          <v-chip-group id="status">
+            <v-chip :class="activity.status.toLowerCase()">
+              {{ activity.id }}
+            </v-chip>
+          </v-chip-group>
+          <h2 class="festival-activity__name">{{ activity.name }}</h2>
+          <v-icon icon="mdi-open-in-new" />
+        </NuxtLink>
 
-      <span v-show="activity.location" class="d-flex ga-1 align-center">
-        <v-icon icon="mdi-map-marker-radius" size="large" />
-        {{ activity.location?.name }}
-      </span>
-      </div>
-
-      <div>
-      <div class="time-windows-title">
-        <h3>Créneaux de l'activité</h3>
-        <v-btn
-          icon="mdi-calendar-blank"
-          aria-label="Ouvrir le planning"
-          title="Ouvrir le planning"
-          color="secondary"
-          rounded="pill"
-          density="comfortable"
-          @click="openCalendar"
-        />
-      </div>
-      <FaTimeWindowTable :time-windows="activity.timeWindows" disabled />
+        <span v-show="activity.location" class="d-flex ga-1 align-center">
+          <v-icon icon="mdi-map-marker-radius" size="large" />
+          {{ activity.location?.name }}
+        </span>
       </div>
 
       <div>
-      <div class="time-windows-title">
-        <h3>Demandes de matos</h3>
-        <v-btn
-          icon="mdi-calendar-blank"
-          aria-label="Ouvrir le planning"
-          title="Ouvrir le planning"
-          color="secondary"
-          rounded="pill"
-          density="comfortable"
-          @click="openCalendar"
-        />
+        <div class="time-windows-title">
+          <h3>Créneaux de l'activité</h3>
+          <v-btn
+            icon="mdi-calendar-blank"
+            aria-label="Ouvrir le planning"
+            title="Ouvrir le planning"
+            color="secondary"
+            rounded="pill"
+            density="comfortable"
+            @click="openCalendar"
+          />
+        </div>
+        <FaTimeWindowTable :time-windows="activity.timeWindows" disabled />
       </div>
-      <FaTimeWindowTable
-        :time-windows="activity.inquiry.timeWindows"
-        disabled
-      />
+
+      <div>
+        <div class="time-windows-title">
+          <h3>Demandes de matos</h3>
+          <v-btn
+            icon="mdi-calendar-blank"
+            aria-label="Ouvrir le planning"
+            title="Ouvrir le planning"
+            color="secondary"
+            rounded="pill"
+            density="comfortable"
+            @click="openCalendar"
+          />
+        </div>
+        <FaTimeWindowTable
+          :time-windows="activity.inquiry.timeWindows"
+          disabled
+        />
       </div>
 
       <InquiryTable

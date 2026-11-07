@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title>Général</v-card-title>
-    
+
     <v-card-subtitle>
       <p>
         Si tu as des questions, n'hésite pas à contacter
