@@ -1,9 +1,9 @@
 <template>
   <RichEditor
     :model-value="instructions"
-    :scope="scope"
     :readonly="readonly"
     :unsaved="unsaved"
+    hide-details
     class="editor"
     @update:model-value="updateInstructions"
   />
@@ -30,10 +30,6 @@
 const instructions = defineModel<string>({ required: true });
 
 defineProps({
-  scope: {
-    type: String,
-    required: true,
-  },
   readonly: {
     type: Boolean,
     default: false,
@@ -70,10 +66,6 @@ const forceSave = () => emit("force-save", modifiedInstructions.value);
 </script>
 
 <style lang="scss" scoped>
-.editor {
-  margin: 6px 0;
-}
-
 .actions {
   display: flex;
   gap: 25px;

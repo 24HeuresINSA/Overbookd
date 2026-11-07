@@ -1,6 +1,7 @@
 <template>
   <v-card>
     <v-card-title>Responsable</v-card-title>
+
     <v-card-subtitle>
       <p>
         N'hésite pas si tu as des questions à contacter
@@ -11,20 +12,24 @@
         <a :href="CTMA_URL">cetaitmieuxavant</a>.
       </p>
     </v-card-subtitle>
-    <v-card-text>
+
+    <v-card-text class="d-flex flex-column ga-4">
       <SearchUser
         v-model="inCharge.adherent"
         label="Adhérent"
         :list="adherents"
+        hide-details
         @update:model-value="updateAdherent"
       />
+
       <SearchTeam
         :team="inChargeTeam"
         label="Équipe"
+        hide-details
         @update:team="updateTeam"
       />
 
-      <section class="contractors">
+      <div>
         <h3>Prestataires</h3>
         <ContractorTable
           :contractors="inCharge.contractors"
@@ -32,7 +37,7 @@
           @update="updateContractor"
           @remove="removeContractor"
         />
-      </section>
+      </div>
     </v-card-text>
   </v-card>
 </template>

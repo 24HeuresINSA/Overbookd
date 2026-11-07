@@ -125,7 +125,7 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .calendar-manager {
   display: flex;
-  gap: 15px;
+  column-gap: 15px;
   align-items: center;
   flex-wrap: wrap-reverse;
   justify-content: left;
