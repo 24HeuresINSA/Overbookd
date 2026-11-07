@@ -1,5 +1,5 @@
 <template>
-  <DialogCard no-closable @close="close">
+  <DialogCard  @close="close">
     <template #title>
       <v-icon icon="mdi-link-variant" class="mr-2" />
       {{ edit ? "Modifier le lien" : "Ajouter un lien" }}
@@ -23,13 +23,13 @@
     </template>
 
     <template #actions>
+      <v-btn text="Annuler" color="secondary" @click="close" />
       <v-btn
         v-if="edit"
         text="Retirer le lien"
-        color="secondary"
+        color="tertiary"
         @click="removeLink"
       />
-      <v-btn text="Annuler" color="secondary" @click="close" />
       <v-btn
         text="Valider"
         color="primary"
