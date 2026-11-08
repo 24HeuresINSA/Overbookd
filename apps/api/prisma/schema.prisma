@@ -56,6 +56,7 @@ model User {
 
   availabilities   VolunteerAvailability[]
   breaks           BreakPeriod[]
+  overClicScores   OverClicScore[]
   friendRequestors Friend[]                @relation("friend_requestor")
   friends          Friend[]                @relation("friend")
 
@@ -854,4 +855,15 @@ model BreakPeriod {
   @@index([end(sort: Asc)])
   @@index([start(sort: Asc), end(sort: Asc)])
   @@map("break_period")
+}
+
+model OverClicScore {
+  id        Int      @id @default(autoincrement())
+  score     Int
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int      @map("user_id")
+
+  @@index([userId])
+  @@map("overclic_score")
 }

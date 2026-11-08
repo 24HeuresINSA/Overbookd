@@ -6,3 +6,8 @@ export { AvailabilityDate } from "./date.js";
 export { Availabilities } from "./availabilities.js";
 export type { AvailabilityErrorMessage } from "./availabilities.js";
 export { AvailabilityError } from "./volunteer-availability.error.js";
+export type {
+  OverClicScore,
+  OverClicUser,
+  CreateOverClicScoreForm,
+} from "./overclic.js";

@@ -19,9 +19,13 @@ import { Permissions } from "../authentication-zitadel/decorators/permissions-au
 import { VolunteerAvailabilityService } from "./volunteer-availability.service";
 import { AFFECT_VOLUNTEER } from "@overbookd/permission";
 import { AvailabilitiesRequestDto } from "./dto/availabilities.request.dto";
+import { CreateOverClicScoreRequestDto } from "./dto/create-overclic-score.request.dto";
+import { OverClicScoreResponseDto } from "./dto/overclic-score.response.dto";
 import { PeriodResponseDto } from "../common/dto/period.response.dto";
 import { VolunteerAvailabilityErrorFilter } from "./volunteer-availability-error.filter";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
+import { AuthenticatedUser } from "../authentication-zitadel/decorators/authenticated-user.decorator";
+import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
 
 @Controller("volunteer-availability")
 @ApiTags("volunteer-availability")
@@ -32,6 +36,35 @@ export class VolunteerAvailabilityController {
   constructor(
     private readonly volunteerAvailabilityService: VolunteerAvailabilityService,
   ) {}
+
+  @Get("overclic/scores")
+  @ApiResponse({
+    status: 200,
+    description: "Get the OverClic high scores",
+    isArray: true,
+    type: OverClicScoreResponseDto,
+  })
+  findOverClicHighScores(): Promise<OverClicScoreResponseDto[]> {
+    return this.volunteerAvailabilityService.findOverClicHighScores();
+  }
+
+  @Post("overclic/scores")
+  @ApiResponse({
+    status: 201,
+    description: "Save an OverClic score and get the high scores",
+    isArray: true,
+    type: OverClicScoreResponseDto,
+  })
+  @ApiBody({
+    description: "The score achieved on OverClic",
+    type: CreateOverClicScoreRequestDto,
+  })
+  saveOverClicScore(
+    @Body() score: CreateOverClicScoreRequestDto,
+    @AuthenticatedUser() user: RequestHydratedUser,
+  ): Promise<OverClicScoreResponseDto[]> {
+    return this.volunteerAvailabilityService.saveOverClicScore(user.id, score);
+  }
 
   @Post(":userId")
   @ApiResponse({
@@ -97,7 +130,7 @@ export class VolunteerAvailabilityController {
     type: PeriodResponseDto,
     isArray: true,
   })
-  overrideHuman(
+  overrideAvailabilities(
     @Param("userId", ParseIntPipe) userId: number,
     @Body() { availabilities }: AvailabilitiesRequestDto,
   ): Promise<PeriodResponseDto[]> {

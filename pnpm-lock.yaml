@@ -751,6 +751,9 @@ importers:
       '@overbookd/time':
         specifier: workspace:*
         version: link:../../libraries/time
+      '@overbookd/user':
+        specifier: workspace:*
+        version: link:../../utils/user
 
   libraries/csv: {}
 

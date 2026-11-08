@@ -13,6 +13,11 @@ import {
 import { PrismaService } from "../prisma.service";
 import { SELECT_PERIOD } from "../common/query/period.query";
 import { VOLUNTEER } from "@overbookd/registration";
+import { CreateOverClicScoreRequestDto } from "./dto/create-overclic-score.request.dto";
+import { OverClicScoreResponseDto } from "./dto/overclic-score.response.dto";
+import { SELECT_USER_IDENTIFIER } from "../common/query/user.query";
+
+const HIGH_SCORES_LIMIT = 10;
 
 @Injectable()
 export class VolunteerAvailabilityService {
@@ -46,6 +51,26 @@ export class VolunteerAvailabilityService {
     return this.prisma.volunteerAvailability.findMany({
       where: { userId },
       select: SELECT_PERIOD,
+    });
+  }
+
+  async saveOverClicScore(
+    userId: number,
+    score: CreateOverClicScoreRequestDto,
+  ): Promise<OverClicScoreResponseDto[]> {
+    await this.prisma.overClicScore.create({
+      data: { ...score, userId },
+    });
+    return this.findOverClicHighScores();
+  }
+
+  async findOverClicHighScores(): Promise<OverClicScoreResponseDto[]> {
+    return this.prisma.overClicScore.findMany({
+      orderBy: [{ score: "desc" }, { createdAt: "asc" }],
+      take: HIGH_SCORES_LIMIT,
+      include: {
+        user: { select: { ...SELECT_USER_IDENTIFIER, profilePicture: true } },
+      },
     });
   }
 

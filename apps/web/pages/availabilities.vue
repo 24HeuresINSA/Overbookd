@@ -41,6 +41,7 @@
       <v-card-text>
         <p class="charisma">
           Mon Charisme : {{ charisma }} {{ charismaEmoji }}
+          <OverClic :charisma="charisma" class="ml-4" />
         </p>
         <AvailabilitiesStepper />
       </v-card-text>
