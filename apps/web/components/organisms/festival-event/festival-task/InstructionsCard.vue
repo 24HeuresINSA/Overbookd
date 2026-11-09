@@ -14,7 +14,6 @@
         <v-label>Instructions globales</v-label>
         <InstructionsEditor
           :model-value="globalInstruction"
-          scope="global-instruction"
           :readonly="disabled && !canForceInstruction"
           :can-save="canSaveInstructions"
           :can-force-instruction="canForceInstruction"
@@ -49,7 +48,6 @@
           <v-label>Instructions pour le·s responsable·s de la tâche</v-label>
           <InstructionsEditor
             :model-value="inChargeInstruction"
-            scope="in-charge-instruction"
             :readonly="disabled && !canForceInstruction"
             :can-save="canSaveInstructions"
             :can-force-instruction="canForceInstruction"

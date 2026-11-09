@@ -11,60 +11,55 @@
     indent-details
   >
     <template #default="{ isValid }">
-      <div
-        class="v-field v-field--variant-outlined d-flex flex-column w-100"
-        :class="{
-          'v-field--focused': focused,
-          'v-field--error': isValid.value === false || unsaved,
-        }"
+      <v-field
+        v-model:focused="focused"
+        variant="outlined"
+        :error="isValid.value === false || unsaved"
       >
-        <ClientOnly>
-          <v-toolbar>
-            <div class="input-content w-100 d-flex ga-2">
-              <div class="d-flex flex-wrap">
-                <template
-                  v-for="(group, groupIndex) in toolbarGroups"
-                  :key="groupIndex"
-                >
-                  <v-divider
-                    v-if="groupIndex > 0"
-                    vertical
-                    inset
-                    class="mx-1"
-                  />
+        <div class="d-flex flex-column w-100">
+          <client-only>
+            <v-toolbar class="toolbar">
+              <div class="input-content w-100 d-flex ga-2">
+                <div class="d-flex flex-wrap">
+                  <template
+                    v-for="(group, groupIndex) in toolbarGroups"
+                    :key="groupIndex"
+                  >
+                    <v-divider
+                      v-if="groupIndex > 0"
+                      vertical
+                      inset
+                      class="mx-1"
+                    />
 
-                  <div>
-                    <v-btn
-                      v-for="(button, buttonIndex) in group"
-                      :key="buttonIndex"
-                      :aria-label="button.title"
-                      :title="button.title"
-                      variant="text"
-                      density="comfortable"
-                      :color="button.isActive?.() ? 'primary' : undefined"
-                      :disabled="readonly || button.isDisabled?.()"
-                      icon
-                      rounded
-                      @click="button.onClick"
-                    >
-                      <v-icon :icon="button.icon" size="small" />
-                    </v-btn>
-                  </div>
-                </template>
+                    <div>
+                      <v-btn
+                        v-for="(button, buttonIndex) in group"
+                        :key="buttonIndex"
+                        :aria-label="button.title"
+                        :title="button.title"
+                        variant="text"
+                        density="comfortable"
+                        :color="button.isActive?.() ? 'primary' : undefined"
+                        :disabled="readonly || button.isDisabled?.()"
+                        icon
+                        rounded
+                        @click="button.onClick"
+                      >
+                        <v-icon :icon="button.icon" size="small" />
+                      </v-btn>
+                    </div>
+                  </template>
+                </div>
               </div>
-            </div>
 
-            <div class="v-field__outline toolbar-separator" />
-          </v-toolbar>
-        </ClientOnly>
+              <div class="v-field__outline toolbar-separator" />
+            </v-toolbar>
+          </client-only>
 
-        <EditorContent :editor class="input-content editor" />
-
-        <div class="v-field__outline">
-          <div class="v-field__outline__start" />
-          <div class="v-field__outline__end" />
+          <EditorContent :editor class="input-content editor" />
         </div>
-      </div>
+      </v-field>
 
       <v-dialog v-model="isLinkDialogOpen" max-width="600">
         <LinkFormDialogCard
@@ -318,14 +313,14 @@ const removeLink = () => {
 </script>
 
 <style lang="scss" scoped>
-.v-field {
-  border-radius: $field-border-radius;
-}
-
 .input-content {
   padding-inline: var(--v-field-padding-start) var(--v-field-padding-end);
 }
 
+.toolbar {
+  border-top-left-radius: $field-border-radius;
+  border-top-right-radius: $field-border-radius;
+}
 .toolbar-separator {
   border: 0 solid currentColor;
   opacity: var(--v-field-border-opacity);
@@ -338,7 +333,7 @@ const removeLink = () => {
 }
 
 .editor {
-  padding-bottom: var(--v-field-input-padding-bottom);
+  padding-block: calc(var(--v-field-input-padding-top) / 2) var(--v-field-input-padding-bottom);
   min-height: 100px;
 }
 
@@ -346,15 +341,10 @@ const removeLink = () => {
   height: 100%;
   display: flow-root;
   outline: none;
-  padding-top: 10px;
 
   ul,
   ol {
     padding-left: 1.5em;
   }
-}
-
-.raw-markdown-editor :deep(.v-field__outline) {
-  --v-field-border-width: 0;
 }
 </style>
