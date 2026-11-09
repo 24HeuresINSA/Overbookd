@@ -15,6 +15,7 @@
         v-model:focused="focused"
         variant="outlined"
         :error="isValid.value === false || unsaved"
+        @mousedown="focusEditor"
       >
         <div class="d-flex flex-column w-100">
           <client-only>
@@ -145,6 +146,13 @@ const editor = useEditor({
     focused.value = false;
   },
 });
+
+const focusEditor = (event: MouseEvent) => {
+  const target = event.target as HTMLElement;
+  if (target.closest("button") || target.closest(".ProseMirror")) return;
+  event.preventDefault();
+  editor.value?.commands.focus("end");
+};
 
 const input = useTemplateRef("input");
 const exposedIsValid = computed(() => input.value?.isValid);
