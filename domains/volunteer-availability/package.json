@@ -55,7 +55,6 @@
   },
   "dependencies": {
     "@overbookd/list": "workspace:*",
-    "@overbookd/time": "workspace:*",
-    "@overbookd/user": "workspace:*"
+    "@overbookd/time": "workspace:*"
   }
 }

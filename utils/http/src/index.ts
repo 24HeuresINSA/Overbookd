@@ -81,6 +81,11 @@ export type {
 export { JSON, CSV, ICAL, PDF } from "./mime";
 export type { AvailabilityForm } from "./volunteer-availability";
 export type {
+  OverClicScore,
+  OverClicUser,
+  CreateOverClicScoreForm,
+} from "./overclic";
+export type {
   StaffCandidate,
   VolunteerCandidate,
   RegistrationStepKey,

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { OverClicScore } from "@overbookd/volunteer-availability";
+import { OverClicScore } from "@overbookd/http";
 import { OverClicUserResponseDto } from "./overclic-user.response.dto";
 
 export class OverClicScoreResponseDto implements OverClicScore {
