@@ -333,7 +333,8 @@ const removeLink = () => {
 }
 
 .editor {
-  padding-block: calc(var(--v-field-input-padding-top) / 2) var(--v-field-input-padding-bottom);
+  padding-block: calc(var(--v-field-input-padding-top) / 2)
+    var(--v-field-input-padding-bottom);
   min-height: 100px;
 }
 
