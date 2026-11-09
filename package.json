@@ -45,10 +45,10 @@
     "version:patch:no-sync": "git fetch -ap && pnpm run version:patch-dependency && pnpm run version:bump-dependent && pnpm run release:candidate",
     "version:patch": "pnpm run version:patch:no-sync && pnpm run dev:sync-version"
   },
-  "packageManager": "pnpm@12.15.0",
+  "packageManager": "pnpm@12.18.0",
   "engines": {
     "node": "26.13.0",
-    "pnpm": "12.15.0"
+    "pnpm": "12.18.0"
   },
   "scarfSettings": {
     "enabled": false
