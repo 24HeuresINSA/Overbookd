@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, IsNumber } from "class-validator";
-import { CreateOverClicScoreForm } from "@overbookd/volunteer-availability";
+import { CreateOverClicScoreForm } from "@overbookd/http";
 
 export class CreateOverClicScoreRequestDto implements CreateOverClicScoreForm {
   @ApiProperty({

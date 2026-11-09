@@ -56,7 +56,7 @@
 <script lang="ts" setup>
 import { formatDateWithMinutes } from "@overbookd/time";
 import { buildUserNameWithNickname } from "@overbookd/user";
-import type { OverClicScore } from "@overbookd/volunteer-availability";
+import type { OverClicScore } from "@overbookd/http";
 
 const WARN_THRESHOLD = 5;
 const PLAY_THRESHOLD = 10;

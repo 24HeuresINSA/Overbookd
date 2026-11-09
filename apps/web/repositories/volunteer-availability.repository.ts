@@ -1,5 +1,5 @@
 import type { IProvidePeriod } from "@overbookd/time";
-import type { OverClicScore } from "@overbookd/volunteer-availability";
+import type { OverClicScore } from "@overbookd/http";
 import { HttpClient } from "~/utils/http/http-client";
 
 export class VolunteerAvailabilityRepository {
