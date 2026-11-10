@@ -20,7 +20,7 @@ describe("Switch a membership application", () => {
       const switchApplication = new SwitchMembershipApplication(candidates);
       await switchApplication.applyOne(lea.id, VOLUNTEER, STAFF);
       const expected: Candidate = {
-        ...leaStaffCandidate,
+        ...leaVolunteerCandidate,
         membership: STAFF,
       };
       expect(candidates.staffs).toContainEqual(expected);
