@@ -23,7 +23,7 @@
 
       <v-stepper-window v-show="step == 1" direction="vertical">
         <v-stepper-window-item :value="1">
-          <div v-html-safe="registrationFormDescription" />
+          <RichViewer :content="registrationFormDescription" />
 
           <div class="stepper-actions">
             <v-btn text="C'est parti ! 🚀" color="primary" @click="step = 2" />

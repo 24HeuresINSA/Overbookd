@@ -2,6 +2,7 @@
   <div>
     <v-card>
       <v-card-title>Général</v-card-title>
+
       <v-card-subtitle>
         Si tu as des questions, n'hésite pas à contacter
         <a :href="`mailto:${contact}`"> {{ contact }} </a>.
@@ -10,26 +11,31 @@
         <a :href="CTMA_URL">cetaitmieuxavant</a>.
       </v-card-subtitle>
 
-      <v-card-text>
+      <v-card-text class="d-flex flex-column ga-3">
         <v-text-field
           :model-value="general.name"
           label="Nom de l'activité"
+          hide-details
           @update:model-value="updateName"
         />
+
+        <div>
+          <h3 class="mb-2">Description de l'activité</h3>
+          <RichEditor
+            :model-value="description ?? ''"
+            hide-details
+            @update:model-value="updateDescription"
+          />
+        </div>
 
         <v-switch
           :model-value="general.toPublish"
           label="Publier sur le site / plaquette"
           :false-value="false"
           color="primary"
+          class="my-n2"
+          hide-details
           @update:model-value="updateToPublishOrAskPublic"
-        />
-
-        <h3>Description de l'activité</h3>
-        <RichEditor
-          scope="activity-description"
-          :model-value="description ?? ''"
-          @update:model-value="updateDescription"
         />
 
         <v-combobox
@@ -37,10 +43,10 @@
           :model-value="general.categories"
           label="Catégories de l'activité"
           :items="activityCategories"
-          class="mt-4"
           chips
           multiple
           clearable
+          hide-details
           @update:model-value="updateCategories"
         />
 
@@ -48,6 +54,8 @@
           v-show="general.toPublish"
           :model-value="general.photoLink"
           label="Lien de la photo de l'activité sur le drive"
+          class="mt-1"
+          hide-details
           @update:model-value="updatePhotoLink"
         />
 
@@ -57,6 +65,7 @@
           label="Activité phare qui sera mise en avant sur les réseaux sociaux"
           :false-value="false"
           color="primary"
+          class="my-n2"
           hide-details
           @update:model-value="updateIsFlagship"
         />

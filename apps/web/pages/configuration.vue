@@ -31,10 +31,7 @@
         <v-divider class="my-5" />
         <div>
           <h3>Description organisateur·rice</h3>
-          <RichEditor
-            v-model="staffRegistrationFormDescription"
-            scope="staff-description"
-          />
+          <RichEditor v-model="staffRegistrationFormDescription" hide-details />
           <div class="description-actions">
             <v-btn
               text="Remplacer par le template"
@@ -52,7 +49,7 @@
             <h3>Description bénévole</h3>
             <RichEditor
               v-model="volunteerRegistrationFormDescription"
-              scope="volunteer-description"
+              hide-details
             />
             <div class="description-actions">
               <v-btn

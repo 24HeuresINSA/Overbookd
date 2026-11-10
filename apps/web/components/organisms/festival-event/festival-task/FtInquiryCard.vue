@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title> Demande de matos </v-card-title>
 
-    <v-card-text>
+    <v-card-text class="d-flex flex-column ga-3">
       <v-form v-show="!disabled" class="inquiry-form">
         <InquiryFormFields
           v-model:gear="gear"
@@ -94,12 +94,8 @@ const removeInquiry = (inquiry: InquiryRequest) => {
   display: flex;
   align-items: center;
   gap: 1em;
-  margin: 10px 0 20px 0;
   &__fields {
     width: 100%;
-  }
-  &__btn {
-    margin: 10px 0 20px 0;
   }
 }
 </style>

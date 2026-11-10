@@ -201,14 +201,18 @@ $side-nav-width: calc(350px + $sidebar-margin);
 }
 
 .container {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
   padding-left: 20px;
   overflow-y: auto;
 }
 
 .container > * {
+  flex-grow: 1;
+}
+
+article {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
   flex-grow: 1;
 }
 

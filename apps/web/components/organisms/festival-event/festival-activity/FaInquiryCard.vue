@@ -6,7 +6,7 @@
         Si tu as des questions, demande aux orgas matos, élec ou barrières !
       </v-card-subtitle>
 
-      <v-card-text>
+      <v-card-text class="d-flex flex-column ga-3">
         <div v-show="shouldInitInquiry" class="init-inquiry">
           <p>
             Tu n'as aucune demande de matos et ta FA est en relecture. Pour
@@ -211,7 +211,6 @@ const removeTimeWindow = (timeWindow: TimeWindow) => {
 
 <style lang="scss" scoped>
 .inquiry-table {
-  margin: 15px 0 30px 0;
   padding: 5px;
   &__title {
     font-size: 1.1rem;
@@ -222,12 +221,8 @@ const removeTimeWindow = (timeWindow: TimeWindow) => {
   display: flex;
   align-items: center;
   gap: 1em;
-  margin: 10px 0 20px 0;
   &__fields {
     width: 100%;
-  }
-  &__btn {
-    margin: 10px 0 20px 0;
   }
 }
 
@@ -236,7 +231,6 @@ const removeTimeWindow = (timeWindow: TimeWindow) => {
   flex-direction: row;
   align-items: center;
   gap: 0.5em;
-  margin-bottom: 20px;
   &__btn {
     max-width: fit-content;
     margin-left: auto;

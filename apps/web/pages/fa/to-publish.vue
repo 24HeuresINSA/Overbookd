@@ -46,7 +46,7 @@
         </template>
 
         <template #item.description="{ item }">
-          <div v-html-safe="item.description" />
+          <RichViewer :content="item.description" />
         </template>
 
         <template #item.categories="{ item }">

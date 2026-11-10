@@ -1,18 +1,21 @@
 <template>
   <v-card>
     <v-card-title>Sécurité</v-card-title>
+
     <v-card-subtitle>
       Si tu as des questions sur les besoins ou le nom d'un dispositif de sécu
       de ton activité, contacte
       <a :href="`mailto:${SECURITE_EMAIL}`">{{ SECURITE_EMAIL }} </a>.
     </v-card-subtitle>
-    <v-card-text>
+
+    <v-card-text class="d-flex flex-column ga-4">
       <v-textarea
         :model-value="security.specialNeed"
         label="Dispositif de sécurité particulier"
         auto-grow
-        rows="2"
+        rows="3"
         prepend-icon="mdi-security"
+        hide-details
         @update:model-value="updateSpecialNeed"
       />
       <v-text-field
@@ -21,6 +24,7 @@
         prepend-icon="mdi-car"
         type="number"
         :rules="[rules.number, rules.min]"
+        hide-details
         @update:model-value="updateFreePass"
       />
     </v-card-text>

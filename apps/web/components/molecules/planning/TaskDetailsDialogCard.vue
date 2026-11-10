@@ -50,15 +50,15 @@
         </div>
         <div class="instructions">
           <h3>Instructions</h3>
-          <div
-            v-html-safe="selectedTask.globalInstruction"
+          <RichViewer
+            :content="selectedTask.globalInstruction"
             class="instructions__text"
           />
         </div>
         <div v-if="selectedTask.inChargeInstruction" class="instructions">
           <h3>Instructions pour les responsables</h3>
-          <div
-            v-html-safe="selectedTask.inChargeInstruction"
+          <RichViewer
+            :content="selectedTask.inChargeInstruction"
             class="instructions__text"
           />
         </div>
@@ -183,22 +183,20 @@ if (locationStore.all.length === 0) locationStore.fetchAllLocations();
 }
 
 .instructions {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
   &__text {
     margin-left: 1rem;
-  }
-  :deep(h1) {
-    font-size: x-large;
-  }
-  :deep(h2) {
-    font-size: large;
-  }
-  :deep(ul),
-  :deep(ol) {
-    padding-left: 2rem;
   }
 }
 
 .contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
   > ul {
     padding-left: 2rem;
   }

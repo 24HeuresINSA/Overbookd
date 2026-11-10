@@ -4,22 +4,21 @@
 
     <template #subtitle>
       Ta FT est en attente de relecture. Pour ajouter des instructions
-      spécifiques pour le.s responsable.s de la tâche, complète ces champs.
+      spécifiques pour le·s responsable·s de la tâche, complète ces champs.
     </template>
 
     <template #content>
-      <SearchUsers
-        v-model="volunteers"
-        label="Responsable(s) de la tâche"
-        closable-chips
-      />
+      <div class="d-flex flex-column ga-3">
+        <SearchUsers
+          v-model="volunteers"
+          label="Responsable(s) de la tâche"
+          closable-chips
+          hide-details
+        />
 
-      <v-label>Instructions pour le.s responsable.s de la tâche</v-label>
-      <RichEditor
-        v-model="instruction"
-        scope="in-charge-instruction-init"
-        class="mb-3"
-      />
+        <v-label>Instructions pour le·s responsable·s de la tâche</v-label>
+        <RichEditor v-model="instruction" hide-details />
+      </div>
     </template>
 
     <template #actions>

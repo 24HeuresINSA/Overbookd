@@ -119,7 +119,6 @@ const removeSupply = (supply: ElectricitySupply) => emit("remove", supply);
     display: flex;
     flex-direction: column;
     gap: 0.5em;
-    margin-bottom: 20px;
   }
   &__add {
     max-width: fit-content;

@@ -1,6 +1,7 @@
 <template>
   <v-card>
     <v-card-title>Général</v-card-title>
+
     <v-card-subtitle>
       <p>
         Si tu as des questions, n'hésite pas à contacter
@@ -12,23 +13,26 @@
       </p>
     </v-card-subtitle>
 
-    <v-card-text>
+    <v-card-text class="d-flex flex-column ga-4">
       <v-text-field
         :model-value="general.name"
         label="Nom de la FT"
         :disabled="disabled"
+        hide-details
         @update:model-value="updateName"
       />
       <SearchUser
         :model-value="general.administrator"
         label="Gestionnaire de la FT"
         :disabled="disabled"
+        hide-details
         @update:model-value="updateAdministrator"
       />
       <SearchTeam
         :team="inChargeTeam"
         label="Équipe"
         :disabled="disabled"
+        hide-details
         @update:team="updateTeam"
       />
     </v-card-text>

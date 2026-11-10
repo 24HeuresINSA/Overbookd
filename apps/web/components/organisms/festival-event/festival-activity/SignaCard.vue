@@ -7,20 +7,23 @@
       pour ajouter des lieux non existants dans la liste déroulante.
     </v-card-subtitle>
 
-    <v-card-text>
+    <v-card-text class="d-flex flex-column ga-4">
       <SearchLocation
         :model-value="signa.location"
         label="Lieu de l'activité"
+        hide-details
         @update:model-value="updateLocation"
       />
 
-      <h3>Demande de signalétique</h3>
-      <FaSignageTable
-        :signages="signa.signages"
-        @add="addSignage"
-        @update="updateSignage"
-        @remove="removeSignage"
-      />
+      <div>
+        <h3>Demande de signalétique</h3>
+        <FaSignageTable
+          :signages="signa.signages"
+          @add="addSignage"
+          @update="updateSignage"
+          @remove="removeSignage"
+        />
+      </div>
     </v-card-text>
   </v-card>
 </template>
