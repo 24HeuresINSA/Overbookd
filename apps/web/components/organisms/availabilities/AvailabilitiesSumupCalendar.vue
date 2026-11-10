@@ -4,8 +4,8 @@
       <AvailabilitiesCalendarManager
         :day="day as DayPresenter"
         :loading="loading"
-        @previous="propagatePrevious"
-        @next="propagateNext"
+        @previous="moveToPrevious"
+        @next="moveToNext"
       />
     </template>
     <template #header>
@@ -46,10 +46,10 @@ const eventStartDate = computed<OverDate>(() =>
 );
 const day = ref<DayPresenter>(new DayPresenter(eventStartDate.value));
 
-const propagatePrevious = () => {
+const moveToPrevious = () => {
   day.value = new DayPresenter(day.value.date.minus(Duration.ONE_WEEK));
 };
-const propagateNext = () => {
+const moveToNext = () => {
   day.value = new DayPresenter(day.value.date.plus(Duration.ONE_WEEK));
 };
 
@@ -68,7 +68,12 @@ const selectOrUnselectAvailability = (period: Period) => {
 };
 const selectOrUnselectDay = (day: DayPresenter) => {
   if (loading) return;
-  const isAllSelected = isSelected(day.startsAt.date);
+  const start = day.startsAt;
+  const tomorrow = start.plus(Duration.ONE_DAY).date;
+  const period = Period.init({ start: start.date, end: tomorrow });
+  const isAllSelected = availabilities.value.list.some((availability) =>
+    availability.includes(period),
+  );
   availabilities.value = ALL_HOURS.reduce((aggregate, hour) => {
     const date = OverDate.init({ date: day.date.dateString, hour });
     return isAllSelected ? aggregate.unselect(date) : aggregate.select(date);
