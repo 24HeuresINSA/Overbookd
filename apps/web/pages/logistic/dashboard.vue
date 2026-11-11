@@ -63,6 +63,7 @@ const end = ref<Date>(new Date(start.value.getTime() + FOUR_DAYS_IN_MS));
 const loading = ref<boolean>(dashboardStore.previews.length === 0);
 const searchOptions = ref<GearSearchOptions>({});
 const fetchPreviews = () => {
+  loading.value = true;
   dashboardStore
     .fetchPreviews({ start: start.value, end: end.value }, searchOptions.value)
     .then(() => (loading.value = false));
