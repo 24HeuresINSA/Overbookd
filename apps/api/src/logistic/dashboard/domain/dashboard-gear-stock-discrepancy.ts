@@ -77,8 +77,10 @@ export class DashboardGearStockDiscrepancy {
   ): StockDiscrepancy {
     const period = Period.init(timeWindow);
     const periods = period.splitWithInterval(Duration.ms(QUARTER_IN_MS));
+    const dates =
+      periods.length > 0 ? periods.map(({ start }) => start) : [period.start];
 
-    const discrepancies = periods.map(({ start }) =>
+    const discrepancies = dates.map((start) =>
       DashboardGearStockDiscrepancy.computeStockDiscrepancyByDateOn(
         gear,
         start,
