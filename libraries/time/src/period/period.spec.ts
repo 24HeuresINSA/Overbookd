@@ -209,6 +209,40 @@ describe("Remove period from another", () => {
   );
 });
 
+describe("Intersect period with another", () => {
+  describe.each`
+    case                       | basePeriod            | otherPeriod           | expectedPeriod
+    ${"not overlapping"}       | ${friday08hto09h}     | ${friday09h30to10h}   | ${null}
+    ${"contiguous"}            | ${friday08hto08h30}   | ${friday08h30to09h}   | ${null}
+    ${"partially overlapping"} | ${friday08hto09h}     | ${friday07hto08h30}   | ${friday08hto08h30}
+    ${"included"}              | ${friday08hto09h}     | ${friday08h15to08h30} | ${friday08h15to08h30}
+    ${"including"}             | ${friday08h15to08h30} | ${friday08hto09h}     | ${friday08h15to08h30}
+    ${"identical"}             | ${friday08hto09h}     | ${friday08hto09h}     | ${friday08hto09h}
+  `(
+    "when intersecting with a $case period",
+    ({ basePeriod, otherPeriod, expectedPeriod }) => {
+      it(`should return ${expectedPeriod ?? "null"}`, () => {
+        expect(basePeriod.intersectWith(otherPeriod)).toStrictEqual(
+          expectedPeriod,
+        );
+      });
+    },
+  );
+
+  describe("when intersecting with an instant inside the period", () => {
+    const instant = new Date("2024-05-17T08:30+02:00");
+    it("should return a period without duration at this instant", () => {
+      const period = friday08hto09h.intersectWith({
+        start: instant,
+        end: instant,
+      });
+      expect(period).toStrictEqual(
+        Period.init({ start: instant, end: instant }),
+      );
+    });
+  });
+});
+
 describe("Period is in day", () => {
   const friday = new Date("2024-05-17");
   describe.each`

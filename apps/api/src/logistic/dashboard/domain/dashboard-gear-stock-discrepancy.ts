@@ -62,13 +62,8 @@ export class DashboardGearStockDiscrepancy {
 
   private static restrictTo(timeWindows: Period[], period: Period): Period[] {
     return timeWindows
-      .filter((timeWindow) => timeWindow.isOverlapping(period))
-      .map(({ start, end }) =>
-        Period.init({
-          start: start < period.start ? period.start : start,
-          end: end > period.end ? period.end : end,
-        }),
-      );
+      .map((timeWindow) => timeWindow.intersectWith(period))
+      .filter((timeWindow) => timeWindow !== null);
   }
 
   private static computeStockDiscrepancyByTimeWindowOn(

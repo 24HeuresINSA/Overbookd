@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { IProvidePeriod } from "@overbookd/time";
+import { Period, type IProvidePeriod } from "@overbookd/time";
 import {
   marginPercent,
   widthPercent,
@@ -94,22 +94,14 @@ const buildTaskPeriod = (task: TimelineTask): IProvidePeriod => {
   const highestEndDate = Math.max(
     ...task.mobilizations.map(({ end }) => end.getTime()),
   );
-  return {
-    start: new Date(Math.max(lowestStartDate, range.value.start.getTime())),
-    end: new Date(Math.min(highestEndDate, range.value.end.getTime())),
-  };
+  return adjustPeriodToRange({
+    start: new Date(lowestStartDate),
+    end: new Date(highestEndDate),
+  });
 };
 
 const adjustPeriodToRange = (period: IProvidePeriod): IProvidePeriod => {
-  const periodStart = period.start.getTime();
-  const rangeStart = range.value.start.getTime();
-  const periodEnd = period.end.getTime();
-  const rangeEnd = range.value.end.getTime();
-
-  const start = new Date(Math.max(periodStart, rangeStart));
-  const end = new Date(Math.min(periodEnd, rangeEnd));
-
-  return { start, end };
+  return Period.init(period).intersectWith(range.value) ?? period;
 };
 
 const computeTaskWidth = (task: TimelineTask): string => {

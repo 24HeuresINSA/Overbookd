@@ -94,6 +94,20 @@ export class Period {
     return new Period(start, end);
   }
 
+  intersectWith(otherPeriod: Period): Period | null;
+  intersectWith(otherPeriod: IProvidePeriod): Period | null;
+  intersectWith(otherPeriod: Period | IProvidePeriod): Period | null {
+    if (!this.isOverlapping(otherPeriod)) return null;
+
+    const start = new Date(
+      Math.max(otherPeriod.start.getTime(), this.start.getTime()),
+    );
+    const end = new Date(
+      Math.min(otherPeriod.end.getTime(), this.end.getTime()),
+    );
+    return new Period(start, end);
+  }
+
   splitOverlapping(otherPeriod: Period): Period[];
   splitOverlapping(otherPeriod: IProvidePeriod): Period[];
   splitOverlapping(otherPeriod: Period | IProvidePeriod): Period[] {
