@@ -3,10 +3,9 @@
     <template #manager>
       <AvailabilitiesCalendarManager
         :day="day as DayPresenter"
-        :loading
-        @previous="propagatePrevious"
-        @next="propagateNext"
-        @validate="saveAvailabilities"
+        :loading="loading"
+        @previous="moveToPrevious"
+        @next="moveToNext"
       />
     </template>
     <template #header>
@@ -18,7 +17,7 @@
     <template #content>
       <AvailabilitiesWeekSumupCalendarContent
         :day="day as DayPresenter"
-        :manager="availabilitiesAggregate as Availabilities"
+        :manager="availabilities as Availabilities"
         @click:availability="selectOrUnselectAvailability"
       />
     </template>
@@ -31,90 +30,53 @@ import { DayPresenter } from "~/utils/calendar/day.presenter";
 import { ALL_HOURS } from "~/utils/availabilities/availabilities";
 import { Availabilities } from "@overbookd/volunteer-availability";
 
-const availabilityStore = useVolunteerAvailabilityStore();
 const configurationStore = useConfigurationStore();
 
-const props = defineProps({
-  volunteerId: {
-    type: Number,
-    required: true,
+const { loading } = defineProps({
+  loading: {
+    type: Boolean,
+    default: false,
   },
 });
 
-const availabilitiesAggregate = ref<Availabilities>(Availabilities.init());
-
-const loading = ref<boolean>(false);
+const availabilities = defineModel<Availabilities>({ required: true });
 
 const eventStartDate = computed<OverDate>(() =>
   OverDate.from(configurationStore.eventStartDate),
 );
 const day = ref<DayPresenter>(new DayPresenter(eventStartDate.value));
 
-watch(
-  () => props.volunteerId,
-  async (volunteerId) => {
-    loading.value = true;
-    availabilityStore.clearVolunteerAvailabilities();
-    day.value = new DayPresenter(eventStartDate.value);
-
-    await availabilityStore.fetchVolunteerAvailabilities(volunteerId);
-    availabilitiesAggregate.value = Availabilities.init({
-      selected: availabilityStore.availabilities.list as Period[],
-      recorded: [],
-    });
-    loading.value = false;
-  },
-  { immediate: true },
-);
-
-const selected = computed<Period[]>(
-  () => availabilitiesAggregate.value.list as Period[],
-);
-const isSelected = (date: Date): boolean => {
-  return selected.value.some((availability) => availability.isIncluding(date));
+const moveToPrevious = () => {
+  day.value = new DayPresenter(day.value.date.minus(Duration.ONE_WEEK));
 };
+const moveToNext = () => {
+  day.value = new DayPresenter(day.value.date.plus(Duration.ONE_WEEK));
+};
+
+const isSelected = (date: Date): boolean =>
+  availabilities.value.list.some((availability) =>
+    availability.isIncluding(date),
+  );
 
 const selectOrUnselectAvailability = (period: Period) => {
+  if (loading) return;
   const date = OverDate.from(period.start);
-  availabilitiesAggregate.value = isSelected(date.date)
-    ? availabilitiesAggregate.value.unselect(date)
-    : availabilitiesAggregate.value.select(date);
+  const aggregate = availabilities.value;
+  availabilities.value = isSelected(date.date)
+    ? aggregate.unselect(date)
+    : aggregate.select(date);
 };
-
-const isAllDaySelected = (day: DayPresenter): boolean => {
+const selectOrUnselectDay = (day: DayPresenter) => {
+  if (loading) return;
   const start = day.startsAt;
   const tomorrow = start.plus(Duration.ONE_DAY).date;
   const period = Period.init({ start: start.date, end: tomorrow });
-  return isSelected(period.start);
-};
-const selectOrUnselectDay = (day: DayPresenter) => {
-  const isAllSelected = isAllDaySelected(day);
-  ALL_HOURS.forEach((hour) => {
-    const date = OverDate.init({ date: day.date.dateString, hour });
-    availabilitiesAggregate.value = isAllSelected
-      ? availabilitiesAggregate.value.unselect(date)
-      : availabilitiesAggregate.value.select(date);
-  });
-};
-
-const emit = defineEmits(["validate"]);
-
-const saveAvailabilities = async () => {
-  loading.value = true;
-  await availabilityStore.overrideVolunteerAvailabilities(
-    props.volunteerId,
-    selected.value,
+  const isAllSelected = availabilities.value.list.some((availability) =>
+    availability.includes(period),
   );
-  emit("validate");
-  loading.value = false;
-};
-
-const propagatePrevious = () => {
-  const previous = day.value.date.minus(Duration.ONE_WEEK);
-  day.value = new DayPresenter(previous);
-};
-const propagateNext = () => {
-  const next = day.value.date.plus(Duration.ONE_WEEK);
-  day.value = new DayPresenter(next);
+  availabilities.value = ALL_HOURS.reduce((aggregate, hour) => {
+    const date = OverDate.init({ date: day.date.dateString, hour });
+    return isAllSelected ? aggregate.unselect(date) : aggregate.select(date);
+  }, availabilities.value);
 };
 </script>
