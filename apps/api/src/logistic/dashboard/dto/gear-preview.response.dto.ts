@@ -31,7 +31,13 @@ export class GearPreviewResponseDto implements GearPreview {
 
   @ApiProperty({
     required: true,
-    description: "Minimum stock discrepancy",
+    description: "Minimum stock discrepancy over the whole event",
   })
-  stockDiscrepancy: number;
+  globalStockDiscrepancy: number;
+
+  @ApiProperty({
+    required: true,
+    description: "Minimum stock discrepancy over the requested period",
+  })
+  periodStockDiscrepancy: number;
 }

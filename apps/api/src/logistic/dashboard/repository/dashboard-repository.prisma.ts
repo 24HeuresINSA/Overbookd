@@ -10,12 +10,17 @@ import { filterGears } from "../../common/filter-gears";
 export class PrismaDashboardGears implements DashboardGears {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getSummaries(searchOptions: GearSearchOptions): Promise<GearPreview[]> {
+  async getSummaries(
+    searchOptions: GearSearchOptions,
+    period: Period,
+  ): Promise<GearPreview[]> {
     const gears = await this.prisma.catalogGear.findMany({
       select: SELECT_DASHBOARD_GEAR,
     });
     const filteredGears = filterGears(gears, searchOptions);
-    return filteredGears.map(DashboardGear.generatePreview);
+    return filteredGears.map((gear) =>
+      DashboardGear.generatePreview(gear, period),
+    );
   }
 
   async getDetails(slug: string, period: Period): Promise<GearWithDetails> {

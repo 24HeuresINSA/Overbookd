@@ -2,6 +2,7 @@
   <div>
     <v-data-table
       v-model:expanded="displayedGears"
+      class="gear-listing"
       :items="previews"
       :headers="headers"
       item-value="slug"
@@ -18,8 +19,8 @@
           <span class="icon-detail">Consommable</span>
         </div>
       </template>
-      <template #expanded-row>
-        <td :colspan="headers.length">
+      <template #expanded-row="{ columns }">
+        <td :colspan="columns.length">
           <DashboardGearDetailsGraph @select:gear-details="selectGearDetails" />
         </td>
       </template>
@@ -64,8 +65,21 @@ const headers: TableHeaders = [
   { title: "Matos", value: "name", sortable: true },
   {
     title: "Différence minimum entre le stock et les demandes",
-    value: "stockDiscrepancy",
-    sortable: true,
+    align: "center",
+    children: [
+      {
+        title: "Au global",
+        value: "globalStockDiscrepancy",
+        align: "center",
+        sortable: true,
+      },
+      {
+        title: "Sur le créneau",
+        value: "periodStockDiscrepancy",
+        align: "center",
+        sortable: true,
+      },
+    ],
   },
   { title: "Matos consommable", value: "isConsumable", sortable: true },
 ];
@@ -80,7 +94,10 @@ const expandOnIconClick = async (gears: string[]) => {
   if (gears.length === 0) return;
   const lastSlug = gears[gears.length - 1];
   if (gears.length > 1) displayedGears.value = [lastSlug];
-  await dashboardStore.fetchDetails(lastSlug, props.start, props.end);
+  await dashboardStore.fetchDetails(lastSlug, {
+    start: props.start,
+    end: props.end,
+  });
 };
 
 const selectedGear = computed<GearWithDetails | undefined>(
@@ -102,6 +119,9 @@ const closeGearDetails = () => {
 </script>
 
 <style lang="scss" scoped>
+.gear-listing {
+  --v-table-header-height: 32px;
+}
 .icon {
   position: relative;
   display: inline-block;

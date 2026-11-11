@@ -23,6 +23,8 @@ import {
   consumableGearWithOneInquiryAndOneBorrowForGraph,
   gearWithTwoInquiriesAndTwoInventoryRecordsForCsv,
   gearWithOneInquiryAndOneBorrowForCsv,
+  friday09hto10h,
+  friday10hto11h,
 } from "./dashboard-gear.test-utils";
 import { DashboardGear } from "./dashboard-gear";
 import { Period } from "@overbookd/time";
@@ -46,15 +48,35 @@ describe("Summarize gear as preview", () => {
     ${"is consumable and has one inquiry and one borrow"}                 | ${consumableGearWithOneInquiryAndOneBorrow}                   | ${-15}
   `("when gear $explaination", ({ gear, expectedStockDiscrepancy }) => {
     it(`should return preview with ${expectedStockDiscrepancy} as stock discrepancy`, () => {
-      const preview = DashboardGear.generatePreview(gear);
+      const preview = DashboardGear.generatePreview(
+        gear,
+        Period.init(friday08hto09h30),
+      );
       const expectedPreview = {
         id: gear.id,
         name: gear.name,
         slug: gear.slug,
         isConsumable: gear.isConsumable,
-        stockDiscrepancy: expectedStockDiscrepancy,
+        globalStockDiscrepancy: expectedStockDiscrepancy,
+        periodStockDiscrepancy: expect.any(Number),
       };
       expect(preview).toEqual(expectedPreview);
+    });
+  });
+});
+
+describe("Summarize gear as preview on a period", () => {
+  describe.each`
+    explaination                                                          | gear                                       | period              | expectedStockDiscrepancy
+    ${"has two inquiries and period covers the biggest one"}              | ${gearWithTwoInquiries}                    | ${friday08hto09h30} | ${-25}
+    ${"has two inquiries and period covers only the smallest one"}        | ${gearWithTwoInquiries}                    | ${friday09hto10h}   | ${-20}
+    ${"has two inquiries and period covers none of them"}                 | ${gearWithTwoInquiries}                    | ${friday10hto11h}   | ${0}
+    ${"has one inquiry with one inventory record and period covers it"}   | ${gearWithOneInquiryAndOneInventoryRecord} | ${friday08hto09h30} | ${15}
+    ${"has one inquiry with one inventory record and period is after it"} | ${gearWithOneInquiryAndOneInventoryRecord} | ${friday10hto11h}   | ${25}
+  `("when gear $explaination", ({ gear, period, expectedStockDiscrepancy }) => {
+    it(`should return ${expectedStockDiscrepancy} as period stock discrepancy`, () => {
+      const preview = DashboardGear.generatePreview(gear, Period.init(period));
+      expect(preview.periodStockDiscrepancy).toBe(expectedStockDiscrepancy);
     });
   });
 });

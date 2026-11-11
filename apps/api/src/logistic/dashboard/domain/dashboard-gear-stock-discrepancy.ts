@@ -13,14 +13,15 @@ export class DashboardGearStockDiscrepancy {
 
   static computeMinStockDiscrepancyOn(
     gear: DatabaseDashboardGear,
+    period?: Period,
   ): StockDiscrepancy {
     const activityTimeWindows = gear.festivalActivityInquiries
       .flatMap((inquiry) => inquiry.fa.inquiryTimeWindows)
-      .map((period) => Period.init(period));
+      .map((timeWindow) => Period.init(timeWindow));
 
     const taskTimeWindows = gear.festivalTaskInquiries
       .flatMap((inquiry) => inquiry.ft.mobilizations)
-      .map((period) => Period.init(period));
+      .map((timeWindow) => Period.init(timeWindow));
 
     const borrowTimeWindows = gear.borrows.map(({ borrow }) => {
       const { availableOn: start, unavailableOn: end } = borrow;
@@ -33,26 +34,41 @@ export class DashboardGearStockDiscrepancy {
       ...borrowTimeWindows,
     ];
     const mergedTimeWindows = Period.mergeContiguous(timeWindows);
+    const relevantTimeWindows = period
+      ? DashboardGearStockDiscrepancy.restrictTo(mergedTimeWindows, period)
+      : mergedTimeWindows;
 
-    const discrepanciesFromTimeWindows = mergedTimeWindows.map((timeWindow) =>
+    const discrepanciesFromTimeWindows = relevantTimeWindows.map((timeWindow) =>
       DashboardGearStockDiscrepancy.computeStockDiscrepancyByTimeWindowOn(
         gear,
         timeWindow,
       ),
     );
 
-    const inventory = DashboardGearStock.findInventoryQuantity(gear);
-    const discrepanciesFromInventory = { quantity: inventory };
+    const baseline = period
+      ? DashboardGearStockDiscrepancy.computeStockDiscrepancyByDateOn(
+          gear,
+          period.start,
+        )
+      : { quantity: DashboardGearStock.findInventoryQuantity(gear) };
 
-    const discrepancies = [
-      discrepanciesFromInventory,
-      ...discrepanciesFromTimeWindows,
-    ];
+    const discrepancies = [baseline, ...discrepanciesFromTimeWindows];
     return discrepancies.reduce(
       (min, discrepancy) =>
         discrepancy.quantity < min.quantity ? discrepancy : min,
       discrepancies[0],
     );
+  }
+
+  private static restrictTo(timeWindows: Period[], period: Period): Period[] {
+    return timeWindows
+      .filter((timeWindow) => timeWindow.isOverlapping(period))
+      .map(({ start, end }) =>
+        Period.init({
+          start: start < period.start ? period.start : start,
+          end: end > period.end ? period.end : end,
+        }),
+      );
   }
 
   private static computeStockDiscrepancyByTimeWindowOn(
