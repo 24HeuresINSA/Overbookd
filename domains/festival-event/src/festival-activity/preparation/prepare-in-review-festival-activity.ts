@@ -184,6 +184,12 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   }
 
   updateGeneral(form: PrepareGeneralUpdate): Reviewable {
+    if (
+      form.toPublish !== undefined &&
+      form.toPublish !== this.activity.general.toPublish
+    ) {
+      this.checkIfGeneralAlreadyApproved(COMMUNICATION);
+    }
     this.checkIfGeneralAlreadyApproved();
     const general = General.init(this.activity.general).update(form);
     const isSwitchingPrivacy =

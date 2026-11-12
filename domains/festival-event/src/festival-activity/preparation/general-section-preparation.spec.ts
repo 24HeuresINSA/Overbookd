@@ -135,6 +135,21 @@ describe("General section of festival activity preparation", () => {
 
   describe("when setting a private activity as public", () => {
     describe("when activity is in review", () => {
+      it("should reject a publication request already approved by communication", async () => {
+        await expect(
+          prepareFestivalActivity.updateGeneralSection(
+            privateApprovedByCommunication.id,
+            {
+              toPublish: true,
+              categories: ["secu"],
+              photoLink: "https://pinterest.com/123",
+            },
+          ),
+        ).rejects.toThrow(
+          "La FA a déjà été validée par l'équipe communication.",
+        );
+      });
+
       describe("when missing required public fields", () => {
         it.each`
           update                                           | field
@@ -176,6 +191,28 @@ describe("General section of festival activity preparation", () => {
         expect(activity.reviews.communication).toBe(REVIEWING);
       });
     });
+  });
+
+  it("should reject removing a publication request approved by communication", async () => {
+    await expect(
+      prepareFestivalActivity.updateGeneralSection(
+        publicApprovedByCommunication.id,
+        { toPublish: false },
+      ),
+    ).rejects.toThrow("La FA a déjà été validée par l'équipe communication.");
+  });
+
+  it("should allow an unchanged publication flag with a private description update", async () => {
+    const update = {
+      toPublish: false,
+      description: "An updated private description",
+    };
+    const { general } = await prepareFestivalActivity.updateGeneralSection(
+      privateApprovedByCommunication.id,
+      update,
+    );
+    expect(general.description).toBe(update.description);
+    expect(general.toPublish).toBe(false);
   });
 
   describe("when adherent want to update multiple fields consecutively", () => {
