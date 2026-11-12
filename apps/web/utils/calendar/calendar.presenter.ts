@@ -42,13 +42,13 @@ export class CalendarEventPresenter {
   }
 
   get displayedEventPeriod(): Period {
-    const dayStart = this.day.startsAt.date;
-    const dayEnd = this.day.endsAt.date;
+    const eventPeriod = Period.init(this.event);
+    const dayPeriod = {
+      start: this.day.startsAt.date,
+      end: this.day.endsAt.date,
+    };
 
-    const start = this.event.start < dayStart ? dayStart : this.event.start;
-    const end = this.event.end > dayEnd ? dayEnd : this.event.end;
-
-    return Period.init({ start, end });
+    return eventPeriod.intersectWith(dayPeriod) ?? eventPeriod;
   }
 
   get top(): Pixel {

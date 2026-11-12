@@ -8,6 +8,7 @@ import type { GearSearchOptions } from "@overbookd/logistic";
 import { LogisticDashboardRepository } from "~/repositories/logistic/logistic-dashboard.repository";
 import { isHttpError } from "~/utils/http/http-error.utils";
 import { castPeriodWithDate } from "~/utils/http/cast-date/period.utils";
+import type { IProvidePeriod } from "@overbookd/time";
 
 type State = {
   previews: GearPreview[];
@@ -21,18 +22,20 @@ export const useLogisticDashboardStore = defineStore("logistic-dashboard", {
     selectedGear: undefined,
   }),
   actions: {
-    async fetchPreviews(searchOptions?: GearSearchOptions) {
-      const res = await LogisticDashboardRepository.getPreviews(searchOptions);
+    async fetchPreviews(
+      period: IProvidePeriod,
+      searchOptions?: GearSearchOptions,
+    ) {
+      const res = await LogisticDashboardRepository.getPreviews(
+        period,
+        searchOptions,
+      );
       if (isHttpError(res)) return;
       this.previews = res;
     },
 
-    async fetchDetails(slug: string, start: Date, end: Date) {
-      const res = await LogisticDashboardRepository.getDetails(
-        slug,
-        start,
-        end,
-      );
+    async fetchDetails(slug: string, period: IProvidePeriod) {
+      const res = await LogisticDashboardRepository.getDetails(slug, period);
       if (isHttpError(res)) return;
       const details = res.details.map(castGearDetailsWithDate);
       this.selectedGear = { ...res, details };

@@ -25,7 +25,10 @@ export type GearRequirementForCsv = {
 };
 
 export type DashboardGears = {
-  getSummaries(searchOptions: GearSearchOptions): Promise<GearPreview[]>;
+  getSummaries(
+    searchOptions: GearSearchOptions,
+    period: Period,
+  ): Promise<GearPreview[]>;
   getDetails(slug: string, period: Period): Promise<GearWithDetails>;
   getRequirementsForCsv(): Promise<GearRequirementForCsv[]>;
 };
@@ -34,8 +37,13 @@ export type DashboardGears = {
 export class DashboardService {
   constructor(private readonly dashboardGears: DashboardGears) {}
 
-  async getSummaries(searchOptions: GearSearchOptions): Promise<GearPreview[]> {
-    return this.dashboardGears.getSummaries(searchOptions);
+  async getSummaries(
+    searchOptions: GearSearchOptions,
+    start: Date,
+    end: Date,
+  ): Promise<GearPreview[]> {
+    const period = Period.init({ start, end });
+    return this.dashboardGears.getSummaries(searchOptions, period);
   }
 
   async getDetails(

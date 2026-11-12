@@ -16,11 +16,11 @@ const friday08hto09h = {
   start: new Date("2024-05-17T08:00+02:00"),
   end: new Date("2024-05-17T09:00+02:00"),
 };
-const friday09hto10h = {
+export const friday09hto10h = {
   start: new Date("2024-05-17T09:00+02:00"),
   end: new Date("2024-05-17T10:00+02:00"),
 };
-const friday10hto11h = {
+export const friday10hto11h = {
   start: new Date("2024-05-17T10:00+02:00"),
   end: new Date("2024-05-17T11:00+02:00"),
 };

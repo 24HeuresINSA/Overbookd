@@ -6,7 +6,8 @@ export type GearPreview = {
   name: string;
   slug: string;
   isConsumable: boolean;
-  stockDiscrepancy: number;
+  globalStockDiscrepancy: number;
+  periodStockDiscrepancy: number;
 };
 
 export type Inquiry = {

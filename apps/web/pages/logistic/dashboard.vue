@@ -14,13 +14,13 @@
           v-model="start"
           label="Début du créneau"
           hide-details
-          @update:model-value="updateSelectedGear"
+          @update:model-value="updatePeriod"
         />
         <DateTimeField
           v-model="end"
           label="Fin du créneau"
           hide-details
-          @update:model-value="updateSelectedGear"
+          @update:model-value="updatePeriod"
         />
         <v-btn
           text="Exporter"
@@ -61,18 +61,30 @@ const start = ref<Date>(configurationStore.eventStartDate);
 const end = ref<Date>(new Date(start.value.getTime() + FOUR_DAYS_IN_MS));
 
 const loading = ref<boolean>(dashboardStore.previews.length === 0);
+const searchOptions = ref<GearSearchOptions>({});
+const fetchPreviews = () => {
+  loading.value = true;
+  dashboardStore
+    .fetchPreviews({ start: start.value, end: end.value }, searchOptions.value)
+    .then(() => (loading.value = false));
+};
 const searchGears = (options: GearSearchOptions) => {
-  dashboardStore.fetchPreviews(options).then(() => (loading.value = false));
+  searchOptions.value = options;
+  fetchPreviews();
 };
 searchGears({});
 
+const updatePeriod = () => {
+  fetchPreviews();
+  updateSelectedGear();
+};
+
 const updateSelectedGear = () => {
   if (dashboardStore.selectedGear === undefined) return;
-  dashboardStore.fetchDetails(
-    dashboardStore.selectedGear.slug,
-    start.value,
-    end.value,
-  );
+  dashboardStore.fetchDetails(dashboardStore.selectedGear.slug, {
+    start: start.value,
+    end: end.value,
+  });
 };
 
 const exportLoading = ref<boolean>(false);
@@ -94,6 +106,7 @@ const exportCsv = async () => {
     gap: 15px;
     align-items: center;
     margin-top: 20px;
+    margin-bottom: 20px;
   }
 }
 </style>

@@ -62,10 +62,24 @@ export class DashboardController {
     type: String,
     description: "Get gears that are owned by team that match name",
   })
+  @ApiQuery({
+    name: "start",
+    required: true,
+    type: Date,
+    description: "Start of the period used for period stock discrepancy",
+  })
+  @ApiQuery({
+    name: "end",
+    required: true,
+    type: Date,
+    description: "End of the period used for period stock discrepancy",
+  })
   getSummaries(
     @Query() searchOptions: GearSearchRequestDto,
+    @Query("start", new ParseDatePipe()) start: Date,
+    @Query("end", new ParseDatePipe()) end: Date,
   ): Promise<GearPreview[]> {
-    return this.dashboardService.getSummaries(searchOptions);
+    return this.dashboardService.getSummaries(searchOptions, start, end);
   }
 
   @Get("export")
