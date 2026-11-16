@@ -1,3 +1,17 @@
+## [4.7.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.6.0...v4.7.0) (2026-11-16)
+
+### Features
+
+* **web:** add links in rich texts by replacing rich editor [#2736](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2736) ([094eebc](https://gitlab.com/24-heures-insa/overbookd-mono/commit/094eebc9fa69c17c761c18320bcb3774f5d777d4))
+
+### Bug Fixes
+
+* **api:** add try catch on passport authentication ([1e3ea02](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1e3ea026f67ca35b5439a7be8c71e3caa196bae4))
+* **gear-dashboard:** apply stock dicrepancy on filter period [#2706](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2706) ([1424dd2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/1424dd21fedba10edb4e3f478b882221153f6629))
+* **volunteer-availability:** embrace charisma exploit on already selected periods [#2843](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2843) ([3ba61a7](https://gitlab.com/24-heures-insa/overbookd-mono/commit/3ba61a793559c13d0ac5a2ca172d4dc4c89b0e8e))
+* **volunteer-availability:** put OverClic types in utils [#2843](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2843) ([7f74e2a](https://gitlab.com/24-heures-insa/overbookd-mono/commit/7f74e2a2a3a5d68782b9dd0e0138f7c4877ffd7c))
+* **volunteer:** bundle volunteer availabilities saving with personal data update in dialog card [#2760](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2760) ([92baed4](https://gitlab.com/24-heures-insa/overbookd-mono/commit/92baed48c9c396f200bad4c960c8e837c6441f44))
+
 ## [4.6.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.5.0...v4.6.0) (2026-11-06)
 
 ### Features
