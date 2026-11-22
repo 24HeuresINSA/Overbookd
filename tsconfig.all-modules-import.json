@@ -20,6 +20,7 @@
       "@overbookd/logistic": ["${configDir}/domains/logistic/src"],
       "@overbookd/money": ["${configDir}/libraries/money/src"],
       "@overbookd/oidc": ["${configDir}/utils/oidc/src"],
+      "@overbookd/overvote": ["${configDir}/domains/overvote/src"],
       "@overbookd/pdf-book": ["${configDir}/libraries/pdf-book/src"],
       "@overbookd/permission": ["${configDir}/constants/permission/src"],
       "@overbookd/personal-account": [

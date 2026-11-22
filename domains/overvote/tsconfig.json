@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "../../tsconfig.cross-modules-import.json",
+    "../../tsconfig.package.json"
+  ],
+  "include": ["src"],
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "./dist"
+  }
+}

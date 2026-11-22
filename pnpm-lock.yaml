@@ -701,6 +701,8 @@ importers:
         specifier: workspace:*
         version: link:../../libraries/time
 
+  domains/overvote: {}
+
   domains/personal-account:
     dependencies:
       '@overbookd/list':
