@@ -4,13 +4,13 @@ import { BLUE_24 } from "~/utils/vuetify/theme/common";
 export default defineEventHandler((event) => {
   const host = getRequestHost(event);
 
-  let icon = "/favicon.ico";
+  let icon = "prod";
   let name = "Overbookd";
   if (host.includes(PREPROD)) {
-    icon = "/favicon-preprod.ico";
+    icon = "preprod";
     name = "Overbookd Preprod";
   } else if (host.includes(CETAITMIEUXAVANT)) {
-    icon = "/favicon-ctma.ico";
+    icon = "ctma";
     name = "Overbookd CTMA";
   } else if (host.includes("localhost")) {
     name = "Overbookd Dev";
@@ -27,9 +27,28 @@ export default defineEventHandler((event) => {
     display: "standalone",
     icons: [
       {
-        src: icon,
-        sizes: "192x192 512x512",
-        type: "image/x-icon",
+        src: `/icon/${icon}_192.png`,
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: `/icon/${icon}_512.png`,
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
+        src: `/icon/${icon}_mask_192.png`,
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "maskable",
+      },
+      {
+        src: `/icon/${icon}_mask_512.png`,
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "maskable",
       },
     ],
   };
