@@ -43,8 +43,14 @@
             class="assignment-metadata__chip"
           >
             <v-icon icon="mdi-clock" />
-            <span>
-              {{ formatTimeWindowForCalendar(selectedTask.timeWindow) }}
+            <span class="assignement-time">
+              <span>
+                {{ formatDateToHumanReadable(selectedTask.timeWindow.start) }}
+                <span class="assignement-time__separator">- </span>
+              </span>
+              <span>
+                {{ formatDateToHumanReadable(selectedTask.timeWindow.end) }}
+              </span>
             </span>
           </v-chip>
         </div>
@@ -181,7 +187,23 @@ if (locationStore.all.length === 0) locationStore.fetchAllLocations();
     }
   }
 }
+@media screen and (max-width: $mobile-max-width) {
+  //UX : 1 ligne/date pour les creneaux d'event sur mobile
+  .assignement-time {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0;
+    line-height: 1.1;
+    &__separator {
+      //pas de "-"
+      display: none;
+    }
+  }
 
+  .assignment-time > span {
+    white-space: nowrap;
+  }
+}
 .instructions {
   display: flex;
   flex-direction: column;
