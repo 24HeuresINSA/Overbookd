@@ -100,7 +100,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { TimeWindow } from "@overbookd/festival-event";
 import {
   LocationFactory,
   type Coordinate,
