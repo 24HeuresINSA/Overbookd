@@ -43,10 +43,10 @@
             class="assignment-metadata__chip"
           >
             <v-icon icon="mdi-clock" />
-            <span class="assignement-time">
+            <span class="assignment-time">
               <span>
                 {{ formatDateToHumanReadable(selectedTask.timeWindow.start) }}
-                <span class="assignement-time__separator">- </span>
+                <span class="assignment-time__separator">- </span>
               </span>
               <span>
                 {{ formatDateToHumanReadable(selectedTask.timeWindow.end) }}
@@ -134,9 +134,6 @@ const openAssignmentInNewTab = () => {
   openPageWithIdInNewTab(FT_URL, props.selectedTask.id);
 };
 
-const formatTimeWindowForCalendar = ({ start, end }: TimeWindow) =>
-  `${formatDateToHumanReadable(start)} - ${formatDateToHumanReadable(end)}`;
-
 const formatPeriodHours = ({ start, end }: IProvidePeriod) =>
   `${formatDateWithHoursAndMinutesOnly(start)} - ${formatDateWithHoursAndMinutesOnly(end)}`;
 
@@ -189,7 +186,7 @@ if (locationStore.all.length === 0) locationStore.fetchAllLocations();
 }
 @media screen and (max-width: $mobile-max-width) {
   //UX : 1 ligne/date pour les creneaux d'event sur mobile
-  .assignement-time {
+  .assignment-time {
     display: inline-flex;
     flex-direction: column;
     gap: 0;
