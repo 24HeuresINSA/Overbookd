@@ -40,7 +40,7 @@
           <v-chip
             color="primary"
             variant="elevated"
-            class="assignment-metadata__chip"
+            class="assignment-metadata__chip time-ship"
           >
             <v-icon icon="mdi-clock" />
             <span class="assignment-time">
@@ -198,6 +198,9 @@ if (locationStore.all.length === 0) locationStore.fetchAllLocations();
 
   .assignment-time > span {
     white-space: nowrap;
+  }
+  .time-ship {
+    padding-block: 18px;
   }
 }
 .instructions {
