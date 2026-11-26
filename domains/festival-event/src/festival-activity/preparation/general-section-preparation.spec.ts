@@ -145,7 +145,9 @@ describe("General section of festival activity preparation", () => {
               photoLink: "https://pinterest.com/123",
             },
           ),
-        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+        ).rejects.toThrow(
+          "La FA a déjà été validée par l'équipe communication.",
+        );
       });
 
       describe("when missing required public fields", () => {
@@ -197,7 +199,7 @@ describe("General section of festival activity preparation", () => {
         publicApprovedByCommunication.id,
         { toPublish: false },
       ),
-    ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+    ).rejects.toThrow("La FA a déjà été validée par l'équipe communication.");
   });
 
   it("should allow an unchanged publication flag with a private description update", async () => {
@@ -417,7 +419,9 @@ describe("General section of festival activity preparation", () => {
           it("should lock general information when publication is requested", async () => {
             await expect(
               prepareFestivalActivity.updateGeneralSection(activityId, update),
-            ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+            ).rejects.toThrow(
+              "La FA a déjà été validée par l'équipe communication.",
+            );
           });
         } else {
           it("should allow updating general information without a publication request", async () => {
@@ -448,7 +452,7 @@ describe("General section of festival activity preparation", () => {
                 activityId,
                 toAdd,
               ),
-          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+          ).rejects.toThrow("La FA a déjà été validée par l'équipe humain.");
         });
       });
       describe("when trying to update a timeWindow", () => {
@@ -460,7 +464,7 @@ describe("General section of festival activity preparation", () => {
                 timeWindow.id,
                 toAdd,
               ),
-          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+          ).rejects.toThrow("La FA a déjà été validée par l'équipe humain.");
         });
       });
       describe("when trying to remove a timeWindow", () => {
@@ -471,7 +475,7 @@ describe("General section of festival activity preparation", () => {
                 activityId,
                 timeWindow.id,
               ),
-          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+          ).rejects.toThrow("La FA a déjà été validée par l'équipe humain.");
         });
       });
     },
@@ -491,7 +495,7 @@ describe("General section of festival activity preparation", () => {
         prepareFestivalActivity.updateGeneralSection(approvedByHumain.id, {
           description: "An updated description",
         }),
-      ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+      ).rejects.toThrow("La FA a déjà été validée par l'équipe humain.");
     });
     it("should allow requesting publication", async () => {
       const { general } = await prepareFestivalActivity.updateGeneralSection(
