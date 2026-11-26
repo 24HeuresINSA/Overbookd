@@ -1,20 +1,11 @@
-import {
-  APPROVED,
-  IN_REVIEW,
-  NOT_ASKING_TO_REVIEW,
-  REFUSED,
-  REVIEWING,
-  VALIDATED,
-} from "@overbookd/festival-event-constants";
+import { APPROVED } from "@overbookd/festival-event-constants";
 import { InitInquiry, Prepare } from "./prepare-festival-activity.js";
 import { ElectricitySupplies } from "./section-aggregates/electricity-supplies.js";
 import { Contractors } from "./section-aggregates/contractors.js";
 import { TimeWindows } from "./section-aggregates/time-windows.js";
 import { IProvidePeriod } from "@overbookd/time";
 import { FestivalActivity, Reviewable } from "../festival-activity.js";
-import { isValidatedReviews } from "../../common/review.js";
 import { Reviews } from "../../common/review.js";
-import { isRefusedReviews } from "../../common/review.js";
 import { InquiryOwner } from "../sections/inquiry.js";
 import { InquiryRequest } from "../../common/inquiry-request.js";
 import { ElectricitySupply } from "../sections/supply.js";
@@ -186,26 +177,14 @@ export class PrepareInReviewFestivalActivity implements Prepare<Reviewable> {
   }
 
   updateGeneral(form: PrepareGeneralUpdate): Reviewable {
-    this.checkIfGeneralAlreadyApproved();
-    const general = General.init(this.activity.general).update(form);
     const isSwitchingPrivacy =
-      this.activity.general.toPublish !== general.toPublish;
-
-    if (!isSwitchingPrivacy) return { ...this.activity, general };
-
-    const reviews: Reviewable["reviews"] = {
-      ...this.activity.reviews,
-      communication: general.toPublish ? REVIEWING : NOT_ASKING_TO_REVIEW,
-    };
-
-    if (isValidatedReviews(reviews)) {
-      return { ...this.activity, general, reviews, status: VALIDATED };
-    }
-    if (isRefusedReviews(reviews)) {
-      return { ...this.activity, general, reviews, status: REFUSED };
-    }
-
-    return { ...this.activity, general, reviews, status: IN_REVIEW };
+      form.toPublish !== undefined &&
+      form.toPublish !== this.activity.general.toPublish;
+    this.checkIfGeneralAlreadyApproved(
+      isSwitchingPrivacy ? COMMUNICATION : undefined,
+    );
+    const general = General.init(this.activity.general).update(form);
+    return { ...this.activity, general };
   }
 
   private checkIfGeneralAlreadyApproved(askingReviewer?: GeneralReviewer) {

@@ -16,11 +16,7 @@ import {
 } from "@overbookd/domain-events";
 import { nicknameOrName, Profile } from "@overbookd/user";
 import { Membership } from "@overbookd/registration";
-import {
-  APPROVED,
-  NOT_ASKING_TO_REVIEW,
-  REJECTED,
-} from "@overbookd/festival-event-constants";
+import { APPROVED, REJECTED } from "@overbookd/festival-event-constants";
 import { createTransport, SendMailOptions } from "nodemailer";
 import { renderFile } from "ejs";
 import { PrismaMembers } from "./repository/members.prisma";
@@ -155,7 +151,7 @@ export class MailService implements OnApplicationBootstrap {
       async ({ data: { festivalActivity } }) => {
         const { reviews, inCharge, general, id } = festivalActivity;
         const stillInReviewCount = Object.values(reviews).filter(
-          (review) => review !== NOT_ASKING_TO_REVIEW && review !== APPROVED,
+          (review) => review !== APPROVED,
         ).length;
         if (stillInReviewCount > 0) return;
 

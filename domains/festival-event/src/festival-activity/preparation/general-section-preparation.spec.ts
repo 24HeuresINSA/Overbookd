@@ -13,7 +13,8 @@ import {
   pcSecurite,
   qgOrga,
   approvedByHumain,
-  approvedByCommunication,
+  publicApprovedByCommunication,
+  privateApprovedByCommunication,
   validatedBySecu,
   publicApprovedByHumain,
 } from "./preparation.test-utils.js";
@@ -23,10 +24,7 @@ import {
   sunday14hToSunday18h,
 } from "../festival-activity.fake.js";
 import { isDraft } from "../../festival-event.js";
-import {
-  NOT_ASKING_TO_REVIEW,
-  REVIEWING,
-} from "@overbookd/festival-event-constants";
+import { REVIEWING } from "@overbookd/festival-event-constants";
 
 describe("General section of festival activity preparation", () => {
   let prepareFestivalActivity: PrepareFestivalActivity;
@@ -40,7 +38,8 @@ describe("General section of festival activity preparation", () => {
       baladeEnPoney,
       qgOrga,
       approvedByHumain,
-      approvedByCommunication,
+      publicApprovedByCommunication,
+      privateApprovedByCommunication,
       validatedBySecu,
       publicApprovedByHumain,
     ]);
@@ -100,7 +99,7 @@ describe("General section of festival activity preparation", () => {
 
   describe("when setting a public activity as private", () => {
     describe("when activity is in review", () => {
-      it("should remove communication from reviewers", async () => {
+      it("should keep communication in reviewers", async () => {
         const update = { toPublish: false };
 
         const activity = await prepareFestivalActivity.updateGeneralSection(
@@ -109,7 +108,7 @@ describe("General section of festival activity preparation", () => {
         );
         if (isDraft(activity)) throw new Error("Activity should not be draft");
 
-        expect(activity.reviews.communication).toBe(NOT_ASKING_TO_REVIEW);
+        expect(activity.reviews.communication).toBe(REVIEWING);
       });
     });
 
@@ -136,6 +135,21 @@ describe("General section of festival activity preparation", () => {
 
   describe("when setting a private activity as public", () => {
     describe("when activity is in review", () => {
+      it("should reject a publication request already approved by communication", async () => {
+        await expect(
+          prepareFestivalActivity.updateGeneralSection(
+            privateApprovedByCommunication.id,
+            {
+              toPublish: true,
+              categories: ["secu"],
+              photoLink: "https://pinterest.com/123",
+            },
+          ),
+        ).rejects.toThrow(
+          "La FA a déjà été validée par l'équipe communication.",
+        );
+      });
+
       describe("when missing required public fields", () => {
         it.each`
           update                                           | field
@@ -177,6 +191,28 @@ describe("General section of festival activity preparation", () => {
         expect(activity.reviews.communication).toBe(REVIEWING);
       });
     });
+  });
+
+  it("should reject removing a publication request approved by communication", async () => {
+    await expect(
+      prepareFestivalActivity.updateGeneralSection(
+        publicApprovedByCommunication.id,
+        { toPublish: false },
+      ),
+    ).rejects.toThrow("La FA a déjà été validée par l'équipe communication.");
+  });
+
+  it("should allow an unchanged publication flag with a private description update", async () => {
+    const update = {
+      toPublish: false,
+      description: "An updated private description",
+    };
+    const { general } = await prepareFestivalActivity.updateGeneralSection(
+      privateApprovedByCommunication.id,
+      update,
+    );
+    expect(general.description).toBe(update.description);
+    expect(general.toPublish).toBe(false);
   });
 
   describe("when adherent want to update multiple fields consecutively", () => {
@@ -338,8 +374,9 @@ describe("General section of festival activity preparation", () => {
   });
 
   describe.each`
-    activityName                            | activityId                    | toAdd                   | timeWindow                                        | update
-    ${approvedByCommunication.general.name} | ${approvedByCommunication.id} | ${sunday14hToSunday18h} | ${approvedByCommunication.general.timeWindows[0]} | ${{ description: "Awsome" }}
+    activityName                                   | activityId                           | toAdd                   | timeWindow                                               | update
+    ${publicApprovedByCommunication.general.name}  | ${publicApprovedByCommunication.id}  | ${sunday14hToSunday18h} | ${publicApprovedByCommunication.general.timeWindows[0]}  | ${{ description: "Awsome" }}
+    ${privateApprovedByCommunication.general.name} | ${privateApprovedByCommunication.id} | ${sunday14hToSunday18h} | ${privateApprovedByCommunication.general.timeWindows[0]} | ${{ description: "Awsome" }}
   `(
     "when $activityName was already validated by communication",
     ({ activityId, toAdd, timeWindow, update }) => {
@@ -378,15 +415,24 @@ describe("General section of festival activity preparation", () => {
         });
       });
       describe("when trying to update general information", () => {
-        it("should indicate that general section is locked", async () => {
-          await expect(
-            async () =>
+        if (activityId === publicApprovedByCommunication.id) {
+          it("should lock general information when publication is requested", async () => {
+            await expect(
+              prepareFestivalActivity.updateGeneralSection(activityId, update),
+            ).rejects.toThrow(
+              "La FA a déjà été validée par l'équipe communication.",
+            );
+          });
+        } else {
+          it("should allow updating general information without a publication request", async () => {
+            const { general } =
               await prepareFestivalActivity.updateGeneralSection(
                 activityId,
                 update,
-              ),
-          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
-        });
+              );
+            expect(general.description).toBe(update.description);
+          });
+        }
       });
     },
   );
@@ -406,7 +452,7 @@ describe("General section of festival activity preparation", () => {
                 activityId,
                 toAdd,
               ),
-          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+          ).rejects.toThrow("La FA a déjà été validée par l'équipe humain.");
         });
       });
       describe("when trying to update a timeWindow", () => {
@@ -418,7 +464,7 @@ describe("General section of festival activity preparation", () => {
                 timeWindow.id,
                 toAdd,
               ),
-          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+          ).rejects.toThrow("La FA a déjà été validée par l'équipe humain.");
         });
       });
       describe("when trying to remove a timeWindow", () => {
@@ -429,33 +475,38 @@ describe("General section of festival activity preparation", () => {
                 activityId,
                 timeWindow.id,
               ),
-          ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+          ).rejects.toThrow("La FA a déjà été validée par l'équipe humain.");
         });
       });
     },
   );
-  describe("when trying to update 'description'", () => {
-    describe("when public activity is only validated by humain", () => {
-      it("should be able to update general information", async () => {
-        const update = { description: "An updated description" };
-        const { general } = await prepareFestivalActivity.updateGeneralSection(
-          publicApprovedByHumain.id,
-          update,
-        );
-        expect(general.description).toBe(update.description);
-      });
+  describe("when only humain already approved the activity", () => {
+    it("should allow updating general information when publication is requested", async () => {
+      const update = { description: "An updated description" };
+
+      const { general } = await prepareFestivalActivity.updateGeneralSection(
+        publicApprovedByHumain.id,
+        update,
+      );
+      expect(general.description).toBe(update.description);
     });
-    describe("when private activity is already validated by humain", () => {
-      it("should indicate that general section is locked", async () => {
-        const update = { description: "An updated description" };
-        await expect(
-          async () =>
-            await prepareFestivalActivity.updateGeneralSection(
-              approvedByHumain.id,
-              update,
-            ),
-        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
-      });
+    it("should lock general information without a publication request", async () => {
+      await expect(
+        prepareFestivalActivity.updateGeneralSection(approvedByHumain.id, {
+          description: "An updated description",
+        }),
+      ).rejects.toThrow("La FA a déjà été validée par l'équipe humain.");
+    });
+    it("should allow requesting publication", async () => {
+      const { general } = await prepareFestivalActivity.updateGeneralSection(
+        approvedByHumain.id,
+        {
+          toPublish: true,
+          categories: ["sports"],
+          photoLink: "https://pinterest.com/123",
+        },
+      );
+      expect(general.toPublish).toBe(true);
     });
   });
 });

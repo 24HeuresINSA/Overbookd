@@ -17,27 +17,24 @@ import {
   SIGNA,
 } from "@overbookd/team-code";
 
-export type PrivateActivityReviewer =
+export type ActivityReviewer =
   | typeof HUMAIN
   | typeof SIGNA
   | typeof SECU
   | typeof LOG_MATOS
   | typeof LOG_ELEC
-  | typeof BARRIERES;
-
-export type PublicActivityReviewer =
-  PrivateActivityReviewer | typeof COMMUNICATION;
+  | typeof BARRIERES
+  | typeof COMMUNICATION;
 
 type NoSupplyRequestTaskReviewer = typeof HUMAIN | typeof LOG_MATOS;
 
 type TaskWithSupplyRequestReviewer =
   NoSupplyRequestTaskReviewer | typeof LOG_ELEC;
 export type Reviewer<T extends FestivalEventIdentifier> = T extends typeof FA
-  ? PublicActivityReviewer | PrivateActivityReviewer
+  ? ActivityReviewer
   : NoSupplyRequestTaskReviewer | TaskWithSupplyRequestReviewer;
 
-type FestivalActivityReviewingStatus =
-  typeof REVIEWING | typeof NOT_ASKING_TO_REVIEW | typeof APPROVED;
+type FestivalActivityReviewingStatus = typeof REVIEWING | typeof APPROVED;
 
 type FestivalTaskReviewingStatus =
   | typeof REVIEWING
@@ -49,8 +46,7 @@ export type ReviewingStatus<T extends FestivalEventIdentifier> = T extends "FA"
   ? FestivalActivityReviewingStatus
   : FestivalTaskReviewingStatus;
 
-type FestivalActivityApprovalReviewStatus =
-  typeof APPROVED | typeof NOT_ASKING_TO_REVIEW;
+type FestivalActivityApprovalReviewStatus = typeof APPROVED;
 
 type FestivalTaskApprovalReviewStatus =
   typeof APPROVED | typeof NOT_ASKING_TO_REVIEW | typeof WILL_NOT_REVIEW;
@@ -61,10 +57,7 @@ export type ApprovalReviewStatus<T extends FestivalEventIdentifier> =
     : FestivalTaskApprovalReviewStatus;
 
 type FestivalActivityRejectionReviewStatus =
-  | typeof REVIEWING
-  | typeof NOT_ASKING_TO_REVIEW
-  | typeof APPROVED
-  | typeof REJECTED;
+  typeof REVIEWING | typeof APPROVED | typeof REJECTED;
 
 type FestivalTaskRejectionReviewStatus =
   | typeof REVIEWING
