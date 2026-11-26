@@ -145,9 +145,7 @@ describe("General section of festival activity preparation", () => {
               photoLink: "https://pinterest.com/123",
             },
           ),
-        ).rejects.toThrow(
-          "La FA a déjà été validée par l'équipe communication.",
-        );
+        ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
       });
 
       describe("when missing required public fields", () => {
@@ -199,7 +197,7 @@ describe("General section of festival activity preparation", () => {
         publicApprovedByCommunication.id,
         { toPublish: false },
       ),
-    ).rejects.toThrow("La FA a déjà été validée par l'équipe communication.");
+    ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
   });
 
   it("should allow an unchanged publication flag with a private description update", async () => {
@@ -494,6 +492,17 @@ describe("General section of festival activity preparation", () => {
           description: "An updated description",
         }),
       ).rejects.toThrow(PrepareError.AlreadyApprovedBy);
+    });
+    it("should allow requesting publication", async () => {
+      const { general } = await prepareFestivalActivity.updateGeneralSection(
+        approvedByHumain.id,
+        {
+          toPublish: true,
+          categories: ["sports"],
+          photoLink: "https://pinterest.com/123",
+        },
+      );
+      expect(general.toPublish).toBe(true);
     });
   });
 });
