@@ -1,3 +1,13 @@
+## [4.8.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.7.0...v4.8.0) (2026-11-27)
+
+### Features
+
+* **festival-activity:** communication team must always review FA [#2601](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2601) ([2b6a1ae](https://gitlab.com/24-heures-insa/overbookd-mono/commit/2b6a1ae95c23b237d2722d6e9c53ab4fe46bd169))
+
+### Bug Fixes
+
+* **pwa:** add missing icons [#2847](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2847) ([e6ae804](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e6ae804a2999191bceaa056231e750371f65d9f9))
+
 ## [4.7.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.6.0...v4.7.0) (2026-11-16)
 
 ### Features
