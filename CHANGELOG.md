@@ -1,3 +1,10 @@
+## [4.8.1](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.8.0...v4.8.1) (2026-11-28)
+
+### Bug Fixes
+
+* **web:** refactor useful links card [#2848](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2848) ([47dfa05](https://gitlab.com/24-heures-insa/overbookd-mono/commit/47dfa05f2cd65917594edf4d5a36ad601d76e74b))
+* **web:** turn nbsp into spaces in rich editor [#2849](https://gitlab.com/24-heures-insa/overbookd-mono/issues/2849) ([e6b49d2](https://gitlab.com/24-heures-insa/overbookd-mono/commit/e6b49d2121d250a8c8a97cc743691399f68233e3))
+
 ## [4.8.0](https://gitlab.com/24-heures-insa/overbookd-mono/compare/v4.7.0...v4.8.0) (2026-11-27)
 
 ### Features
