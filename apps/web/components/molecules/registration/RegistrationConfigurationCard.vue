@@ -18,7 +18,7 @@
             title="Copier le lien"
             variant="flat"
             density="comfortable"
-            @click="copyToClipBoard"
+            @click="copyInviteStaffLink"
           />
           <v-btn
             icon="mdi-refresh"
@@ -36,6 +36,7 @@
 
 <script lang="ts" setup>
 import { InviteStaff } from "@overbookd/registration";
+import { copyToClipboard } from "~/utils/clipboard";
 
 const membershipApplicationStore = useMembershipApplicationStore();
 
@@ -50,10 +51,9 @@ const expirationInviteStaffLinkDate = computed<string>(() => {
   return InviteStaff.isLinkExpired(inviteStaffLink.value);
 });
 
-const copyToClipBoard = async () => {
+const copyInviteStaffLink = () => {
   if (!inviteStaffLink.value?.toString()) return;
-  await navigator.clipboard.writeText(inviteStaffLink.value.toString());
-  sendInfoNotification("Lien copié ✅");
+  copyToClipboard(inviteStaffLink.value.toString(), "Lien copié ✅");
 };
 const refreshInviteStaffLink = () =>
   membershipApplicationStore.generateInviteStaffLink();
