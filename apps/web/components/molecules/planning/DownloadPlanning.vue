@@ -75,6 +75,7 @@ import {
 } from "@overbookd/permission";
 import { Edition } from "@overbookd/time";
 import type { User } from "@overbookd/user";
+import { copyToClipboard } from "~/utils/clipboard";
 
 const myStore = useMyStore();
 const userStore = useUserStore();
@@ -120,10 +121,9 @@ const syncWithApple = () => {
   window.location.href = plainTextLink;
 };
 
-const copySyncLinkToClipboard = async () => {
+const copySyncLinkToClipboard = () => {
   if (!syncLink.value) return;
-  await navigator.clipboard.writeText(syncLink.value);
-  sendInfoNotification("Lien copié ✅");
+  copyToClipboard(syncLink.value, "Lien copié ✅");
 };
 
 const withLoader = (download: () => Promise<unknown>) => {

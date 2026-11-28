@@ -24,14 +24,12 @@
 
 <script lang="ts" setup>
 import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
+import { copyToClipboard } from "~/utils/clipboard";
 
 const emit = defineEmits(["close"]);
 const close = () => emit("close");
 
-const copyEmail = async () => {
-  await navigator.clipboard.writeText(HUMAINS_EMAIL);
-  sendSuccessNotification("Email copié");
-};
+const copyEmail = () => copyToClipboard(HUMAINS_EMAIL, "Email copié ✅");
 </script>
 
 <style lang="scss" scoped>

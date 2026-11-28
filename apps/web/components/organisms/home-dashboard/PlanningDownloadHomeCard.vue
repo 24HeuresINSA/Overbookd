@@ -18,8 +18,8 @@
       </p>
       <p>
         Pour réaliser cette opération tu auras besoin du lien vers
-        <a href="#" @click="copyToClipBoard">ton planning personnel</a>
-        <v-icon size="small" class="ml-1" @click="copyToClipBoard">
+        <a href="#" @click="copyPersonalLink">ton planning personnel</a>
+        <v-icon size="small" class="ml-1" @click="copyPersonalLink">
           mdi-content-copy
         </v-icon>
       </p>
@@ -84,6 +84,7 @@
 <script lang="ts" setup>
 import { DOWNLOAD_PLANNING } from "@overbookd/permission";
 import { Edition } from "@overbookd/time";
+import { copyToClipboard } from "~/utils/clipboard";
 
 const HELP_LINK = {
   google: "https://support.google.com/calendar/answer/37100",
@@ -116,10 +117,8 @@ const outlookLink = computed<string>(() => {
   return `https://outlook.live.com/calendar/addcalendar?name=24%20Heures%20de%20l%27INSA%20-%20${Edition.current}e&url=${personalLink.value}`;
 });
 
-const copyToClipBoard = () => {
-  navigator.clipboard.writeText(personalLink.value);
-  sendInfoNotification("Lien copié ✅");
-};
+const copyPersonalLink = () =>
+  copyToClipboard(personalLink.value, "Lien copié ✅");
 
 const exportPlanning = async () => {
   if (!myStore.can(DOWNLOAD_PLANNING)) return;

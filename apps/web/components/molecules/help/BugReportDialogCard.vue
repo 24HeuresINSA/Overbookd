@@ -65,6 +65,7 @@
 
 <script lang="ts" setup>
 import { BugReport } from "~/utils/bug-report.constant";
+import { copyToClipboard } from "~/utils/clipboard";
 
 const expectedBehaviour = ref<string>("");
 const actualBehaviour = ref<string>("");
@@ -77,21 +78,17 @@ const stepsToReproducePlaceholder = "- Étape 1\n- Étape 2\n...";
 const emit = defineEmits(["close"]);
 const close = () => emit("close");
 
-const copyEmail = async () => {
-  await navigator.clipboard.writeText(bugReportEmail);
-  sendSuccessNotification("Email copié");
-};
+const copyEmail = () => copyToClipboard(bugReportEmail, "Email copié ✅");
 
-const copyIssueTemplate = async () => {
-  await navigator.clipboard.writeText(
+const copyIssueTemplate = () =>
+  copyToClipboard(
     BugReport.template(
       expectedBehaviour.value,
       actualBehaviour.value,
       stepsToReproduce.value,
     ),
+    "Modèle copié ✅",
   );
-  sendSuccessNotification("Modèle copié");
-};
 </script>
 
 <style lang="scss" scoped>
