@@ -12,6 +12,10 @@ defineProps({
 </script>
 
 <style scoped>
+.rich-viewer {
+  white-space: pre-wrap;
+}
+
 .rich-viewer :deep(ul),
 .rich-viewer :deep(ol) {
   padding-left: 1.5em;
