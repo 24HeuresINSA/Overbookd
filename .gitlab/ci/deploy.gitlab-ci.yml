@@ -2,6 +2,7 @@ deploy:
   image: curlimages/curl
   interruptible: true
   stage: deploy
+  resource_group: watchtower
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
       when: never
@@ -11,4 +12,4 @@ deploy:
     - if: '$CI_COMMIT_TAG =~ /^v[0-9]+\.[0-9]+\.[0-9]+$/'
     - when: never
   script:
-    - 'curl -X POST -H "Authorization: Bearer ${WATCHTOWER_API_KEY}" "${WATCHTOWER_BASE_URL}/v1/update"'
+    - 'curl --fail-with-body -X POST -H "Authorization: Bearer ${WATCHTOWER_API_KEY}" "${WATCHTOWER_BASE_URL}/v1/update"'
