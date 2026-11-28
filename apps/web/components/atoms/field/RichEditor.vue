@@ -124,12 +124,18 @@ const focused = ref<boolean>(false);
 const fixLineBreaks = (htmlContent: string) =>
   htmlContent.replace(/<p><\/p>/g, "<p><br></p>");
 
-const normalizeEmptyParagraphs = (htmlContent: string) =>
-  htmlContent.replace(/<p>\s*<br\s*\/?>\s*<\/p>/g, "<p></p>");
+const normalizeHtml = (htmlContent: string) =>
+  htmlContent
+    .replace(/&nbsp;|\u00A0/g, " ")
+    .replace(/<p>\s*<br\s*\/?>\s*<\/p>/g, "<p></p>");
 
 const editor = useEditor({
-  content: normalizeEmptyParagraphs(content.value ?? ""),
+  content: normalizeHtml(content.value ?? ""),
   editable: !readonly,
+  editorProps: {
+    transformPastedHTML: (html) => normalizeHtml(html),
+    transformPastedText: (text) => text.replace(/\u00A0/g, " "),
+  },
   extensions: [
     StarterKit.configure({
       heading: { levels: [1, 2] },
@@ -171,7 +177,7 @@ watch(content, (newContent) => {
   const editorInstance = editor.value;
   if (!editorInstance) return;
   const currentContent = editorInstance.getHTML();
-  const normalizedNewContent = normalizeEmptyParagraphs(newContent ?? "");
+  const normalizedNewContent = normalizeHtml(newContent ?? "");
   if (normalizedNewContent === currentContent) return;
   editorInstance.commands.setContent(normalizedNewContent, {
     emitUpdate: false,
