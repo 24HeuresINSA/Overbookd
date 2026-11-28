@@ -4,6 +4,7 @@ import { OnGoingSharedMealBuilder } from "./on-going-shared-meal.builder";
 import {
   AmountTooHigh,
   AmountTooLow,
+  EmptyMenu,
   MealNotFound,
   MultipleShotgunsAlreadyAllowed,
   MultipleShotgunsAlreadyDisallowed,
@@ -30,6 +31,7 @@ import {
   ALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR,
   DISALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR,
   CANCEL_MEAL_PAST_MEAL_ERROR,
+  UPDATE_MENU_PAST_MEAL_ERROR,
 } from "./past-shared-meal.builder.js";
 
 const julie = { id: 1, name: "Julie Reiffocex" };
@@ -162,6 +164,23 @@ describe("Meal Sharing", () => {
         });
       },
     );
+    describe.each`
+      menu
+      ${""}
+      ${"   "}
+    `("when offering a meal with an empty menu ($menu)", ({ menu }) => {
+      it("should indicate that menu cannot be empty", async () => {
+        await expect(
+          async () =>
+            await mealSharing.offer(
+              menu,
+              { day: "2023-10-13", moment: SOIR },
+              julie.id,
+              false,
+            ),
+        ).rejects.toThrow(EmptyMenu);
+      });
+    });
   });
 
   describe("Shotgun a meal", () => {
@@ -674,6 +693,77 @@ describe("Meal Sharing", () => {
               ),
           ).rejects.toThrow(MultipleShotgunsAlreadyDisallowed);
         });
+      });
+    });
+  });
+
+  describe("Update menu", () => {
+    beforeEach(() => {
+      sharedMeals = new InMemorySharedMeals([rizCantonnais, closedMeal]);
+      adherents = new InMemoryAdherents([...adherentListing]);
+      mealSharing = new MealSharing(sharedMeals, adherents);
+    });
+    describe("when adherent other than chef tries to update the menu", () => {
+      it("should indicate that only chef can update the menu", async () => {
+        await expect(
+          async () =>
+            await mealSharing.updateMenu(rizCantonnais.id, "Paella", lea.id),
+        ).rejects.toThrow(OnlyChefCan.updateMenu(rizCantonnais));
+      });
+    });
+    describe("when chef updates the menu", () => {
+      let sharedMeal: OnGoingSharedMeal;
+      beforeEach(async () => {
+        sharedMeal = await mealSharing.updateMenu(
+          rizCantonnais.id,
+          "Paella",
+          rizCantonnais.chef.id,
+        );
+      });
+      it("should update the menu", () => {
+        expect(sharedMeal.meal.menu).toBe("Paella");
+      });
+      it("should keep the meal date", () => {
+        expect(sharedMeal.meal.date).toBe(rizCantonnais.meal.date);
+      });
+      it("should keep the shotguns", () => {
+        expect(sharedMeal.shotguns).toEqual(rizCantonnais.shotguns);
+        expect(sharedMeal.portionCount).toBe(rizCantonnais.portionCount);
+      });
+      it("should save the updated menu", async () => {
+        const saved = await mealSharing.findById(rizCantonnais.id);
+        expect(saved.meal.menu).toBe("Paella");
+      });
+    });
+    describe("when chef updates the menu with an empty one", () => {
+      it("should indicate that menu cannot be empty", async () => {
+        await expect(
+          async () =>
+            await mealSharing.updateMenu(
+              rizCantonnais.id,
+              "   ",
+              rizCantonnais.chef.id,
+            ),
+        ).rejects.toThrow(EmptyMenu);
+      });
+    });
+    describe("when chef updates the menu of a closed meal", () => {
+      it("should indicate that menu cannot be updated anymore", async () => {
+        await expect(
+          async () =>
+            await mealSharing.updateMenu(
+              closedMeal.id,
+              "Paella",
+              closedMeal.chef.id,
+            ),
+        ).rejects.toThrow(UPDATE_MENU_PAST_MEAL_ERROR);
+      });
+    });
+    describe("when meal does not exist", () => {
+      it("should indicate that meal is not found", async () => {
+        await expect(
+          async () => await mealSharing.updateMenu(42, "Paella", julie.id),
+        ).rejects.toThrow(MealNotFound);
       });
     });
   });

@@ -35,7 +35,7 @@ export type {
 } from "./festival-event/festival-task";
 
 // PERSONAL ACCOUNT
-export type { OfferMeal } from "./personal-account/shared-meal";
+export type { OfferMeal, UpdateMealMenu } from "./personal-account/shared-meal";
 export type { Consumer } from "./personal-account/consumer";
 export type {
   CreateBarrelTransactionsForm,

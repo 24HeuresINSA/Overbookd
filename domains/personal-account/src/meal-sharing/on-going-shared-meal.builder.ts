@@ -194,6 +194,18 @@ export class OnGoingSharedMealBuilder
     );
   }
 
+  updateMenu(menu: string): OnGoingSharedMealBuilder {
+    return new OnGoingSharedMealBuilder(
+      this.id,
+      this.createdAt,
+      Meal.updateMenu(this.meal, menu),
+      this.chef,
+      this.areShotgunsOpen,
+      this.areMultipleShotgunsAllowed,
+      this._shotguns,
+    );
+  }
+
   isChef(adherent: Adherent["id"]): boolean {
     return adherent === this.chef.id;
   }

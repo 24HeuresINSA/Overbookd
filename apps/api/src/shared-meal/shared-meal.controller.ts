@@ -8,6 +8,7 @@ import {
   UseFilters,
   HttpCode,
   Delete,
+  Patch,
 } from "@nestjs/common";
 import {
   ApiBearerAuth,
@@ -37,6 +38,7 @@ import {
 } from "@overbookd/personal-account";
 import { MealSharingErrorFilter } from "./filter/meal-sharing.filter";
 import { RecordExpenseRequestDto } from "./dto/record-expense.request.dto";
+import { UpdateMenuRequestDto } from "./dto/update-menu.request.dto";
 import { ApiSwaggerResponse } from "../api-swagger-response.decorator";
 import { RequestHydratedUser } from "../authentication-zitadel/request-hydrated-user";
 import { AuthenticatedUser } from "../authentication-zitadel/decorators/authenticated-user.decorator";
@@ -270,6 +272,28 @@ export class SharedMealController {
     @AuthenticatedUser() user: RequestHydratedUser,
   ): Promise<OnGoingSharedMealResponseDto> {
     return this.sharedMeal.openShotguns(mealId, user.id);
+  }
+
+  @Patch(":mealId/menu")
+  @Permissions(OFFER_SHARED_MEAL)
+  @HttpCode(200)
+  @ApiResponse({
+    status: 200,
+    description: "Updated meal details",
+    type: OnGoingSharedMealResponseDto,
+  })
+  @ApiParam({
+    name: "mealId",
+    type: Number,
+    required: true,
+  })
+  @ApiBody({ type: UpdateMenuRequestDto })
+  updateMenu(
+    @Param("mealId", ParseIntPipe) mealId: SharedMeal["id"],
+    @AuthenticatedUser() user: RequestHydratedUser,
+    @Body() update: UpdateMenuRequestDto,
+  ): Promise<OnGoingSharedMealResponseDto> {
+    return this.sharedMeal.updateMenu(mealId, update, user.id);
   }
 
   @Post(":mealId/allow-multiple-shotguns")

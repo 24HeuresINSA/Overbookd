@@ -61,6 +61,8 @@ export abstract class SharedMealBuilder {
 
   abstract disallowMultipleShotguns(): SharedMealBuilder;
 
+  abstract updateMenu(menu: string): SharedMealBuilder;
+
   get shotguns(): Shotgun[] {
     return this._shotguns.all;
   }
@@ -94,6 +96,7 @@ export type SharedMeals = {
   disallowMultipleShotguns(
     updatedMeal: OnGoingSharedMeal,
   ): Promise<OnGoingSharedMeal>;
+  updateMenu(updatedMeal: OnGoingSharedMeal): Promise<OnGoingSharedMeal>;
 };
 
 export type Adherents = {
@@ -274,5 +277,19 @@ export class MealSharing {
 
     const updatedMeal = meal.disallowMultipleShotguns();
     return this.sharedMeals.disallowMultipleShotguns(updatedMeal);
+  }
+
+  async updateMenu(
+    mealId: SharedMeal["id"],
+    menu: string,
+    instigatorId: Adherent["id"],
+  ): Promise<SharedMeal> {
+    const meal = await this.sharedMeals.find(mealId);
+
+    if (!meal) throw new MealNotFound(mealId);
+    if (!meal.isChef(instigatorId)) throw OnlyChefCan.updateMenu(meal);
+
+    const updatedMeal = meal.updateMenu(menu);
+    return this.sharedMeals.updateMenu(updatedMeal);
   }
 }

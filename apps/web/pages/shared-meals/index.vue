@@ -19,9 +19,11 @@
       <SharedMealCard v-for="meal in meals" :key="meal.id" :meal="meal" />
 
       <v-card v-if="meals.length === 0" class="meals__empty">
-        <v-icon icon="mdi-silverware-clean" size="64" />
-        <p>Aucun repas de prévu pour le moment</p>
-        <p class="meals__empty-hint">Lance-toi et propose le prochain !</p>
+        <v-card-text class="meals__empty-content">
+          <v-icon icon="mdi-silverware-clean" size="64" />
+          <p>Aucun repas de prévu pour le moment</p>
+          <p class="meals__empty-hint">Lance-toi et propose le prochain !</p>
+        </v-card-text>
       </v-card>
     </section>
   </div>
@@ -103,6 +105,9 @@ mealSharingStore.fetchOnGoing();
 
   &__empty {
     grid-column: 1 / -1;
+  }
+
+  &__empty-content {
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -26,6 +26,9 @@ export const ALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR =
 export const DISALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR =
   "Ce repas partagé a été cloturé, il n'est plus possible de retirer les shotguns multiples";
 
+export const UPDATE_MENU_PAST_MEAL_ERROR =
+  "Ce repas partagé a été cloturé, il n'est plus possible de modifier le menu";
+
 class PastMealError extends MealSharingError {
   static get addPortion(): PastMealError {
     return new PastMealError(ADD_PORTION_PAST_MEAL_ERROR);
@@ -57,6 +60,10 @@ class PastMealError extends MealSharingError {
 
   static get disallowMultipleShotguns(): PastMealError {
     return new PastMealError(DISALLOW_MULTIPLE_SHOTGUNS_PAST_MEAL_ERROR);
+  }
+
+  static get updateMenu(): PastMealError {
+    return new PastMealError(UPDATE_MENU_PAST_MEAL_ERROR);
   }
 }
 
@@ -158,5 +165,9 @@ export class PastSharedMealBuilder
 
   disallowMultipleShotguns(): PastSharedMealBuilder {
     throw PastMealError.disallowMultipleShotguns;
+  }
+
+  updateMenu(): PastSharedMealBuilder {
+    throw PastMealError.updateMenu;
   }
 }

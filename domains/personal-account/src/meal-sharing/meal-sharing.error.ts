@@ -3,6 +3,12 @@ import { MAX_PORTIONS_PER_GUEST, SharedMeal } from "./meals.model.js";
 
 export class MealSharingError extends Error {}
 
+export class EmptyMenu extends MealSharingError {
+  constructor() {
+    super("Le menu du repas partagé ne peut pas être vide");
+  }
+}
+
 export class ChefNotFound extends MealSharingError {
   constructor(id: number) {
     super(`Impossible de trouver l'adhérent #${id} en tant que chef`);
@@ -56,6 +62,10 @@ export class OnlyChefCan extends MealSharingError {
 
   static disallowMultipleShotguns({ chef }: SharedMeal) {
     return new OnlyChefCan(chef, "ne pas autoriser les shotguns multiples");
+  }
+
+  static updateMenu({ chef }: SharedMeal) {
+    return new OnlyChefCan(chef, "modifier le menu");
   }
 }
 

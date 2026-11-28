@@ -5,3 +5,7 @@ export type OfferMeal = {
   date: MealDate;
   areMultipleShotgunsAllowed: boolean;
 };
+
+export type UpdateMealMenu = {
+  menu: string;
+};

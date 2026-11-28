@@ -1,4 +1,4 @@
-import type { OfferMeal } from "@overbookd/http";
+import type { OfferMeal, UpdateMealMenu } from "@overbookd/http";
 import type {
   Adherent,
   Expense,
@@ -67,6 +67,13 @@ export class MealSharingRepository {
   static openShotguns(mealId: SharedMeal["id"]) {
     return HttpClient.post<SharedMeal>(
       `${this.basePath}/${mealId}/open-shotguns`,
+    );
+  }
+
+  static updateMenu(mealId: SharedMeal["id"], update: UpdateMealMenu) {
+    return HttpClient.patch<SharedMeal>(
+      `${this.basePath}/${mealId}/menu`,
+      update,
     );
   }
 

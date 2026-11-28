@@ -165,6 +165,17 @@ export class PrismaMeals implements SharedMeals {
     return buildSharedMeal(saved);
   }
 
+  async updateMenu(meal: OnGoingSharedMeal): Promise<OnGoingSharedMeal> {
+    const saved = await this.prisma.sharedMeal.update({
+      where: { id: meal.id },
+      select: SELECT_SHARED_MEAL,
+      data: {
+        menu: meal.meal.menu,
+      },
+    });
+    return buildSharedMeal(saved);
+  }
+
   async allowMultipleShotguns(
     meal: OnGoingSharedMeal,
   ): Promise<OnGoingSharedMeal> {

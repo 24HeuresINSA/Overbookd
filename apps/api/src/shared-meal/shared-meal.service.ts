@@ -1,4 +1,4 @@
-import { OfferMeal } from "@overbookd/http";
+import { OfferMeal, UpdateMealMenu } from "@overbookd/http";
 import {
   Adherent,
   Expense,
@@ -118,6 +118,19 @@ export class SharedMealService {
     instigatorId: Adherent["id"],
   ): Promise<OnGoingSharedMeal> {
     const updated = await this.mealSharing.openShotguns(mealId, instigatorId);
+    return formatSharedMeal(updated);
+  }
+
+  async updateMenu(
+    mealId: SharedMeal["id"],
+    { menu }: UpdateMealMenu,
+    instigatorId: Adherent["id"],
+  ): Promise<OnGoingSharedMeal> {
+    const updated = await this.mealSharing.updateMenu(
+      mealId,
+      menu,
+      instigatorId,
+    );
     return formatSharedMeal(updated);
   }
 

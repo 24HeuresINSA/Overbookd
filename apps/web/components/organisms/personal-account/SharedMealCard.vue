@@ -72,7 +72,14 @@
         <h4 class="meal__section-title">
           <v-icon icon="mdi-silverware" size="small" /> Au menu
         </h4>
-        <p>{{ meal.meal.menu }}</p>
+        <v-textarea
+          v-model="menu"
+          :readonly="!iAmChef"
+          :error-messages="menuErrors"
+          hide-details="auto"
+          auto-grow
+          rows="1"
+        />
       </div>
 
       <div class="meal__guests">
@@ -227,6 +234,7 @@ import {
 } from "@overbookd/personal-account";
 import { nicknameOrName } from "@overbookd/user";
 import { getShotgunTitle } from "~/utils/easter-egg/shotgun";
+import { watchDebounced } from "@vueuse/core";
 
 const myStore = useMyStore();
 const mealSharingStore = useMealSharingStore();
@@ -315,6 +323,19 @@ const toggleMultipleShotguns = () => {
     ? openDisallowMultipleShotgunsConfirmationDialog()
     : mealSharingStore.allowMultipleShotguns(meal.id);
 };
+
+const menu = ref<string>(meal.meal.menu);
+const menuErrors = computed<string[]>(() =>
+  menu.value.trim() ? [] : ["Le menu ne peut pas être vide"],
+);
+watchDebounced(
+  menu,
+  (updatedMenu) => {
+    if (!updatedMenu.trim()) return;
+    mealSharingStore.updateMenu(meal.id, updatedMenu);
+  },
+  { debounce: 800 },
+);
 
 const disallowMultipleShotguns = () => {
   mealSharingStore.disallowMultipleShotguns(meal.id);

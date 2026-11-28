@@ -108,6 +108,13 @@ export const useMealSharingStore = defineStore("meal-sharing", {
       this._updateMealInsideOnGoingMeals(sharedMeal);
     },
 
+    async updateMenu(mealId: SharedMeal["id"], menu: string) {
+      const res = await MealSharingRepository.updateMenu(mealId, { menu });
+      if (isHttpError(res)) return;
+      const sharedMeal = castSharedMealWithDate(res);
+      this._updateMealInsideOnGoingMeals(sharedMeal);
+    },
+
     async allowMultipleShotguns(mealId: SharedMeal["id"]) {
       const res = await MealSharingRepository.allowMultipleShotguns(mealId);
       if (isHttpError(res)) return;
