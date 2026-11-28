@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/permission",
-  "version": "1.1.23",
+  "version": "1.1.24",
   "description": "Gestion des permissions pour overbookd",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -49,7 +49,7 @@
     "permission"
   ],
   "engines": {
-    "node": "26.13.0",
+    "node": "26.13.1",
     "pnpm": "12.23.0"
   }
 }

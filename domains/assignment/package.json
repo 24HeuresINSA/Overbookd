@@ -1,6 +1,6 @@
 {
   "name": "@overbookd/assignment",
-  "version": "1.5.28",
+  "version": "1.5.29",
   "description": "Gestion de l'affectation pour overbookd",
   "author": "Club des 24 heures de l'INSA (https://www.24heures.org/)",
   "homepage": "https://gitlab.com/24-heures-insa/overbookd-mono",
@@ -50,7 +50,7 @@
     "domain"
   ],
   "engines": {
-    "node": "26.13.0",
+    "node": "26.13.1",
     "pnpm": "12.23.0"
   },
   "dependencies": {
