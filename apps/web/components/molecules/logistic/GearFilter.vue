@@ -32,12 +32,9 @@ const category = defineModel<CatalogCategory | undefined>("category", {
 });
 const team = defineModel<Team | undefined>("team", { required: true });
 
-const updateSearch = (value: string | null) =>
-  emit("update:search", value ?? "");
-
 const searchField = useDebouncedModel<string | null | undefined>(
   () => search.value,
-  (value) => updateSearch(value ?? null),
+  (value) => emit("update:search", value ?? ""),
 );
 
 const searchOptions = computed<GearSearchOptions>(() => {
