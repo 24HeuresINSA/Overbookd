@@ -15,11 +15,10 @@
 
     <v-card-text class="d-flex flex-column ga-4">
       <v-text-field
-        :model-value="general.name"
+        v-model="name"
         label="Nom de la FT"
         :disabled="disabled"
         hide-details
-        @update:model-value="updateName"
       />
       <SearchUser
         :model-value="general.administrator"
@@ -40,12 +39,12 @@
 </template>
 
 <script lang="ts" setup>
-import { useDebounceFn } from "@vueuse/core";
 import type { Team } from "@overbookd/team";
 import type { User } from "@overbookd/user";
 import type { FestivalTask } from "@overbookd/festival-event";
 import { HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 import { CTMA_URL } from "~/utils/navigation/url.constant";
+import { useDebouncedModel } from "~/composable/useDebouncedModel";
 
 const ftStore = useFestivalTaskStore();
 const teamStore = useTeamStore();
@@ -65,9 +64,10 @@ const inChargeTeam = computed<Team | undefined>(() =>
   teamStore.getTeamByCode(general.value.team ?? ""),
 );
 
-const updateName = useDebounceFn((name: string) => {
-  ftStore.updateGeneral({ name });
-}, 800);
+const name = useDebouncedModel<string>(
+  () => general.value.name,
+  (name) => ftStore.updateGeneral({ name }),
+);
 
 const updateAdministrator = (administrator?: User) => {
   if (!administrator) return;

@@ -12,12 +12,7 @@
       </v-card-subtitle>
 
       <v-card-text class="d-flex flex-column ga-3">
-        <v-text-field
-          :model-value="general.name"
-          label="Nom de l'activité"
-          hide-details
-          @update:model-value="updateName"
-        />
+        <v-text-field v-model="name" label="Nom de l'activité" hide-details />
 
         <div>
           <h3 class="mb-2">Description de l'activité</h3>
@@ -52,11 +47,10 @@
 
         <v-text-field
           v-show="general.toPublish"
-          :model-value="general.photoLink"
+          v-model="photoLink"
           label="Lien de la photo de l'activité sur le drive"
           class="mt-1"
           hide-details
-          @update:model-value="updatePhotoLink"
         />
 
         <v-switch
@@ -108,6 +102,7 @@ import type { IProvidePeriod } from "@overbookd/time";
 import { activityCategories } from "~/utils/festival-event/festival-activity/festival-activity.model";
 import { COMMUNICATION_EMAIL, HUMAINS_EMAIL } from "~/utils/mail/mail.constant";
 import { CTMA_URL } from "~/utils/navigation/url.constant";
+import { useDebouncedModel } from "~/composable/useDebouncedModel";
 
 const faStore = useFestivalActivityStore();
 
@@ -129,18 +124,20 @@ const contact = computed<string>(() =>
 const emit = defineEmits(["open:calendar"]);
 const openCalendar = () => emit("open:calendar");
 
-const updateName = useDebounceFn((name: string) => {
-  faStore.updateGeneral({ name });
-}, 800);
+const name = useDebouncedModel<string>(
+  () => general.value.name,
+  (name) => faStore.updateGeneral({ name }),
+);
 
 const description = ref<string>(general.value.description ?? "");
 const updateDescription = useDebounceFn((description?: string) => {
   faStore.updateGeneral({ description: description || null });
 }, 800);
 
-const updatePhotoLink = useDebounceFn((photoLink: string) => {
-  faStore.updateGeneral({ photoLink: photoLink || null });
-}, 800);
+const photoLink = useDebouncedModel<string | null>(
+  () => general.value.photoLink,
+  (photoLink) => faStore.updateGeneral({ photoLink: photoLink || null }),
+);
 const updateCategories = (categories: string[]) => {
   return faStore.updateGeneral({ categories });
 };

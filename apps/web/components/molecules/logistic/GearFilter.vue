@@ -1,13 +1,12 @@
 <template>
   <form class="filters">
     <v-text-field
-      :model-value="search"
+      v-model="searchField"
       label="Rechercher un matos"
       autofocus
       clearable
       clear-icon="mdi-close-circle-outline"
       hide-details
-      @update:model-value="debouncedSearchUpdate($event)"
     />
     <SearchCategory v-model="category" label="Catégorie" hide-details />
     <SearchTeam
@@ -21,9 +20,9 @@
 </template>
 
 <script lang="ts" setup>
-import { useDebounceFn } from "@vueuse/core";
 import type { CatalogCategory, GearSearchOptions } from "@overbookd/logistic";
 import type { Team } from "@overbookd/team";
+import { useDebouncedModel } from "~/composable/useDebouncedModel";
 
 const emit = defineEmits(["update:search", "update:options"]);
 
@@ -36,9 +35,10 @@ const team = defineModel<Team | undefined>("team", { required: true });
 const updateSearch = (value: string | null) =>
   emit("update:search", value ?? "");
 
-const debouncedSearchUpdate = useDebounceFn((search: string) => {
-  updateSearch(search);
-}, 800);
+const searchField = useDebouncedModel<string | null | undefined>(
+  () => search.value,
+  (value) => updateSearch(value ?? null),
+);
 
 const searchOptions = computed<GearSearchOptions>(() => {
   const validSearch = search.value?.trim() ? { search: search.value } : {};

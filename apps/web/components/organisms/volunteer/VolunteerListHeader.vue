@@ -2,7 +2,7 @@
   <div class="volunteers-header">
     <div class="filters">
       <v-text-field
-        :model-value="filters.search"
+        v-model="searchField"
         label="Recherche"
         density="compact"
         bg-color="surface"
@@ -10,7 +10,6 @@
         hide-details
         clearable
         autofocus
-        @update:model-value="updateSearchParam"
       />
       <SearchTeams
         :model-value="filters.teams ?? []"
@@ -95,8 +94,8 @@
 <script lang="ts" setup>
 import { AFFECT_VOLUNTEER, MANAGE_USERS } from "@overbookd/permission";
 import type { Team } from "@overbookd/team";
-import { useDebounceFn } from "@vueuse/core";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
+import { useDebouncedModel } from "~/composable/useDebouncedModel";
 import {
   DisplayModeBuilder,
   TROMBINOSCOPE,
@@ -113,10 +112,14 @@ const displayMode = defineModel<DisplayMode>("displayMode", {
   required: true,
 });
 
-const updateSearchParam = useDebounceFn((search?: string) => {
-  filters.value.search = search;
-  updateQueryParams("search", search);
-}, 200);
+const searchField = useDebouncedModel<string | undefined>(
+  () => filters.value.search,
+  (search) => {
+    filters.value.search = search;
+    updateQueryParams("search", search);
+  },
+  200,
+);
 const updateTeamsParam = (teams: Team[]) => {
   filters.value.teams = teams;
   const teamsCode = teams.map(({ code }) => code);

@@ -1,6 +1,6 @@
 <template>
   <v-text-field
-    :model-value="dateStringified"
+    v-model="dateStringified"
     :label="noLabel ? undefined : label"
     type="datetime-local"
     :hide-details="hideDetails"

@@ -3,12 +3,11 @@
     <v-card-title>Filtres</v-card-title>
     <v-card-text class="filters-input">
       <v-text-field
-        :model-value="search"
+        v-model="searchField"
         label="Recherche"
         autofocus
         clearable
         hide-details
-        @update:model-value="updateSearchParam"
       />
       <SearchTeam
         v-model:team="team"
@@ -44,7 +43,6 @@
 </template>
 
 <script lang="ts" setup>
-import { useDebounceFn } from "@vueuse/core";
 import type {
   FestivalActivity,
   FestivalTask,
@@ -58,6 +56,7 @@ import type { Team } from "@overbookd/team";
 import type { User } from "@overbookd/user";
 import type { FestivalEventStatus } from "~/utils/festival-event/festival-event.utils";
 import { updateQueryParams } from "~/utils/http/url-params.utils";
+import { useDebouncedModel } from "~/composable/useDebouncedModel";
 import {
   ADHERENT_QUERY_PARAM,
   SEARCH_QUERY_PARAM,
@@ -101,10 +100,14 @@ const statusWithLabels = computed<StatusLabels>(() => {
 });
 const clearStatus = () => (status.value = undefined);
 
-const updateSearchParam = useDebounceFn((newSearch: string) => {
-  search.value = newSearch;
-  updateQueryParams(SEARCH_QUERY_PARAM, newSearch);
-}, 200);
+const searchField = useDebouncedModel<string | undefined>(
+  () => search.value,
+  (newSearch) => {
+    search.value = newSearch;
+    updateQueryParams(SEARCH_QUERY_PARAM, newSearch);
+  },
+  200,
+);
 const updateTeamParam = (team?: Team) => {
   updateQueryParams(TEAM_QUERY_PARAM, team?.code);
 };

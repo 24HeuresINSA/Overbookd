@@ -234,7 +234,7 @@ import {
 } from "@overbookd/personal-account";
 import { nicknameOrName } from "@overbookd/user";
 import { getShotgunTitle } from "~/utils/easter-egg/shotgun";
-import { watchDebounced } from "@vueuse/core";
+import { useDebouncedModel } from "~/composable/useDebouncedModel";
 
 const myStore = useMyStore();
 const mealSharingStore = useMealSharingStore();
@@ -324,17 +324,15 @@ const toggleMultipleShotguns = () => {
     : mealSharingStore.allowMultipleShotguns(meal.id);
 };
 
-const menu = ref<string>(meal.meal.menu);
-const menuErrors = computed<string[]>(() =>
-  menu.value.trim() ? [] : ["Le menu ne peut pas être vide"],
-);
-watchDebounced(
-  menu,
+const menu = useDebouncedModel<string>(
+  () => meal.meal.menu,
   (updatedMenu) => {
     if (!updatedMenu.trim()) return;
     mealSharingStore.updateMenu(meal.id, updatedMenu);
   },
-  { debounce: 800 },
+);
+const menuErrors = computed<string[]>(() =>
+  menu.value.trim() ? [] : ["Le menu ne peut pas être vide"],
 );
 
 const disallowMultipleShotguns = () => {

@@ -10,32 +10,30 @@
 
     <v-card-text class="d-flex flex-column ga-4">
       <v-textarea
-        :model-value="security.specialNeed"
+        v-model="specialNeed"
         label="Dispositif de sécurité particulier"
         auto-grow
         rows="3"
         prepend-icon="mdi-security"
         hide-details
-        @update:model-value="updateSpecialNeed"
       />
       <v-text-field
-        :model-value="security.freePass"
+        v-model="freePass"
         label="Nombre de laissez passer"
         prepend-icon="mdi-car"
         type="number"
         :rules="[rules.number, rules.min]"
         hide-details
-        @update:model-value="updateFreePass"
       />
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts" setup>
-import { useDebounceFn } from "@vueuse/core";
 import type { FestivalActivity } from "@overbookd/festival-event";
 import { isNumber, min } from "~/utils/rules/input.rules";
 import { SECURITE_EMAIL } from "~/utils/mail/mail.constant";
+import { useDebouncedModel } from "~/composable/useDebouncedModel";
 
 const faStore = useFestivalActivityStore();
 
@@ -51,11 +49,15 @@ const security = computed<FestivalActivity["security"]>(
   () => selectedActivity.value.security,
 );
 
-const updateSpecialNeed = useDebounceFn((canBeEmpty: string) => {
-  const specialNeed = canBeEmpty.trim() || null;
-  faStore.updateSecurity({ specialNeed });
-}, 800);
-const updateFreePass = useDebounceFn((freePass: string) => {
-  faStore.updateSecurity({ freePass: +freePass });
-}, 800);
+const specialNeed = useDebouncedModel<string | null>(
+  () => security.value.specialNeed,
+  (canBeEmpty) => {
+    const specialNeed = canBeEmpty?.trim() || null;
+    faStore.updateSecurity({ specialNeed });
+  },
+);
+const freePass = useDebouncedModel<number | string>(
+  () => security.value.freePass,
+  (freePass) => faStore.updateSecurity({ freePass: +freePass }),
+);
 </script>

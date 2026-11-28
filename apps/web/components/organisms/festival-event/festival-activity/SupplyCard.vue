@@ -15,24 +15,19 @@
         @update="updateElectricitySupply"
         @remove="removeElectricitySupply"
       />
-      <v-text-field
-        :model-value="supply.water"
-        label="Besoin en eau"
-        hide-details
-        @update:model-value="updateWaterSupply"
-      />
+      <v-text-field v-model="water" label="Besoin en eau" hide-details />
     </v-card-text>
   </v-card>
 </template>
 
 <script lang="ts" setup>
-import { useDebounceFn } from "@vueuse/core";
 import type {
   FestivalActivity,
   ElectricitySupply,
   PrepareElectricitySupplyCreation,
 } from "@overbookd/festival-event";
 import { LOG_ELEC_EMAIL } from "~/utils/mail/mail.constant";
+import { useDebouncedModel } from "~/composable/useDebouncedModel";
 
 const faStore = useFestivalActivityStore();
 
@@ -53,8 +48,11 @@ const removeElectricitySupply = (supply: ElectricitySupply) => {
   faStore.removeElectricitySupply(supply.id);
 };
 
-const updateWaterSupply = useDebounceFn((canBeEmpty: string) => {
-  const water = canBeEmpty.trim() ? canBeEmpty : null;
-  faStore.updateSupply({ water });
-}, 800);
+const water = useDebouncedModel<string | null>(
+  () => supply.value.water,
+  (canBeEmpty) => {
+    const water = canBeEmpty?.trim() ? canBeEmpty : null;
+    faStore.updateSupply({ water });
+  },
+);
 </script>
